@@ -35,8 +35,27 @@ namespace SolarEngine
 
     };
 
+    public interface SEBaseAttributes
+    {
+        // checkId
+        string checkId { get; set; }
+    }
+
     [Serializable]
-    public struct ProductsAttributes
+    public struct CustomAttributes : SEBaseAttributes
+    {
+        // 自定义事件名
+        public string custom_event_name { get; set; }
+
+        // 自定义属性, json字符串
+        public Dictionary<string, object> customProperties { get; set; }
+
+        // 实现 SEBaseAttributes 接口中的 checkId 属性
+        public string checkId { get; set; }
+    }
+
+    [Serializable]
+    public struct ProductsAttributes : SEBaseAttributes
     {
         // 商品名称 不可为空
         public string product_name { get; set; }
@@ -58,10 +77,12 @@ namespace SolarEngine
         public double pay_amount { get; set; }
         // 自定义属性, json字符串
         public Dictionary<string, object> customProperties { get; set; }
+        // 实现 SEBaseAttributes 接口中的 checkId 属性
+        public string checkId { get; set; }
     }
 
     [Serializable]
-    public struct AppImpressionAttributes
+    public struct AppImpressionAttributes : SEBaseAttributes
     {
         // 变现平台名称 不可为空:
         // csj：穿山甲国内版、pangle：穿山甲国际版、tencent：腾讯优量汇、baidu：百度百青藤、kuaishou：快手、oppo：OPPO、vivo：vivo
@@ -85,10 +106,12 @@ namespace SolarEngine
         public bool is_rendered { get; set; }
         // 自定义属性, json字符串
         public Dictionary<string, object> customProperties { get; set; }
+        // 实现 SEBaseAttributes 接口中的 checkId 属性
+        public string checkId { get; set; }
     }
 
     [Serializable]
-    public struct AdClickAttributes
+    public struct AdClickAttributes : SEBaseAttributes
     {
         // 变现平台名称 不可为空:
         // csj：穿山甲国内版、pangle：穿山甲国际版、tencent：腾讯优量汇、baidu：百度百青藤、kuaishou：快手、oppo：OPPO、vivo：vivo
@@ -107,11 +130,13 @@ namespace SolarEngine
         public string mediation_platform { get; set; }
         // 自定义属性, json字符串
         public Dictionary<string, object> customProperties { get; set; }
+        // 实现 SEBaseAttributes 接口中的 checkId 属性
+        public string checkId { get; set; }
 
     }
 
     [Serializable]
-    public struct RegisterAttributes
+    public struct RegisterAttributes : SEBaseAttributes
     {
         // 注册类型，如：QQ、WeiXin
         public string register_type { get; set; }
@@ -119,11 +144,14 @@ namespace SolarEngine
         public string register_status { get; set; }
         // 自定义属性, json字符串
         public Dictionary<string, object> customProperties { get; set; }
+
+        // 实现 SEBaseAttributes 接口中的 checkId 属性
+        public string checkId { get; set; }
         
     }
 
     [Serializable]
-    public struct LoginAttributes
+    public struct LoginAttributes : SEBaseAttributes
     {
         // 登录类型
         public string login_type { get; set; }
@@ -131,10 +159,13 @@ namespace SolarEngine
         public string login_status { get; set; }
         // 自定义属性, json字符串
         public Dictionary<string, object> customProperties { get; set; }
+
+        // 实现 SEBaseAttributes 接口中的 checkId 属性
+        public string checkId { get; set; }
     }
 
     [Serializable]
-    public struct OrderAttributes
+    public struct OrderAttributes : SEBaseAttributes
     {
         // 订单 ID 不超过 128  字符
         public string order_id { get; set; }
@@ -149,12 +180,13 @@ namespace SolarEngine
         // 自定义属性, json字符串
         public Dictionary<string, object> customProperties { get; set; }
 
-
+        // 实现 SEBaseAttributes 接口中的 checkId 属性
+        public string checkId { get; set; }
     }
 
 
     [Serializable]
-    public struct AppAttributes
+    public struct AppAttributes : SEBaseAttributes
     {
         // 投放广告的渠道 ID，需要与发行平台匹配
         public string ad_network { get; set; }
@@ -182,6 +214,9 @@ namespace SolarEngine
 
         // 自定义属性, json字符串
         public Dictionary<string, object> customProperties { get; set; }
+
+        // 实现 SEBaseAttributes 接口中的 checkId 属性
+        public string checkId { get; set; }
 
     }
 
@@ -318,7 +353,15 @@ namespace SolarEngine
             executingTaskList.Clear();
         }
 
+        private static readonly string SEConstant_CHECK_ID                    = "_first_event_check_id";
+        private static readonly string SEConstant_EVENT_TYPE                  = "_event_type";
 
+        
+        private static readonly string SEConstant_CUSTOM_EVENT_NAME           = "_custom_event_name";
+        private static readonly string SEConstant_CUSTOM                      = "_custom_event";
+        private static readonly string SEConstant_Custom_CustomProperties     = "_customProperties";
+
+        private static readonly string SEConstant_IAP                         = "_appPur";
         private static readonly string SEConstant_IAP_PName                   = "_product_name";
         private static readonly string SEConstant_IAP_PID                     = "_product_id";
         private static readonly string SEConstant_IAP_PCount                  = "_product_num";
@@ -330,6 +373,7 @@ namespace SolarEngine
         private static readonly string SEConstant_IAP_Paystatus               = "_pay_status";
         private static readonly string SEConstant_IAP_CustomProperties        = "_customProperties";
 
+        private static readonly string SEConstant_IAI                         = "_appImp";
         private static readonly string SEConstant_IAI_AdPlatform              = "_ad_platform";
         private static readonly string SEConstant_IAI_MediationPlatform       = "_mediation_platform";
         private static readonly string SEConstant_IAI_AdAppid                 = "_ad_appid";
@@ -340,20 +384,24 @@ namespace SolarEngine
         private static readonly string SEConstant_IAI_IsRendered              = "_is_rendered";
         private static readonly string SEConstant_IAI_CustomProperties        = "_customProperties";
 
+        private static readonly string SEConstant_AdClick                     = "_appClick";
         private static readonly string SEConstant_AdClick_AdPlatform          = "_ad_platform";
         private static readonly string SEConstant_AdClick_MediationPlatform   = "_mediation_platform";
         private static readonly string SEConstant_AdClick_AdId                = "_ad_id";
         private static readonly string SEConstant_AdClick_AdType              = "_ad_type";
         private static readonly string SEConstant_AdClick_CustomProperties    = "_customProperties";
 
+        private static readonly string SEConstant_Register                    = "_appReg";
         private static readonly string SEConstant_Register_Type               = "_reg_type";
         private static readonly string SEConstant_Register_Status             = "_status";
         private static readonly string SEConstant_Register_CustomProperties   = "_customProperties";
 
+        private static readonly string SEConstant_Login                       = "_appLogin";
         private static readonly string SEConstant_Login_Type                  = "_login_type";
         private static readonly string SEConstant_Login_Status                = "_status";
         private static readonly string SEConstant_Login_CustomProperties      = "_customProperties";
 
+        private static readonly string SEConstant_Order                       = "_appOrder";
         private static readonly string SEConstant_Order_ID                    = "_order_id";
         private static readonly string SEConstant_Order_Pay_Amount            = "_pay_amount";
         private static readonly string SEConstant_Order_Currency_Type         = "_currency_type";
@@ -362,6 +410,7 @@ namespace SolarEngine
         private static readonly string SEConstant_Order_CustomProperties      = "_customProperties";
 
 
+        private static readonly string SEConstant_AppAttr                     = "_appAttr";
         private static readonly string SEConstant_AppAttr_Ad_Network          = "_adnetwork";
         private static readonly string SEConstant_AppAttr_Sub_Channel         = "_sub_channel";
         private static readonly string SEConstant_AppAttr_Ad_Account_ID       = "_adaccount_id";
@@ -546,6 +595,15 @@ namespace SolarEngine
         public static void clearSuperProperties()
         {
             ClearSuperProperties();
+        }
+
+        /// <summary>
+        /// 上报首次事件
+        /// </summary>
+        /// <param name="attributes">SEBaseAttributes 实例</param>
+        public static void trackFirstEvent(SEBaseAttributes attributes)
+        {
+            TrackFirstEvent(attributes);
         }
 
         /// <summary>
@@ -1198,6 +1256,243 @@ namespace SolarEngine
 
 
 
+
+        }
+
+        private static void TrackFirstEvent(SEBaseAttributes attributes)
+        {
+            if (attributes == null)
+            {
+                Debug.Log("attributes must not be null");
+                return;
+            }
+            Dictionary<string, object> attributesDict = new Dictionary<string, object>();
+            
+            if (attributes is RegisterAttributes registerAttributes)
+            {
+                // 处理 RegisterAttributes 类型的逻辑
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_EVENT_TYPE, SolarEngine.Analytics.SEConstant_Register);
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_Register_Type, registerAttributes.register_type);
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_Register_Status, registerAttributes.register_status);
+                if (registerAttributes.customProperties != null)
+                {
+                    attributesDict.Add(SolarEngine.Analytics.SEConstant_Register_CustomProperties, registerAttributes.customProperties);
+                }
+                if (registerAttributes.checkId != null)
+                {
+                    attributesDict.Add(SolarEngine.Analytics.SEConstant_CHECK_ID, registerAttributes.checkId);
+                }
+            }
+
+            if (attributes is LoginAttributes loginAttributes)
+            {
+                // 处理 LoginAttributes 类型的逻辑
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_EVENT_TYPE, SolarEngine.Analytics.SEConstant_Login);
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_Login_Type, loginAttributes.login_type);
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_Login_Status, loginAttributes.login_status);
+                if (loginAttributes.customProperties != null)
+                {
+                    attributesDict.Add(SolarEngine.Analytics.SEConstant_Login_CustomProperties, loginAttributes.customProperties);
+                }
+                if (loginAttributes.checkId != null)
+                {
+                    attributesDict.Add(SolarEngine.Analytics.SEConstant_CHECK_ID, loginAttributes.checkId);
+                }
+            }
+
+            if (attributes is OrderAttributes orderAttributes)
+            {
+                // 处理 OrderAttributes 类型的逻辑
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_EVENT_TYPE, SolarEngine.Analytics.SEConstant_Order);
+
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_Order_ID, orderAttributes.order_id);
+
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_Order_Currency_Type, orderAttributes.currency_type);
+
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_Order_Pay_Type, orderAttributes.pay_type);
+
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_Order_Status, orderAttributes.status);
+
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_Order_Pay_Amount, orderAttributes.pay_amount);
+
+                if (orderAttributes.customProperties != null)
+                {
+                    attributesDict.Add(SolarEngine.Analytics.SEConstant_Order_CustomProperties, orderAttributes.customProperties);
+                }
+                if (orderAttributes.checkId != null)
+                {
+                    attributesDict.Add(SolarEngine.Analytics.SEConstant_CHECK_ID, orderAttributes.checkId);
+                }
+            }
+            if (attributes is AppAttributes appAttributes)
+            {
+                // 处理 AppAttributes 类型的逻辑
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_EVENT_TYPE, SolarEngine.Analytics.SEConstant_AppAttr);
+                if (appAttributes.sub_channel != null)
+                {
+                    attributesDict.Add(SolarEngine.Analytics.SEConstant_AppAttr_Sub_Channel, appAttributes.sub_channel);
+                }
+                if (appAttributes.ad_account_id != null)
+                {
+                    attributesDict.Add(SolarEngine.Analytics.SEConstant_AppAttr_Ad_Account_ID, appAttributes.ad_account_id);
+                }
+                if (appAttributes.ad_account_name != null)
+                {
+                    attributesDict.Add(SolarEngine.Analytics.SEConstant_AppAttr_Ad_Account_Name, appAttributes.ad_account_name);
+                }
+                if (appAttributes.ad_campaign_id != null)
+                {
+                    attributesDict.Add(SolarEngine.Analytics.SEConstant_AppAttr_Ad_Campaign_ID, appAttributes.ad_campaign_id);
+                }
+                if (appAttributes.ad_campaign_name != null)
+                {
+                    attributesDict.Add(SolarEngine.Analytics.SEConstant_AppAttr_Ad_Campaign_Name, appAttributes.ad_campaign_name);
+                }
+                if (appAttributes.ad_offer_id != null)
+                {
+                    attributesDict.Add(SolarEngine.Analytics.SEConstant_AppAttr_Ad_Offer_ID, appAttributes.ad_offer_id);
+                }
+                if (appAttributes.ad_offer_name != null)
+                {
+                    attributesDict.Add(SolarEngine.Analytics.SEConstant_AppAttr_Ad_Offer_Name, appAttributes.ad_offer_name);
+                }
+                if (appAttributes.ad_creative_id != null)
+                {
+                    attributesDict.Add(SolarEngine.Analytics.SEConstant_AppAttr_Ad_Creative_ID, appAttributes.ad_creative_id);
+                }
+                if (appAttributes.ad_creative_name != null)
+                {
+                    attributesDict.Add(SolarEngine.Analytics.SEConstant_AppAttr_Ad_Creative_Name, appAttributes.ad_creative_name);
+                }
+                if (appAttributes.customProperties != null)
+                {
+                    attributesDict.Add(SolarEngine.Analytics.SEConstant_AppAttr_Ad_CustomProperties, appAttributes.customProperties);
+                }
+                if (appAttributes.checkId != null)
+                {
+                    attributesDict.Add(SolarEngine.Analytics.SEConstant_CHECK_ID, appAttributes.checkId);
+                }
+            }
+
+            if (attributes is AdClickAttributes adClickAttributes)
+            {
+                // 处理 AdClickAttributes 类型的逻辑
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_EVENT_TYPE, SolarEngine.Analytics.SEConstant_AdClick);
+
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_AdClick_AdPlatform, adClickAttributes.ad_platform);
+
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_AdClick_MediationPlatform, adClickAttributes.mediation_platform);
+
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_AdClick_AdId, adClickAttributes.ad_id);
+
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_AdClick_AdType, adClickAttributes.ad_type);
+
+                if (adClickAttributes.customProperties != null)
+                {
+                    attributesDict.Add(SolarEngine.Analytics.SEConstant_AdClick_CustomProperties, adClickAttributes.customProperties);
+                }
+                if (adClickAttributes.checkId != null)
+                {
+                    attributesDict.Add(SolarEngine.Analytics.SEConstant_CHECK_ID, adClickAttributes.checkId);
+                }
+            }
+            if (attributes is AppImpressionAttributes appImpressionAttributes)
+            {
+                // 处理 AppImpressionAttributes 类型的逻辑
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_EVENT_TYPE, SolarEngine.Analytics.SEConstant_IAI);
+
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_IAI_AdPlatform, appImpressionAttributes.ad_platform);
+
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_IAI_MediationPlatform, appImpressionAttributes.mediation_platform);
+
+                if (appImpressionAttributes.ad_appid != null)
+                {
+                    attributesDict.Add(SolarEngine.Analytics.SEConstant_IAI_AdAppid, appImpressionAttributes.ad_appid);
+                }
+
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_IAI_AdId, appImpressionAttributes.ad_id);
+
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_IAI_AdType, appImpressionAttributes.ad_type);
+
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_IAI_AdEcpm, appImpressionAttributes.ad_ecpm);
+
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_IAI_CurrencyType, appImpressionAttributes.currency_type);
+
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_IAI_IsRendered, appImpressionAttributes.is_rendered);
+
+                if (appImpressionAttributes.customProperties != null)
+                {
+                    attributesDict.Add(SolarEngine.Analytics.SEConstant_IAI_CustomProperties, appImpressionAttributes.customProperties);
+                }
+                if (appImpressionAttributes.checkId != null)
+                {
+                    attributesDict.Add(SolarEngine.Analytics.SEConstant_CHECK_ID, appImpressionAttributes.checkId);
+                }
+            }
+            if (attributes is ProductsAttributes productsAttributes)
+            {
+                // 处理 ProductsAttributes 类型的逻辑
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_EVENT_TYPE, SolarEngine.Analytics.SEConstant_IAP);
+
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_IAP_OrderId, productsAttributes.order_id);
+        
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_IAP_Amount, productsAttributes.pay_amount);
+
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_IAP_Currency, productsAttributes.currency_type);
+
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_IAP_PayType, productsAttributes.pay_type);
+
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_IAP_PID, productsAttributes.product_id);
+
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_IAP_PName, productsAttributes.product_name);
+
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_IAP_PCount, productsAttributes.product_num);
+
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_IAP_Paystatus, productsAttributes.paystatus);
+
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_IAP_FailReason, productsAttributes.fail_reason == null ? "": productsAttributes.fail_reason);
+
+                if (productsAttributes.customProperties != null) {
+                    attributesDict.Add(SolarEngine.Analytics.SEConstant_IAP_CustomProperties, productsAttributes.customProperties);
+                }
+
+                if (productsAttributes.checkId != null)
+                {
+                    attributesDict.Add(SolarEngine.Analytics.SEConstant_CHECK_ID, productsAttributes.checkId);
+                }
+            }
+
+            if (attributes is CustomAttributes customAttributes)
+            {
+                // 处理 CustomAttributes 类型的逻辑
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_EVENT_TYPE, SolarEngine.Analytics.SEConstant_CUSTOM);
+
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_CUSTOM_EVENT_NAME, customAttributes.custom_event_name);
+
+                if (customAttributes.customProperties != null) {
+                    attributesDict.Add(SolarEngine.Analytics.SEConstant_Custom_CustomProperties, customAttributes.customProperties);
+                }
+
+                if (customAttributes.checkId != null)
+                {
+                    attributesDict.Add(SolarEngine.Analytics.SEConstant_CHECK_ID, customAttributes.checkId);
+                }
+            }
+              
+            if(attributesDict == null)
+            {
+                return;
+            }
+            string attributesJSONString = JsonConvert.SerializeObject(attributesDict);
+            #if UNITY_EDITOR
+                Debug.Log("Unity Editor: trackFirstEvent");
+            #elif UNITY_ANDROID
+                SolarEngineAndroidSDKObject.CallStatic("trackFirstEvent",attributesJSONString);
+            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+                //todo ios support
+            #else
+
+            #endif
 
         }
 
