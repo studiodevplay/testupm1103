@@ -12,6 +12,279 @@
 
 typedef void (*SEBridgeAttributionCallback)(int errorCode, const char * attributionData);
 
+NSString * const SEKeyFlutterEventType                                   = @"_event_type";
+
+NSString * const SEKeyFlutterEventNameIAP                                = @"_appPur";
+NSString * const SEKeyFlutterEventNameAdImpresstion                      = @"_appImp";
+NSString * const SEKeyFlutterEventNameAdClick                            = @"_appClick";
+NSString * const SEKeyFlutterEventNameAppAttr                            = @"_appAttr";
+NSString * const SEKeyFlutterEventNameRegister                           = @"_appReg";
+NSString * const SEKeyFlutterEventNameLogin                              = @"_appLogin";
+NSString * const SEKeyFlutterEventNameOrder                              = @"_appOrder";
+NSString * const SEKeyFlutterEventNameCustom                             = @"_custom_event";
+
+
+NSString * const SEKeyFlutterKeyCustomProperties                         = @"_customProperties";
+NSString * const SEKeyFlutterKeyCustomEventName                          = @"_customEventName";
+
+
+
+static SEIAPEventAttribute *buildIAPAttribute(const char *IAPAttribute) {
+    
+    NSString *jsonString = [NSString stringWithUTF8String:IAPAttribute];
+    NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+
+    NSError *error = nil;
+    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    if (error) {
+        NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data", jsonString];
+        NSLog(@"trackIAPWithAttributes, error :%@",msg);
+        return nil;
+    }
+    
+    NSString *productID     = [dict objectForKey:SEIAPEventProductID];
+    NSString *productName   = [dict objectForKey:SEIAPEventProductName];
+    NSString *orderId       = [dict objectForKey:SEIAPEventOrderID];
+    NSString *currencyType  = [dict objectForKey:SEIAPEventCurrency];
+    NSString *payType       = [dict objectForKey:SEIAPEventPayType];
+    NSString *failReason    = [dict objectForKey:SEIAPEventFailReason];
+    
+    NSNumber *payStatus     = [dict objectForKey:SEIAPEventPaystatus];
+    NSNumber *productCount  = [dict objectForKey:SEIAPEventProductCount];
+    NSNumber *payAmount     = [dict objectForKey:SEIAPEventProductPayAmount];
+    NSDictionary *customProperties = [dict objectForKey:@"_customProperties"];
+
+    SEIAPEventAttribute *attribute = [[SEIAPEventAttribute alloc] init];
+    attribute.productID = productID;
+    attribute.productName = productName;
+    attribute.orderId = orderId;
+    attribute.currencyType = currencyType;
+    attribute.payType = payType;
+    attribute.payStatus = (SolarEngineIAPStatus)[payStatus integerValue];
+    attribute.failReason = failReason;
+    attribute.payAmount = [payAmount doubleValue];
+    attribute.productCount = [productCount integerValue];
+    attribute.customProperties = customProperties;
+
+    return attribute;
+
+}
+
+static SEAdImpressionEventAttribute *buildAdImpressionAttribute(const char *adImpressionAttribute) {
+    NSString *jsonString = [NSString stringWithUTF8String:adImpressionAttribute];
+    NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *error = nil;
+    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    
+    if (error) {
+        NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data", jsonString];
+        NSLog(@"trackAdImpressionWithAttributes, error :%@", msg);
+        return nil;
+    }
+
+    NSString *adNetworkPlatform = [dict objectForKey:SEAdImpressionPropertyAdPlatform];
+    NSString *adNetworkAppID = [dict objectForKey:SEAdImpressionPropertyAppID];
+    NSString *adNetworkPlacementID = [dict objectForKey:SEAdImpressionPropertyPlacementID];
+    NSString *currency = [dict objectForKey:SEAdImpressionPropertyCurrency];
+    
+    NSNumber *adType = [dict objectForKey:SEAdImpressionPropertyAdType];
+    NSNumber *ecpm = [dict objectForKey:SEAdImpressionPropertyEcpm];
+    NSString *mediationPlatform = [dict objectForKey:SEAdImpressionPropertyMediationPlatform];
+    NSNumber *rendered = [dict objectForKey:SEAdImpressionPropertyRendered];
+    NSDictionary *customProperties = [dict objectForKey:@"_customProperties"];
+
+    SEAdImpressionEventAttribute *attribute = [[SEAdImpressionEventAttribute alloc] init];
+    attribute.adType = [adType integerValue];
+    attribute.adNetworkPlatform = adNetworkPlatform;
+    attribute.adNetworkAppID = adNetworkAppID;
+    attribute.adNetworkPlacementID = adNetworkPlacementID;
+    attribute.currency = currency;
+    attribute.mediationPlatform = mediationPlatform;
+    attribute.ecpm = [ecpm doubleValue];
+    if (rendered) {
+        attribute.rendered = [rendered boolValue];
+    }
+    attribute.customProperties = customProperties;
+    return attribute;
+
+}
+
+
+static SEAdClickEventAttribute *buildAdClickAttribute(const char *adClickAttribute) {
+    
+    NSString *jsonString = [NSString stringWithUTF8String:adClickAttribute];
+    NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *error = nil;
+    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    
+    if (error) {
+        NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data", jsonString];
+        NSLog(@"trackAdClickWithAttributes, error :%@", msg);
+        return nil;
+    }
+
+    NSString *adNetworkPlatform = [dict objectForKey:SEAdImpressionPropertyAdPlatform];
+    NSNumber *adType = [dict objectForKey:SEAdImpressionPropertyAdType];
+    NSString *adNetworkPlacementID = [dict objectForKey:SEAdImpressionPropertyPlacementID];
+    NSString *mediationPlatform = [dict objectForKey:SEAdImpressionPropertyMediationPlatform];
+    NSDictionary *customProperties = [dict objectForKey:@"_customProperties"];
+    
+    SEAdClickEventAttribute *attribute = [[SEAdClickEventAttribute alloc] init];
+    attribute.adType = [adType integerValue];
+    attribute.adNetworkPlatform = adNetworkPlatform;
+    attribute.adNetworkPlacementID = adNetworkPlacementID;
+    attribute.mediationPlatform = mediationPlatform;
+    attribute.customProperties = customProperties;
+    
+    return attribute;
+}
+
+static SERegisterEventAttribute *buildRegisterAttribute(const char *registerAttribute) {
+    
+    NSString *jsonString = [NSString stringWithUTF8String:registerAttribute];
+    NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *error = nil;
+    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    
+    if (error) {
+        NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data", jsonString];
+        NSLog(@"trackRegisterWithAttributes, error :%@", msg);
+        return nil;
+    }
+
+    NSString *type = [dict objectForKey:SERegisterPropertyType];
+    NSString *status = [dict objectForKey:SERegisterPropertyStatus];
+    NSDictionary *customProperties = [dict objectForKey:@"_customProperties"];
+    
+    SERegisterEventAttribute *attribute = [[SERegisterEventAttribute alloc] init];
+    attribute.registerType = type;
+    attribute.registerStatus = status;
+    attribute.customProperties = customProperties;
+    
+    return attribute;
+
+}
+static SELoginEventAttribute *buildLoginAttribute(const char *loginAttribute) {
+    
+    NSString *jsonString = [NSString stringWithUTF8String:loginAttribute];
+    NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *error = nil;
+    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    
+    if (error) {
+        NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data", jsonString];
+        NSLog(@"trackLoginWithAttributes, error :%@", msg);
+        return nil;
+    }
+
+    NSString *type = [dict objectForKey:SELoginPropertyType];
+    NSString *status = [dict objectForKey:SELoginPropertyStatus];
+    NSDictionary *customProperties = [dict objectForKey:@"_customProperties"];
+    
+    SELoginEventAttribute *attribute = [[SELoginEventAttribute alloc] init];
+    attribute.loginType = type;
+    attribute.loginStatus = status;
+    attribute.customProperties = customProperties;
+
+    return attribute;
+}
+static SEOrderEventAttribute *buildOrderAttribute(const char *orderAttribute) {
+    
+    NSString *jsonString = [NSString stringWithUTF8String:orderAttribute];
+    NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *error = nil;
+    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    
+    if (error) {
+        NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data", jsonString];
+        NSLog(@"trackOrderWithAttributes, error :%@", msg);
+        return nil;
+    }
+
+    NSString *orderID = [dict objectForKey:SEOrderPropertyID];
+    NSNumber *payAmount = [dict objectForKey:SEOrderPropertyPayAmount];
+    NSString *currencyType = [dict objectForKey:SEOrderPropertyCurrencyType];
+    NSString *payType = [dict objectForKey:SEOrderPropertyPayType];
+    NSString *status = [dict objectForKey:SEOrderPropertyStatus];
+    NSDictionary *customProperties = [dict objectForKey:@"_customProperties"];
+    
+    SEOrderEventAttribute *attribute = [[SEOrderEventAttribute alloc] init];
+    attribute.orderID = orderID;
+    attribute.payAmount = [payAmount doubleValue];
+    attribute.currencyType = currencyType;
+    attribute.payType = payType;
+    attribute.status = status;
+    attribute.customProperties = customProperties;
+
+    return attribute;
+}
+static SEAppAttrEventAttribute *buildAppAttrAttribute(const char *AppAttrAttribute) {
+    
+    NSString *jsonString = [NSString stringWithUTF8String:AppAttrAttribute];
+    NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *error = nil;
+    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    
+    if (error) {
+        NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data", jsonString];
+        NSLog(@"trackOrderWithAttributes, error :%@", msg);
+        return nil;
+    }
+
+    NSString *adNetwork         = [dict objectForKey:SEAppAttrPropertyAdNetwork];
+    NSString *subChannel        = [dict objectForKey:SEAppAttrPropertySubChannel];
+    NSString *adAccountID       = [dict objectForKey:SEAppAttrPropertyAdAccountID];
+    NSString *adAccountName     = [dict objectForKey:SEAppAttrPropertyAdAccountName];
+    NSString *adCampaignID      = [dict objectForKey:SEAppAttrPropertyAdCampaignID];
+    NSString *adCampaignName    = [dict objectForKey:SEAppAttrPropertyAdCampaignName];
+    NSString *adOfferID         = [dict objectForKey:SEAppAttrPropertyAdOfferID];
+    NSString *adOfferName       = [dict objectForKey:SEAppAttrPropertyAdOfferName];
+    NSString *adCreativeID      = [dict objectForKey:SEAppAttrPropertyAdCreativeID];
+    NSString *adCreativeName    = [dict objectForKey:SEAppAttrPropertyAdCreativeName];
+    NSString *attributionPlatform = [dict objectForKey:SEAppAttrPropertyAttributionPlatform];
+
+    NSDictionary *customProperties  = [dict objectForKey:@"_customProperties"];
+
+    SEAppAttrEventAttribute *appAttr = [[SEAppAttrEventAttribute alloc] init];
+    appAttr.adNetwork = adNetwork;
+    appAttr.subChannel = subChannel;
+    appAttr.adAccountID = adAccountID;
+    appAttr.adAccountName = adAccountName;
+    appAttr.adCampaignID = adCampaignID;
+    appAttr.adCampaignName = adCampaignName;
+    appAttr.adOfferID = adOfferID;
+    appAttr.adOfferName = adOfferName;
+    appAttr.adCreativeID = adCreativeID;
+    appAttr.adCreativeName = adCreativeName;
+    appAttr.attributionPlatform = attributionPlatform;
+
+    appAttr.customProperties = customProperties;
+    
+    return appAttr;
+}
+
+static SECustomEventAttribute *buildCustomEventAttribute(const char *customAttribute) {
+    
+    NSString *jsonString = [NSString stringWithUTF8String:customAttribute];
+    NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *error = nil;
+    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    
+    if (error) {
+        NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data", jsonString];
+        NSLog(@"trackCustomWithAttributes, error :%@", msg);
+        return nil;
+    }
+
+    NSString *eventName             = [dict objectForKey:@"_custom_event_name"];
+    NSDictionary *customProperties  = [dict objectForKey:@"_customProperties"];
+
+    SECustomEventAttribute *attribute = [[SECustomEventAttribute alloc] init];
+    attribute.eventName = eventName;
+    attribute.customProperties = customProperties;
+    
+    return attribute;
+}
 
 extern "C" {
 
@@ -91,9 +364,8 @@ void __iOSSolarEngineSDKPreInit(const char * appKey, const char * SEUserId) {
  
     NSLog(@"__iOSSolarEngineSDKPreInit called");
     NSString *_appKey = [NSString stringWithUTF8String:appKey];
-    NSString *_SEUserId = [NSString stringWithUTF8String:SEUserId];
     
-    [[SolarEngineSDK sharedInstance] preInitWithAppKey:_appKey userId:_SEUserId];
+    [[SolarEngineSDK sharedInstance] preInitWithAppKey:_appKey];
 
 }
 
@@ -197,6 +469,55 @@ void __iOSSolarEngineSDKTrack(const char *eventName, const char *attributes)
     [[SolarEngineSDK sharedInstance] track:_eventName withProperties:dict];
 }
 
+
+void __iOSSolarEngineSDKTrackFirstEventWithAttributes(const char *firstEventAttribute) {
+    
+    NSLog(@"__iOSSolarEngineSDKTrackFirstEventWithAttributes called");
+
+    NSString *jsonString = [NSString stringWithUTF8String:firstEventAttribute];
+    NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+
+    NSError *error = nil;
+    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    if (error) {
+        NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data", jsonString];
+        NSLog(@"TrackFirstEventWithAttributes, error :%@",msg);
+        return;
+    }
+    
+    NSString *eventType = [dict objectForKey:SEKeyFlutterEventType];
+    NSString *first_event_check_id  =  [dict objectForKey:@"_first_event_check_id"];
+
+    SEEventBaseAttribute *attribute = nil;
+    
+    if ([eventType isEqualToString:SEKeyFlutterEventNameIAP]) {
+        attribute = buildIAPAttribute(firstEventAttribute);
+    } else if ([eventType isEqualToString:SEKeyFlutterEventNameAdImpresstion]) {
+        attribute = buildAdImpressionAttribute(firstEventAttribute);
+    } else if ([eventType isEqualToString:SEKeyFlutterEventNameAdClick]) {
+        attribute = buildAdClickAttribute(firstEventAttribute);
+    } else if ([eventType isEqualToString:SEKeyFlutterEventNameAppAttr]) {
+        attribute = buildAppAttrAttribute(firstEventAttribute);
+    } else if ([eventType isEqualToString:SEKeyFlutterEventNameRegister]) {
+        attribute = buildRegisterAttribute(firstEventAttribute);
+    } else if ([eventType isEqualToString:SEKeyFlutterEventNameLogin]) {
+        attribute = buildLoginAttribute(firstEventAttribute);
+    } else if ([eventType isEqualToString:SEKeyFlutterEventNameOrder]) {
+        attribute = buildOrderAttribute(firstEventAttribute);
+    } else if ([eventType isEqualToString:SEKeyFlutterEventNameCustom]) {
+        attribute = buildCustomEventAttribute(firstEventAttribute);
+    }
+
+    if (attribute) {
+        if ([first_event_check_id isKindOfClass:NSString.class]) {
+            attribute.firstCheckId = first_event_check_id;
+        }
+        [[SolarEngineSDK sharedInstance] trackFirstEvent:attribute];
+    } else {
+        NSLog(@"TrackFirstEventWithAttributes attribute is nil");
+    }
+}
+
 void __iOSSolarEngineSDKTrackIAPWithAttributes(const char *IAPAttribute)
 {
     NSString *jsonString = [NSString stringWithUTF8String:IAPAttribute];
@@ -210,29 +531,7 @@ void __iOSSolarEngineSDKTrackIAPWithAttributes(const char *IAPAttribute)
         return;
     }
 
-    NSString *productID     = [dict objectForKey:SEIAPEventProductID];
-    NSString *productName   = [dict objectForKey:SEIAPEventProductName];
-    NSString *orderId       = [dict objectForKey:SEIAPEventOrderID];
-    NSString *currencyType  = [dict objectForKey:SEIAPEventCurrency];
-    NSString *payType       = [dict objectForKey:SEIAPEventPayType];
-    NSString *failReason    = [dict objectForKey:SEIAPEventFailReason];
-    
-    NSNumber *payStatus    = [dict objectForKey:SEIAPEventPaystatus];
-    NSNumber *productCount  = [dict objectForKey:SEIAPEventProductCount];
-    NSNumber *payAmount     = [dict objectForKey:SEIAPEventProductPayAmount];
-    NSDictionary *customProperties = [dict objectForKey:@"_customProperties"];
-
-    SEIAPEventAttribute *attribute = [[SEIAPEventAttribute alloc] init];
-    attribute.productID = productID;
-    attribute.productName = productName;
-    attribute.orderId = orderId;
-    attribute.currencyType = currencyType;
-    attribute.payType = payType;
-    attribute.payStatus = (SolarEngineIAPStatus)[payStatus integerValue];
-    attribute.failReason = failReason;
-    attribute.payAmount = [payAmount doubleValue];
-    attribute.productCount = [productCount integerValue];
-    attribute.customProperties = customProperties;
+    SEIAPEventAttribute *attribute = buildIAPAttribute(IAPAttribute);
     [[SolarEngineSDK sharedInstance] trackIAPWithAttributes:attribute];
 }
 
@@ -249,29 +548,7 @@ void __iOSSolarEngineSDKTrackAdImpressionWithAttributes(const char *adImpression
         return;
     }
 
-    NSString *adNetworkPlatform = [dict objectForKey:SEAdImpressionPropertyAdPlatform];
-    NSString *adNetworkAppID = [dict objectForKey:SEAdImpressionPropertyAppID];
-    NSString *adNetworkPlacementID = [dict objectForKey:SEAdImpressionPropertyPlacementID];
-    NSString *currency = [dict objectForKey:SEAdImpressionPropertyCurrency];
-    
-    NSNumber *adType = [dict objectForKey:SEAdImpressionPropertyAdType];
-    NSNumber *ecpm = [dict objectForKey:SEAdImpressionPropertyEcpm];
-    NSString *mediationPlatform = [dict objectForKey:SEAdImpressionPropertyMediationPlatform];
-    NSNumber *rendered = [dict objectForKey:SEAdImpressionPropertyRendered];
-    NSDictionary *customProperties = [dict objectForKey:@"_customProperties"];
-
-    SEAdImpressionEventAttribute *attribute = [[SEAdImpressionEventAttribute alloc] init];
-    attribute.adType = [adType integerValue];
-    attribute.adNetworkPlatform = adNetworkPlatform;
-    attribute.adNetworkAppID = adNetworkAppID;
-    attribute.adNetworkPlacementID = adNetworkPlacementID;
-    attribute.currency = currency;
-    attribute.mediationPlatform = mediationPlatform;
-    attribute.ecpm = [ecpm doubleValue];
-    if (rendered) {
-        attribute.rendered = [rendered boolValue];
-    }
-    attribute.customProperties = customProperties;
+    SEAdImpressionEventAttribute *attribute = buildAdImpressionAttribute(adImpressionAttribute);
     [[SolarEngineSDK sharedInstance] trackAdImpressionWithAttributes:attribute];
 }
 
@@ -286,20 +563,8 @@ void __iOSSolarEngineSDKTrackAdClickWithAttributes(const char *adClickAttribute)
         NSLog(@"trackAdClickWithAttributes, error :%@", msg);
         return;
     }
-
-    NSString *adNetworkPlatform = [dict objectForKey:SEAdImpressionPropertyAdPlatform];
-    NSNumber *adType = [dict objectForKey:SEAdImpressionPropertyAdType];
-    NSString *adNetworkPlacementID = [dict objectForKey:SEAdImpressionPropertyPlacementID];
-    NSString *mediationPlatform = [dict objectForKey:SEAdImpressionPropertyMediationPlatform];
-    NSDictionary *customProperties = [dict objectForKey:@"_customProperties"];
     
-    SEAdClickEventAttribute *attribute = [[SEAdClickEventAttribute alloc] init];
-    attribute.adType = [adType integerValue];
-    attribute.adNetworkPlatform = adNetworkPlatform;
-    attribute.adNetworkPlacementID = adNetworkPlacementID;
-    attribute.mediationPlatform = mediationPlatform;
-    attribute.customProperties = customProperties;
-    
+    SEAdClickEventAttribute *attribute = buildAdClickAttribute(adClickAttribute);
     [[SolarEngineSDK sharedInstance] trackAdClickWithAttributes:attribute];
 }
 
@@ -315,14 +580,7 @@ void __iOSSolarEngineSDKTrackRegisterWithAttributes(const char *registerAttribut
         return;
     }
 
-    NSString *type = [dict objectForKey:SERegisterPropertyType];
-    NSString *status = [dict objectForKey:SERegisterPropertyStatus];
-    NSDictionary *customProperties = [dict objectForKey:@"_customProperties"];
-    
-    SERegisterEventAttribute *attribute = [[SERegisterEventAttribute alloc] init];
-    attribute.registerType = type;
-    attribute.registerStatus = status;
-    attribute.customProperties = customProperties;
+    SERegisterEventAttribute *attribute = buildRegisterAttribute(registerAttribute);
     [[SolarEngineSDK sharedInstance] trackRegisterWithAttributes:attribute];
 }
 
@@ -338,14 +596,7 @@ void __iOSSolarEngineSDKTrackLoginWithAttributes(const char *loginAttribute) {
         return;
     }
 
-    NSString *type = [dict objectForKey:SELoginPropertyType];
-    NSString *status = [dict objectForKey:SELoginPropertyStatus];
-    NSDictionary *customProperties = [dict objectForKey:@"_customProperties"];
-    
-    SELoginEventAttribute *attribute = [[SELoginEventAttribute alloc] init];
-    attribute.loginType = type;
-    attribute.loginStatus = status;
-    attribute.customProperties = customProperties;
+    SELoginEventAttribute *attribute = buildLoginAttribute(loginAttribute);
     [[SolarEngineSDK sharedInstance] trackLoginWithAttributes:attribute];
 }
 
@@ -361,20 +612,7 @@ void __iOSSolarEngineSDKTrackOrderWithAttributes(const char *orderAttribute) {
         return;
     }
 
-    NSString *orderID = [dict objectForKey:SEOrderPropertyID];
-    NSNumber *payAmount = [dict objectForKey:SEOrderPropertyPayAmount];
-    NSString *currencyType = [dict objectForKey:SEOrderPropertyCurrencyType];
-    NSString *payType = [dict objectForKey:SEOrderPropertyPayType];
-    NSString *status = [dict objectForKey:SEOrderPropertyStatus];
-    NSDictionary *customProperties = [dict objectForKey:@"_customProperties"];
-    
-    SEOrderEventAttribute *attribute = [[SEOrderEventAttribute alloc] init];
-    attribute.orderID = orderID;
-    attribute.payAmount = [payAmount doubleValue];
-    attribute.currencyType = currencyType;
-    attribute.payType = payType;
-    attribute.status = status;
-    attribute.customProperties = customProperties;
+    SEOrderEventAttribute *attribute = buildOrderAttribute(orderAttribute);
     [[SolarEngineSDK sharedInstance] trackOrderWithAttributes:attribute];
 }
 
@@ -390,41 +628,8 @@ void __iOSSolarEngineSDKTrackAppAttrWithAttributes(const char *AppAttrAttribute)
         return;
     }
 
-    NSString *adNetwork         = [dict objectForKey:SEAppAttrPropertyAdNetwork];
-    NSString *subChannel        = [dict objectForKey:SEAppAttrPropertySubChannel];
-    NSString *adAccountID       = [dict objectForKey:SEAppAttrPropertyAdAccountID];
-    NSString *adAccountName     = [dict objectForKey:SEAppAttrPropertyAdAccountName];
-    NSString *adCampaignID      = [dict objectForKey:SEAppAttrPropertyAdCampaignID];
-    NSString *adCampaignName    = [dict objectForKey:SEAppAttrPropertyAdCampaignName];
-    NSString *adOfferID         = [dict objectForKey:SEAppAttrPropertyAdOfferID];
-    NSString *adOfferName       = [dict objectForKey:SEAppAttrPropertyAdOfferName];
-    NSString *adCreativeID      = [dict objectForKey:SEAppAttrPropertyAdCreativeID];
-    NSString *adCreativeName    = [dict objectForKey:SEAppAttrPropertyAdCreativeName];
-    NSString *attributionPlatform = [dict objectForKey:SEAppAttrPropertyAttributionPlatform];
-
-    NSDictionary *customProperties  = [dict objectForKey:@"_customProperties"];
-
-    SEAppAttrEventAttribute *appAttr = [[SEAppAttrEventAttribute alloc] init];
-    appAttr.adNetwork = adNetwork;
-    appAttr.subChannel = subChannel;
-    appAttr.adAccountID = adAccountID;
-    appAttr.adAccountName = adAccountName;
-    appAttr.adCampaignID = adCampaignID;
-    appAttr.adCampaignName = adCampaignName;
-    appAttr.adOfferID = adOfferID;
-    appAttr.adOfferName = adOfferName;
-    appAttr.adCreativeID = adCreativeID;
-    appAttr.adCreativeName = adCreativeName;
-    appAttr.attributionPlatform = attributionPlatform;
-
-    appAttr.customProperties = customProperties;
-    
-
+    SEAppAttrEventAttribute *appAttr = buildAppAttrAttribute(AppAttrAttribute);
     [[SolarEngineSDK sharedInstance] trackAppAttrWithAttributes:appAttr];
-
-    
-    
-    
 }
 
 

@@ -1490,6 +1490,7 @@ namespace SolarEngine
                 SolarEngineAndroidSDKObject.CallStatic("trackFirstEvent",attributesJSONString);
             #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 //todo ios support
+                __iOSSolarEngineSDKTrackFirstEventWithAttributes(attributesJSONString);
             #else
 
             #endif
@@ -2053,6 +2054,9 @@ namespace SolarEngine
 
             [DllImport("__Internal")]
             private static extern void __iOSSolarEngineSDKTrackAppAttrWithAttributes(string attributes);       
+
+            [DllImport("__Internal")]
+            private static extern void __iOSSolarEngineSDKTrackFirstEventWithAttributes(string attributes);
 
             [DllImport("__Internal")]
             private static extern void __iOSSolarEngineSDKSetVisitorID(string visitorID);
