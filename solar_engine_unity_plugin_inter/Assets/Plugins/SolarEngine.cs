@@ -1328,6 +1328,8 @@ namespace SolarEngine
             {
                 // 处理 AppAttributes 类型的逻辑
                 attributesDict.Add(SolarEngine.Analytics.SEConstant_EVENT_TYPE, SolarEngine.Analytics.SEConstant_AppAttr);
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_AppAttr_Ad_Network, attributes.ad_network);
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_AppAttr_AttributionPlatform, appAttributes.attribution_platform);
                 if (appAttributes.sub_channel != null)
                 {
                     attributesDict.Add(SolarEngine.Analytics.SEConstant_AppAttr_Sub_Channel, appAttributes.sub_channel);
