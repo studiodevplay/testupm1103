@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
-using System.Text;
 using System.Runtime.InteropServices;
-using Newtonsoft.Json;
+using System.Text;
+
 using AOT;
+
+using Newtonsoft.Json;
+
+using UnityEngine;
 
 namespace SolarEngine
 {
@@ -762,9 +765,44 @@ namespace SolarEngine
             UserDelete(deleteType);
         }
 
+        /// <summary>
+        /// 获取设备、用户相关信息'
+        /// <returns>设备、用户相关信息</returns>
+        /// </summary>
+        public static Dictionary<string, object> getPresetProperties()
+        {
+            return GetPresetProperties();
+        }
+
 #region 
 
-        private static void PreInitSeSdk(string appKey)
+       private static Dictionary<string, object> GetPresetProperties()
+        {
+
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: Init error");
+            return null;
+#elif UNITY_ANDROID
+            string presetProperties = SolarEngineAndroidSDK.CallStatic<string>("getPresetProperties");
+            Debug.Log("SEUunity-presetProperties: " + presetProperties);
+            if(presetProperties != null){
+                try{
+                    return JsonConvert.DeserializeObject<Dictionary<string, object>>(presetProperties);
+                } catch (Exception e) {
+
+                }
+            }
+            return null;
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+            //todo ios
+            return null;
+#else
+
+#endif
+        } 
+
+       
+       private static void PreInitSeSdk(string appKey)
         {
 
 #if UNITY_EDITOR
@@ -1255,8 +1293,6 @@ namespace SolarEngine
 #endif
 
 
-
-
         }
 
         private static void TrackFirstEvent(SEBaseAttributes attributes)
@@ -1328,7 +1364,7 @@ namespace SolarEngine
             {
                 // 处理 AppAttributes 类型的逻辑
                 attributesDict.Add(SolarEngine.Analytics.SEConstant_EVENT_TYPE, SolarEngine.Analytics.SEConstant_AppAttr);
-                attributesDict.Add(SolarEngine.Analytics.SEConstant_AppAttr_Ad_Network, attributes.ad_network);
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_AppAttr_Ad_Network, appAttributes.ad_network);
                 attributesDict.Add(SolarEngine.Analytics.SEConstant_AppAttr_AttributionPlatform, appAttributes.attribution_platform);
                 if (appAttributes.sub_channel != null)
                 {

@@ -21,6 +21,9 @@ namespace SolarEngine
         private FetchRemoteConfigCallback fetchRemoteConfigCallback_private = null;
         public delegate void FetchRemoteConfigCallback(string result);
 
+        private FetchAllRemoteConfigCallback fetchAllRemoteConfigCallback_private = null;
+        public delegate void FetchAllRemoteConfigCallback(Dictionary<string, object> result);
+
         private static List<Action> waitingTaskList = new List<Action>();
         private static List<Action> executingTaskList = new List<Action>();
 
@@ -117,6 +120,16 @@ namespace SolarEngine
         }
 
         /// <summary>
+        /// 同步获取所有参数配置
+        /// 优先从缓存配置查询，查询不到则从默认配置查询，都查询不到则返回nil
+        /// <returns>Dictionary 字典，代表所有参数配置</returns>
+        /// </summary>
+        public Dictionary<string, object> FastFetchRemoteConfig()
+        {
+            return SESDKFastFetchAllRemoteConfig();
+        }
+
+        /// <summary>
         /// 异步获取参数配置，回调方法：OnRemoteConfigFetchCompletion
         /// 请求服务端配置后与本地缓存配置合并，然后从缓存配置查询，查询不到则从默认配置中查询，都查询不到则返回nil 
         /// </summary>
@@ -126,6 +139,17 @@ namespace SolarEngine
         {
             SESDKRemoteConfig.Instance.fetchRemoteConfigCallback_private = callback;
             SESDKAsyncFetchRemoteConfig(key);
+        }
+
+        /// <summary>
+        /// 异步获取所有参数配置
+        /// 请求服务端配置后与本地缓存配置合并，然后从缓存配置查询，查询不到则从默认配置中查询，都查询不到则返回nil 
+        /// </summary>
+        /// <param name="callback">参数配置异步回调</param>
+        public void AsyncFetchRemoteConfig(FetchAllRemoteConfigCallback callback)
+        {
+            SESDKRemoteConfig.Instance.fetchAllRemoteConfigCallback_private = callback;
+            SESDKAsyncFetchAllRemoteConfig();
         }
 
         private void SESDKSetRemoteDefaultConfig(Dictionary<string, object>[] defaultConfig)
@@ -196,6 +220,7 @@ namespace SolarEngine
 
         }
 
+       
         private string SESDKFastFetchRemoteConfig(string key)
         {
             if (key == null)
@@ -216,6 +241,40 @@ namespace SolarEngine
 #endif
         }
 
+        private Dictionary<string, object> SESDKFastFetchAllRemoteConfig()
+        {
+
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: SESDKFastFetchRemoteConfig error");
+            return null;
+#elif UNITY_ANDROID
+            string result = SeRemoteConfigAndroidSDK.CallStatic<string>("fastFetchRemoteConfig");
+            try{
+                return JsonConvert.DeserializeObject<Dictionary<string, object>>(result);
+            }catch(Exception e){
+
+            }
+            return null;
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+            // ios todo
+#else
+
+#endif
+        }
+
+         private void SESDKAsyncFetchAllRemoteConfig()
+        {
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: SESDKAsyncFetchAllRemoteConfig error");
+#elif UNITY_ANDROID
+             SeRemoteConfigAndroidSDK.CallStatic("asyncFetchRemoteConfig",new OnRemoteConfigReceivedAllData());
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+            //todo  ios support
+#else
+
+#endif
+        }
+
         private void SESDKAsyncFetchRemoteConfig(string key)
         {
             if (key == null)
@@ -227,7 +286,7 @@ namespace SolarEngine
 #if UNITY_EDITOR
             Debug.Log("Unity Editor: SESDKAsyncFetchRemoteConfig error");
 #elif UNITY_ANDROID
-             SeRemoteConfigAndroidSDK.CallStatic("ansycFetchRemoteConfig",key,new OnRemoteConfigReceivedData());
+             SeRemoteConfigAndroidSDK.CallStatic("asyncFetchRemoteConfig",key,new OnRemoteConfigReceivedData());
 #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
             __iOSSESDKAsyncFetchRemoteConfig(key,OnRemoteConfigiOSReceivedData);
 #else
@@ -273,6 +332,35 @@ namespace SolarEngine
 
     }
 
+#if UNITY_ANDROID && !UNITY_EDITOR
+    private sealed class OnRemoteConfigReceivedAllData: AndroidJavaProxy
+    {
+        public OnRemoteConfigReceivedAllData():base("com.reyun.se.remote.config.unity.bridge.OnRemoteConfigReceivedAllDataForUnity")
+        {
+            
+        }
+        public void onResultForUnity(String result)
+        {
+            Dictionary<string, object> dict = JsonConvert.DeserializeObject<Dictionary<string, object>>(result);
+            if(dict != null){
+                OnFetchAllRemoteConfigCallback(dict);
+            }
+        }
+    }
+#endif
+
+    private static void OnFetchAllRemoteConfigCallback(Dictionary<string, object> result)
+    {
+
+        SESDKRemoteConfig.PostTask(() =>
+        {
+            if (SESDKRemoteConfig.Instance.fetchAllRemoteConfigCallback_private != null)
+            {
+                SESDKRemoteConfig.Instance.fetchAllRemoteConfigCallback_private.Invoke(result);
+            }
+        });
+
+    }
 
 
 
