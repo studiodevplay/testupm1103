@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 #import <objc/runtime.h>
 
-#define SERCSDKVersion @"1.2.5.3"
+#define SERCSDKVersion @"1.2.6.0"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -70,6 +70,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (id)fastFetchRemoteConfig:(NSString *)key;
 
 /**
+ * 同步获取所有参数配置
+ * 包含默认配置和缓存配置
+ */
+- (NSDictionary *)fastFetchRemoteConfig ;
+
+
+/**
  * 异步获取参数配置
  * 请求服务端配置后与本地缓存配置合并，然后从缓存配置查询，查询不到则从默认配置中查询，都查询不到则返回nil
  *
@@ -77,6 +84,15 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)asyncFetchRemoteConfig:(NSString *)key
              completionHandler:(void (^)(id data))completionHandler;
+
+
+/**
+ * 异步获取所有参数配置
+ * 请求服务端配置后与本地缓存配置合并，然后从缓存配置查询，查询不到则从默认配置中查询，都查询不到则返回nil
+ *
+ */
+- (void)asyncFetchRemoteConfigWithCompletionHandler:(void (^)(NSDictionary *dict))responseHandle;
+
 
 /**
  *  设置debug模式，debug模式输出详细日志

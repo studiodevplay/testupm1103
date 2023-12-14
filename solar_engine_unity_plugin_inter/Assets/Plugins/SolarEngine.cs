@@ -794,15 +794,22 @@ namespace SolarEngine
             }
             return null;
 #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
-            //todo ios
+            string presetProperties =  __iOSSolarEngineSDKGetPresetProperties();
+            if(presetProperties != null){
+                try{
+                    return JsonConvert.DeserializeObject<Dictionary<string, object>>(presetProperties);
+                } catch (Exception e) {
+
+                }
+            }
             return null;
 #else
 
 #endif
-        } 
+        }
 
-       
-       private static void PreInitSeSdk(string appKey)
+
+        private static void PreInitSeSdk(string appKey)
         {
 
 #if UNITY_EDITOR
@@ -2110,6 +2117,9 @@ namespace SolarEngine
 
             [DllImport("__Internal")]
             private static extern string __iOSSolarEngineSDKGetDistinctId();
+
+            [DllImport("__Internal")]
+            private static extern string __iOSSolarEngineSDKGetPresetProperties();
 
             [DllImport("__Internal")]
             private static extern void __iOSSolarEngineSDKLogout();

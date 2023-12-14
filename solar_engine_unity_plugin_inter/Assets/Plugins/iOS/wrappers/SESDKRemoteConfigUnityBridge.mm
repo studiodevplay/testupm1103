@@ -92,6 +92,14 @@ extern "C" {
         NSString *keyString = [NSString stringWithUTF8String:key];
         id data = [[SESDKRemoteConfig sharedInstance] fastFetchRemoteConfig:keyString];
         NSString *msg = [NSString stringWithFormat:@"%@", data];
+        
+        if ([data isKindOfClass:[NSDictionary class]] || [data isKindOfClass:[NSArray class]]) {
+            NSData *d = [NSJSONSerialization dataWithJSONObject:data options:0 error:nil];
+            if (d) {
+                msg = [[NSString alloc] initWithData:d encoding:NSUTF8StringEncoding];
+            }
+        }
+        
         return reteinStr([msg cStringUsingEncoding:NSUTF8StringEncoding]);
     }
     
@@ -99,7 +107,44 @@ extern "C" {
         NSString *keyString = [NSString stringWithUTF8String:key];
         [[SESDKRemoteConfig sharedInstance] asyncFetchRemoteConfig:keyString completionHandler:^(id  _Nonnull data) {
             NSString *msg = [NSString stringWithFormat:@"%@", data];
+            if ([data isKindOfClass:[NSDictionary class]] || [data isKindOfClass:[NSArray class]]) {
+                NSData *d = [NSJSONSerialization dataWithJSONObject:data options:0 error:nil];
+                if (d) {
+                    msg = [[NSString alloc] initWithData:d encoding:NSUTF8StringEncoding];
+                }
+            }
             callback([msg cStringUsingEncoding:NSUTF8StringEncoding]);
         }];
     }
+
+    char * __iOSSESDKFastFetchAllRemoteConfig() {
+        NSDictionary *dict = [[SESDKRemoteConfig sharedInstance] fastFetchRemoteConfig];
+        NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
+        if (data == nil) {
+            return NULL;
+        }
+        NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        return reteinStr([dataString cStringUsingEncoding:NSUTF8StringEncoding]);
+    }
+
+    void __iOSSESDKAsyncFetchAllRemoteConfig(FetchRemoteConfigCallback callback) {
+                
+        [[SESDKRemoteConfig sharedInstance] asyncFetchRemoteConfigWithCompletionHandler:^(NSDictionary * _Nonnull dict) {
+            
+            if (dict) {
+                NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
+                if (data != nil) {
+                    NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                    callback(reteinStr([dataString cStringUsingEncoding:NSUTF8StringEncoding]));
+                } else {
+                    callback(NULL);
+                }
+            } else {
+                callback(NULL);
+            }
+
+
+        }];
+    }
+
 }

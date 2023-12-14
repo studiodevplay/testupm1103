@@ -256,20 +256,26 @@ namespace SolarEngine
             }
             return null;
 #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
-            // ios todo
+            string result = __iOSSESDKFastFetchAllRemoteConfig();
+            try{
+                return JsonConvert.DeserializeObject<Dictionary<string, object>>(result);
+            }catch(Exception e){
+
+            }
+            return null;
 #else
 
 #endif
         }
 
-         private void SESDKAsyncFetchAllRemoteConfig()
+        private void SESDKAsyncFetchAllRemoteConfig()
         {
 #if UNITY_EDITOR
             Debug.Log("Unity Editor: SESDKAsyncFetchAllRemoteConfig error");
 #elif UNITY_ANDROID
              SeRemoteConfigAndroidSDK.CallStatic("asyncFetchRemoteConfig",new OnRemoteConfigReceivedAllData());
 #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
-            //todo  ios support
+            __iOSSESDKAsyncFetchAllRemoteConfig(OnRemoteConfigiOSReceivedAllData);
 #else
 
 #endif
@@ -301,7 +307,20 @@ namespace SolarEngine
     private static void OnRemoteConfigiOSReceivedData(string result)
     {
         OnFetchRemoteConfigCallback(result);
-     }
+    }
+
+    //回调函数，必须MonoPInvokeCallback并且是static
+    [MonoPInvokeCallback(typeof(FetchRemoteConfigCallback))]
+    private static void OnRemoteConfigiOSReceivedAllData(string result)
+    {
+
+            Dictionary<string, object> dict = null;
+            if (result != null) { 
+                dict = JsonConvert.DeserializeObject<Dictionary<string, object>>(result);
+            }
+            OnFetchAllRemoteConfigCallback(dict);
+
+    }
 #endif
 
 
@@ -319,7 +338,7 @@ namespace SolarEngine
     }
 #endif
 
-    private static void OnFetchRemoteConfigCallback(String result)
+        private static void OnFetchRemoteConfigCallback(String result)
     {
 
         SESDKRemoteConfig.PostTask(() =>
@@ -381,7 +400,13 @@ namespace SolarEngine
         private static extern string __iOSSESDKFastFetchRemoteConfig(string key);
 
         [DllImport("__Internal")]
+        private static extern string __iOSSESDKFastFetchAllRemoteConfig();
+
+        [DllImport("__Internal")]
         private static extern void __iOSSESDKAsyncFetchRemoteConfig(string key, FetchRemoteConfigCallback callBack);
+
+        [DllImport("__Internal")]
+        private static extern void __iOSSESDKAsyncFetchAllRemoteConfig(FetchRemoteConfigCallback callBack);
 
 #endif
 

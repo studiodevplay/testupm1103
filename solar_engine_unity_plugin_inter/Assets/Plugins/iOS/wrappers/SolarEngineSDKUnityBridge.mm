@@ -651,6 +651,18 @@ char* __iOSSolarEngineSDKGetDistinctId(void) {
     return convertNSStringToCString(visitorID);
 }
 
+char* __iOSSolarEngineSDKGetPresetProperties(void){
+    NSDictionary *presetProperties = [[SolarEngineSDK sharedInstance] getPresetProperties];
+    
+    NSData *data = [NSJSONSerialization dataWithJSONObject:presetProperties options:0 error:nil];
+    if (data == nil) {
+        return NULL;
+    }
+    NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    
+    return convertNSStringToCString(dataString);
+}
+
 void __iOSSolarEngineSDKLoginWithAccountID(const char *accountID)
 {
     NSString *_accountID = [NSString stringWithUTF8String:accountID];
