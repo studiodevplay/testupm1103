@@ -237,7 +237,7 @@ namespace SolarEngine
 #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
             return __iOSSESDKFastFetchRemoteConfig(key);
 #else
-
+            return null;
 #endif
         }
 
@@ -264,7 +264,7 @@ namespace SolarEngine
             }
             return null;
 #else
-
+        return null;
 #endif
         }
 

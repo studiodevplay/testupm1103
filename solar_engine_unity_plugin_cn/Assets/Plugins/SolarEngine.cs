@@ -804,7 +804,7 @@ namespace SolarEngine
             }
             return null;
 #else
-
+            return null;
 #endif
         }
 
