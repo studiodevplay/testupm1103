@@ -9,8 +9,7 @@
 #import <SolarEngineSDK/SolarEngineSDK.h>
 #import <SESDKRemoteConfig/SESDKRemoteConfig.h>
 
-
-typedef void (*SEBridgeAttributionCallback)(int errorCode, const char * attributionData);
+typedef void (*SEBridgeCallback)(int errorCode, const char * data);
 
 NSString * const SEKeyFlutterEventType                                   = @"_event_type";
 
@@ -418,7 +417,7 @@ void __iOSSolarEngineSDKInit(const char * appKey, const char * SEUserId, const c
     [[SolarEngineSDK sharedInstance] startWithAppKey:_appKey userId:_SEUserId config:config];
 }
 
-void __iOSSESDKSetAttributionDataCallback(SEBridgeAttributionCallback callback) {
+void __iOSSESDKSetAttributionDataCallback(SEBridgeCallback callback) {
     
     [[SolarEngineSDK sharedInstance] setAttributionCallback:^(int code, NSDictionary * _Nullable attribution) {
             NSString *attData = nil;
@@ -428,7 +427,10 @@ void __iOSSESDKSetAttributionDataCallback(SEBridgeAttributionCallback callback) 
                     attData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
                 }
             }
+        
+        if (callback) {
             callback(code,convertNSStringToCString(attData));
+        }
     }];
 }
 
@@ -858,4 +860,40 @@ void __iOSSolarEngineSDKEventFinish(const char *eventJSONStr)
     [[SolarEngineSDK sharedInstance] eventFinish:_eventName properties:_attributes];
 }
 
+void __iOSSESDKupdatePostbackConversionValue(int conversionValue, SEBridgeCallback callback) {
+    
+    [[SolarEngineSDK sharedInstance] updatePostbackConversionValue:conversionValue completionHandler:^(NSError * _Nonnull error) {
+        if (callback) {
+            callback((int)error.code,convertNSStringToCString(error.description));
+        }
+    }];
+}
+
+void __iOSSESDKupdateConversionValueCoarseValue(int fineValue, const char *  coarseValue, SEBridgeCallback callback) {
+    
+    NSString *_coarseValue = nil;
+    if (coarseValue != NULL) {
+        _coarseValue = [NSString stringWithUTF8String:coarseValue];
+    }
+
+    [[SolarEngineSDK sharedInstance] updatePostbackConversionValue:fineValue coarseValue:_coarseValue completionHandler:^(NSError * _Nonnull error) {
+        if (callback) {
+            callback((int)error.code,convertNSStringToCString(error.description));
+        }
+    }];
+}
+
+void __iOSSESDKupdateConversionValueCoarseValueLockWindow(int fineValue, const char *  coarseValue, bool lockWindow, SEBridgeCallback callback) {
+    
+    NSString *_coarseValue = nil;
+    if (coarseValue != NULL) {
+        _coarseValue = [NSString stringWithUTF8String:coarseValue];
+    }
+    [[SolarEngineSDK sharedInstance] updatePostbackConversionValue:fineValue coarseValue:_coarseValue lockWindow:lockWindow completionHandler:^(NSError * _Nonnull error) {
+        if (callback) {
+            callback((int)error.code,convertNSStringToCString(error.description));
+        }
+    }];
+    
+}
 }

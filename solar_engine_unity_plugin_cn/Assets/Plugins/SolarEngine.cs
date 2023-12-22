@@ -292,10 +292,18 @@ namespace SolarEngine
     {
 
         private SEAttributionCallback attributionCallback_private = null;
-        public delegate void SEAttributionCallback(int code , Dictionary<string, object> attribution);
+        public delegate void SEAttributionCallback(int code, Dictionary<string, object> attribution);
 
 
-        public delegate void SEAttributionStringCallback(int code, string attributionString);
+        // only ios
+        public delegate void SKANUpdateCompletionHandler(int errorCode, String errorMsg);
+
+        private SKANUpdateCompletionHandler iosSKANUpdateCVCompletionHandler_private = null;
+        private SKANUpdateCompletionHandler iosSKANUpdateCVCoarseValueCompletionHandler_private = null;
+        private SKANUpdateCompletionHandler iosSKANUpdateCVCoarseValueLockWindowCompletionHandler_private = null;
+
+
+        public delegate void SEiOSStringCallback(int code, string dataString);
 
 
         private static List<Action> waitingTaskList = new List<Action>();
@@ -356,74 +364,74 @@ namespace SolarEngine
             executingTaskList.Clear();
         }
 
-        private static readonly string SEConstant_CHECK_ID                    = "_first_event_check_id";
-        private static readonly string SEConstant_EVENT_TYPE                  = "_event_type";
-
-        
-        private static readonly string SEConstant_CUSTOM_EVENT_NAME           = "_custom_event_name";
-        private static readonly string SEConstant_CUSTOM                      = "_custom_event";
-        private static readonly string SEConstant_Custom_CustomProperties     = "_customProperties";
-
-        private static readonly string SEConstant_IAP                         = "_appPur";
-        private static readonly string SEConstant_IAP_PName                   = "_product_name";
-        private static readonly string SEConstant_IAP_PID                     = "_product_id";
-        private static readonly string SEConstant_IAP_PCount                  = "_product_num";
-        private static readonly string SEConstant_IAP_Currency                = "_currency_type";
-        private static readonly string SEConstant_IAP_OrderId                 = "_order_id";
-        private static readonly string SEConstant_IAP_FailReason              = "_fail_reason";
-        private static readonly string SEConstant_IAP_PayType                 = "_pay_type";
-        private static readonly string SEConstant_IAP_Amount                  = "_pay_amount";
-        private static readonly string SEConstant_IAP_Paystatus               = "_pay_status";
-        private static readonly string SEConstant_IAP_CustomProperties        = "_customProperties";
-
-        private static readonly string SEConstant_IAI                         = "_appImp";
-        private static readonly string SEConstant_IAI_AdPlatform              = "_ad_platform";
-        private static readonly string SEConstant_IAI_MediationPlatform       = "_mediation_platform";
-        private static readonly string SEConstant_IAI_AdAppid                 = "_ad_appid";
-        private static readonly string SEConstant_IAI_AdId                    = "_ad_id";
-        private static readonly string SEConstant_IAI_AdType                  = "_ad_type";
-        private static readonly string SEConstant_IAI_AdEcpm                  = "_ad_ecpm";
-        private static readonly string SEConstant_IAI_CurrencyType            = "_currency_type";
-        private static readonly string SEConstant_IAI_IsRendered              = "_is_rendered";
-        private static readonly string SEConstant_IAI_CustomProperties        = "_customProperties";
-
-        private static readonly string SEConstant_AdClick                     = "_appClick";
-        private static readonly string SEConstant_AdClick_AdPlatform          = "_ad_platform";
-        private static readonly string SEConstant_AdClick_MediationPlatform   = "_mediation_platform";
-        private static readonly string SEConstant_AdClick_AdId                = "_ad_id";
-        private static readonly string SEConstant_AdClick_AdType              = "_ad_type";
-        private static readonly string SEConstant_AdClick_CustomProperties    = "_customProperties";
-
-        private static readonly string SEConstant_Register                    = "_appReg";
-        private static readonly string SEConstant_Register_Type               = "_reg_type";
-        private static readonly string SEConstant_Register_Status             = "_status";
-        private static readonly string SEConstant_Register_CustomProperties   = "_customProperties";
-
-        private static readonly string SEConstant_Login                       = "_appLogin";
-        private static readonly string SEConstant_Login_Type                  = "_login_type";
-        private static readonly string SEConstant_Login_Status                = "_status";
-        private static readonly string SEConstant_Login_CustomProperties      = "_customProperties";
-
-        private static readonly string SEConstant_Order                       = "_appOrder";
-        private static readonly string SEConstant_Order_ID                    = "_order_id";
-        private static readonly string SEConstant_Order_Pay_Amount            = "_pay_amount";
-        private static readonly string SEConstant_Order_Currency_Type         = "_currency_type";
-        private static readonly string SEConstant_Order_Pay_Type              = "_pay_type";
-        private static readonly string SEConstant_Order_Status                = "_status";
-        private static readonly string SEConstant_Order_CustomProperties      = "_customProperties";
+        private static readonly string SEConstant_CHECK_ID = "_first_event_check_id";
+        private static readonly string SEConstant_EVENT_TYPE = "_event_type";
 
 
-        private static readonly string SEConstant_AppAttr                     = "_appAttr";
-        private static readonly string SEConstant_AppAttr_Ad_Network          = "_adnetwork";
-        private static readonly string SEConstant_AppAttr_Sub_Channel         = "_sub_channel";
-        private static readonly string SEConstant_AppAttr_Ad_Account_ID       = "_adaccount_id";
-        private static readonly string SEConstant_AppAttr_Ad_Account_Name     = "_adaccount_name";
-        private static readonly string SEConstant_AppAttr_Ad_Campaign_ID      = "_adcampaign_id";
-        private static readonly string SEConstant_AppAttr_Ad_Campaign_Name    = "_adcampaign_name";
-        private static readonly string SEConstant_AppAttr_Ad_Offer_ID         = "_adoffer_id";
-        private static readonly string SEConstant_AppAttr_Ad_Offer_Name       = "_adoffer_name";
-        private static readonly string SEConstant_AppAttr_Ad_Creative_ID      = "_adcreative_id";
-        private static readonly string SEConstant_AppAttr_Ad_Creative_Name    = "_adcreative_name";
+        private static readonly string SEConstant_CUSTOM_EVENT_NAME = "_custom_event_name";
+        private static readonly string SEConstant_CUSTOM = "_custom_event";
+        private static readonly string SEConstant_Custom_CustomProperties = "_customProperties";
+
+        private static readonly string SEConstant_IAP = "_appPur";
+        private static readonly string SEConstant_IAP_PName = "_product_name";
+        private static readonly string SEConstant_IAP_PID = "_product_id";
+        private static readonly string SEConstant_IAP_PCount = "_product_num";
+        private static readonly string SEConstant_IAP_Currency = "_currency_type";
+        private static readonly string SEConstant_IAP_OrderId = "_order_id";
+        private static readonly string SEConstant_IAP_FailReason = "_fail_reason";
+        private static readonly string SEConstant_IAP_PayType = "_pay_type";
+        private static readonly string SEConstant_IAP_Amount = "_pay_amount";
+        private static readonly string SEConstant_IAP_Paystatus = "_pay_status";
+        private static readonly string SEConstant_IAP_CustomProperties = "_customProperties";
+
+        private static readonly string SEConstant_IAI = "_appImp";
+        private static readonly string SEConstant_IAI_AdPlatform = "_ad_platform";
+        private static readonly string SEConstant_IAI_MediationPlatform = "_mediation_platform";
+        private static readonly string SEConstant_IAI_AdAppid = "_ad_appid";
+        private static readonly string SEConstant_IAI_AdId = "_ad_id";
+        private static readonly string SEConstant_IAI_AdType = "_ad_type";
+        private static readonly string SEConstant_IAI_AdEcpm = "_ad_ecpm";
+        private static readonly string SEConstant_IAI_CurrencyType = "_currency_type";
+        private static readonly string SEConstant_IAI_IsRendered = "_is_rendered";
+        private static readonly string SEConstant_IAI_CustomProperties = "_customProperties";
+
+        private static readonly string SEConstant_AdClick = "_appClick";
+        private static readonly string SEConstant_AdClick_AdPlatform = "_ad_platform";
+        private static readonly string SEConstant_AdClick_MediationPlatform = "_mediation_platform";
+        private static readonly string SEConstant_AdClick_AdId = "_ad_id";
+        private static readonly string SEConstant_AdClick_AdType = "_ad_type";
+        private static readonly string SEConstant_AdClick_CustomProperties = "_customProperties";
+
+        private static readonly string SEConstant_Register = "_appReg";
+        private static readonly string SEConstant_Register_Type = "_reg_type";
+        private static readonly string SEConstant_Register_Status = "_status";
+        private static readonly string SEConstant_Register_CustomProperties = "_customProperties";
+
+        private static readonly string SEConstant_Login = "_appLogin";
+        private static readonly string SEConstant_Login_Type = "_login_type";
+        private static readonly string SEConstant_Login_Status = "_status";
+        private static readonly string SEConstant_Login_CustomProperties = "_customProperties";
+
+        private static readonly string SEConstant_Order = "_appOrder";
+        private static readonly string SEConstant_Order_ID = "_order_id";
+        private static readonly string SEConstant_Order_Pay_Amount = "_pay_amount";
+        private static readonly string SEConstant_Order_Currency_Type = "_currency_type";
+        private static readonly string SEConstant_Order_Pay_Type = "_pay_type";
+        private static readonly string SEConstant_Order_Status = "_status";
+        private static readonly string SEConstant_Order_CustomProperties = "_customProperties";
+
+
+        private static readonly string SEConstant_AppAttr = "_appAttr";
+        private static readonly string SEConstant_AppAttr_Ad_Network = "_adnetwork";
+        private static readonly string SEConstant_AppAttr_Sub_Channel = "_sub_channel";
+        private static readonly string SEConstant_AppAttr_Ad_Account_ID = "_adaccount_id";
+        private static readonly string SEConstant_AppAttr_Ad_Account_Name = "_adaccount_name";
+        private static readonly string SEConstant_AppAttr_Ad_Campaign_ID = "_adcampaign_id";
+        private static readonly string SEConstant_AppAttr_Ad_Campaign_Name = "_adcampaign_name";
+        private static readonly string SEConstant_AppAttr_Ad_Offer_ID = "_adoffer_id";
+        private static readonly string SEConstant_AppAttr_Ad_Offer_Name = "_adoffer_name";
+        private static readonly string SEConstant_AppAttr_Ad_Creative_ID = "_adcreative_id";
+        private static readonly string SEConstant_AppAttr_Ad_Creative_Name = "_adcreative_name";
         private static readonly string SEConstant_AppAttr_AttributionPlatform = "_attribution_platform";
 
         private static readonly string SEConstant_AppAttr_Ad_CustomProperties = "_customProperties";
@@ -467,7 +475,7 @@ namespace SolarEngine
         /// <param name="userID">用户 ID ，请联系商务人员获取。</param>
         /// <param name="SEConfig">见SEConfig 说明</param>
         public static void initSeSdk(string appKey, string userID, SEConfig config, RCConfig rcConfig)
-        {       
+        {
             Init(appKey, userID, config, rcConfig);
         }
 
@@ -679,7 +687,7 @@ namespace SolarEngine
         /// <param name="attributes">自定义事件属性</param>
         public static void trackCustom(string customEventName, Dictionary<string, object> attributes)
         {
-            ReportCustomEvent(customEventName,attributes);
+            ReportCustomEvent(customEventName, attributes);
         }
 
         /// <summary>
@@ -690,7 +698,7 @@ namespace SolarEngine
         /// <returns>JSON 字符串，上报时需要传给 trackTimerEvent 方法。</returns>
         public static string createTimerEvent(string timerEventName, Dictionary<string, object> attributes)
         {
-            return CreateTimerEvent(timerEventName,attributes);
+            return CreateTimerEvent(timerEventName, attributes);
         }
 
         /// <summary>
@@ -774,9 +782,63 @@ namespace SolarEngine
             return GetPresetProperties();
         }
 
-#region 
 
-       private static Dictionary<string, object> GetPresetProperties()
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static void updatePostbackConversionValue(int conversionValue, SKANUpdateCompletionHandler callback) {
+
+            #if UNITY_EDITOR
+                Debug.Log("Unity Editor: updatePostbackConversionValue only ios");
+            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+                Analytics.Instance.iosSKANUpdateCVCompletionHandler_private = callback;
+                __iOSSESDKupdatePostbackConversionValue(conversionValue, OnSKANUpdateCVCallback);
+
+            #else
+                Debug.Log("Unity Editor: updatePostbackConversionValue only ios");
+            #endif
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static void updateConversionValueCoarseValue(int fineValue, String coarseValue, SKANUpdateCompletionHandler callback)
+        {
+
+            #if UNITY_EDITOR
+                        Debug.Log("Unity Editor: updateConversionValueCoarseValue only ios");
+            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+
+                Analytics.Instance.iosSKANUpdateCVCoarseValueCompletionHandler_private = callback;
+                __iOSSESDKupdateConversionValueCoarseValue(fineValue, coarseValue, OnSKANUpdateCVCoarseValueCallback);
+            
+            #else
+                Debug.Log("Unity Editor: updateConversionValueCoarseValue only ios");
+            #endif
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static void updateConversionValueCoarseValueLockWindow(int fineValue, String coarseValue, bool lockWindow, SKANUpdateCompletionHandler callback)
+        {
+
+            #if UNITY_EDITOR
+                Debug.Log("Unity Editor: updateConversionValueCoarseValueLockWindow only ios");
+            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+                 Analytics.Instance.iosSKANUpdateCVCoarseValueLockWindowCompletionHandler_private = callback;
+                 __iOSSESDKupdateConversionValueCoarseValueLockWindow(fineValue, coarseValue, lockWindow, OnSKANUpdateCVCoarseValueLockWindowCallback);
+            
+            #else
+                 Debug.Log("Unity Editor: updatePostbackConversionValue only ios");
+            #endif
+        }
+
+        #region 
+
+        private static Dictionary<string, object> GetPresetProperties()
         {
 
 #if UNITY_EDITOR
@@ -829,7 +891,7 @@ namespace SolarEngine
         private static void Init(string appKey, string userId, SEConfig config)
         {
 
-            Dictionary<string, object> seDict= new Dictionary<string, object>();
+            Dictionary<string, object> seDict = new Dictionary<string, object>();
             seDict.Add("isDebugModel", config.isDebugModel);
             seDict.Add("logEnabled", config.logEnabled);
             seDict.Add("isGDPRArea", config.isGDPRArea);
@@ -919,146 +981,146 @@ namespace SolarEngine
 
         private static void SetVisitorID(string visitorId)
         {
-            if(visitorId == null)
+            if (visitorId == null)
             {
                 Debug.Log("visitorId must not be null");
                 return;
             }
 
-            #if UNITY_EDITOR
-                Debug.Log("Unity Editor: SetVisitorID");
-            #elif UNITY_ANDROID
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: SetVisitorID");
+#elif UNITY_ANDROID
                 SolarEngineAndroidSDK.CallStatic("setVisitorID",visitorId);
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 __iOSSolarEngineSDKSetVisitorID(visitorId);
-            #else
+#else
 
-            #endif
+#endif
         }
 
         private static string GetVisitorID()
         {
-            #if UNITY_EDITOR
-                Debug.Log("Unity Editor: GetVisitorID");
-                return null;
-            #elif UNITY_ANDROID
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: GetVisitorID");
+            return null;
+#elif UNITY_ANDROID
                 return SolarEngineAndroidSDK.CallStatic<string>("getVisitorID");
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 return __iOSSolarEngineSDKVisitorID();
-            #else
+#else
                 return null;
-            #endif
+#endif
         }
 
         private static void Login(string accountId)
         {
-            if(accountId == null)
+            if (accountId == null)
             {
                 Debug.Log("accountId must not be null");
                 return;
             }
 
-            #if UNITY_EDITOR
-                Debug.Log("Unity Editor: Login");
-            #elif UNITY_ANDROID
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: Login");
+#elif UNITY_ANDROID
                 SolarEngineAndroidSDK.CallStatic("login",accountId);
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 __iOSSolarEngineSDKLoginWithAccountID(accountId);
-            #else
+#else
                 return;
-            #endif
+#endif
 
         }
 
         private static string GetAccountId()
         {
-            #if UNITY_EDITOR
-                Debug.Log("Unity Editor: GetAccountId");
-                return null;
-            #elif UNITY_ANDROID
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: GetAccountId");
+            return null;
+#elif UNITY_ANDROID
                 return SolarEngineAndroidSDK.CallStatic<string>("getAccountID");
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 return __iOSSolarEngineSDKAccountID();
-            #else
+#else
                 return null;
-            #endif
+#endif
 
         }
 
         private static void Logout()
         {
-            #if UNITY_EDITOR
-                Debug.Log("Unity Editor: Logout");
-            #elif UNITY_ANDROID
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: Logout");
+#elif UNITY_ANDROID
                 SolarEngineAndroidSDK.CallStatic("logout");
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 __iOSSolarEngineSDKLogout();
-            #else
+#else
 
-            #endif
+#endif
 
         }
 
         private static void SetGaid(string gaid)
         {
-            #if UNITY_EDITOR
-                Debug.Log("Unity Editor: SetGaid");
-            #elif UNITY_ANDROID
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: SetGaid");
+#elif UNITY_ANDROID
                 SolarEngineAndroidSDK.CallStatic("setGaid",gaid);
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 Debug.Log("Only Android can set gaid , iOS not support");
-            #else
+#else
 
-            #endif
+#endif
 
         }
 
         private static void SetChannel(string channel)
         {
-            #if UNITY_EDITOR
-                Debug.Log("Unity Editor: SetChannel");
-            #elif UNITY_ANDROID
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: SetChannel");
+#elif UNITY_ANDROID
                 SolarEngineAndroidSDK.CallStatic("setChannel",channel);
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 Debug.Log("Only Android can set channel , iOS not support");
-            #else
+#else
 
-            #endif
+#endif
 
         }
 
         private static void SetGDPRArea(bool isGDPRArea)
         {
-            #if UNITY_EDITOR
-                Debug.Log("Unity Editor: SetGDPRArea");
-            #elif UNITY_ANDROID
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: SetGDPRArea");
+#elif UNITY_ANDROID
                 SolarEngineAndroidSDK.CallStatic("setGDPRArea",isGDPRArea);
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 __iOSSolarEngineSDKSetGDPRArea(isGDPRArea);
-            #else
+#else
 
-            #endif
+#endif
 
         }
 
         private static string GetDistinctId()
         {
-            #if UNITY_EDITOR
-                Debug.Log("Unity Editor: GetDistinctId");
-                return null;
-            #elif UNITY_ANDROID
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: GetDistinctId");
+            return null;
+#elif UNITY_ANDROID
                 return SolarEngineAndroidSDK.CallStatic<string>("getDistinctId");
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 return __iOSSolarEngineSDKGetDistinctId();
-             #else
+#else
                 return null;
-            #endif
+#endif
 
         }
 
         private static void SetSuperProperties(Dictionary<string, object> userProperties)
         {
-            if(userProperties == null)
+            if (userProperties == null)
             {
                 Debug.Log("userProperties must not be null");
                 return;
@@ -1066,60 +1128,60 @@ namespace SolarEngine
 
             string userPropertiesJSONString = JsonConvert.SerializeObject(userProperties);
 
-            #if UNITY_EDITOR
-                Debug.Log("Unity Editor: SetSuperProperties");
-            #elif UNITY_ANDROID
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: SetSuperProperties");
+#elif UNITY_ANDROID
                 SolarEngineAndroidSDK.CallStatic("setSuperProperties",Context,userPropertiesJSONString);
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 __iOSSolarEngineSDKSetSuperProperties(userPropertiesJSONString);
-            #else
+#else
 
-            #endif
+#endif
         }
 
         private static void UnsetSuperProperty(string key)
         {
 
-            if(key == null)
+            if (key == null)
             {
                 Debug.Log("key must not be null");
                 return;
             }
 
-            #if UNITY_EDITOR
-                Debug.Log("Unity Editor: UnsetSuperProperty");
-            #elif UNITY_ANDROID
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: UnsetSuperProperty");
+#elif UNITY_ANDROID
                 SolarEngineAndroidSDK.CallStatic("unsetSuperProperty",Context,key);
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 __iOSSolarEngineSDKUnsetSuperProperty(key);
-            #else
+#else
 
-            #endif
+#endif
 
         }
 
         private static void ClearSuperProperties()
         {
-            #if UNITY_EDITOR
-                Debug.Log("Unity Editor: ClearSuperProperties");
-            #elif UNITY_ANDROID
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: ClearSuperProperties");
+#elif UNITY_ANDROID
                 SolarEngineAndroidSDK.CallStatic("clearSuperProperties",Context);
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                  __iOSSolarEngineSDKClearSuperProperties();
-            #else
+#else
 
-            #endif
+#endif
 
         }
 
         private static string CreateTimerEvent(string timerEventName, Dictionary<string, object> attributes)
         {
-            if(timerEventName == null)
+            if (timerEventName == null)
             {
                 Debug.Log("timerEventName must not be null");
                 return null;
             }
-            if(attributes == null)
+            if (attributes == null)
             {
                 Debug.Log("attributes must not be null");
                 return null;
@@ -1127,42 +1189,42 @@ namespace SolarEngine
 
             string attributesJSONString = JsonConvert.SerializeObject(attributes);
 
-            #if UNITY_EDITOR
-                Debug.Log("Unity Editor: CreateTimerEvent");
-                return null;
-            #elif UNITY_ANDROID
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: CreateTimerEvent");
+            return null;
+#elif UNITY_ANDROID
                 return SolarEngineAndroidSDK.CallStatic<string>("createTimerEvent",timerEventName,attributesJSONString);
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 __iOSSolarEngineSDKEventStart(timerEventName);
                 return "{ \"eventName\": \"" + timerEventName + "\", \"attributes\": " + attributesJSONString + " }";
-            #else
+#else
                 return null;
-            #endif
+#endif
 
         }
 
         private static void TrackTimerEvent(string timerEventData)
         {
-            if(timerEventData == null)
+            if (timerEventData == null)
             {
                 Debug.Log("timerEventData must not be null");
                 return;
             }
 
-            #if UNITY_EDITOR
-                Debug.Log("Unity Editor: TrackTimerEvent");
-            #elif UNITY_ANDROID
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: TrackTimerEvent");
+#elif UNITY_ANDROID
                 SolarEngineAndroidSDK.CallStatic("trackTimerEvent",timerEventData);
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 __iOSSolarEngineSDKEventFinish(timerEventData);
-            #else
+#else
 
-            #endif
+#endif
         }
 
         private static void UserUpdate(Dictionary<string, object> userProperties)
         {
-            if(userProperties == null)
+            if (userProperties == null)
             {
                 Debug.Log("userProperties must not be null");
                 return;
@@ -1170,20 +1232,20 @@ namespace SolarEngine
 
             string userPropertiesJSONString = JsonConvert.SerializeObject(userProperties);
 
-            #if UNITY_EDITOR
-                Debug.Log("Unity Editor: UserUpdate");
-            #elif UNITY_ANDROID
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: UserUpdate");
+#elif UNITY_ANDROID
                 SolarEngineAndroidSDK.CallStatic("userUpdate", userPropertiesJSONString);
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 __iOSSolarEngineSDKUserUpdate(userPropertiesJSONString);
-            #else
+#else
 
-            #endif
+#endif
         }
 
         private static void UserInit(Dictionary<string, object> userProperties)
         {
-            if(userProperties == null)
+            if (userProperties == null)
             {
                 Debug.Log("userProperties must not be null");
                 return;
@@ -1191,20 +1253,20 @@ namespace SolarEngine
 
             string userPropertiesJSONString = JsonConvert.SerializeObject(userProperties);
 
-            #if UNITY_EDITOR
-                Debug.Log("Unity Editor: UserInit");
-            #elif UNITY_ANDROID
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: UserInit");
+#elif UNITY_ANDROID
                 SolarEngineAndroidSDK.CallStatic("userInit",userPropertiesJSONString);
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 __iOSSolarEngineSDKUserInit(userPropertiesJSONString);
-            #else
+#else
 
-            #endif
+#endif
         }
 
         private static void UserAdd(Dictionary<string, object> userProperties)
         {
-            if(userProperties == null)
+            if (userProperties == null)
             {
                 Debug.Log("userProperties must not be null");
                 return;
@@ -1212,20 +1274,20 @@ namespace SolarEngine
 
             string userPropertiesJSONString = JsonConvert.SerializeObject(userProperties);
 
-            #if UNITY_EDITOR
-                Debug.Log("Unity Editor: UserAdd");
-            #elif UNITY_ANDROID
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: UserAdd");
+#elif UNITY_ANDROID
                 SolarEngineAndroidSDK.CallStatic("userAdd",userPropertiesJSONString);
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 __iOSSolarEngineSDKUserAdd(userPropertiesJSONString);
-            #else
+#else
 
-            #endif
+#endif
         }
 
         private static void UserAppend(Dictionary<string, object> userProperties)
         {
-            if(userProperties == null)
+            if (userProperties == null)
             {
                 Debug.Log("userProperties must not be null");
                 return;
@@ -1233,58 +1295,58 @@ namespace SolarEngine
 
             string userPropertiesJSONString = JsonConvert.SerializeObject(userProperties);
 
-            #if UNITY_EDITOR
-                Debug.Log("Unity Editor: UserAppend");
-            #elif UNITY_ANDROID
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: UserAppend");
+#elif UNITY_ANDROID
                 SolarEngineAndroidSDK.CallStatic("userAppend",userPropertiesJSONString);
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 __iOSSolarEngineSDKUserAppend(userPropertiesJSONString);
-            #else
+#else
 
-            #endif
+#endif
         }
 
         private static void UserUnset(string[] keys)
         {
-            if(keys == null)
+            if (keys == null)
             {
                 Debug.Log("keys must not be null");
                 return;
             }
 
-            if(keys.Length <= 0)
+            if (keys.Length <= 0)
             {
                 Debug.Log("keys length must be > 0");
                 return;
             }
 
-            #if UNITY_EDITOR
-                Debug.Log("Unity Editor: UserUnset");
-            #elif UNITY_ANDROID
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: UserUnset");
+#elif UNITY_ANDROID
                 SolarEngineAndroidSDK.CallStatic("userUnset",keys);
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 string keysJSONStr = JsonConvert.SerializeObject(keys);
                 __iOSSolarEngineSDKUserUnset(keysJSONStr);
-            #else
+#else
 
-            #endif
+#endif
         }
 
         private static void UserDelete(SEUserDeleteType deleteType)
         {
             int seUserDeleteType = deleteType == SEUserDeleteType.SEUserDeleteTypeByAccountId ? 0 : 1;
-            #if UNITY_EDITOR
-                Debug.Log("Unity Editor: UserDelete");
-            #elif UNITY_ANDROID
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: UserDelete");
+#elif UNITY_ANDROID
                 SolarEngineAndroidSDK.CallStatic("userDelete",seUserDeleteType);
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 __iOSSolarEngineSDKUserDelete(seUserDeleteType);
-            #else
+#else
 
-            #endif
+#endif
         }
 
-        private static string GetAttribution () {
+        private static string GetAttribution() {
 
 
 
@@ -1310,7 +1372,7 @@ namespace SolarEngine
                 return;
             }
             Dictionary<string, object> attributesDict = new Dictionary<string, object>();
-            
+
             if (attributes is RegisterAttributes registerAttributes)
             {
                 // 处理 RegisterAttributes 类型的逻辑
@@ -1480,7 +1542,7 @@ namespace SolarEngine
                 attributesDict.Add(SolarEngine.Analytics.SEConstant_EVENT_TYPE, SolarEngine.Analytics.SEConstant_IAP);
 
                 attributesDict.Add(SolarEngine.Analytics.SEConstant_IAP_OrderId, productsAttributes.order_id);
-        
+
                 attributesDict.Add(SolarEngine.Analytics.SEConstant_IAP_Amount, productsAttributes.pay_amount);
 
                 attributesDict.Add(SolarEngine.Analytics.SEConstant_IAP_Currency, productsAttributes.currency_type);
@@ -1495,7 +1557,7 @@ namespace SolarEngine
 
                 attributesDict.Add(SolarEngine.Analytics.SEConstant_IAP_Paystatus, productsAttributes.paystatus);
 
-                attributesDict.Add(SolarEngine.Analytics.SEConstant_IAP_FailReason, productsAttributes.fail_reason == null ? "": productsAttributes.fail_reason);
+                attributesDict.Add(SolarEngine.Analytics.SEConstant_IAP_FailReason, productsAttributes.fail_reason == null ? "" : productsAttributes.fail_reason);
 
                 if (productsAttributes.customProperties != null) {
                     attributesDict.Add(SolarEngine.Analytics.SEConstant_IAP_CustomProperties, productsAttributes.customProperties);
@@ -1523,26 +1585,26 @@ namespace SolarEngine
                     attributesDict.Add(SolarEngine.Analytics.SEConstant_CHECK_ID, customAttributes.checkId);
                 }
             }
-              
-            if(attributesDict == null)
+
+            if (attributesDict == null)
             {
                 return;
             }
             string attributesJSONString = JsonConvert.SerializeObject(attributesDict);
-            #if UNITY_EDITOR
-                Debug.Log("Unity Editor: trackFirstEvent");
-            #elif UNITY_ANDROID
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: trackFirstEvent");
+#elif UNITY_ANDROID
                 SolarEngineAndroidSDKObject.CallStatic("trackFirstEvent",attributesJSONString);
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 //todo ios support
                 __iOSSolarEngineSDKTrackFirstEventWithAttributes(attributesJSONString);
-            #else
+#else
 
-            #endif
+#endif
 
         }
 
-        private static void ReportIAPEvent(ProductsAttributes  attributes)
+        private static void ReportIAPEvent(ProductsAttributes attributes)
         {
             Dictionary<string, object> attributesDict = new Dictionary<string, object>();
 
@@ -1571,7 +1633,7 @@ namespace SolarEngine
                 Debug.Log("product_name must not be null");
                 return;
             }
-            if (!Enum.IsDefined(typeof(SEConstant_IAP_PayStatus) , attributes.paystatus))
+            if (!Enum.IsDefined(typeof(SEConstant_IAP_PayStatus), attributes.paystatus))
             {
                 Debug.Log("pay_status param type error");
                 return;
@@ -1586,7 +1648,7 @@ namespace SolarEngine
 
 
             attributesDict.Add(SolarEngine.Analytics.SEConstant_IAP_OrderId, attributes.order_id);
-        
+
             attributesDict.Add(SolarEngine.Analytics.SEConstant_IAP_Amount, attributes.pay_amount);
 
             attributesDict.Add(SolarEngine.Analytics.SEConstant_IAP_Currency, attributes.currency_type);
@@ -1601,27 +1663,27 @@ namespace SolarEngine
 
             attributesDict.Add(SolarEngine.Analytics.SEConstant_IAP_Paystatus, attributes.paystatus);
 
-            attributesDict.Add(SolarEngine.Analytics.SEConstant_IAP_FailReason, attributes.fail_reason == null ? "": attributes.fail_reason);
+            attributesDict.Add(SolarEngine.Analytics.SEConstant_IAP_FailReason, attributes.fail_reason == null ? "" : attributes.fail_reason);
 
             if (attributes.customProperties != null) {
                 attributesDict.Add(SolarEngine.Analytics.SEConstant_IAP_CustomProperties, attributes.customProperties);
             }
-            
+
 
             string attributesJSONString = JsonConvert.SerializeObject(attributesDict);
 
-            #if UNITY_EDITOR
-                    Debug.Log("Unity Editor: TrackIAP");
-            #elif UNITY_ANDROID
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: TrackIAP");
+#elif UNITY_ANDROID
                     SolarEngineAndroidSDKObject.CallStatic("trackPurchaseEvent",attributesJSONString);
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                     __iOSSolarEngineSDKTrackIAPWithAttributes(attributesJSONString);
-            #else
+#else
 
-            #endif
+#endif
         }
 
-         private static void ReportIAIEvent(AppImpressionAttributes attributes)
+        private static void ReportIAIEvent(AppImpressionAttributes attributes)
         {
             Dictionary<string, object> attributesDict = new Dictionary<string, object>();
 
@@ -1650,7 +1712,7 @@ namespace SolarEngine
                 Debug.Log("currency_type must not be null");
                 return;
             }
-            
+
             attributesDict.Add(SolarEngine.Analytics.SEConstant_IAI_AdPlatform, attributes.ad_platform);
 
             attributesDict.Add(SolarEngine.Analytics.SEConstant_IAI_MediationPlatform, attributes.mediation_platform);
@@ -1677,15 +1739,15 @@ namespace SolarEngine
 
             string attributesJSONString = JsonConvert.SerializeObject(attributesDict);
 
-            #if UNITY_EDITOR
-                Debug.Log("Unity Editor: TrackIAI");
-            #elif UNITY_ANDROID
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: TrackIAI");
+#elif UNITY_ANDROID
                 SolarEngineAndroidSDKObject.CallStatic("trackImpEvent",attributesJSONString);
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 __iOSSolarEngineSDKTrackAdImpressionWithAttributes(attributesJSONString);
-            #else
+#else
 
-            #endif
+#endif
         }
 
         private static void ReportAdClickEvent(AdClickAttributes attributes)
@@ -1732,15 +1794,15 @@ namespace SolarEngine
 
             string attributesJSONString = JsonConvert.SerializeObject(attributesDict);
 
-            #if UNITY_EDITOR
-                Debug.Log("Unity Editor: TrackAdClick");
-            #elif UNITY_ANDROID
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: TrackAdClick");
+#elif UNITY_ANDROID
                 SolarEngineAndroidSDKObject.CallStatic("trackAdClickEvent",attributesJSONString);
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 __iOSSolarEngineSDKTrackAdClickWithAttributes(attributesJSONString);
-            #else
+#else
 
-            #endif
+#endif
 
         }
 
@@ -1772,15 +1834,15 @@ namespace SolarEngine
 
             string attributesJSONString = JsonConvert.SerializeObject(attributesDict);
 
-            #if UNITY_EDITOR
-                Debug.Log("Unity Editor: TrackRegister");
-            #elif UNITY_ANDROID
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: TrackRegister");
+#elif UNITY_ANDROID
                 SolarEngineAndroidSDKObject.CallStatic("trackRegisterEvent",attributesJSONString);
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 __iOSSolarEngineSDKTrackRegisterWithAttributes(attributesJSONString);
-            #else
+#else
 
-            #endif
+#endif
 
         }
 
@@ -1812,15 +1874,15 @@ namespace SolarEngine
 
             string attributesJSONString = JsonConvert.SerializeObject(attributesDict);
 
-            #if UNITY_EDITOR
-                Debug.Log("Unity Editor: TrackLogin");
-            #elif UNITY_ANDROID
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: TrackLogin");
+#elif UNITY_ANDROID
                 SolarEngineAndroidSDKObject.CallStatic("trackLoginEvent",attributesJSONString);
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 __iOSSolarEngineSDKTrackLoginWithAttributes(attributesJSONString);
-            #else
+#else
 
-            #endif
+#endif
 
         }
 
@@ -1869,15 +1931,15 @@ namespace SolarEngine
 
             string attributesJSONString = JsonConvert.SerializeObject(attributesDict);
 
-            #if UNITY_EDITOR
-                Debug.Log("Unity Editor: TrackOrder");
-            #elif UNITY_ANDROID
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: TrackOrder");
+#elif UNITY_ANDROID
                 SolarEngineAndroidSDKObject.CallStatic("trackOrderEvent",attributesJSONString);
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 __iOSSolarEngineSDKTrackOrderWithAttributes(attributesJSONString);
-            #else
+#else
 
-            #endif
+#endif
 
         }
 
@@ -1944,15 +2006,15 @@ namespace SolarEngine
 
             string attributesJSONString = JsonConvert.SerializeObject(attributesDict);
 
-            #if UNITY_EDITOR
-                Debug.Log("Unity Editor: AppAttrEvent");
-            #elif UNITY_ANDROID
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: AppAttrEvent");
+#elif UNITY_ANDROID
                 SolarEngineAndroidSDKObject.CallStatic("trackAppAttrEvent",attributesJSONString);
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 __iOSSolarEngineSDKTrackAppAttrWithAttributes(attributesJSONString);
-            #else
+#else
 
-            #endif
+#endif
         }
 
 
@@ -1977,40 +2039,61 @@ namespace SolarEngine
             }
 
 
-            #if UNITY_EDITOR
-                Debug.Log("Unity Editor: SetPresetEvent");
-            #elif UNITY_ANDROID
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: SetPresetEvent");
+#elif UNITY_ANDROID
                 SolarEngineAndroidSDKObject.CallStatic("setPresetEvent",eventName,eventDataJSONString);
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 __iOSSolarEngineSDKSetPresetEvent(eventName, eventDataJSONString);
-            #else
+#else
 
-            #endif
+#endif
         }
 
         private static void ReportCustomEvent(string customEventName, Dictionary<string, object> attributes)
         {
             string eventDataJSONString = JsonConvert.SerializeObject(attributes);
 
-        #if UNITY_EDITOR
-                Debug.Log("Unity Editor: ReportCustomEvent");
-        #elif UNITY_ANDROID
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: ReportCustomEvent");
+#elif UNITY_ANDROID
                 SolarEngineAndroidSDKObject.CallStatic("trackCustomEvent",customEventName,eventDataJSONString);
-        #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 __iOSSolarEngineSDKTrack(customEventName, eventDataJSONString);
-        #else
+#else
 
-        #endif
+#endif
         }
 
 
 
 #if UNITY_IPHONE
         //回调函数，必须MonoPInvokeCallback并且是static
-        [MonoPInvokeCallback(typeof(SEAttributionStringCallback))]
+        [MonoPInvokeCallback(typeof(SEiOSStringCallback))]
         private static void OnAttributionCallback(int code, string attribution)
         {
-            OnAttributionHandler(code , attribution);
+            OnAttributionHandler(code, attribution);
+        }
+
+        //回调函数，必须MonoPInvokeCallback并且是static
+        [MonoPInvokeCallback(typeof(SEiOSStringCallback))]
+        private static void OnSKANUpdateCVCallback(int errorCode, string errorMsg)
+        {
+            OnSKANUpdateCVCompletionHandler(errorCode, errorMsg);
+        }
+
+        //回调函数，必须MonoPInvokeCallback并且是static
+        [MonoPInvokeCallback(typeof(SEiOSStringCallback))]
+        private static void OnSKANUpdateCVCoarseValueCallback(int errorCode, string errorMsg)
+        {
+            OnSKANUpdateCVCoarseValueCompletionHandler(errorCode, errorMsg);
+        }
+
+        //回调函数，必须MonoPInvokeCallback并且是static
+        [MonoPInvokeCallback(typeof(SEiOSStringCallback))]
+        private static void OnSKANUpdateCVCoarseValueLockWindowCallback(int errorCode, string errorMsg)
+        {
+            OnSKANUpdateCVCoarseValueLockWindowCompletionHandler(errorCode, errorMsg);
         }
 #endif
 
@@ -2060,14 +2143,59 @@ namespace SolarEngine
 
         }
 
+        private static void OnSKANUpdateCVCompletionHandler(int errorCode, String errorMsg)
+        {
+            Analytics.PostTask(() =>
+            {
+                if (Analytics.Instance.iosSKANUpdateCVCompletionHandler_private != null)
+                {
+                    Analytics.Instance.iosSKANUpdateCVCompletionHandler_private.Invoke(errorCode, errorMsg);
+                }
+                else
+                {
+                    Debug.Log("Unity Editor: iosSKANUpdateCVCompletionHandler_private not found ");
+                }
+            });
 
+        }
+
+        private static void OnSKANUpdateCVCoarseValueCompletionHandler(int errorCode, String errorMsg)
+        {
+            Analytics.PostTask(() =>
+            {
+                if (Analytics.Instance.iosSKANUpdateCVCoarseValueCompletionHandler_private != null)
+                {
+                    Analytics.Instance.iosSKANUpdateCVCoarseValueCompletionHandler_private.Invoke(errorCode, errorMsg);
+                }
+                else
+                {
+                    Debug.Log("Unity Editor: iosSKANUpdateCVCoarseValueCompletionHandler_private not found ");
+                }
+            });
+        }
+
+
+        private static void OnSKANUpdateCVCoarseValueLockWindowCompletionHandler(int errorCode, String errorMsg)
+        {
+            Analytics.PostTask(() =>
+            {
+                if (Analytics.Instance.iosSKANUpdateCVCoarseValueLockWindowCompletionHandler_private != null)
+                {
+                    Analytics.Instance.iosSKANUpdateCVCoarseValueLockWindowCompletionHandler_private.Invoke(errorCode, errorMsg);
+                }
+                else
+                {
+                    Debug.Log("Unity Editor: iosSKANUpdateCVCoarseValueLockWindowCompletionHandler_private not found ");
+                }
+            });
+        }
 
 
 
 #if UNITY_IPHONE
 
 
-            [DllImport("__Internal")]
+        [DllImport("__Internal")]
             private static extern void __iOSSolarEngineSDKPreInit(string appKey, string SEUserId);
 
             [DllImport("__Internal")]
@@ -2164,12 +2292,21 @@ namespace SolarEngine
             private static extern string __iOSSolarEngineSDKGetAttribution();
 
             [DllImport("__Internal")]
-            private static extern void __iOSSESDKSetAttributionDataCallback(SEAttributionStringCallback callback);
+            private static extern void __iOSSESDKSetAttributionDataCallback(SEiOSStringCallback callback);
+
+            [DllImport("__Internal")]
+            private static extern void __iOSSESDKupdatePostbackConversionValue(int conversionValue, SEiOSStringCallback callback);
+
+            [DllImport("__Internal")]
+            private static extern void __iOSSESDKupdateConversionValueCoarseValue(int fineValue, String coarseValue, SEiOSStringCallback callback);
+
+            [DllImport("__Internal")]
+            private static extern void __iOSSESDKupdateConversionValueCoarseValueLockWindow(int fineValue, String coarseValue, bool lockWindow, SEiOSStringCallback callback);
 
 
 #endif
 
-        #endregion
+#endregion
 
     }
 }
