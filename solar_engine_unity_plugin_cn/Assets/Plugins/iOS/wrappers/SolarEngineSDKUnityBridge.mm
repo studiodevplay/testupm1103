@@ -389,7 +389,8 @@ void __iOSSolarEngineSDKInit(const char * appKey, const char * SEUserId, const c
     config.isDebugModel = [seDict[@"isDebugModel"] boolValue];
     config.logEnabled = [seDict[@"logEnabled"] boolValue];
     config.disableRecordLog = [seDict[@"disableRecordLog"] boolValue];
-    
+    config.enable2GReporting = [seDict[@"isEnable2GReporting"] boolValue];
+
     NSDictionary *rcDict = nil;
     if (rcConfig != NULL) {
         NSString *_rcConfig = [NSString stringWithUTF8String:rcConfig];
@@ -710,6 +711,11 @@ void __iOSSolarEngineSDKUnsetSuperProperty(const char *property)
 void __iOSSolarEngineSDKClearSuperProperties(void)
 {
     [[SolarEngineSDK sharedInstance] clearSuperProperties];
+}
+
+void __iOSSolarEngineSDKReportEventImmediately(void)
+{
+    [[SolarEngineSDK sharedInstance] reportEventImmediately];
 }
 
 void __iOSSolarEngineSDKUserInit(const char *properties)

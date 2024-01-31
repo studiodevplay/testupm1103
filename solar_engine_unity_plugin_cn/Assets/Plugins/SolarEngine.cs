@@ -2105,7 +2105,7 @@ namespace SolarEngine
 #elif UNITY_ANDROID
                 SolarEngineAndroidSDKObject.CallStatic("reportEventImmediately");
 #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
-                //todo
+                __iOSSolarEngineSDKReportEventImmediately();
 #else
 
 #endif
@@ -2297,6 +2297,9 @@ namespace SolarEngine
 
             [DllImport("__Internal")]
             private static extern void __iOSSolarEngineSDKLogout();
+
+            [DllImport("__Internal")]
+            private static extern void __iOSSolarEngineSDKReportEventImmediately();
 
             [DllImport("__Internal")]
             private static extern void __iOSSolarEngineSDKSetSuperProperties(string properties);
