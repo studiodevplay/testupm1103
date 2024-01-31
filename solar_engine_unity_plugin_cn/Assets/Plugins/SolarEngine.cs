@@ -272,6 +272,9 @@ namespace SolarEngine
         // 是否关闭SDK内部日志。默认为false，可选字段
         public bool disableRecordLog { get; set; }
 
+        // 是否允许2G上报数据。默认为false，可选字段
+        public bool isEnable2GReporting { get; set; }
+
         // 设置获取归因结果回调，可选字段
         public Analytics.SEAttributionCallback attributionCallback { get; set; }
 
@@ -472,11 +475,31 @@ namespace SolarEngine
         /// 用于应用启动后，初始化 SDK。
         /// </summary>
         /// <param name="appKey">应用 appKey，请联系商务人员获取。</param>
+        /// <param name="SEConfig">见SEConfig 说明</param>
+        public static void initSeSdk(string appKey, SEConfig config)
+        {
+            Init(appKey, null, config);
+        }
+
+        /// <summary>
+        /// 用于应用启动后，初始化 SDK。
+        /// </summary>
+        /// <param name="appKey">应用 appKey，请联系商务人员获取。</param>
         /// <param name="userID">用户 ID ，请联系商务人员获取。</param>
         /// <param name="SEConfig">见SEConfig 说明</param>
         public static void initSeSdk(string appKey, string userID, SEConfig config, RCConfig rcConfig)
         {
             Init(appKey, userID, config, rcConfig);
+        }
+
+        /// <summary>
+        /// 用于应用启动后，初始化 SDK。
+        /// </summary>
+        /// <param name="appKey">应用 appKey，请联系商务人员获取。</param>
+        /// <param name="SEConfig">见SEConfig 说明</param>
+        public static void initSeSdk(string appKey, SEConfig config, RCConfig rcConfig)
+        {
+            Init(appKey, null, config, rcConfig);
         }
 
         public static Dictionary<string, object> getAttribution() {
@@ -782,6 +805,14 @@ namespace SolarEngine
             return GetPresetProperties();
         }
 
+        /// <summary>
+        /// 立即上报事件，不再等上报策略
+        /// </summary>
+        public static void reportEventImmediately()
+        {
+            ReportEventImmediately();
+        }
+
 
 
         /// <summary>
@@ -896,6 +927,7 @@ namespace SolarEngine
             seDict.Add("logEnabled", config.logEnabled);
             seDict.Add("isGDPRArea", config.isGDPRArea);
             seDict.Add("disableRecordLog", config.disableRecordLog);
+            seDict.Add("isEnable2GReporting", config.isEnable2GReporting);
             string jonString = JsonConvert.SerializeObject(seDict);
 
 
@@ -930,6 +962,7 @@ namespace SolarEngine
             seDict.Add("logEnabled", config.logEnabled);
             seDict.Add("isGDPRArea", config.isGDPRArea);
             seDict.Add("disableRecordLog", config.disableRecordLog);
+            seDict.Add("isEnable2GReporting", config.isEnable2GReporting);
             string seJonString = JsonConvert.SerializeObject(seDict);
 
             if (config.attributionCallback != null)
@@ -1181,11 +1214,11 @@ namespace SolarEngine
                 Debug.Log("timerEventName must not be null");
                 return null;
             }
-            if (attributes == null)
-            {
-                Debug.Log("attributes must not be null");
-                return null;
-            }
+            // if (attributes == null)
+            // {
+            //     Debug.Log("attributes must not be null");
+            //     return null;
+            // }
 
             string attributesJSONString = JsonConvert.SerializeObject(attributes);
 
@@ -1224,11 +1257,11 @@ namespace SolarEngine
 
         private static void UserUpdate(Dictionary<string, object> userProperties)
         {
-            if (userProperties == null)
-            {
-                Debug.Log("userProperties must not be null");
-                return;
-            }
+            // if (userProperties == null)
+            // {
+            //     Debug.Log("userProperties must not be null");
+            //     return;
+            // }
 
             string userPropertiesJSONString = JsonConvert.SerializeObject(userProperties);
 
@@ -1245,11 +1278,11 @@ namespace SolarEngine
 
         private static void UserInit(Dictionary<string, object> userProperties)
         {
-            if (userProperties == null)
-            {
-                Debug.Log("userProperties must not be null");
-                return;
-            }
+            // if (userProperties == null)
+            // {
+            //     Debug.Log("userProperties must not be null");
+            //     return;
+            // }
 
             string userPropertiesJSONString = JsonConvert.SerializeObject(userProperties);
 
@@ -1266,11 +1299,11 @@ namespace SolarEngine
 
         private static void UserAdd(Dictionary<string, object> userProperties)
         {
-            if (userProperties == null)
-            {
-                Debug.Log("userProperties must not be null");
-                return;
-            }
+            // if (userProperties == null)
+            // {
+            //     Debug.Log("userProperties must not be null");
+            //     return;
+            // }
 
             string userPropertiesJSONString = JsonConvert.SerializeObject(userProperties);
 
@@ -1287,11 +1320,11 @@ namespace SolarEngine
 
         private static void UserAppend(Dictionary<string, object> userProperties)
         {
-            if (userProperties == null)
-            {
-                Debug.Log("userProperties must not be null");
-                return;
-            }
+            // if (userProperties == null)
+            // {
+            //     Debug.Log("userProperties must not be null");
+            //     return;
+            // }
 
             string userPropertiesJSONString = JsonConvert.SerializeObject(userProperties);
 
@@ -1608,41 +1641,41 @@ namespace SolarEngine
         {
             Dictionary<string, object> attributesDict = new Dictionary<string, object>();
 
-            if (attributes.order_id == null)
-            {
-                Debug.Log("order_id must not be null");
-                return;
-            }
-            if (attributes.currency_type == null)
-            {
-                Debug.Log("currency_type must not be null");
-                return;
-            }
-            if (attributes.product_id == null)
-            {
-                Debug.Log("product_id must not be null");
-                return;
-            }
-            if (attributes.product_num == 0)
-            {
-                Debug.Log("product_num must be > 0");
-                return;
-            }
-            if (attributes.product_name == null)
-            {
-                Debug.Log("product_name must not be null");
-                return;
-            }
-            if (!Enum.IsDefined(typeof(SEConstant_IAP_PayStatus), attributes.paystatus))
-            {
-                Debug.Log("pay_status param type error");
-                return;
-            }
-            if (attributes.pay_type == null)
-            {
-                Debug.Log("pay_type must not be null");
-                return;
-            }
+            // if (attributes.order_id == null)
+            // {
+            //     Debug.Log("order_id must not be null");
+            //     return;
+            // }
+            // if (attributes.currency_type == null)
+            // {
+            //     Debug.Log("currency_type must not be null");
+            //     return;
+            // }
+            // if (attributes.product_id == null)
+            // {
+            //     Debug.Log("product_id must not be null");
+            //     return;
+            // }
+            // if (attributes.product_num == 0)
+            // {
+            //     Debug.Log("product_num must be > 0");
+            //     return;
+            // }
+            // if (attributes.product_name == null)
+            // {
+            //     Debug.Log("product_name must not be null");
+            //     return;
+            // }
+            // if (!Enum.IsDefined(typeof(SEConstant_IAP_PayStatus), attributes.paystatus))
+            // {
+            //     Debug.Log("pay_status param type error");
+            //     return;
+            // }
+            // if (attributes.pay_type == null)
+            // {
+            //     Debug.Log("pay_type must not be null");
+            //     return;
+            // }
 
 
 
@@ -1687,31 +1720,31 @@ namespace SolarEngine
         {
             Dictionary<string, object> attributesDict = new Dictionary<string, object>();
 
-            if (attributes.ad_platform == null)
-            {
-                Debug.Log("ad_platform must not be null");
-                return;
-            }
-            if (attributes.mediation_platform == null)
-            {
-                Debug.Log("mediation_platform must not be null");
-                return;
-            }
-            if (attributes.ad_id == null)
-            {
-                Debug.Log("ad_id must not be null");
-                return;
-            }
-            if (attributes.ad_type == 0)
-            {
-                Debug.Log("ad_type must be > 0");
-                return;
-            }
-            if (attributes.currency_type == null)
-            {
-                Debug.Log("currency_type must not be null");
-                return;
-            }
+            // if (attributes.ad_platform == null)
+            // {
+            //     Debug.Log("ad_platform must not be null");
+            //     return;
+            // }
+            // if (attributes.mediation_platform == null)
+            // {
+            //     Debug.Log("mediation_platform must not be null");
+            //     return;
+            // }
+            // if (attributes.ad_id == null)
+            // {
+            //     Debug.Log("ad_id must not be null");
+            //     return;
+            // }
+            // if (attributes.ad_type == 0)
+            // {
+            //     Debug.Log("ad_type must be > 0");
+            //     return;
+            // }
+            // if (attributes.currency_type == null)
+            // {
+            //     Debug.Log("currency_type must not be null");
+            //     return;
+            // }
 
             attributesDict.Add(SolarEngine.Analytics.SEConstant_IAI_AdPlatform, attributes.ad_platform);
 
@@ -1753,29 +1786,29 @@ namespace SolarEngine
         private static void ReportAdClickEvent(AdClickAttributes attributes)
         {
 
-            if (attributes.ad_platform == null)
-            {
-                Debug.Log("ad_platform must not be null");
-                return;
-            }
+            // if (attributes.ad_platform == null)
+            // {
+            //     Debug.Log("ad_platform must not be null");
+            //     return;
+            // }
 
-            if (attributes.ad_id == null)
-            {
-                Debug.Log("ad_id must not be null");
-                return;
-            }
+            // if (attributes.ad_id == null)
+            // {
+            //     Debug.Log("ad_id must not be null");
+            //     return;
+            // }
 
-            if (attributes.mediation_platform == null)
-            {
-                Debug.Log("mediation_platform must not be null");
-                return;
-            }
+            // if (attributes.mediation_platform == null)
+            // {
+            //     Debug.Log("mediation_platform must not be null");
+            //     return;
+            // }
 
-            if (attributes.ad_type == 0)
-            {
-                Debug.Log("ad_type must be > 0");
-                return;
-            }
+            // if (attributes.ad_type == 0)
+            // {
+            //     Debug.Log("ad_type must be > 0");
+            //     return;
+            // }
 
             Dictionary<string, object> attributesDict = new Dictionary<string, object>();
 
@@ -1809,17 +1842,17 @@ namespace SolarEngine
         private static void ReportRegisterEvent(RegisterAttributes attributes)
         {
 
-            if (attributes.register_type == null)
-            {
-                Debug.Log("register_type must not be null");
-                return;
-            }
+            // if (attributes.register_type == null)
+            // {
+            //     Debug.Log("register_type must not be null");
+            //     return;
+            // }
 
-            if (attributes.register_status == null)
-            {
-                Debug.Log("register_status must not be null");
-                return;
-            }
+            // if (attributes.register_status == null)
+            // {
+            //     Debug.Log("register_status must not be null");
+            //     return;
+            // }
 
             Dictionary<string, object> attributesDict = new Dictionary<string, object>();
 
@@ -1849,17 +1882,17 @@ namespace SolarEngine
         private static void ReportLoginEvent(LoginAttributes attributes)
         {
 
-            if (attributes.login_type == null)
-            {
-                Debug.Log("login_type must not be null");
-                return;
-            }
+            // if (attributes.login_type == null)
+            // {
+            //     Debug.Log("login_type must not be null");
+            //     return;
+            // }
 
-            if (attributes.login_status == null)
-            {
-                Debug.Log("login_status must not be null");
-                return;
-            }
+            // if (attributes.login_status == null)
+            // {
+            //     Debug.Log("login_status must not be null");
+            //     return;
+            // }
 
             Dictionary<string, object> attributesDict = new Dictionary<string, object>();
 
@@ -1889,27 +1922,27 @@ namespace SolarEngine
         private static void ReportOrderEvent(OrderAttributes attributes)
         {
 
-            if (attributes.order_id == null)
-            {
-                Debug.Log("order_id must not be null");
-                return;
-            }
+            // if (attributes.order_id == null)
+            // {
+            //     Debug.Log("order_id must not be null");
+            //     return;
+            // }
 
-            if (attributes.currency_type == null)
-            {
-                Debug.Log("currency_type must not be null");
-                return;
-            }
-            if (attributes.pay_type == null)
-            {
-                Debug.Log("pay_type must not be null");
-                return;
-            }
-            if (attributes.status == null)
-            {
-                Debug.Log("status must not be null");
-                return;
-            }
+            // if (attributes.currency_type == null)
+            // {
+            //     Debug.Log("currency_type must not be null");
+            //     return;
+            // }
+            // if (attributes.pay_type == null)
+            // {
+            //     Debug.Log("pay_type must not be null");
+            //     return;
+            // }
+            // if (attributes.status == null)
+            // {
+            //     Debug.Log("status must not be null");
+            //     return;
+            // }
 
 
             Dictionary<string, object> attributesDict = new Dictionary<string, object>();
@@ -1946,17 +1979,17 @@ namespace SolarEngine
         private static void AppAttrEvent(AppAttributes attributes)
         {
 
-            if (attributes.ad_network == null)
-            {
-                Debug.Log("ad_network must not be null");
-                return;
-            }
+            // if (attributes.ad_network == null)
+            // {
+            //     Debug.Log("ad_network must not be null");
+            //     return;
+            // }
 
-            if (attributes.attribution_platform == null)
-            {
-                Debug.Log("attribution_platform must not be null");
-                return;
-            }
+            // if (attributes.attribution_platform == null)
+            // {
+            //     Debug.Log("attribution_platform must not be null");
+            //     return;
+            // }
 
             Dictionary<string, object> attributesDict = new Dictionary<string, object>();
 
@@ -2060,6 +2093,19 @@ namespace SolarEngine
                 SolarEngineAndroidSDKObject.CallStatic("trackCustomEvent",customEventName,eventDataJSONString);
 #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 __iOSSolarEngineSDKTrack(customEventName, eventDataJSONString);
+#else
+
+#endif
+        }
+
+        private static void ReportEventImmediately()
+        {
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: ReportEventImmediately");
+#elif UNITY_ANDROID
+                SolarEngineAndroidSDKObject.CallStatic("reportEventImmediately");
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+                //todo
 #else
 
 #endif
