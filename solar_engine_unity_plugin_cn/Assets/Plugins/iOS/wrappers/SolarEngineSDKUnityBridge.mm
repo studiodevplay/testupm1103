@@ -26,7 +26,14 @@ NSString * const SEKeyFlutterEventNameCustom                             = @"_cu
 NSString * const SEKeyFlutterKeyCustomProperties                         = @"_customProperties";
 NSString * const SEKeyFlutterKeyCustomEventName                          = @"_customEventName";
 
+id seTrimValue(id __nullable value){
+    
+    if (!value || [value isEqual:[NSNull null]]) {
+        return nil;
+    }
 
+    return value;
+}
 
 static SEIAPEventAttribute *buildIAPAttribute(const char *IAPAttribute) {
     
@@ -54,16 +61,16 @@ static SEIAPEventAttribute *buildIAPAttribute(const char *IAPAttribute) {
     NSDictionary *customProperties = [dict objectForKey:@"_customProperties"];
 
     SEIAPEventAttribute *attribute = [[SEIAPEventAttribute alloc] init];
-    attribute.productID = productID;
-    attribute.productName = productName;
-    attribute.orderId = orderId;
-    attribute.currencyType = currencyType;
-    attribute.payType = payType;
-    attribute.payStatus = (SolarEngineIAPStatus)[payStatus integerValue];
-    attribute.failReason = failReason;
-    attribute.payAmount = [payAmount doubleValue];
-    attribute.productCount = [productCount integerValue];
-    attribute.customProperties = customProperties;
+    attribute.productID = seTrimValue(productID);
+    attribute.productName = seTrimValue(productName);
+    attribute.orderId = seTrimValue(orderId);
+    attribute.currencyType = seTrimValue(currencyType);
+    attribute.payType = seTrimValue(payType);
+    attribute.payStatus = (SolarEngineIAPStatus)[seTrimValue(payStatus) integerValue];
+    attribute.failReason = seTrimValue(failReason);
+    attribute.payAmount = [seTrimValue(payAmount) doubleValue];
+    attribute.productCount = [seTrimValue(productCount) integerValue];
+    attribute.customProperties = seTrimValue(customProperties);
 
     return attribute;
 
@@ -93,17 +100,15 @@ static SEAdImpressionEventAttribute *buildAdImpressionAttribute(const char *adIm
     NSDictionary *customProperties = [dict objectForKey:@"_customProperties"];
 
     SEAdImpressionEventAttribute *attribute = [[SEAdImpressionEventAttribute alloc] init];
-    attribute.adType = [adType integerValue];
-    attribute.adNetworkPlatform = adNetworkPlatform;
-    attribute.adNetworkAppID = adNetworkAppID;
-    attribute.adNetworkPlacementID = adNetworkPlacementID;
-    attribute.currency = currency;
-    attribute.mediationPlatform = mediationPlatform;
-    attribute.ecpm = [ecpm doubleValue];
-    if (rendered) {
-        attribute.rendered = [rendered boolValue];
-    }
-    attribute.customProperties = customProperties;
+    attribute.adType = [seTrimValue(adType) integerValue];
+    attribute.adNetworkPlatform = seTrimValue(adNetworkPlatform);
+    attribute.adNetworkAppID = seTrimValue(adNetworkAppID);
+    attribute.adNetworkPlacementID = seTrimValue(adNetworkPlacementID);
+    attribute.currency = seTrimValue(currency);
+    attribute.mediationPlatform = seTrimValue(mediationPlatform);
+    attribute.ecpm = [seTrimValue(ecpm) doubleValue];
+    attribute.rendered = [seTrimValue(rendered) boolValue];
+    attribute.customProperties = seTrimValue(customProperties);
     return attribute;
 
 }
@@ -129,11 +134,11 @@ static SEAdClickEventAttribute *buildAdClickAttribute(const char *adClickAttribu
     NSDictionary *customProperties = [dict objectForKey:@"_customProperties"];
     
     SEAdClickEventAttribute *attribute = [[SEAdClickEventAttribute alloc] init];
-    attribute.adType = [adType integerValue];
-    attribute.adNetworkPlatform = adNetworkPlatform;
-    attribute.adNetworkPlacementID = adNetworkPlacementID;
-    attribute.mediationPlatform = mediationPlatform;
-    attribute.customProperties = customProperties;
+    attribute.adType = [seTrimValue(adType) integerValue];
+    attribute.adNetworkPlatform = seTrimValue(adNetworkPlatform);
+    attribute.adNetworkPlacementID = seTrimValue(adNetworkPlacementID);
+    attribute.mediationPlatform = seTrimValue(mediationPlatform);
+    attribute.customProperties = seTrimValue(customProperties);
     
     return attribute;
 }
@@ -154,11 +159,10 @@ static SERegisterEventAttribute *buildRegisterAttribute(const char *registerAttr
     NSString *type = [dict objectForKey:SERegisterPropertyType];
     NSString *status = [dict objectForKey:SERegisterPropertyStatus];
     NSDictionary *customProperties = [dict objectForKey:@"_customProperties"];
-    
     SERegisterEventAttribute *attribute = [[SERegisterEventAttribute alloc] init];
-    attribute.registerType = type;
-    attribute.registerStatus = status;
-    attribute.customProperties = customProperties;
+    attribute.registerType = seTrimValue(type);
+    attribute.registerStatus = seTrimValue(status);
+    attribute.customProperties = seTrimValue(customProperties);
     
     return attribute;
 
@@ -181,9 +185,9 @@ static SELoginEventAttribute *buildLoginAttribute(const char *loginAttribute) {
     NSDictionary *customProperties = [dict objectForKey:@"_customProperties"];
     
     SELoginEventAttribute *attribute = [[SELoginEventAttribute alloc] init];
-    attribute.loginType = type;
-    attribute.loginStatus = status;
-    attribute.customProperties = customProperties;
+    attribute.loginType = seTrimValue(type);
+    attribute.loginStatus = seTrimValue(status);
+    attribute.customProperties = seTrimValue(customProperties);
 
     return attribute;
 }
@@ -208,12 +212,12 @@ static SEOrderEventAttribute *buildOrderAttribute(const char *orderAttribute) {
     NSDictionary *customProperties = [dict objectForKey:@"_customProperties"];
     
     SEOrderEventAttribute *attribute = [[SEOrderEventAttribute alloc] init];
-    attribute.orderID = orderID;
-    attribute.payAmount = [payAmount doubleValue];
-    attribute.currencyType = currencyType;
-    attribute.payType = payType;
-    attribute.status = status;
-    attribute.customProperties = customProperties;
+    attribute.orderID = seTrimValue(orderID);
+    attribute.payAmount = [seTrimValue(payAmount) doubleValue];
+    attribute.currencyType = seTrimValue(currencyType);
+    attribute.payType = seTrimValue(payType);
+    attribute.status = seTrimValue(status);
+    attribute.customProperties = seTrimValue(customProperties);
 
     return attribute;
 }
@@ -245,19 +249,19 @@ static SEAppAttrEventAttribute *buildAppAttrAttribute(const char *AppAttrAttribu
     NSDictionary *customProperties  = [dict objectForKey:@"_customProperties"];
 
     SEAppAttrEventAttribute *appAttr = [[SEAppAttrEventAttribute alloc] init];
-    appAttr.adNetwork = adNetwork;
-    appAttr.subChannel = subChannel;
-    appAttr.adAccountID = adAccountID;
-    appAttr.adAccountName = adAccountName;
-    appAttr.adCampaignID = adCampaignID;
-    appAttr.adCampaignName = adCampaignName;
-    appAttr.adOfferID = adOfferID;
-    appAttr.adOfferName = adOfferName;
-    appAttr.adCreativeID = adCreativeID;
-    appAttr.adCreativeName = adCreativeName;
-    appAttr.attributionPlatform = attributionPlatform;
+    appAttr.adNetwork = seTrimValue(adNetwork);
+    appAttr.subChannel = seTrimValue(subChannel);
+    appAttr.adAccountID = seTrimValue(adAccountID);
+    appAttr.adAccountName = seTrimValue(adAccountName);
+    appAttr.adCampaignID = seTrimValue(adCampaignID);
+    appAttr.adCampaignName = seTrimValue(adCampaignName);
+    appAttr.adOfferID = seTrimValue(adOfferID);
+    appAttr.adOfferName = seTrimValue(adOfferName);
+    appAttr.adCreativeID = seTrimValue(adCreativeID);
+    appAttr.adCreativeName = seTrimValue(adCreativeName);
+    appAttr.attributionPlatform = seTrimValue(attributionPlatform);
 
-    appAttr.customProperties = customProperties;
+    appAttr.customProperties = seTrimValue(customProperties);
     
     return appAttr;
 }
@@ -279,8 +283,8 @@ static SECustomEventAttribute *buildCustomEventAttribute(const char *customAttri
     NSDictionary *customProperties  = [dict objectForKey:@"_customProperties"];
 
     SECustomEventAttribute *attribute = [[SECustomEventAttribute alloc] init];
-    attribute.eventName = eventName;
-    attribute.customProperties = customProperties;
+    attribute.eventName = seTrimValue(eventName);
+    attribute.customProperties = seTrimValue(customProperties);
     
     return attribute;
 }
@@ -329,36 +333,6 @@ void __iOSSolarEngineSDKSetPresetEvent(const char *presetEventName, const char *
     }
 }
 
-//void __iOSSolarEngineSDKInit(const char *appKey, const char *SEUserId, const char *seConfig)
-//{
-//    NSLog(@"__iOSSolarEngineSDKInit called");
-//    NSString *_appKey = [NSString stringWithUTF8String:appKey];
-//    NSString *_SEUserId = [NSString stringWithUTF8String:SEUserId];
-//
-//
-//    NSString *_seConfig = [NSString stringWithUTF8String:seConfig];
-//    NSData *data = [_seConfig dataUsingEncoding:NSUTF8StringEncoding];
-//    NSError *error = nil;
-//    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-//    if (error) {
-//        NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data",_seConfig];
-//        NSLog(@"__iOSSolarEngineSDKInit, error :%@",msg);
-//        return;
-//    }
-//
-//    NSLog(@"se-dict = %@",dict);
-//
-//    SEConfig *config = [[SEConfig alloc] init];
-//    config.isDebug = dict[@"isDebug"];
-//
-//
-//    SERemoteConfig *remoteConfig = [[SERemoteConfig alloc] init];
-//    remoteConfig.enable = YES;
-//    config.remoteConfig = remoteConfig;
-//
-//    [[SolarEngineSDK sharedInstance] startWithAppKey:_appKey userId:_SEUserId config:config];
-//}
-
 void __iOSSolarEngineSDKPreInit(const char * appKey, const char * SEUserId) {
  
     NSLog(@"__iOSSolarEngineSDKPreInit called");
@@ -372,8 +346,6 @@ void __iOSSolarEngineSDKInit(const char * appKey, const char * SEUserId, const c
     
     NSLog(@"__iOSSolarEngineSDKInit called");
     NSString *_appKey = [NSString stringWithUTF8String:appKey];
-    NSString *_SEUserId = [NSString stringWithUTF8String:SEUserId];
-    
     
     NSString *_seConfig = [NSString stringWithUTF8String:seConfig];
     NSData *data = [_seConfig dataUsingEncoding:NSUTF8StringEncoding];
@@ -415,7 +387,7 @@ void __iOSSolarEngineSDKInit(const char * appKey, const char * SEUserId, const c
     }
     
     
-    [[SolarEngineSDK sharedInstance] startWithAppKey:_appKey userId:_SEUserId config:config];
+    [[SolarEngineSDK sharedInstance] startWithAppKey:_appKey config:config];
 }
 
 void __iOSSESDKSetAttributionDataCallback(SEBridgeCallback callback) {

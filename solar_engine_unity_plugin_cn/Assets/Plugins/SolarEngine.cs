@@ -911,7 +911,7 @@ namespace SolarEngine
             SolarEngineAndroidSDK.CallStatic("preInit", Context, appKey);
 #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
             //todo
-            __iOSSolarEngineSDKPreInit(appKey, "ios_channel");
+            __iOSSolarEngineSDKPreInit(appKey);
 #else
 
 #endif
@@ -2241,8 +2241,8 @@ namespace SolarEngine
 #if UNITY_IPHONE
 
 
-        [DllImport("__Internal")]
-            private static extern void __iOSSolarEngineSDKPreInit(string appKey, string SEUserId);
+            [DllImport("__Internal")]
+            private static extern void __iOSSolarEngineSDKPreInit(string appKey);
 
             [DllImport("__Internal")]
             private static extern void __iOSSolarEngineSDKInit(string appKey, string SEUserId, string seConfig, string rcConfig);
