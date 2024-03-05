@@ -268,6 +268,10 @@ namespace SolarEngine
 
         // 是否为GDPR区域。默认为false，可选字段
         public bool isGDPRArea { get; set; }
+        // 用户是否允许Google将其数据用于个性化广告，不设置则不上报该字段，可选字段，只有Android调用有效，iOS没有此字段，无需设置此字段
+        public bool adPersonalizationEnabled { get; set; }
+        // 用户是否同意将其数据发送到Google。不设置则不上报该字段，可选字段，只有Android调用有效，iOS没有此字段，无需设置此字段
+        public bool adUserDataEnabled { get; set; }
 
         // 是否关闭SDK内部日志。默认为false，可选字段
         public bool disableRecordLog { get; set; }
@@ -926,6 +930,8 @@ namespace SolarEngine
             seDict.Add("isDebugModel", config.isDebugModel);
             seDict.Add("logEnabled", config.logEnabled);
             seDict.Add("isGDPRArea", config.isGDPRArea);
+            seDict.Add("adPersonalizationEnabled", config.adPersonalizationEnabled);
+            seDict.Add("adUserDataEnabled", config.adUserDataEnabled);
             seDict.Add("disableRecordLog", config.disableRecordLog);
             seDict.Add("isEnable2GReporting", config.isEnable2GReporting);
             string jonString = JsonConvert.SerializeObject(seDict);
@@ -961,6 +967,8 @@ namespace SolarEngine
             seDict.Add("isDebugModel", config.isDebugModel);
             seDict.Add("logEnabled", config.logEnabled);
             seDict.Add("isGDPRArea", config.isGDPRArea);
+            seDict.Add("adPersonalizationEnabled", config.adPersonalizationEnabled);
+            seDict.Add("adUserDataEnabled", config.adUserDataEnabled);
             seDict.Add("disableRecordLog", config.disableRecordLog);
             seDict.Add("isEnable2GReporting", config.isEnable2GReporting);
             string seJonString = JsonConvert.SerializeObject(seDict);
