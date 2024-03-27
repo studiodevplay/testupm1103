@@ -10,6 +10,7 @@
 #import <SESDKRemoteConfig/SESDKRemoteConfig.h>
 
 typedef void (*SEBridgeCallback)(int errorCode, const char * data);
+typedef void (*SEBridgeInitCallback)(int errorCode);
 
 NSString * const SEKeyFlutterEventType                                   = @"_event_type";
 
@@ -25,6 +26,39 @@ NSString * const SEKeyFlutterEventNameCustom                             = @"_cu
 
 NSString * const SEKeyFlutterKeyCustomProperties                         = @"_customProperties";
 NSString * const SEKeyFlutterKeyCustomEventName                          = @"_customEventName";
+
+
+@interface SEWrapperManager : NSObject
+
+@property (nonatomic,copy)NSString *sub_lib_version;
+@property (nonatomic,copy)NSString *sdk_type;
+
++ (SEWrapperManager *)sharedInstance;
+
+@end
+
+@implementation SEWrapperManager
+
++ (SEWrapperManager *)sharedInstance {
+    static SEWrapperManager * instance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [[self alloc] init];
+    });
+    return instance;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _sdk_type = @"unity";
+    }
+    return self;
+}
+
+@end
+
 
 id seTrimValue(id __nullable value){
     
@@ -362,7 +396,13 @@ void __iOSSolarEngineSDKInit(const char * appKey, const char * SEUserId, const c
     config.logEnabled = [seDict[@"logEnabled"] boolValue];
     config.disableRecordLog = [seDict[@"disableRecordLog"] boolValue];
     config.enable2GReporting = [seDict[@"isEnable2GReporting"] boolValue];
+    config.isGDPRArea = [seDict[@"isGDPRArea"] boolValue];
 
+    NSString *sub_lib_version = seDict[@"sub_lib_version"];
+    if ([sub_lib_version isKindOfClass:[NSString class]]) {
+        [SEWrapperManager sharedInstance].sub_lib_version = sub_lib_version;
+    }
+    
     NSDictionary *rcDict = nil;
     if (rcConfig != NULL) {
         NSString *_rcConfig = [NSString stringWithUTF8String:rcConfig];
@@ -388,6 +428,15 @@ void __iOSSolarEngineSDKInit(const char * appKey, const char * SEUserId, const c
     
     
     [[SolarEngineSDK sharedInstance] startWithAppKey:_appKey config:config];
+}
+
+void __iOSSESDKSetInitCompletedCallback(SEBridgeInitCallback callback) {
+    
+    [[SolarEngineSDK sharedInstance] setInitCompletedCallback:^(int code) {
+        if (callback) {
+            callback(code);
+        }
+    }];
 }
 
 void __iOSSESDKSetAttributionDataCallback(SEBridgeCallback callback) {
@@ -433,15 +482,50 @@ void __iOSSolarEngineSDKTrack(const char *eventName, const char *attributes)
 
     NSData *data = [_attributes dataUsingEncoding:NSUTF8StringEncoding];
     NSError *error = nil;
-    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-
-    if (error) {
-        NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data",_attributes];
-        NSLog(@"track, error :%@",msg);
-        return;
+    NSDictionary *dict = nil;
+    
+    if (data){
+        dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data",_attributes];
+            NSLog(@"track, error :%@",msg);
+            return;
+        }
     }
 
     [[SolarEngineSDK sharedInstance] track:_eventName withProperties:dict];
+}
+
+void __iOSSolarEngineSDKTrackCustomEventWithPreAttributes(const char *eventName, const char *customAttributes, const char *preAttributes)
+{
+    NSString *_eventName = [NSString stringWithUTF8String:eventName];
+    NSString *_customAttributes = [NSString stringWithUTF8String:customAttributes];
+    NSString *_preAttributes = [NSString stringWithUTF8String:preAttributes];
+
+    NSData *customData = [_customAttributes dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *error = nil;
+    NSDictionary *customProperties = nil;
+    if (customData) {
+        customProperties = [NSJSONSerialization JSONObjectWithData:customData options:0 error:&error];
+        if (error) {
+            NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data",_customAttributes];
+            NSLog(@"track, error :%@",msg);
+            return;
+        }
+    }
+    
+    NSData *preData = [_preAttributes dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *preError = nil;
+    NSDictionary *preProperties = nil;
+    if (preData) {
+        preProperties = [NSJSONSerialization JSONObjectWithData:preData options:0 error:&error];
+        if (preError) {
+            NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data",_preAttributes];
+            NSLog(@"track, error :%@",msg);
+            return;
+        }
+    }
+    [[SolarEngineSDK sharedInstance] track:_eventName withProperties:customProperties withPreProperties:preProperties];
 }
 
 

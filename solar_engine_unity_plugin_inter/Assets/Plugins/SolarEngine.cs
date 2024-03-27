@@ -282,6 +282,9 @@ namespace SolarEngine
         // 设置获取归因结果回调，可选字段
         public Analytics.SEAttributionCallback attributionCallback { get; set; }
 
+        // 设置初始化完成回调, 可选
+        public Analytics.SESDKInitCompletedCallback initCompletedCallback { get; set; }
+
     }
 
     [Serializable]
@@ -298,8 +301,15 @@ namespace SolarEngine
     public partial class Analytics : MonoBehaviour
     {
 
+        private static readonly string sdk_version = "1.2.7.2";
+
+
         private SEAttributionCallback attributionCallback_private = null;
         public delegate void SEAttributionCallback(int code, Dictionary<string, object> attribution);
+
+
+        private SESDKInitCompletedCallback initCompletedCallback_private = null;
+        public delegate void SESDKInitCompletedCallback(int code);
 
 
         // only ios
@@ -711,11 +721,24 @@ namespace SolarEngine
         /// 上报自定义事件
         /// </summary>
         /// <param name="customEventName">自定义事件名称</param>
-        /// <param name="attributes">自定义事件属性</param>
-        public static void trackCustom(string customEventName, Dictionary<string, object> attributes)
+        /// <param name="customAttributes">自定义事件属性</param>
+        public static void trackCustom(string customEventName, Dictionary<string, object> customAttributes)
         {
-            ReportCustomEvent(customEventName, attributes);
+            ReportCustomEvent(customEventName, customAttributes);
         }
+
+
+        /// <summary>
+        /// 上报自定义事件
+        /// </summary>
+        /// <param name="customEventName">自定义事件名称</param>
+        /// <param name="customAttributes">自定义事件属性</param>
+        /// <param name="preAttributes">SDK预置属性</param>
+        public static void trackCustom(string customEventName, Dictionary<string, object> customAttributes, Dictionary<string, object> preAttributes)
+        {
+            ReportCustomEventWithPreAttributes(customEventName, customAttributes, preAttributes);
+        }
+
 
         /// <summary>
         /// 创建时长事件
@@ -934,10 +957,18 @@ namespace SolarEngine
             seDict.Add("adUserDataEnabled", config.adUserDataEnabled);
             seDict.Add("disableRecordLog", config.disableRecordLog);
             seDict.Add("isEnable2GReporting", config.isEnable2GReporting);
+            seDict.Add("sub_lib_version", sdk_version);
+
             string jonString = JsonConvert.SerializeObject(seDict);
 
 
-            if (config.attributionCallback != null) {
+            if (config.initCompletedCallback != null) {
+                Analytics.Instance.initCompletedCallback_private = config.initCompletedCallback;
+            }
+
+
+            if (config.attributionCallback != null)
+            {
                 Analytics.Instance.attributionCallback_private = config.attributionCallback;
             }
 
@@ -951,9 +982,14 @@ namespace SolarEngine
                 SolarEngineAndroidSDK.CallStatic("initialize", Context, appKey,userId,jonString,null);
             }
 #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+            if (config.initCompletedCallback != null) {
+                __iOSSESDKSetInitCompletedCallback(OnInitCompletedCallback);
+            }
+
             if (config.attributionCallback != null) {
                 __iOSSESDKSetAttributionDataCallback(OnAttributionCallback);
             }
+
             __iOSSolarEngineSDKInit(appKey, userId, jonString, null);
 #else
 
@@ -971,7 +1007,13 @@ namespace SolarEngine
             seDict.Add("adUserDataEnabled", config.adUserDataEnabled);
             seDict.Add("disableRecordLog", config.disableRecordLog);
             seDict.Add("isEnable2GReporting", config.isEnable2GReporting);
+            seDict.Add("sub_lib_version", sdk_version);
             string seJonString = JsonConvert.SerializeObject(seDict);
+
+            if (config.initCompletedCallback != null)
+            {
+                Analytics.Instance.initCompletedCallback_private = config.initCompletedCallback;
+            }
 
             if (config.attributionCallback != null)
             {
@@ -1010,9 +1052,14 @@ namespace SolarEngine
             SolarEngineAndroidSDK.CallStatic("initialize", Context, appKey,userId,seJonString,rcJonString,null);
         }
 #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
-            if (config.attributionCallback != null) {
+            if (config.initCompletedCallback != null) {
+                __iOSSESDKSetInitCompletedCallback(OnInitCompletedCallback);
+            }
+
+             if (config.attributionCallback != null) {
                 __iOSSESDKSetAttributionDataCallback(OnAttributionCallback);
             }
+
             __iOSSolarEngineSDKInit(appKey, userId, seJonString, rcJonString);
 #else
 
@@ -2106,6 +2153,22 @@ namespace SolarEngine
 #endif
         }
 
+        private static void ReportCustomEventWithPreAttributes(string customEventName, Dictionary<string, object> customAttributes, Dictionary<string, object> preAttributes)
+        {
+            string customDataJSONString = JsonConvert.SerializeObject(customAttributes);
+            string preDataJSONString = JsonConvert.SerializeObject(preAttributes);
+
+#if UNITY_EDITOR
+            Debug.Log("Unity Editor: ReportCustomEvent");
+#elif UNITY_ANDROID
+            // todo
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+             __iOSSolarEngineSDKTrackCustomEventWithPreAttributes(customEventName,customDataJSONString,preDataJSONString);
+#else
+
+#endif
+        }
+
         private static void ReportEventImmediately()
         {
 #if UNITY_EDITOR
@@ -2121,12 +2184,20 @@ namespace SolarEngine
 
 
 
+
+
 #if UNITY_IPHONE
         //回调函数，必须MonoPInvokeCallback并且是static
         [MonoPInvokeCallback(typeof(SEiOSStringCallback))]
         private static void OnAttributionCallback(int code, string attribution)
         {
             OnAttributionHandler(code, attribution);
+        }
+
+        [MonoPInvokeCallback(typeof(SESDKInitCompletedCallback))]
+        private static void OnInitCompletedCallback(int code)
+        {
+            OnInitCompletedHandler(code);
         }
 
         //回调函数，必须MonoPInvokeCallback并且是static
@@ -2197,6 +2268,24 @@ namespace SolarEngine
 
         }
 
+        private static void OnInitCompletedHandler(int code)
+        {
+        
+
+            Analytics.PostTask(() =>
+            {
+                if (Analytics.Instance.initCompletedCallback_private != null)
+                {
+                    Analytics.Instance.initCompletedCallback_private.Invoke(code);
+                }
+                else
+                {
+                    Debug.Log("Unity Editor: initCompletedCallback_private not found ");
+                }
+            });
+
+        }
+
         private static void OnSKANUpdateCVCompletionHandler(int errorCode, String errorMsg)
         {
             Analytics.PostTask(() =>
@@ -2261,7 +2350,10 @@ namespace SolarEngine
             [DllImport("__Internal")]
 	        private static extern void __iOSSolarEngineSDKTrack(string eventName, string attributes);
 
-	        [DllImport("__Internal")]
+            [DllImport("__Internal")]
+            private static extern void __iOSSolarEngineSDKTrackCustomEventWithPreAttributes(string eventName, string customAttributes, string preAttributes);
+
+            [DllImport("__Internal")]
 	        private static extern void __iOSSolarEngineSDKTrackIAPWithAttributes(string attributes);
 
 	        [DllImport("__Internal")]
@@ -2350,6 +2442,9 @@ namespace SolarEngine
 
             [DllImport("__Internal")]
             private static extern void __iOSSESDKSetAttributionDataCallback(SEiOSStringCallback callback);
+
+            [DllImport("__Internal")]
+            private static extern void __iOSSESDKSetInitCompletedCallback(SESDKInitCompletedCallback callback);
 
             [DllImport("__Internal")]
             private static extern void __iOSSESDKupdatePostbackConversionValue(int conversionValue, SEiOSStringCallback callback);
