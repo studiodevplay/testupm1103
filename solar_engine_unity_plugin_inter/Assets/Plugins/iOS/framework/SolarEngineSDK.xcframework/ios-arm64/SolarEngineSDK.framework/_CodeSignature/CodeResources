@@ -10,11 +10,11 @@
 		</data>
 		<key>Headers/SEEventConstants.h</key>
 		<data>
-		X0pEXSD168/NlS+US/S3cEWRRhM=
+		nO1NlJYfA4lucUWDm6k4YyhTxtE=
 		</data>
 		<key>Headers/SolarEngineSDK.h</key>
 		<data>
-		Graf5LTp2lvU4NIsUufhFlJlAWg=
+		J/3oXiIsCqp2YiU7eGLsUjm5SXY=
 		</data>
 		<key>Info.plist</key>
 		<data>
@@ -46,22 +46,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			X0pEXSD168/NlS+US/S3cEWRRhM=
+			nO1NlJYfA4lucUWDm6k4YyhTxtE=
 			</data>
 			<key>hash2</key>
 			<data>
-			0A/U3PZUTSwSLzj/k6Q0IXTh9Lzf1sd57miL5GhUBps=
+			TkojnUFbYRTaJkD/98E4jhX1FZsB0cgkNZmtK3qWrno=
 			</data>
 		</dict>
 		<key>Headers/SolarEngineSDK.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			Graf5LTp2lvU4NIsUufhFlJlAWg=
+			J/3oXiIsCqp2YiU7eGLsUjm5SXY=
 			</data>
 			<key>hash2</key>
 			<data>
-			7ccUunxXGWo36AH7WOKls9bIoFGRY6MbPY08W0a4Az8=
+			5l8VyCZ2qtaOmMPDxeFCYFTimZkzdUS6rOcr7j0Mq/I=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>

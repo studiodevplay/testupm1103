@@ -198,7 +198,7 @@ typedef NS_ENUM(NSInteger, SolarEngineAdType) {
 @property (nonatomic, copy) NSDictionary *customProperties;
 
 /// 预置属性
-@property (nonatomic, copy) NSDictionary *preProperties;
+@property (nonatomic, copy) NSDictionary *presetProperties;
 
 @end
 

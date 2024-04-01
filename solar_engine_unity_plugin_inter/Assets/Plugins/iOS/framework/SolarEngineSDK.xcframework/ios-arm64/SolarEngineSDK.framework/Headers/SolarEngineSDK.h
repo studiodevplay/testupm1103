@@ -95,7 +95,7 @@ typedef void (^SECompleteCallback)(int code);
 /// @param eventName 事件名称 事件名支持大小写中英文、数字、下划线，不能以下划线开头，长度不超过 40
 /// @param customProperties 事件自定义属性，不能以_开头的key
 /// @param preProperties 事件预置属性，可以传一些特定的预置属性以_下划线开头
-- (void)track:(NSString *)eventName withProperties:( NSDictionary * _Nullable )customProperties withPreProperties:( NSDictionary * _Nullable )preProperties;
+- (void)track:(NSString *)eventName withCustomProperties:( NSDictionary * _Nullable )customProperties withPresetProperties:( NSDictionary * _Nullable )preProperties;
 
 /// 上报应用内购买事件
 /// @param attribute SEIAPEventAttribute 实例

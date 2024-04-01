@@ -525,7 +525,7 @@ void __iOSSolarEngineSDKTrackCustomEventWithPreAttributes(const char *eventName,
             return;
         }
     }
-    [[SolarEngineSDK sharedInstance] track:_eventName withProperties:customProperties withPreProperties:preProperties];
+    [[SolarEngineSDK sharedInstance] track:_eventName withCustomProperties:customProperties withPresetProperties:preProperties];
 }
 
 
