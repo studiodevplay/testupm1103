@@ -971,7 +971,7 @@ namespace SolarEngine
 #elif UNITY_ANDROID
             Debug.Log("SEUunity:jonString :" + jonString);
             SolarEngineAndroidSDK.CallStatic("initialize", Context, appKey, userId, jonString,
-                config.attributionCallback != null ? new OnAttributionReceivedData() : null, config.initCompletedCallback != null ? new OnInitCompletedCallback() : null);
+                config.attributionCallback != null ? new OnAttributionReceivedData() : null, config.initCompletedCallback != null ? new OnUnityInitCompletedCallback() : null);
 #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
             if (config.initCompletedCallback != null) {
                 __iOSSESDKSetInitCompletedCallback(OnInitCompletedCallback);
@@ -1036,7 +1036,7 @@ namespace SolarEngine
             Debug.Log("Unity Editor: Init error");
 #elif UNITY_ANDROID
         SolarEngineAndroidSDK.CallStatic("initialize", Context, appKey, userId, seJonString, rcJonString,
-                config.attributionCallback != null ? new OnAttributionReceivedData() : null, config.initCompletedCallback != null ? new OnInitCompletedCallback() : null);
+                config.attributionCallback != null ? new OnAttributionReceivedData() : null, config.initCompletedCallback != null ? new OnUnityInitCompletedCallback() : null);
 #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
             if (config.initCompletedCallback != null) {
                 __iOSSESDKSetInitCompletedCallback(OnInitCompletedCallback);
@@ -2147,7 +2147,7 @@ namespace SolarEngine
 #if UNITY_EDITOR
             Debug.Log("Unity Editor: ReportCustomEvent");
 #elif UNITY_ANDROID
-            // todo
+            SolarEngineAndroidSDKObject.CallStatic("trackCustomEventWithPreEventData",customEventName,customDataJSONString,preDataJSONString);
 #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
              __iOSSolarEngineSDKTrackCustomEventWithPreAttributes(customEventName,customDataJSONString,preDataJSONString);
 #else
@@ -2224,9 +2224,9 @@ namespace SolarEngine
 #endif
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-    private sealed class OnInitCompletedCallback: AndroidJavaProxy
+    private sealed class OnUnityInitCompletedCallback: AndroidJavaProxy
     {
-        public OnInitCompletedCallback():base("com.reyun.solar.engine.unity.bridge.OnInitCompletedCallback")
+        public OnUnityInitCompletedCallback():base("com.reyun.solar.engine.unity.bridge.OnUnityInitCompletedCallback")
         {
             
         }
