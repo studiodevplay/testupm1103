@@ -301,7 +301,7 @@ namespace SolarEngine
     public partial class Analytics : MonoBehaviour
     {
 
-        private static readonly string sdk_version = "1.2.7.2";
+        private static readonly string sdk_version = "1.2.7.3";
 
 
         private SEAttributionCallback attributionCallback_private = null;
