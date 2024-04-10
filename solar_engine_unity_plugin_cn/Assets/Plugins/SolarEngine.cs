@@ -970,11 +970,8 @@ namespace SolarEngine
             Debug.Log("Unity Editor: Init error");
 #elif UNITY_ANDROID
             Debug.Log("SEUunity:jonString :" + jonString);
-            if(config.attributionCallback != null) {
-                SolarEngineAndroidSDK.CallStatic("initialize", Context, appKey,userId,jonString,new OnAttributionReceivedData());
-            } else {
-                SolarEngineAndroidSDK.CallStatic("initialize", Context, appKey,userId,jonString,null);
-            }
+            SolarEngineAndroidSDK.CallStatic("initialize", Context, appKey, userId, jonString,
+                config.attributionCallback != null ? new OnAttributionReceivedData() : null, config.initCompletedCallback != null ? new OnInitCompletedCallback() : null);
 #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
             if (config.initCompletedCallback != null) {
                 __iOSSESDKSetInitCompletedCallback(OnInitCompletedCallback);
@@ -1038,11 +1035,8 @@ namespace SolarEngine
 #if UNITY_EDITOR
             Debug.Log("Unity Editor: Init error");
 #elif UNITY_ANDROID
-        if(config.attributionCallback != null) {
-            SolarEngineAndroidSDK.CallStatic("initialize", Context, appKey, userId, seJonString, rcJonString,new OnAttributionReceivedData());
-        } else {
-            SolarEngineAndroidSDK.CallStatic("initialize", Context, appKey,userId,seJonString,rcJonString,null);
-        }
+        SolarEngineAndroidSDK.CallStatic("initialize", Context, appKey, userId, seJonString, rcJonString,
+                config.attributionCallback != null ? new OnAttributionReceivedData() : null, config.initCompletedCallback != null ? new OnInitCompletedCallback() : null);
 #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
             if (config.initCompletedCallback != null) {
                 __iOSSESDKSetInitCompletedCallback(OnInitCompletedCallback);
@@ -2225,6 +2219,20 @@ namespace SolarEngine
         public void onResultForUnity(int code,String result)
         {
             OnAttributionHandler(code,result);
+        }
+    }
+#endif
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+    private sealed class OnInitCompletedCallback: AndroidJavaProxy
+    {
+        public OnInitCompletedCallback():base("com.reyun.solar.engine.unity.bridge.OnInitCompletedCallback")
+        {
+            
+        }
+        public void onInitializationCompleted(int code)
+        {
+            OnInitCompletedHandler(code,result);
         }
     }
 #endif
