@@ -1,6 +1,6 @@
 framework module SESDKRemoteConfig {
   umbrella header "SESDKRemoteConfig.h"
-  export *
 
+  export *
   module * { export * }
 }
