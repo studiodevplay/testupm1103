@@ -269,11 +269,14 @@ namespace SolarEngine
         // 是否为GDPR区域。默认为false，可选字段
         public bool isGDPRArea { get; set; }
 
-        // 是否关闭SDK内部日志。默认为false，可选字段
-        public bool disableRecordLog { get; set; }
-
         // 是否允许2G上报数据。默认为false，可选字段
         public bool isEnable2GReporting { get; set; }
+
+        // 是否支持coppa合规。默认为false，可选字段
+        public bool isCoppaEnabled { get; set; }
+
+        // 是否支持Kids App应用。默认为false，可选字段
+        public bool isKidsAppEnabled { get; set; }
 
         // 设置获取归因结果回调，可选字段
         public Analytics.SEAttributionCallback attributionCallback { get; set; }
@@ -297,7 +300,7 @@ namespace SolarEngine
     public partial class Analytics : MonoBehaviour
     {
 
-        private static readonly string sdk_version = "1.2.7.4";
+        private static readonly string sdk_version = "1.2.7.5";
 
 
         private SEAttributionCallback attributionCallback_private = null;
@@ -949,8 +952,9 @@ namespace SolarEngine
             seDict.Add("isDebugModel", config.isDebugModel);
             seDict.Add("logEnabled", config.logEnabled);
             seDict.Add("isGDPRArea", config.isGDPRArea);
-            seDict.Add("disableRecordLog", config.disableRecordLog);
             seDict.Add("isEnable2GReporting", config.isEnable2GReporting);
+            seDict.Add("isCoppaEnabled", config.isCoppaEnabled);
+            seDict.Add("isKidsAppEnabled", config.isKidsAppEnabled);
             seDict.Add("sub_lib_version", sdk_version);
 
             string jonString = JsonConvert.SerializeObject(seDict);
@@ -994,8 +998,9 @@ namespace SolarEngine
             seDict.Add("isDebugModel", config.isDebugModel);
             seDict.Add("logEnabled", config.logEnabled);
             seDict.Add("isGDPRArea", config.isGDPRArea);
-            seDict.Add("disableRecordLog", config.disableRecordLog);
             seDict.Add("isEnable2GReporting", config.isEnable2GReporting);
+            seDict.Add("isCoppaEnabled", config.isCoppaEnabled);
+            seDict.Add("isKidsAppEnabled", config.isKidsAppEnabled);
             seDict.Add("sub_lib_version", sdk_version);
             string seJonString = JsonConvert.SerializeObject(seDict);
 
