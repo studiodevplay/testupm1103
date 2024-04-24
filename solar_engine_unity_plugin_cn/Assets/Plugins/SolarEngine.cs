@@ -272,12 +272,6 @@ namespace SolarEngine
         // 是否允许2G上报数据。默认为false，可选字段
         public bool isEnable2GReporting { get; set; }
 
-        // 是否支持coppa合规。默认为false，可选字段
-        public bool isCoppaEnabled { get; set; }
-
-        // 是否支持Kids App应用。默认为false，可选字段
-        public bool isKidsAppEnabled { get; set; }
-
         // 设置获取归因结果回调，可选字段
         public Analytics.SEAttributionCallback attributionCallback { get; set; }
 
@@ -953,8 +947,6 @@ namespace SolarEngine
             seDict.Add("logEnabled", config.logEnabled);
             seDict.Add("isGDPRArea", config.isGDPRArea);
             seDict.Add("isEnable2GReporting", config.isEnable2GReporting);
-            seDict.Add("isCoppaEnabled", config.isCoppaEnabled);
-            seDict.Add("isKidsAppEnabled", config.isKidsAppEnabled);
             seDict.Add("sub_lib_version", sdk_version);
 
             string jonString = JsonConvert.SerializeObject(seDict);
@@ -999,8 +991,6 @@ namespace SolarEngine
             seDict.Add("logEnabled", config.logEnabled);
             seDict.Add("isGDPRArea", config.isGDPRArea);
             seDict.Add("isEnable2GReporting", config.isEnable2GReporting);
-            seDict.Add("isCoppaEnabled", config.isCoppaEnabled);
-            seDict.Add("isKidsAppEnabled", config.isKidsAppEnabled);
             seDict.Add("sub_lib_version", sdk_version);
             string seJonString = JsonConvert.SerializeObject(seDict);
 
