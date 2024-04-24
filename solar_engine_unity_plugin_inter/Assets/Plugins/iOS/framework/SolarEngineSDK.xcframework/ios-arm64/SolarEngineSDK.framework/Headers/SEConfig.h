@@ -61,15 +61,18 @@ ENUM：SERCMergeTypeUser 在App版本更新时会清除缓存配置
 /// 是否为GDPR区域，默认为不做GDPR区域限制
 @property (nonatomic, assign) BOOL isGDPRArea;
 
+// 是否开启COPPA合规政策，开启后不获取idfv、idfa, 默认不开启
+@property (nonatomic, assign) BOOL setCoppaEnabled;
+
+// 是否开启Kids App合规政策，开启后不获取idfv、idfa, 默认不开启
+@property (nonatomic, assign) BOOL setKidsAppEnabled;
+
 /// 自动追踪埋点采集类型，SDK默认不开启自动追踪埋点采集
 @property(nonatomic, assign) SEAutoTrackEventType autoTrackEventType;
 
 
 /// 2G网络是否上报数据，默认只有3G、4G、5G、WiFi上报，2G不上报
 @property (nonatomic, assign) BOOL enable2GReporting;
-
-
-@property (nonatomic, assign) BOOL disableRecordLog;
 
 
 /// 在线参数config (不使用在线参数则不需要设置)

@@ -394,7 +394,8 @@ void __iOSSolarEngineSDKInit(const char * appKey, const char * SEUserId, const c
     SEConfig *config = [[SEConfig alloc] init];
     config.isDebugModel = [seDict[@"isDebugModel"] boolValue];
     config.logEnabled = [seDict[@"logEnabled"] boolValue];
-    config.disableRecordLog = [seDict[@"disableRecordLog"] boolValue];
+    config.setCoppaEnabled = [seDict[@"isCoppaEnabled"] boolValue];
+    config.setKidsAppEnabled = [seDict[@"isKidsAppEnabled"] boolValue];
     config.enable2GReporting = [seDict[@"isEnable2GReporting"] boolValue];
     config.isGDPRArea = [seDict[@"isGDPRArea"] boolValue];
 
