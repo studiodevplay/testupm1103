@@ -74,6 +74,9 @@ ENUM：SERCMergeTypeUser 在App版本更新时会清除缓存配置
 /// 2G网络是否上报数据，默认只有3G、4G、5G、WiFi上报，2G不上报
 @property (nonatomic, assign) BOOL enable2GReporting;
 
+/// 首次上报事件等待ATT授权秒数，单位：秒
+@property (nonatomic, assign) int attAuthorizationWaitingInterval;
+
 
 /// 在线参数config (不使用在线参数则不需要设置)
 @property (nonatomic, strong) SERemoteConfig * remoteConfig;

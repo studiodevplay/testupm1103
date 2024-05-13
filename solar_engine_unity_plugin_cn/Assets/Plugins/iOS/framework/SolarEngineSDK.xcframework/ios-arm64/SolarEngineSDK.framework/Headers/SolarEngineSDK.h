@@ -11,7 +11,7 @@
 #import <Webkit/WebKit.h>
 #import <SolarEngineSDK/SEConfig.h>
 
-#define SESDKVersion @"1.2.7.5"
+#define SESDKVersion @"1.2.7.6"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -65,6 +65,14 @@ typedef void (^SECompleteCallback)(int code);
 /// 当有归因结果或者获取归因结果失败时回调，error.cod如上描述
 - (void)setAttributionCallback:(SEAttributionCallback)callback;
 
+/// 获取归因结果
+/// 如果没有归因结果则返回nil
+- (NSDictionary *)getAttributionData;
+
+/// SolarEngine 封装系统requestTrackingAuthorizationWithCompletionHandler接口
+/// @param completion 回调用户授权状态: 0: Not Determined；1: Restricted；2: Denied；3: Authorized ；999: system error
+- (void)requestTrackingAuthorizationWithCompletionHandler:(void (^)(NSUInteger status))completion;
+
 /*
  code说明如下
  0: 初始化成功
@@ -75,11 +83,6 @@ typedef void (^SECompleteCallback)(int code);
  */
 /// 设置SDK初始化回调，成功或者失败
 - (void)setInitCompletedCallback:(SECompleteCallback)callback;
-
-/// 获取归因结果
-/// 如果没有归因结果则返回nil
-- (NSDictionary *)getAttributionData;
-
 
 /// 获取SDK事件基础属性
 - (NSDictionary *)getPresetProperties;
