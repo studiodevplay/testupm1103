@@ -398,6 +398,7 @@ void __iOSSolarEngineSDKInit(const char * appKey, const char * SEUserId, const c
     config.setKidsAppEnabled = [seDict[@"isKidsAppEnabled"] boolValue];
     config.enable2GReporting = [seDict[@"isEnable2GReporting"] boolValue];
     config.isGDPRArea = [seDict[@"isGDPRArea"] boolValue];
+    config.attAuthorizationWaitingInterval = [seDict[@"attAuthorizationWaitingInterval"] intValue];
 
     NSString *sub_lib_version = seDict[@"sub_lib_version"];
     if ([sub_lib_version isKindOfClass:[NSString class]]) {
@@ -439,6 +440,16 @@ void __iOSSESDKSetInitCompletedCallback(SEBridgeInitCallback callback) {
         }
     }];
 }
+
+void __iOSSESDKRequestTrackingAuthorizationWithCompletionHandler(SEBridgeInitCallback callback) {
+    [[SolarEngineSDK sharedInstance] requestTrackingAuthorizationWithCompletionHandler:^(NSUInteger status) {
+                
+        if (callback) {
+            callback((int)status);
+        }
+    }];
+}
+
 
 void __iOSSESDKSetAttributionDataCallback(SEBridgeCallback callback) {
     
