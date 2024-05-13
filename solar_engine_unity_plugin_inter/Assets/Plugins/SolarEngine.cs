@@ -282,11 +282,15 @@ namespace SolarEngine
         // 是否支持Kids App应用。默认为false，可选字段
         public bool isKidsAppEnabled { get; set; }
 
+        // iOS ATT 授权等待时间，默认不等待，可选字段；只有iOS调用有效。
+        public int attAuthorizationWaitingInterval { get; set; }
+
         // 设置获取归因结果回调，可选字段
         public Analytics.SEAttributionCallback attributionCallback { get; set; }
 
         // 设置初始化完成回调, 可选
         public Analytics.SESDKInitCompletedCallback initCompletedCallback { get; set; }
+
 
     }
 
@@ -314,6 +318,9 @@ namespace SolarEngine
         private SESDKInitCompletedCallback initCompletedCallback_private = null;
         public delegate void SESDKInitCompletedCallback(int code);
 
+
+        private SESDKATTCompletedCallback attCompletedCallback_private = null;
+        public delegate void SESDKATTCompletedCallback(int code);
 
         // only ios
         public delegate void SKANUpdateCompletionHandler(int errorCode, String errorMsg);
@@ -846,7 +853,27 @@ namespace SolarEngine
 
 
         /// <summary>
-        /// 
+        /// 仅支持iOS
+        /// SolarEngine 封装系统requestTrackingAuthorizationWithCompletionHandler接口
+        /// callback 回调用户授权状态: 0: Not Determined；1: Restricted；2: Denied；3: Authorized ；999: system error
+        /// </summary>
+        public static void requestTrackingAuthorizationWithCompletionHandler(SESDKATTCompletedCallback callback) {
+
+            #if UNITY_EDITOR
+                Debug.Log("Unity Editor: requestTrackingAuthorizationWithCompletionHandler only ios");
+            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+                Analytics.Instance.attCompletedCallback_private = callback;
+                __iOSSESDKRequestTrackingAuthorizationWithCompletionHandler(OnRequestTrackingAuthorizationCompletedCallback);
+
+            #else
+                Debug.Log("Unity Editor: requestTrackingAuthorizationWithCompletionHandler only ios");
+            #endif
+        }
+
+
+        /// <summary>
+        /// 仅支持iOS
+        /// SolarEngine 封装系统updatePostbackConversionValue
         /// </summary>
         public static void updatePostbackConversionValue(int conversionValue, SKANUpdateCompletionHandler callback) {
 
@@ -863,7 +890,8 @@ namespace SolarEngine
         }
 
         /// <summary>
-        /// 
+        /// 仅支持iOS
+        /// SolarEngine 封装系统updateConversionValueCoarseValue
         /// </summary>
         public static void updateConversionValueCoarseValue(int fineValue, String coarseValue, SKANUpdateCompletionHandler callback)
         {
@@ -881,7 +909,8 @@ namespace SolarEngine
         }
 
         /// <summary>
-        /// 
+        /// 仅支持iOS
+        /// SolarEngine 封装系统updateConversionValueCoarseValueLockWindow
         /// </summary>
         public static void updateConversionValueCoarseValueLockWindow(int fineValue, String coarseValue, bool lockWindow, SKANUpdateCompletionHandler callback)
         {
@@ -962,6 +991,8 @@ namespace SolarEngine
             seDict.Add("isCoppaEnabled", config.isCoppaEnabled);
             seDict.Add("isKidsAppEnabled", config.isKidsAppEnabled);
             seDict.Add("sub_lib_version", sdk_version);
+            seDict.Add("attAuthorizationWaitingInterval", config.attAuthorizationWaitingInterval);
+
 
             string jonString = JsonConvert.SerializeObject(seDict);
 
@@ -1010,6 +1041,8 @@ namespace SolarEngine
             seDict.Add("isCoppaEnabled", config.isCoppaEnabled);
             seDict.Add("isKidsAppEnabled", config.isKidsAppEnabled);
             seDict.Add("sub_lib_version", sdk_version);
+            seDict.Add("attAuthorizationWaitingInterval", config.attAuthorizationWaitingInterval);
+
             string seJonString = JsonConvert.SerializeObject(seDict);
 
             if (config.initCompletedCallback != null)
@@ -2199,6 +2232,12 @@ namespace SolarEngine
             OnInitCompletedHandler(code);
         }
 
+        [MonoPInvokeCallback(typeof(SESDKATTCompletedCallback))]
+        private static void OnRequestTrackingAuthorizationCompletedCallback(int code)
+        {
+            OnRequestTrackingAuthorizationCompletedHandler(code);
+        }
+
         //回调函数，必须MonoPInvokeCallback并且是static
         [MonoPInvokeCallback(typeof(SEiOSStringCallback))]
         private static void OnSKANUpdateCVCallback(int errorCode, string errorMsg)
@@ -2294,6 +2333,24 @@ namespace SolarEngine
                 else
                 {
                     Debug.Log("Unity Editor: initCompletedCallback_private not found ");
+                }
+            });
+
+        }
+
+        private static void OnRequestTrackingAuthorizationCompletedHandler(int code)
+        {
+
+
+            Analytics.PostTask(() =>
+            {
+                if (Analytics.Instance.attCompletedCallback_private != null)
+                {
+                    Analytics.Instance.attCompletedCallback_private.Invoke(code);
+                }
+                else
+                {
+                    Debug.Log("Unity Editor: attCompletedCallback_private not found ");
                 }
             });
 
@@ -2458,6 +2515,9 @@ namespace SolarEngine
 
             [DllImport("__Internal")]
             private static extern void __iOSSESDKSetInitCompletedCallback(SESDKInitCompletedCallback callback);
+
+            [DllImport("__Internal")]
+            private static extern void __iOSSESDKRequestTrackingAuthorizationWithCompletionHandler(SESDKATTCompletedCallback callback);
 
             [DllImport("__Internal")]
             private static extern void __iOSSESDKupdatePostbackConversionValue(int conversionValue, SEiOSStringCallback callback);
