@@ -1440,12 +1440,12 @@ namespace SolarEngine
                 return;
             }
 
+            string keysJSONStr = JsonConvert.SerializeObject(keys);
 #if UNITY_EDITOR
             Debug.Log("Unity Editor: UserUnset");
 #elif UNITY_ANDROID
-                SolarEngineAndroidSDK.CallStatic("userUnset",keys);
+                SolarEngineAndroidSDK.CallStatic("userUnset",keysJSONStr);
 #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
-                string keysJSONStr = JsonConvert.SerializeObject(keys);
                 __iOSSolarEngineSDKUserUnset(keysJSONStr);
 #else
 
