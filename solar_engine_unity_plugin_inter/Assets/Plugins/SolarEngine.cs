@@ -308,7 +308,7 @@ namespace SolarEngine
     public partial class Analytics : MonoBehaviour
     {
 
-        private static readonly string sdk_version = "1.2.7.6";
+        private static readonly string sdk_version = "1.2.7.7";
 
 
         private SEAttributionCallback attributionCallback_private = null;
@@ -317,6 +317,9 @@ namespace SolarEngine
 
         private SESDKInitCompletedCallback initCompletedCallback_private = null;
         public delegate void SESDKInitCompletedCallback(int code);
+
+        private SESDKDeeplinkCallback deeplinkCallback_private = null;
+        public delegate void SESDKDeeplinkCallback(int code, Dictionary<string, object> data);
 
 
         private SESDKATTCompletedCallback attCompletedCallback_private = null;
@@ -850,6 +853,11 @@ namespace SolarEngine
             ReportEventImmediately();
         }
 
+        public static void deeplinkCompletionHandler(SESDKDeeplinkCallback callback)
+        {
+
+            DeeplinkCompletionHandler(callback);
+        }
 
 
         /// <summary>
@@ -859,15 +867,15 @@ namespace SolarEngine
         /// </summary>
         public static void requestTrackingAuthorizationWithCompletionHandler(SESDKATTCompletedCallback callback) {
 
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
                 Debug.Log("Unity Editor: requestTrackingAuthorizationWithCompletionHandler only ios");
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 Analytics.Instance.attCompletedCallback_private = callback;
                 __iOSSESDKRequestTrackingAuthorizationWithCompletionHandler(OnRequestTrackingAuthorizationCompletedCallback);
 
-            #else
-                Debug.Log("Unity Editor: requestTrackingAuthorizationWithCompletionHandler only ios");
-            #endif
+#else
+            Debug.Log("Unity Editor: requestTrackingAuthorizationWithCompletionHandler only ios");
+#endif
         }
 
 
@@ -877,15 +885,15 @@ namespace SolarEngine
         /// </summary>
         public static void updatePostbackConversionValue(int conversionValue, SKANUpdateCompletionHandler callback) {
 
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
                 Debug.Log("Unity Editor: updatePostbackConversionValue only ios");
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 Analytics.Instance.iosSKANUpdateCVCompletionHandler_private = callback;
                 __iOSSESDKupdatePostbackConversionValue(conversionValue, OnSKANUpdateCVCallback);
 
-            #else
-                Debug.Log("Unity Editor: updatePostbackConversionValue only ios");
-            #endif
+#else
+            Debug.Log("Unity Editor: updatePostbackConversionValue only ios");
+#endif
 
         }
 
@@ -896,16 +904,16 @@ namespace SolarEngine
         public static void updateConversionValueCoarseValue(int fineValue, String coarseValue, SKANUpdateCompletionHandler callback)
         {
 
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
                         Debug.Log("Unity Editor: updateConversionValueCoarseValue only ios");
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
 
                 Analytics.Instance.iosSKANUpdateCVCoarseValueCompletionHandler_private = callback;
                 __iOSSESDKupdateConversionValueCoarseValue(fineValue, coarseValue, OnSKANUpdateCVCoarseValueCallback);
             
-            #else
-                Debug.Log("Unity Editor: updateConversionValueCoarseValue only ios");
-            #endif
+#else
+            Debug.Log("Unity Editor: updateConversionValueCoarseValue only ios");
+#endif
         }
 
         /// <summary>
@@ -915,15 +923,15 @@ namespace SolarEngine
         public static void updateConversionValueCoarseValueLockWindow(int fineValue, String coarseValue, bool lockWindow, SKANUpdateCompletionHandler callback)
         {
 
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
                 Debug.Log("Unity Editor: updateConversionValueCoarseValueLockWindow only ios");
-            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                  Analytics.Instance.iosSKANUpdateCVCoarseValueLockWindowCompletionHandler_private = callback;
                  __iOSSESDKupdateConversionValueCoarseValueLockWindow(fineValue, coarseValue, lockWindow, OnSKANUpdateCVCoarseValueLockWindowCallback);
             
-            #else
-                 Debug.Log("Unity Editor: updatePostbackConversionValue only ios");
-            #endif
+#else
+            Debug.Log("Unity Editor: updatePostbackConversionValue only ios");
+#endif
         }
 
         #region 
@@ -1128,7 +1136,7 @@ namespace SolarEngine
 #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 return __iOSSolarEngineSDKVisitorID();
 #else
-                return null;
+            return null;
 #endif
         }
 
@@ -1147,7 +1155,7 @@ namespace SolarEngine
 #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 __iOSSolarEngineSDKLoginWithAccountID(accountId);
 #else
-                return;
+            return;
 #endif
 
         }
@@ -1162,7 +1170,7 @@ namespace SolarEngine
 #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 return __iOSSolarEngineSDKAccountID();
 #else
-                return null;
+            return null;
 #endif
 
         }
@@ -1233,7 +1241,7 @@ namespace SolarEngine
 #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 return __iOSSolarEngineSDKGetDistinctId();
 #else
-                return null;
+            return null;
 #endif
 
         }
@@ -1318,7 +1326,7 @@ namespace SolarEngine
                 __iOSSolarEngineSDKEventStart(timerEventName);
                 return "{ \"eventName\": \"" + timerEventName + "\", \"attributes\": " + attributesJSONString + " }";
 #else
-                return null;
+            return null;
 #endif
 
         }
@@ -1478,7 +1486,7 @@ namespace SolarEngine
 #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                return __iOSSolarEngineSDKGetAttribution();
 #else
-    return null;
+            return null;
 #endif
 
 
@@ -2215,6 +2223,21 @@ namespace SolarEngine
         }
 
 
+        private static void DeeplinkCompletionHandler(SESDKDeeplinkCallback callback)
+        {
+
+#if UNITY_EDITOR
+                Debug.Log("Unity Editor: DeeplinkCompletionHandler not found");
+#elif UNITY_ANDROID
+                Debug.Log("Android Editor: DeeplinkCompletionHandler not found");
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+                Analytics.Instance.deeplinkCallback_private = callback;
+                __iOSSolarEngineSDKDeeplinkParseCallback(OnDeeplinkParseCallback);
+#else
+
+#endif
+
+        }
 
 
 
@@ -2258,6 +2281,14 @@ namespace SolarEngine
         {
             OnSKANUpdateCVCoarseValueLockWindowCompletionHandler(errorCode, errorMsg);
         }
+
+        //回调函数，必须MonoPInvokeCallback并且是static
+        [MonoPInvokeCallback(typeof(SEiOSStringCallback))]
+        private static void OnDeeplinkParseCallback(int code, string jsonString)
+        {
+            OnDeeplinkCompletionHandler(code, jsonString);
+        }
+
 #endif
 
 
@@ -2351,6 +2382,36 @@ namespace SolarEngine
                 else
                 {
                     Debug.Log("Unity Editor: attCompletedCallback_private not found ");
+                }
+            });
+
+        }
+
+        private static void OnDeeplinkCompletionHandler(int code, String jsonString)
+        {
+            Dictionary<string, object> deeplinkData = null;
+
+            try
+            {
+                if (jsonString != null)
+                {
+                    deeplinkData = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonString);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e.Message);
+            }
+
+            Analytics.PostTask(() =>
+            {
+                if (Analytics.Instance.deeplinkCallback_private != null)
+                {
+                    Analytics.Instance.deeplinkCallback_private.Invoke(code, deeplinkData);
+                }
+                else
+                {
+                    Debug.Log("Unity Editor: OnDeeplinkCompletionHandler not found ");
                 }
             });
 
@@ -2527,6 +2588,9 @@ namespace SolarEngine
 
             [DllImport("__Internal")]
             private static extern void __iOSSESDKupdateConversionValueCoarseValueLockWindow(int fineValue, String coarseValue, bool lockWindow, SEiOSStringCallback callback);
+
+            [DllImport("__Internal")]
+            private static extern void __iOSSolarEngineSDKDeeplinkParseCallback(SEiOSStringCallback callback);
 
 
 #endif

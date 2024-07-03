@@ -480,5 +480,14 @@ typedef NS_ENUM(NSInteger, SolarEngineAdType) {
 
 @end
 
+@interface SEDeeplinkInfo : NSObject
+
+@property (nonatomic, copy) NSString *sedpLink;
+@property (nonatomic, copy) NSString *turlId;
+@property (nonatomic, copy) NSString *from;
+@property (nonatomic, copy) NSDictionary *customParams;
+
+@end
+
 
 NS_ASSUME_NONNULL_END

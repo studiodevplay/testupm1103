@@ -11,12 +11,13 @@
 #import <Webkit/WebKit.h>
 #import <SolarEngineSDK/SEConfig.h>
 
-#define SESDKVersion @"1.2.7.6"
+#define SESDKVersion @"1.2.7.7"
 
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^SEAttributionCallback)(int code, NSDictionary * _Nullable attributionData);
 typedef void (^SECompleteCallback)(int code);
+typedef void (^SEDeeplinkCallback)(int code, SEDeeplinkInfo * _Nullable deeplinkInfo);
 
 @class UIView, UIViewController;
 
@@ -133,6 +134,9 @@ typedef void (^SECompleteCallback)(int code);
 /// @param attribute  请传 SEEventBaseAttribute 的子类，具体的事件EventAttribute
 - (void)trackFirstEvent:(SEEventBaseAttribute *)attribute;
 
+/// 上报deeplink拉起成功事件, 注：如果调用了appDeeplinkOpenURL则不用调用该API，否则会造成重复事件
+/// @param customProperties 事件属性，不能以_开头的key
+- (void)trackAppReEngagement:( NSDictionary * _Nullable)customProperties;
 
 /// 上报浏览 App 页面事件
 /// @param viewController 视图控制器
@@ -233,6 +237,16 @@ typedef void (^SECompleteCallback)(int code);
 /// SEUserDeleteTypeByVisitorId：   通过VisitorId删除用户
 - (void)userDelete:(SEUserDeleteType)deleteType;
 
+
+#pragma Deeplink
+// 通过Deeplink(Universal Link或者URL Scheme)的方式打开App时把url传给SDK
+// @param url 系统回调的URL
+- (void)appDeeplinkOpenURL:(NSURL *)url;
+
+// 回调通过Deeplink的方式打开App时的回调参数
+- (void)setDeepLinkCallback:(SEDeeplinkCallback)callback;
+
+#pragma SKAN
 /// SKAN API 封装
 /// 参考：https://developer.apple.com/documentation/storekit/skadnetworkcoarseconversionvalue?language=objc
 /// 封装 SKAdNetwork 的 updatePostbackConversionValue:completionHandler:
