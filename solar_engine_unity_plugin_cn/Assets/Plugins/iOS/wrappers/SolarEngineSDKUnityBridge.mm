@@ -970,4 +970,46 @@ void __iOSSESDKupdateConversionValueCoarseValueLockWindow(int fineValue, const c
     }];
     
 }
+
+
+void __iOSSolarEngineSDKDeeplinkParseCallback(SEBridgeCallback callback) {
+    
+    [[SolarEngineSDK sharedInstance] setDeepLinkCallback:^(int code, SEDeeplinkInfo * _Nullable deeplinkInfo) {
+                
+        NSString *dData = nil;
+        if (code == 0){
+            
+            NSMutableDictionary *deeplinkData = [NSMutableDictionary dictionary];
+            
+            if (deeplinkInfo.from) {
+                [deeplinkData setObject:deeplinkInfo.from forKey:@"from"];
+            }
+            if (deeplinkInfo.sedpLink) {
+                [deeplinkData setObject:deeplinkInfo.sedpLink forKey:@"sedpLink"];
+            }
+            if (deeplinkInfo.turlId) {
+                [deeplinkData setObject:deeplinkInfo.turlId forKey:@"turlId"];
+            }
+            if (deeplinkInfo.customParams) {
+                [deeplinkData setObject:deeplinkInfo.customParams forKey:@"customParams"];
+            }
+            
+            NSData *data = [NSJSONSerialization dataWithJSONObject:deeplinkData options:0 error:nil];
+            if (data) {
+                dData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            }
+            
+        }
+        
+        
+        if (callback) {
+            callback(code,convertNSStringToCString(dData));
+        }
+    }];
+    
 }
+
+}
+
+
+

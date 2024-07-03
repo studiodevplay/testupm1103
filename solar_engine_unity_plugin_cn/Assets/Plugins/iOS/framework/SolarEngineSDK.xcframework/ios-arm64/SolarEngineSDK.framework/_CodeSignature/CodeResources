@@ -10,7 +10,7 @@
 		</data>
 		<key>Headers/SEEventConstants.h</key>
 		<data>
-		nO1NlJYfA4lucUWDm6k4YyhTxtE=
+		8jcbDOI2Ab40bwILu9cUym4j5Vg=
 		</data>
 		<key>Headers/SESDKForCN.h</key>
 		<data>
@@ -18,15 +18,15 @@
 		</data>
 		<key>Headers/SolarEngineSDK.h</key>
 		<data>
-		OUJCgMLJVB084eaA7TNEgvEayJs=
+		2B68o+0pIKge0FiHKM6Y/aGHHCc=
 		</data>
 		<key>Info.plist</key>
 		<data>
-		PgHJOMioXbMZlP+8Lgbjxl5q6qU=
+		qWN9eCwFhOIrETpqNyfdTbp2AFQ=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
-		hRNgwzrMmivy0+t0B8rb0fXhwPM=
+		w4HyNP3THkStMHmWo023HF7tqP8=
 		</data>
 		<key>PrivacyInfo.xcprivacy</key>
 		<data>
@@ -50,11 +50,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			nO1NlJYfA4lucUWDm6k4YyhTxtE=
+			8jcbDOI2Ab40bwILu9cUym4j5Vg=
 			</data>
 			<key>hash2</key>
 			<data>
-			TkojnUFbYRTaJkD/98E4jhX1FZsB0cgkNZmtK3qWrno=
+			Ukhf8VozvIO33r1zJuvNaPYkZRDQhpaHsPv90XbyVD8=
 			</data>
 		</dict>
 		<key>Headers/SESDKForCN.h</key>
@@ -72,22 +72,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			OUJCgMLJVB084eaA7TNEgvEayJs=
+			2B68o+0pIKge0FiHKM6Y/aGHHCc=
 			</data>
 			<key>hash2</key>
 			<data>
-			Cs9SXfSVAHpIvCHRSZwTQmVMzBMo1mYQIHsuWUZ5Qqc=
+			cGGDzb0xuHxKMBaxYj6we4CnE8HK2bnJrDDcUhlqcGI=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			hRNgwzrMmivy0+t0B8rb0fXhwPM=
+			w4HyNP3THkStMHmWo023HF7tqP8=
 			</data>
 			<key>hash2</key>
 			<data>
-			GtVaUbzbWFGsOAFeAi4FfXtzOaDy+qYBiR2i3BSMXoA=
+			nE94pv3WndcRmrf78EMPHPzd3suLeMAWRV+s4Un/a8w=
 			</data>
 		</dict>
 		<key>PrivacyInfo.xcprivacy</key>
