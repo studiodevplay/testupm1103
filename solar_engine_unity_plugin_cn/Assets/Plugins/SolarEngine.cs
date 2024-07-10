@@ -843,10 +843,22 @@ namespace SolarEngine
             ReportEventImmediately();
         }
 
+        /// <summary>
+        /// 设置deeplink回调
+        /// <param name="callback">deeplink回调</param>
+        /// </summary>
         public static void deeplinkCompletionHandler(SESDKDeeplinkCallback callback)
         {
 
             DeeplinkCompletionHandler(callback);
+        }
+
+        /// <summary>
+        /// 设置urlScheme
+        /// <param name="url">urlScheme,此方法仅支持Android系统</param>
+        /// </summary>
+        public static void handleSchemeUrl(string url){
+            HandleSchemeUrl(url);
         }
 
 
@@ -2205,16 +2217,34 @@ namespace SolarEngine
 #endif
         }
 
-
-        private static void DeeplinkCompletionHandler(SESDKDeeplinkCallback callback)
+        private static void HandleSchemeUrl(string url)
         {
 
 #if UNITY_EDITOR
+                Debug.Log("Unity Editor: handleSchemeUrl not found");
+#elif UNITY_ANDROID
+                if(url != null) {
+                    SolarEngineAndroidSDK.CallStatic("handleSchemeUrl", url);
+                } else {
+                    Debug.Log("url is invalid");
+                }
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+               Debug.Log("Only Android can use , iOS not support");
+#else
+
+#endif
+
+        }
+
+
+        private static void DeeplinkCompletionHandler(SESDKDeeplinkCallback callback)
+        {
+            Analytics.Instance.deeplinkCallback_private = callback;
+#if UNITY_EDITOR
                 Debug.Log("Unity Editor: DeeplinkCompletionHandler not found");
 #elif UNITY_ANDROID
-                Debug.Log("Android Editor: DeeplinkCompletionHandler not found");
+                SolarEngineAndroidSDK.CallStatic("setDeepLinkCallback", callback != null ? new OnDeepLinkCallBack() : null);
 #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
-                Analytics.Instance.deeplinkCallback_private = callback;
                 __iOSSolarEngineSDKDeeplinkParseCallback(OnDeeplinkParseCallback);
 #else
 
@@ -2290,6 +2320,20 @@ namespace SolarEngine
 #endif
 
 #if UNITY_ANDROID && !UNITY_EDITOR
+    private sealed class OnDeepLinkCallBack: AndroidJavaProxy
+    {
+        public OnDeepLinkCallBack():base("com.reyun.solar.engine.unity.bridge.OnDeepLinkCallBack")
+        {
+        }
+        public void onReceived(int code,String result)
+        {
+
+            OnDeeplinkCompletionHandler(code,result);
+        }
+    }
+#endif
+
+#if UNITY_ANDROID && !UNITY_EDITOR
     private sealed class OnUnityInitCompletedCallback: AndroidJavaProxy
     {
         public OnUnityInitCompletedCallback():base("com.reyun.solar.engine.unity.bridge.OnUnityInitCompletedCallback")
@@ -2298,7 +2342,7 @@ namespace SolarEngine
         }
         public void onInitializationCompleted(int code)
         {
-            OnInitCompletedHandler(code,result);
+            OnInitCompletedHandler(code);
         }
     }
 #endif
