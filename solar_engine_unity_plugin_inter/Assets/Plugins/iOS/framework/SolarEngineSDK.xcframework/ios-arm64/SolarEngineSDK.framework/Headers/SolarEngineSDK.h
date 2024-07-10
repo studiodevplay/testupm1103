@@ -11,7 +11,7 @@
 #import <Webkit/WebKit.h>
 #import <SolarEngineSDK/SEConfig.h>
 
-#define SESDKVersion @"1.2.7.7"
+#define SESDKVersion @"1.2.7.8"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -244,6 +244,7 @@ typedef void (^SEDeeplinkCallback)(int code, SEDeeplinkInfo * _Nullable deeplink
 - (void)appDeeplinkOpenURL:(NSURL *)url;
 
 // 回调通过Deeplink的方式打开App时的回调参数
+// 回调参数 code:0成功，code:1 URL非法或为空, code:2 URL 参数解析错误
 - (void)setDeepLinkCallback:(SEDeeplinkCallback)callback;
 
 #pragma SKAN

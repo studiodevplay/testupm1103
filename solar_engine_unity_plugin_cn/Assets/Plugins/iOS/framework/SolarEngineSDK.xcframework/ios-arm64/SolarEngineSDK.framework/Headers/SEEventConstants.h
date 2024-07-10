@@ -482,9 +482,13 @@ typedef NS_ENUM(NSInteger, SolarEngineAdType) {
 
 @interface SEDeeplinkInfo : NSObject
 
+// 跳转参数
 @property (nonatomic, copy) NSString *sedpLink;
+// 7位短链
 @property (nonatomic, copy) NSString *turlId;
+// 链接类型, link 或 urlscheme
 @property (nonatomic, copy) NSString *from;
+// 自定义参数    
 @property (nonatomic, copy) NSDictionary *customParams;
 
 @end

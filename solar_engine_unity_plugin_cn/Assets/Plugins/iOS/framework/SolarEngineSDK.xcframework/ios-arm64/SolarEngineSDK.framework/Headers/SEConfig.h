@@ -55,7 +55,7 @@ ENUM：SERCMergeTypeUser 在App版本更新时会清除缓存配置
 @property (nonatomic, assign) BOOL logEnabled;
 
 /// 是否开启 Debug 模式，开启后能在后台实时查看数据（不设置时默认不开启 Debug 模式）
-/// Debug 模式 切记发布到线上 !!!
+/// Debug 模式 请勿发布到线上 !!!
 @property (nonatomic, assign) BOOL isDebugModel;
 
 /// 是否为GDPR区域，默认为不做GDPR区域限制
