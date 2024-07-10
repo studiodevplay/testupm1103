@@ -855,10 +855,10 @@ namespace SolarEngine
 
         /// <summary>
         /// 设置urlScheme
-        /// <param name="url">urlScheme,此方法仅支持Android系统</param>
+        /// <param name="url">deeplink url,此方法仅支持Android系统</param>
         /// </summary>
-        public static void handleSchemeUrl(string url){
-            HandleSchemeUrl(url);
+        public static void handleDeepLinkUrl(string url){
+            HandleDeepLinkUrl(url);
         }
 
 
@@ -2217,11 +2217,11 @@ namespace SolarEngine
 #endif
         }
 
-        private static void HandleSchemeUrl(string url)
+        private static void HandleDeepLinkUrl(string url)
         {
 
 #if UNITY_EDITOR
-                Debug.Log("Unity Editor: handleSchemeUrl not found");
+                Debug.Log("Unity Editor: HandleDeepLinkUrl not found");
 #elif UNITY_ANDROID
                 if(url != null) {
                     SolarEngineAndroidSDK.CallStatic("handleSchemeUrl", url);
