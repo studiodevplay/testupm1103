@@ -762,6 +762,23 @@ namespace SolarEngine
         {
             TrackTimerEvent(timeEventData);
         }
+		
+		/// <summary>
+		/// 创建时长事件
+		/// </summary>
+		/// <param name="timerEventName">时长事件名称</param>
+		public static void eventStart(string timerEventName){
+			EventStart(timerEventName);
+		}
+		
+		/// <summary>
+		/// 上报时长事件
+		/// </summary>
+		/// <param name="timerEventName">时长事件名称</param>
+		/// <param name="attributes">时长事件自定义属性</param>
+		public static void eventFinish(string timerEventName, Dictionary<string, object> attributes){
+			EventFinish(timerEventName,attributes);
+		}
 
         /// <summary>
         /// 设置预置事件属性
@@ -1295,6 +1312,49 @@ namespace SolarEngine
 #endif
 
         }
+		
+		private static void EventStart(string timerEventName)
+		        {
+		            if (timerEventName == null)
+		            {
+		                Debug.Log("timerEventName must not be null");
+		                return;
+		            }
+		    
+		#if UNITY_EDITOR
+		            Debug.Log("Unity Editor: EventStart");
+		            return;
+		#elif UNITY_ANDROID
+		            SolarEngineAndroidSDK.CallStatic("eventStart",timerEventName);
+		#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+		                //todo
+		#else
+		            return;
+		#endif
+		
+		        }
+				
+		private static void EventFinish(string timerEventName, Dictionary<string, object> attributes)
+		        {
+		            if (timerEventName == null)
+		            {
+		                Debug.Log("timerEventName must not be null");
+		                return;
+		            }
+		            string attributesJSONString = JsonConvert.SerializeObject(attributes);
+		
+		#if UNITY_EDITOR
+		            Debug.Log("Unity Editor: EventFinish");
+		            return;
+		#elif UNITY_ANDROID
+		            SolarEngineAndroidSDK.CallStatic("eventFinish",timerEventName,attributesJSONString);
+		#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+		                //todo
+		#else
+		            return;
+		#endif
+		
+		        }
 
         private static string CreateTimerEvent(string timerEventName, Dictionary<string, object> attributes)
         {
