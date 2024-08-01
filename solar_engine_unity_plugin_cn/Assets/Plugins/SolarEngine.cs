@@ -275,6 +275,9 @@ namespace SolarEngine
         // iOS ATT 授权等待时间，默认不等待，可选字段；只有iOS调用有效。
         public int attAuthorizationWaitingInterval { get; set; }
 
+        // iOS caid；只有iOS调用有效。
+        public string caid { get; set; }
+
         // 设置获取归因结果回调，可选字段
         public Analytics.SEAttributionCallback attributionCallback { get; set; }
 
@@ -1015,6 +1018,7 @@ namespace SolarEngine
             seDict.Add("isEnable2GReporting", config.isEnable2GReporting);
             seDict.Add("sub_lib_version", sdk_version);
             seDict.Add("attAuthorizationWaitingInterval", config.attAuthorizationWaitingInterval);
+            seDict.Add("caid", config.caid);
 
 
             string jonString = JsonConvert.SerializeObject(seDict);
@@ -1061,6 +1065,7 @@ namespace SolarEngine
             seDict.Add("isEnable2GReporting", config.isEnable2GReporting);
             seDict.Add("sub_lib_version", sdk_version);
             seDict.Add("attAuthorizationWaitingInterval", config.attAuthorizationWaitingInterval);
+            seDict.Add("caid", config.caid);
 
             string seJonString = JsonConvert.SerializeObject(seDict);
 
