@@ -935,6 +935,37 @@ void __iOSSolarEngineSDKEventFinish(const char *eventJSONStr)
     [[SolarEngineSDK sharedInstance] eventFinish:_eventName properties:_attributes];
 }
 
+void __iOSSolarEngineSDKEventFinishNew(const char *eventName, const char *properties)
+{
+    NSString *_eventName = [NSString stringWithUTF8String:eventName];
+    NSDictionary *_properties = nil;
+    if (properties != NULL){
+        NSString *_eventJSONStr = [NSString stringWithUTF8String:properties];
+        if (_eventJSONStr && ![_eventJSONStr isEqualToString:@"null"]){
+            NSData *data = [_eventJSONStr dataUsingEncoding:NSUTF8StringEncoding];
+            
+            NSError *error = nil;
+            NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            
+            if (error) {
+                dict = nil;
+                NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data",_eventJSONStr];
+                NSLog(@"eventFinish, error :%@",msg);
+            }
+            
+            if (![dict isKindOfClass:NSDictionary.class]) {
+                dict = nil;
+                NSString *msg = [NSString stringWithFormat:@"%@ is not an dict",_eventJSONStr];
+                NSLog(@"eventFinish, error :%@", msg);
+            }
+            _properties = dict;
+        }
+    }
+    
+    [[SolarEngineSDK sharedInstance] eventFinish:_eventName properties:_properties];
+}
+
+
 void __iOSSESDKupdatePostbackConversionValue(int conversionValue, SEBridgeCallback callback) {
     
     [[SolarEngineSDK sharedInstance] updatePostbackConversionValue:conversionValue completionHandler:^(NSError * _Nonnull error) {

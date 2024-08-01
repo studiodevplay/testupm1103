@@ -1327,7 +1327,7 @@ namespace SolarEngine
 		#elif UNITY_ANDROID
 		            SolarEngineAndroidSDK.CallStatic("eventStart",timerEventName);
 		#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
-		                //todo
+		            __iOSSolarEngineSDKEventStart(timerEventName);
 		#else
 		            return;
 		#endif
@@ -1349,7 +1349,7 @@ namespace SolarEngine
 		#elif UNITY_ANDROID
 		            SolarEngineAndroidSDK.CallStatic("eventFinish",timerEventName,attributesJSONString);
 		#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
-		                //todo
+		            __iOSSolarEngineSDKEventFinishNew(timerEventName,attributesJSONString);
 		#else
 		            return;
 		#endif
@@ -2651,6 +2651,9 @@ namespace SolarEngine
 
             [DllImport("__Internal")]
             private static extern void __iOSSolarEngineSDKEventFinish(string eventJSONStr);
+
+            [DllImport("__Internal")]
+            private static extern void __iOSSolarEngineSDKEventFinishNew(string eventName, string properties);
 
             [DllImport("__Internal")]
             private static extern void __iOSSolarEngineSDKSetPresetEvent(string eventName, string eventDataJSONString);
