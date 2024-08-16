@@ -18,7 +18,7 @@
 		</data>
 		<key>Headers/SolarEngineSDK.h</key>
 		<data>
-		6Ao4q+ZudjUqhq34Ro9Yzqca2lg=
+		b6DW3V0SNzqw6oAu8ksT1CE+ZB0=
 		</data>
 		<key>Info.plist</key>
 		<data>
@@ -72,11 +72,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			6Ao4q+ZudjUqhq34Ro9Yzqca2lg=
+			b6DW3V0SNzqw6oAu8ksT1CE+ZB0=
 			</data>
 			<key>hash2</key>
 			<data>
-			Cv20fRMbsJlO29fux7Yt17OyOYyr6V0Vou9ODMpTsr4=
+			8kOASEsX9qa+64JmXC9fAANAp8aDqkQx3HvHNVUOisE=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
