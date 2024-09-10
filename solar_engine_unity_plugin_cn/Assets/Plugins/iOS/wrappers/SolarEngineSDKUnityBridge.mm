@@ -401,7 +401,8 @@ void __iOSSolarEngineSDKInit(const char * appKey, const char * SEUserId, const c
     config.isGDPRArea = [seDict[@"isGDPRArea"] boolValue];
     config.attAuthorizationWaitingInterval = [seDict[@"attAuthorizationWaitingInterval"] intValue];
     config.caid             = configDict[@"caid"];
-                                              
+    config.enableDelayDeeplink = [seDict[@"delayDeeplinkEnable"] boolValue];
+
     NSString *sub_lib_version = seDict[@"sub_lib_version"];
     if ([sub_lib_version isKindOfClass:[NSString class]]) {
         [SEWrapperManager sharedInstance].sub_lib_version = sub_lib_version;
@@ -444,6 +445,7 @@ void __iOSSESDKSetInitCompletedCallback(SEBridgeInitCallback callback) {
 }
 
 void __iOSSESDKRequestTrackingAuthorizationWithCompletionHandler(SEBridgeInitCallback callback) {
+
     [[SolarEngineSDK sharedInstance] requestTrackingAuthorizationWithCompletionHandler:^(NSUInteger status) {
                 
         if (callback) {
@@ -936,7 +938,6 @@ void __iOSSolarEngineSDKEventFinish(const char *eventJSONStr)
     [[SolarEngineSDK sharedInstance] eventFinish:_eventName properties:_attributes];
 }
 
-
 void __iOSSolarEngineSDKEventFinishNew(const char *eventName, const char *properties)
 {
     NSString *_eventName = [NSString stringWithUTF8String:eventName];
@@ -1042,6 +1043,44 @@ void __iOSSolarEngineSDKDeeplinkParseCallback(SEBridgeCallback callback) {
     }];
     
 }
+
+
+void __iOSSolarEngineSDKDelayDeeplinkParseCallback(SEBridgeCallback callback) {
+    
+    [[SolarEngineSDK sharedInstance] setDelayDeeplinkDeepLinkCallbackWithSuccess:^(SEDelayDeeplinkInfo * _Nullable deeplinkInfo) {
+        
+        NSString *dData = nil;
+
+        NSMutableDictionary *deeplinkData = [NSMutableDictionary dictionary];
+        
+        if (deeplinkInfo.sedpUrlscheme) {
+            [deeplinkData setObject:deeplinkInfo.sedpUrlscheme forKey:@"sedpUrlscheme"];
+        }
+        if (deeplinkInfo.sedpLink) {
+            [deeplinkData setObject:deeplinkInfo.sedpLink forKey:@"sedpLink"];
+        }
+        if (deeplinkInfo.turlId) {
+            [deeplinkData setObject:deeplinkInfo.turlId forKey:@"turlId"];
+        }
+        
+        NSData *data = [NSJSONSerialization dataWithJSONObject:deeplinkData options:0 error:nil];
+        if (data) {
+            dData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        }
+        
+        if (callback) {
+            callback(0,convertNSStringToCString(dData));
+        }
+        
+    } fail:^(NSError * _Nullable error) {
+        
+        if (callback) {
+            callback((int)error.code,convertNSStringToCString(nil));
+        }
+
+    }];
+}
+
 
 }
 

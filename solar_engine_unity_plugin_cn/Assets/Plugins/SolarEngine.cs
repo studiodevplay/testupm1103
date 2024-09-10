@@ -272,9 +272,13 @@ namespace SolarEngine
         // 是否允许2G上报数据。默认为false，可选字段
         public bool isEnable2GReporting { get; set; }
 
+
+        // 是否开启延迟deeplink。默认为false，可选字段
+        public bool delayDeeplinkEnable { get; set; }
+
         // iOS ATT 授权等待时间，默认不等待，可选字段；只有iOS调用有效。
         public int attAuthorizationWaitingInterval { get; set; }
-
+		
         // iOS caid；只有iOS调用有效。
         public string caid { get; set; }
 
@@ -301,7 +305,7 @@ namespace SolarEngine
     public partial class Analytics : MonoBehaviour
     {
 
-        private static readonly string sdk_version = "1.2.8.0";
+        private static readonly string sdk_version = "1.2.8.1";
 
 
         private SEAttributionCallback attributionCallback_private = null;
@@ -314,6 +318,9 @@ namespace SolarEngine
         private SESDKDeeplinkCallback deeplinkCallback_private = null;
         public delegate void SESDKDeeplinkCallback(int code, Dictionary<string, object> data);
 
+        // 延迟deeplink
+        private SESDKDelayDeeplinkCallback delayDeeplinkCallback_private = null;
+        public delegate void SESDKDelayDeeplinkCallback(int code, Dictionary<string, object> data);
 
         private SESDKATTCompletedCallback attCompletedCallback_private = null;
         public delegate void SESDKATTCompletedCallback(int code);
@@ -874,6 +881,16 @@ namespace SolarEngine
         }
 
         /// <summary>
+        /// 设置深度deeplink回调
+        /// <param name="callback">delayDeeplink回调</param>
+        /// </summary>
+        public static void delayDeeplinkCompletionHandler(SESDKDelayDeeplinkCallback callback)
+        {
+
+            DelayDeeplinkCompletionHandler(callback);
+        }
+
+        // <summary>
         /// 设置urlScheme
         /// <param name="url">deeplink url,此方法仅支持Android系统</param>
         /// </summary>
@@ -1019,6 +1036,7 @@ namespace SolarEngine
             seDict.Add("sub_lib_version", sdk_version);
             seDict.Add("attAuthorizationWaitingInterval", config.attAuthorizationWaitingInterval);
             seDict.Add("caid", config.caid);
+            seDict.Add("delayDeeplinkEnable", config.delayDeeplinkEnable);
 
 
             string jonString = JsonConvert.SerializeObject(seDict);
@@ -1066,6 +1084,7 @@ namespace SolarEngine
             seDict.Add("sub_lib_version", sdk_version);
             seDict.Add("attAuthorizationWaitingInterval", config.attAuthorizationWaitingInterval);
             seDict.Add("caid", config.caid);
+            seDict.Add("delayDeeplinkEnable", config.delayDeeplinkEnable);
 
             string seJonString = JsonConvert.SerializeObject(seDict);
 
@@ -1332,7 +1351,7 @@ namespace SolarEngine
 		#elif UNITY_ANDROID
 		            SolarEngineAndroidSDK.CallStatic("eventStart",timerEventName);
 		#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
-		            __iOSSolarEngineSDKEventStart(timerEventName);
+                    __iOSSolarEngineSDKEventStart(timerEventName);
 		#else
 		            return;
 		#endif
@@ -1360,7 +1379,7 @@ namespace SolarEngine
 		#endif
 		
 		        }
-
+				
         private static string CreateTimerEvent(string timerEventName, Dictionary<string, object> attributes)
         {
             if (timerEventName == null)
@@ -2318,6 +2337,21 @@ namespace SolarEngine
         }
 
 
+        private static void DelayDeeplinkCompletionHandler(SESDKDelayDeeplinkCallback callback)
+        {
+            Analytics.Instance.delayDeeplinkCallback_private = callback;
+#if UNITY_EDITOR
+                Debug.Log("Unity Editor: DelayDeeplinkCompletionHandler not found");
+#elif UNITY_ANDROID
+                // todo
+#elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+                __iOSSolarEngineSDKDelayDeeplinkParseCallback(OnDelayDeeplinkParseCallback);
+#else
+
+#endif
+
+        }
+
 
 #if UNITY_IPHONE
         //回调函数，必须MonoPInvokeCallback并且是static
@@ -2365,6 +2399,13 @@ namespace SolarEngine
         private static void OnDeeplinkParseCallback(int code, string jsonString)
         {
             OnDeeplinkCompletionHandler(code, jsonString);
+        }
+
+        //回调函数，必须MonoPInvokeCallback并且是static
+        [MonoPInvokeCallback(typeof(SEiOSStringCallback))]
+        private static void OnDelayDeeplinkParseCallback(int code, string jsonString)
+        {
+            OnDelayDeeplinkCompletionHandler(code, jsonString);
         }
 
 #endif
@@ -2508,6 +2549,38 @@ namespace SolarEngine
             });
 
         }
+
+
+        private static void OnDelayDeeplinkCompletionHandler(int code, String jsonString)
+        {
+            Dictionary<string, object> delayDeeplinkData = null;
+
+            try
+            {
+                if (jsonString != null)
+                {
+                    delayDeeplinkData = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonString);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e.Message);
+            }
+
+            Analytics.PostTask(() =>
+            {
+                if (Analytics.Instance.delayDeeplinkCallback_private != null)
+                {
+                    Analytics.Instance.delayDeeplinkCallback_private.Invoke(code, delayDeeplinkData);
+                }
+                else
+                {
+                    Debug.Log("Unity Editor: OnDelayDeeplinkCompletionHandler not found ");
+                }
+            });
+
+        }
+
 
         private static void OnSKANUpdateCVCompletionHandler(int errorCode, String errorMsg)
         {
@@ -2687,10 +2760,13 @@ namespace SolarEngine
             [DllImport("__Internal")]
             private static extern void __iOSSolarEngineSDKDeeplinkParseCallback(SEiOSStringCallback callback);
 
+            [DllImport("__Internal")]
+            private static extern void __iOSSolarEngineSDKDelayDeeplinkParseCallback(SEiOSStringCallback callback);
+
 
 #endif
 
-#endregion
+        #endregion
 
     }
 }

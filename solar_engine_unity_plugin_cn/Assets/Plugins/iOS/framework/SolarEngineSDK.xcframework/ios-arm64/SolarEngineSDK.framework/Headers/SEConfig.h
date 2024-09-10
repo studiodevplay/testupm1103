@@ -77,6 +77,9 @@ ENUM：SERCMergeTypeUser 在App版本更新时会清除缓存配置
 /// 首次上报事件等待ATT授权秒数，单位：秒
 @property (nonatomic, assign) int attAuthorizationWaitingInterval;
 
+/// 是否开启延迟Deeplink，默认NO，不开启。
+@property (nonatomic, assign) BOOL enableDelayDeeplink;
+
 
 /// 在线参数config (不使用在线参数则不需要设置)
 @property (nonatomic, strong) SERemoteConfig * remoteConfig;
