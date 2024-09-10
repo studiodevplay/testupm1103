@@ -399,6 +399,7 @@ void __iOSSolarEngineSDKInit(const char * appKey, const char * SEUserId, const c
     config.enable2GReporting = [seDict[@"isEnable2GReporting"] boolValue];
     config.isGDPRArea = [seDict[@"isGDPRArea"] boolValue];
     config.attAuthorizationWaitingInterval = [seDict[@"attAuthorizationWaitingInterval"] intValue];
+    config.enableDelayDeeplink = [seDict[@"delayDeeplinkEnable"] boolValue];
 
     NSString *sub_lib_version = seDict[@"sub_lib_version"];
     if ([sub_lib_version isKindOfClass:[NSString class]]) {
@@ -1040,6 +1041,44 @@ void __iOSSolarEngineSDKDeeplinkParseCallback(SEBridgeCallback callback) {
     }];
     
 }
+
+
+void __iOSSolarEngineSDKDelayDeeplinkParseCallback(SEBridgeCallback callback) {
+    
+    [[SolarEngineSDK sharedInstance] setDelayDeeplinkDeepLinkCallbackWithSuccess:^(SEDelayDeeplinkInfo * _Nullable deeplinkInfo) {
+        
+        NSString *dData = nil;
+
+        NSMutableDictionary *deeplinkData = [NSMutableDictionary dictionary];
+        
+        if (deeplinkInfo.sedpUrlscheme) {
+            [deeplinkData setObject:deeplinkInfo.sedpUrlscheme forKey:@"sedpUrlscheme"];
+        }
+        if (deeplinkInfo.sedpLink) {
+            [deeplinkData setObject:deeplinkInfo.sedpLink forKey:@"sedpLink"];
+        }
+        if (deeplinkInfo.turlId) {
+            [deeplinkData setObject:deeplinkInfo.turlId forKey:@"turlId"];
+        }
+        
+        NSData *data = [NSJSONSerialization dataWithJSONObject:deeplinkData options:0 error:nil];
+        if (data) {
+            dData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        }
+        
+        if (callback) {
+            callback(0,convertNSStringToCString(dData));
+        }
+        
+    } fail:^(NSError * _Nullable error) {
+        
+        if (callback) {
+            callback((int)error.code,convertNSStringToCString(nil));
+        }
+
+    }];
+}
+
 
 }
 

@@ -493,5 +493,17 @@ typedef NS_ENUM(NSInteger, SolarEngineAdType) {
 
 @end
 
+@interface SEDelayDeeplinkInfo : NSObject
+
+// 跳转参数
+@property (nonatomic, copy) NSString *sedpLink;
+// 7位短链
+@property (nonatomic, copy) NSString *turlId;
+// 用户在创建deeplink链接时填写的url scheme
+@property (nonatomic, copy) NSString *sedpUrlscheme;
+
+@end
+
+
 
 NS_ASSUME_NONNULL_END

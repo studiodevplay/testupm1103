@@ -11,13 +11,17 @@
 #import <Webkit/WebKit.h>
 #import <SolarEngineSDK/SEConfig.h>
 
-#define SESDKVersion @"1.2.8.0"
+#define SESDKVersion @"1.2.8.1"
 
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^SEAttributionCallback)(int code, NSDictionary * _Nullable attributionData);
 typedef void (^SECompleteCallback)(int code);
 typedef void (^SEDeeplinkCallback)(int code, SEDeeplinkInfo * _Nullable deeplinkInfo);
+
+typedef void (^SEDelayDeeplinkCallback)(SEDelayDeeplinkInfo * _Nullable deeplinkInfo);
+
+typedef void (^SEFailCallback)(NSError * _Nullable error);
 
 @class UIView, UIViewController;
 
@@ -246,6 +250,14 @@ typedef void (^SEDeeplinkCallback)(int code, SEDeeplinkInfo * _Nullable deeplink
 // 回调通过Deeplink的方式打开App时的回调参数
 // 回调参数 code:0成功，code:1 URL非法或为空, code:2 URL 参数解析错误
 - (void)setDeepLinkCallback:(SEDeeplinkCallback)callback;
+
+
+#pragma 深度 Deeplink
+// 设置深度deeplink回调，此接口在sdk初始化前调用，sdk初始化是设置了SEConfig中的enableDelayDeeplink为YES，才会请求深度deeplink，此接口才有回调
+// fail 回调如下
+// 1101: sdk内部异常；1102: 与服务端建立链接失败；1103: 与服务端建立链接超时；1104: 服务端异常；1105: 服务端返回sdk端数据；1106: deeplink匹配失败，服务端回调空
+- (void)setDelayDeeplinkDeepLinkCallbackWithSuccess:(SEDelayDeeplinkCallback)success fail:(SEFailCallback)fail;
+
 
 #pragma SKAN
 /// SKAN API 封装
