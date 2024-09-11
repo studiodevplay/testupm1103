@@ -1,7 +1,7 @@
 //
 //  SolarEngineSDK.h
 //  SolarEngineSDK
-//
+//  f2e6b2f
 //  Created by MVP on 2022/1/20.
 //
 
