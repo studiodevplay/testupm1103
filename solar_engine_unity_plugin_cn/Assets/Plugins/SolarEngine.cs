@@ -2343,7 +2343,7 @@ namespace SolarEngine
 #if UNITY_EDITOR
                 Debug.Log("Unity Editor: DelayDeeplinkCompletionHandler not found");
 #elif UNITY_ANDROID
-                // todo
+                 SolarEngineAndroidSDK.CallStatic("setDelayDeepLinkCallback", callback != null ? new OnDelayDeepLinkCallBack() : null);
 #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
                 __iOSSolarEngineSDKDelayDeeplinkParseCallback(OnDelayDeeplinkParseCallback);
 #else
@@ -2435,6 +2435,19 @@ namespace SolarEngine
         {
 
             OnDeeplinkCompletionHandler(code,result);
+        }
+    }
+#endif
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+    private sealed class OnDelayDeepLinkCallBack: AndroidJavaProxy
+    {
+        public OnDelayDeepLinkCallBack():base("com.reyun.solar.engine.unity.bridge.OnDelayDeepLinkCallBack")
+        {
+        }
+        public void onReceived(int code,String result)
+        {            
+            OnDelayDeeplinkCompletionHandler(code,result);
         }
     }
 #endif
