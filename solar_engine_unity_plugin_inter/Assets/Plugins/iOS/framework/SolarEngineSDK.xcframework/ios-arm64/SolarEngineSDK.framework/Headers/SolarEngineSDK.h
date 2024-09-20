@@ -1,7 +1,7 @@
 //
 //  SolarEngineSDK.h
 //  SolarEngineSDK
-//  f2e6b2f
+//  84de83f
 //  Created by MVP on 2022/1/20.
 //
 
@@ -11,7 +11,7 @@
 #import <Webkit/WebKit.h>
 #import <SolarEngineSDK/SEConfig.h>
 
-#define SESDKVersion @"1.2.8.1"
+#define SESDKVersion @"1.2.8.2"
 
 NS_ASSUME_NONNULL_BEGIN
 
