@@ -1,4 +1,4 @@
-﻿#if (SOLARENGINE_BYTEDANCE||SOLARENGINE_WECHAT||SOLARENGINE_KUAISHOU)&&!UNITY_EDITOR
+﻿#if (SOLARENGINE_BYTEDANCE||SOLARENGINE_WECHAT||SOLARENGINE_KUAISHOU)&&(!UNITY_EDITOR||DeveloperEditor)
 
 using System;
 using System.Collections.Generic;
@@ -52,16 +52,24 @@ namespace SolarEngine
                 initParams.miniGameAttributionCallback = attributionCallback;
             }
 
-
-            initParams.miniGameInitParams = config.miniGameInitParams;
+            if (config.miniGameInitParams != null)
+            {
+                initParams.miniGameInitParams = new MiniGames.MiniGameInitParams();
 
 #if SOLARENGINE_WECHAT
-            if( initParams.miniGameInitParams!=null)
-            initParams.miniGameInitParams.anonymous_openid = "";
+                initParams.miniGameInitParams.anonymous_openid = "";
+#else
+                initParams.miniGameInitParams.anonymous_openid = config.miniGameInitParams.anonymous_openid;
 #endif
+              
+
+                initParams.miniGameInitParams.openid = config.miniGameInitParams.openid;
+                initParams.miniGameInitParams.unionid = config.miniGameInitParams.unionid;
+
+            }
             initParams.debugModel = config.isDebugModel;
             initParams.logEnabled = config.logEnabled;
-
+            initParams.sublibVersion = sdk_version;
 #if  SOLARENGINE_WECHAT
             SEAdapterInterface _adapter = new SolarEngine.Platform. WeChatAdapter();
 #elif SOLARENGINE_BYTEDANCE
@@ -72,7 +80,7 @@ namespace SolarEngine
 #endif
             SolarEngineSDK4MiniGames.init(appKey, initParams, _adapter);
         }
-
+      
         private static void Init(string appKey, string userId, SEConfig config, RCConfig rcConfig)
         {
             InitParams initParams = new InitParams();
@@ -95,15 +103,24 @@ namespace SolarEngine
                 initParams.miniGameAttributionCallback = attributionCallback;
             }
 
-
-            initParams.miniGameInitParams = config.miniGameInitParams;
+            if (config.miniGameInitParams != null)
+            {
+                initParams.miniGameInitParams = new MiniGames.MiniGameInitParams();
 #if SOLARENGINE_WECHAT
-            if( initParams.miniGameInitParams!=null)
             initParams.miniGameInitParams.anonymous_openid = "";
+ #else
+            initParams.miniGameInitParams.anonymous_openid = config.miniGameInitParams.anonymous_openid;
 #endif
+              
+
+                initParams.miniGameInitParams.openid = config.miniGameInitParams.openid;
+                initParams.miniGameInitParams.unionid = config.miniGameInitParams.unionid;
+
+            }
+            
             initParams.debugModel = config.isDebugModel;
             initParams.logEnabled = config.logEnabled;
-
+            initParams.sublibVersion = sdk_version;
 
             MiniGameRCConfig minircConfig = new MiniGameRCConfig();
             minircConfig.enable = rcConfig.enable;
@@ -196,8 +213,6 @@ namespace SolarEngine
      
         private static void SetSuperProperties(Dictionary<string, object> userProperties)
         {
-          
-
             SolarEngineSDK4MiniGames.setSuperProperties(userProperties);
         }
 
@@ -264,8 +279,8 @@ namespace SolarEngine
 
         private static string  GetAttribution()
         {
-         //   return SolarEngineSDK4MiniGames.getAttribution();
-         return "";
+            return SolarEngineSDK4MiniGames.getAttribution();
+        
         }
         private static void TrackFirstEvent(SEBaseAttributes attributes)
         {
@@ -380,7 +395,6 @@ namespace SolarEngine
          private static void UpdateConversionValueCoarseValue(int fineValue, String coarseValue, SKANUpdateCompletionHandler callback)
          {
              Debug.Log("Current on MiniGame,requestTrackingAuthorizationWithCompletionHandler only iOS");
-
 
          }
          /// 仅支持iOS

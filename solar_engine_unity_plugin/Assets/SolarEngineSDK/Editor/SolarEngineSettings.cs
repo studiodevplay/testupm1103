@@ -74,7 +74,7 @@ namespace SolarEngine
 		}
 
 		#if UNITY_EDITOR
-		[MenuItem("SolarEngineSDK/Edit Settings", false, 0)]
+		[MenuItem("SolarEngineSDK/iOS/Edit Settings", false, 0)]
 	    public static void EditSettings ()
 	    {
 	        Selection.activeObject = Instance;
