@@ -1,4 +1,12 @@
 <dependencies>
+    <iosPods>
+      <iosPod name="SolarEngineSDK" version="~> 1.2.8.2">
+      </iosPod>
+    </iosPods>
+    <iosPods>
+      <iosPod name="SESDKRemoteConfig" version="~> 1.2.8.2">
+      </iosPod>
+    </iosPods>
 
   <androidPackages>
     <androidPackage spec="com.reyun.solar.engine.oversea:solar-engine-core:1.2.7.5">

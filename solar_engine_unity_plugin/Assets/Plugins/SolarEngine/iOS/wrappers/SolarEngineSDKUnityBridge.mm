@@ -8,7 +8,10 @@
 #import <Foundation/Foundation.h>
 #import <SolarEngineSDK/SolarEngineSDK.h>
 #import <SESDKRemoteConfig/SESDKRemoteConfig.h>
-#import <SolarEngineSDK/SESDKForCN.h>
+
+#if  __has_include(<SolarEngineSDK/SESDKForCN.h>)
+    #import <SolarEngineSDK/SESDKForCN.h>
+#endif
 
 typedef void (*SEBridgeCallback)(int errorCode, const char * data);
 typedef void (*SEBridgeInitCallback)(int errorCode);
@@ -400,7 +403,13 @@ void __iOSSolarEngineSDKInit(const char * appKey, const char * SEUserId, const c
     config.enable2GReporting = [seDict[@"isEnable2GReporting"] boolValue];
     config.isGDPRArea = [seDict[@"isGDPRArea"] boolValue];
     config.attAuthorizationWaitingInterval = [seDict[@"attAuthorizationWaitingInterval"] intValue];
-    config.caid             = configDict[@"caid"];
+#if  __has_include(<SolarEngineSDK/SESDKForCN.h>)
+        if (seDict[@"caid"]) {
+            config.caid = seDict[@"caid"];
+        }
+#endif
+
+
     config.enableDelayDeeplink = [seDict[@"delayDeeplinkEnable"] boolValue];
 
     NSString *sub_lib_version = seDict[@"sub_lib_version"];
