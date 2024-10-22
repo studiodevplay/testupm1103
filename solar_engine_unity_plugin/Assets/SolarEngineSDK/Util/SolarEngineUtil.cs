@@ -874,4 +874,12 @@ namespace SolarEngine
         public string distinct_id;
         public int distinct_id_type;
     }
+    public class MiniGameInitParams
+    {
+        public string unionid;
+        public string openid;
+        public string anonymous_openid;
+  
+ 
+    }
 }
