@@ -400,7 +400,7 @@ void __iOSSolarEngineSDKInit(const char * appKey, const char * SEUserId, const c
     config.enable2GReporting = [seDict[@"isEnable2GReporting"] boolValue];
     config.isGDPRArea = [seDict[@"isGDPRArea"] boolValue];
     config.attAuthorizationWaitingInterval = [seDict[@"attAuthorizationWaitingInterval"] intValue];
-    config.caid             = configDict[@"caid"];
+    config.caid             = seDict[@"caid"];
     config.enableDelayDeeplink = [seDict[@"delayDeeplinkEnable"] boolValue];
 
     NSString *sub_lib_version = seDict[@"sub_lib_version"];

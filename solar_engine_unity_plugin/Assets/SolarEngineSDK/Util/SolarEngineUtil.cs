@@ -33,6 +33,8 @@ namespace SolarEngine
             seDict.Add("attAuthorizationWaitingInterval", config.attAuthorizationWaitingInterval);
             seDict.Add("caid", config.caid);
             seDict.Add("delayDeeplinkEnable", config.delayDeeplinkEnable);
+            seDict.Add("isCoppaEnabled", config.isCoppaEnabled);
+            seDict.Add("isKidsAppEnabled", config.isKidsAppEnabled);
             initCallBack(config);
             string seJonString = JsonConvert.SerializeObject(seDict);
             return seJonString;
@@ -837,20 +839,25 @@ namespace SolarEngine
         // 是否开启 本地调试日志（不设置时默认不开启 本地日志）
         public bool logEnabled { get; set; }
 
-        // 是否为GDPR区域。默认为false，可选字段
+        // 是否为GDPR区域。默认为false，可选字段（仅海外版设置有效）
         public bool isGDPRArea { get; set; }
+
+        // 是否支持coppa合规。默认为false，可选字段（仅海外版设置有效）
+        public bool isCoppaEnabled { get; set; }
+
+        // 是否支持Kids App应用。默认为false，可选字段（仅海外版设置有效）
+        public bool isKidsAppEnabled { get; set; }
 
         // 是否允许2G上报数据。默认为false，可选字段
         public bool isEnable2GReporting { get; set; }
-
 
         // 是否开启延迟deeplink。默认为false，可选字段
         public bool delayDeeplinkEnable { get; set; }
 
         // iOS ATT 授权等待时间，默认不等待，可选字段；只有iOS调用有效。
         public int attAuthorizationWaitingInterval { get; set; }
-		
-        // iOS caid；只有iOS调用有效。
+
+        // iOS caid；只有iOS调用有效。（仅国内版设置有效）
         public string caid { get; set; }
 
         // 设置获取归因结果回调，可选字段
