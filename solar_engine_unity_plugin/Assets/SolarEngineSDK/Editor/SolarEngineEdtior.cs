@@ -8,14 +8,14 @@ public class SolarEngineEdtior : MonoBehaviour
 {
    private const string SolarEngineSDK = "SolarEngineSDK";
    private const string RemoteConfig = SolarEngineSDK + "/RemoteConfig";
-   private const string RemoteConfigDelete = RemoteConfig + "/RemoteConfigDelete";
-   private const string DeleteAll = RemoteConfigDelete + "/DeleteAll";
-   private const string DeleteMiniGame = RemoteConfigDelete + "/DeleteMiniGame";
-
-   private const string RemoteConfigShow = RemoteConfig + "/RemoteConfigShow";
-   private const string RemoteConfigShowAll = RemoteConfigShow + "/RemoteConfigShowAll";
-   private const string ShowMiniGame = RemoteConfigShow + "/ShowMiniGame";
+   private const string RemoteConfigDisable= RemoteConfig + "/Disable";
+   private const string DisableAll = RemoteConfigDisable + "/DisableAll";
+   private const string DisableMiniGame = RemoteConfigDisable + "/DisableMiniGame";
+   private const string DisableiOS= RemoteConfigDisable + "/DisableiOS";
+   private const string DisableAndroid = RemoteConfigDisable + "/DisableAndroid";
    
+
+  
    
    
    
@@ -23,23 +23,45 @@ public class SolarEngineEdtior : MonoBehaviour
 
    private const string PluginsSolarEnginePath = "Assets/Plugins/SolarEngine/";
    private const string MiniGameRemoteConfigsPath = "Assets/SolarEngineSDK/RemoteConfigWrapper";
-   private const string MiniGameRemoteConfigsPathMini = "Assets/SolarEngineSDK/RemoteConfigWrapper/SESDKRemoteConfigMiniGameWrapper.cs";
-   private const string MiniGameRemoteConfigsPathMinidll = PluginsSolarEnginePath+"MiniGame/MiniGameRemoteConfig.dll";
+   
+   //minigamepath
+   private const string MiniGameRemoteConfigsPathMiniCS = "Assets/SolarEngineSDK/RemoteConfigWrapper/SESDKRemoteConfigMiniGameWrapper.cs";
+   private const string MiniGameRemoteConfigsPathMiniDll = PluginsSolarEnginePath+"MiniGame/MiniGameRemoteConfig.dll";
 
    
-   // [MenuItem(DeleteAll, false, 0)]
-   // public static void deleteAllRemoteConfig ()
-   // {
-   //       HidePath(MiniGameRemoteConfigsPath);
-   //     
-   // }
-   //
-   [MenuItem(DeleteMiniGame, false, 0)]
-   public static void deleteRemoteConfigMiniGame ()
+   //iospath
+   private const string RemoteConfigsPathiOSCS = "Assets/SolarEngineSDK/RemoteConfigWrapper/SESDKRemoteConfigiOSWrapper.cs";
+   private const string RemoteConfigsPathiOSMM = PluginsSolarEnginePath+"iOS/wrappers/SESDKRemoteConfigUnityBridge.mm";
+   private const string RemoteConfigsPathiOSH =  PluginsSolarEnginePath+"iOS/wrappers/SESDKRemoteConfigUnityBridge.h";
+   
+   //androidpath
+   private const string RemoteConfigsPathAndroidCS = "Assets/SolarEngineSDK/RemoteConfigWrapper/SESDKRemoteConfigAndroidWrapper.cs";
+   private const string ConfigsPathAndroidJar = PluginsSolarEnginePath+"Android/libs/se_remote_config_unity_bridge.jar";
+   
+   
+  
+   [MenuItem(DisableMiniGame, false, 0)]
+   public static void disableMiniGame ()
    {
-         HideFile(MiniGameRemoteConfigsPathMinidll);
-         HideFile(MiniGameRemoteConfigsPathMini);
+      DisableFile(MiniGameRemoteConfigsPathMiniDll);
+      DisableFile(MiniGameRemoteConfigsPathMiniCS);
       
+   }
+   [MenuItem(DisableiOS, false, 0)]
+   public static void disableiOS ()
+   {
+    DisableFile(RemoteConfigsPathiOSCS);
+    DisableFile(RemoteConfigsPathiOSMM);
+    DisableFile(RemoteConfigsPathiOSH);
+    
+   }
+   
+   [MenuItem(DisableAndroid, false, 0)]
+   public static void disableAndroid ()
+   {
+      DisableFile(RemoteConfigsPathAndroidCS);
+      DisableFile(ConfigsPathAndroidJar);
+    
    }
    
    // [MenuItem(RemoteConfigShowAll, false, 0)]
@@ -49,26 +71,17 @@ public class SolarEngineEdtior : MonoBehaviour
    //    
    // }
    
-   [MenuItem(ShowMiniGame, false, 0)]
-   public static void showRemoteConfigMiniGame ()
-   {
-      showFile(MiniGameRemoteConfigsPathMinidll);
-      showFile(MiniGameRemoteConfigsPathMini);
-      
-   }
-   
-   
-   
-   
+  
    
 
    
-   private static void HidePath(string path)
+   private static void DisablePath(string path)
    {
       if (System.IO.Directory.Exists(path))
       {
-         System.IO.Directory.Move(path, path + "~");
-         Debug.Log("delete:  " + path);
+         //System.IO.Directory.Move(path, path + "~");
+         System.IO.Directory.Delete(path);
+         Debug.Log("Disable:  " + path);
       }
       else if (System.IO.Directory.Exists(path + "~"))
       {
@@ -81,48 +94,19 @@ public class SolarEngineEdtior : MonoBehaviour
 
    }
 
-   private static void ShowPath(string path)
-   {
-      if (System.IO.Directory.Exists(path))
-      {
-
-      }
-      else if (System.IO.Directory.Exists(path + "~"))
-      {
-         System.IO.Directory.Move(path + "~", path);
-      }
-      else
-      {
-         Debug.LogError("不存在 " + path);
-      }
-
-   }
-   private static void HideFile(string path)
+  
+   private static void DisableFile(string path)
         {
             if (File.Exists(path))
             {
-               System.IO.  File.Move(path, path + "~");
-               Debug.Log("delete:  " + path);
+              // System.IO. File.Move(path, path + "~");
+              System.IO.File.Delete(path);
+               Debug.Log("Disable:  " + path);
             }
             else
             {
                 Debug.LogError("不存在 " + path);
             }
         }
-   private static void showFile(string path)
-      {
-         if (File.Exists(path))
-         {
-      
-         }
-         else if (File.Exists(path + "~"))
-         {
-            System.IO.  File.Move(path + "~", path);
-            Debug.Log("show:  " + path);
-         }
-         else
-         {
-            Debug.LogError("不存在 " + path);
-         }
-      }
+ 
 }
