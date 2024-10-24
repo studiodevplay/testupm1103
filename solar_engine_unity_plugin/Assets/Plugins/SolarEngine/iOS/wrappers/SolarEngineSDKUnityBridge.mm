@@ -319,7 +319,7 @@ static SECustomEventAttribute *buildCustomEventAttribute(const char *customAttri
 
     NSString *eventName             = [dict objectForKey:@"_custom_event_name"];
     NSDictionary *customProperties  = [dict objectForKey:@"_customProperties"];
-    NSDictionary *preProperties     = [dict objectForKey:@"_preProperties"];
+    NSDictionary *preProperties     = [dict objectForKey:@"_pre_properties"];
     
     SECustomEventAttribute *attribute = [[SECustomEventAttribute alloc] init];
     attribute.eventName = seTrimValue(eventName);
