@@ -316,10 +316,12 @@ static SECustomEventAttribute *buildCustomEventAttribute(const char *customAttri
 
     NSString *eventName             = [dict objectForKey:@"_custom_event_name"];
     NSDictionary *customProperties  = [dict objectForKey:@"_customProperties"];
+    NSDictionary *preProperties     = [dict objectForKey:@"_preProperties"];
 
     SECustomEventAttribute *attribute = [[SECustomEventAttribute alloc] init];
     attribute.eventName = seTrimValue(eventName);
     attribute.customProperties = seTrimValue(customProperties);
+    attribute.presetProperties = seTrimValue(preProperties);
     
     return attribute;
 }
