@@ -1,0 +1,7 @@
+<dependencies>
+<iosPods>
+  <iosPod name="SESDKRemoteConfig" version="~> 1.2.8.2">
+  </iosPod>
+</iosPods>
+
+</dependencies>

@@ -5,13 +5,13 @@
             url "https://maven.google.com"
         }
         maven {
-            url "https://dl-maven-android.mintegral.com/repository/yongqi_test_maven/" // Assets/SolarEngineNet/Editor/SEUmpDependencies.xml:8, Assets/SolarEngineNet/Editor/SEUmpDependencies.xml:16, Assets/SolarEngineNet/Editor/SEUmpDependencies.xml:24
+            url "https://dl-maven-android.mintegral.com/repository/se_sdk_for_android/" // Assets/SolarEngineNet/Editor/Dependencies.xml:12, Assets/SolarEngineNet/SolarEnginePlugins/Oaid/Editor/Dependencies.xml:8
         }
         maven {
-            url "https://developer.huawei.com/repo/" // Assets/SolarEngineNet/Editor/SEUmpDependencies.xml:32
+            url "https://developer.huawei.com/repo/" // Assets/SolarEngineNet/SolarEnginePlugins/Oaid/Editor/Dependencies.xml:16
         }
         maven {
-            url "https://developer.hihonor.com/repo" // Assets/SolarEngineNet/Editor/SEUmpDependencies.xml:40
+            url "https://developer.hihonor.com/repo" // Assets/SolarEngineNet/SolarEnginePlugins/Oaid/Editor/Dependencies.xml:24
         }
         mavenLocal()
         mavenCentral()
@@ -24,11 +24,11 @@ apply plugin: 'com.android.library'
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 // Android Resolver Dependencies Start
-    implementation 'com.hihonor.mcs:ads-identifier:1.0.2.301' // Assets/SolarEngineNet/Editor/SEUmpDependencies.xml:40
-    implementation 'com.huawei.hms:ads-identifier:3.4.62.300' // Assets/SolarEngineNet/Editor/SEUmpDependencies.xml:32
-    implementation 'com.reyun.solar.engine.oversea:solar-engine-core:1.2.7.5' // Assets/SolarEngineNet/Editor/SEUmpDependencies.xml:8
-    implementation 'com.reyun.solar.engine.oversea:solar-remote-config:1.2.7.5' // Assets/SolarEngineNet/Editor/SEUmpDependencies.xml:16
-    implementation 'com.reyun.solar.engine:se-plugin-oaid:1.2.7.4' // Assets/SolarEngineNet/Editor/SEUmpDependencies.xml:24
+    implementation 'com.hihonor.mcs:ads-identifier:1.0.2.301' // Assets/SolarEngineNet/SolarEnginePlugins/Oaid/Editor/Dependencies.xml:24
+    implementation 'com.huawei.hms:ads-identifier:3.4.62.300' // Assets/SolarEngineNet/SolarEnginePlugins/Oaid/Editor/Dependencies.xml:16
+    implementation 'com.reyun.solar.engine.china:solar-engine-core:1.2.9.0' // Assets/SolarEngineNet/Editor/Dependencies.xml:12
+    implementation 'com.reyun.solar.engine.china:solar-remote-config:1.2.9.0' // Assets/SolarEngineNet/SolarEnginePlugins/RemoteConfigSDK/Android/Editor/Dependencies.xml:5
+    implementation 'com.reyun.solar.engine:se-plugin-oaid:1.2.7.4' // Assets/SolarEngineNet/SolarEnginePlugins/Oaid/Editor/Dependencies.xml:8
 // Android Resolver Dependencies End
 **DEPS**}
 

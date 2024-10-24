@@ -1,0 +1,17 @@
+<dependencies>
+    <iosPods>
+      <iosPod name="SolarEngineSDK" version="~> 1.2.8.2">
+      </iosPod>
+    </iosPods>
+
+  <androidPackages>
+    <androidPackage spec="com.reyun.solar.engine.china:solar-engine-core:1.2.9.0">
+      <repositories>
+        <repository>https://dl-maven-android.mintegral.com/repository/se_sdk_for_android/</repository>
+      </repositories>
+    </androidPackage>
+  </androidPackages>
+
+
+</dependencies>
+

@@ -1,0 +1,8 @@
+<dependencies>
+    <androidPackages>
+      <androidPackage spec="com.reyun.solar.engine.china:solar-remote-config:1.2.9.0">
+     
+      </androidPackage>
+    </androidPackages>
+
+</dependencies>

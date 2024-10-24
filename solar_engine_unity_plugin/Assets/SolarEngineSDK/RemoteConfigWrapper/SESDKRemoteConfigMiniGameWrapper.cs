@@ -1,4 +1,4 @@
-﻿#if (SOLARENGINE_BYTEDANCE||SOLARENGINE_WECHAT||SOLARENGINE_KUAISHOU)&&!UNITY_EDITOR
+﻿#if (SOLARENGINE_BYTEDANCE||SOLARENGINE_WECHAT||SOLARENGINE_KUAISHOU)&&(!UNITY_EDITOR||DeveloperEditor)
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -95,8 +95,7 @@ namespace SolarEngine
         private void SESDKAsyncFetchAllRemoteConfig()
         {
 
-            MiniRemoteConfigWrapper.MiniFetchAllRemoteConfigCallback _miniFetchAll=  (MiniRemoteConfigWrapper.MiniFetchAllRemoteConfigCallback)Delegate.CreateDelegate(typeof(MiniRemoteConfigWrapper.MiniFetchAllRemoteConfigCallback), fetchAllRemoteConfigCallback_private.Target, fetchAllRemoteConfigCallback_private.Method);
-          
+            MiniRemoteConfigWrapper.MiniFetchAllRemoteConfigCallback _miniFetchAll=  (MiniRemoteConfigWrapper.MiniFetchAllRemoteConfigCallback)Delegate.CreateDelegate(typeof(MiniRemoteConfigWrapper.MiniFetchAllRemoteConfigCallback), SESDKRemoteConfig.Instance.fetchAllRemoteConfigCallback_private.Target, SESDKRemoteConfig.Instance.fetchAllRemoteConfigCallback_private.Method);
             MiniRemoteConfigWrapper.Instance.asyncFetchRemoteConfig(_miniFetchAll);
         }
 
@@ -106,7 +105,7 @@ namespace SolarEngine
             {
                 return;
             }
-            MiniRemoteConfigWrapper.MiniFetchRemoteConfigCallback _miniFetch=  (MiniRemoteConfigWrapper.MiniFetchRemoteConfigCallback)Delegate.CreateDelegate(typeof(MiniRemoteConfigWrapper.MiniFetchRemoteConfigCallback), fetchRemoteConfigCallback_private.Target, fetchRemoteConfigCallback_private.Method);
+            MiniRemoteConfigWrapper.MiniFetchRemoteConfigCallback _miniFetch=  (MiniRemoteConfigWrapper.MiniFetchRemoteConfigCallback)Delegate.CreateDelegate(typeof(MiniRemoteConfigWrapper.MiniFetchRemoteConfigCallback), SESDKRemoteConfig.Instance.fetchRemoteConfigCallback_private.Target, SESDKRemoteConfig.Instance.fetchRemoteConfigCallback_private.Method);
           
             MiniRemoteConfigWrapper.Instance.asyncFetchRemoteConfig(key,_miniFetch);
 

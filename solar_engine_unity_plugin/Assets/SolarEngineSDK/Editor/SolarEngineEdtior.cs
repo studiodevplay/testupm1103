@@ -14,15 +14,11 @@ public class SolarEngineEdtior : MonoBehaviour
    private const string DisableiOS= RemoteConfigDisable + "/DisableiOS";
    private const string DisableAndroid = RemoteConfigDisable + "/DisableAndroid";
    
-
   
-   
-   
-   
-   
 
    private const string PluginsSolarEnginePath = "Assets/Plugins/SolarEngine/";
-   private const string MiniGameRemoteConfigsPath = "Assets/SolarEngineSDK/RemoteConfigWrapper";
+   private const string RemoteConfigsCSPath = "Assets/SolarEngineSDK/RemoteConfigWrapper";
+   private const string RemoteConfigXmlPath = "Assets/SolarEngineSDK/SolarEngineNet/SolarEnginePlugins/RemoteConfigSDK";
    
    //minigamepath
    private const string MiniGameRemoteConfigsPathMiniCS = "Assets/SolarEngineSDK/RemoteConfigWrapper/SESDKRemoteConfigMiniGameWrapper.cs";
@@ -33,12 +29,24 @@ public class SolarEngineEdtior : MonoBehaviour
    private const string RemoteConfigsPathiOSCS = "Assets/SolarEngineSDK/RemoteConfigWrapper/SESDKRemoteConfigiOSWrapper.cs";
    private const string RemoteConfigsPathiOSMM = PluginsSolarEnginePath+"iOS/wrappers/SESDKRemoteConfigUnityBridge.mm";
    private const string RemoteConfigsPathiOSH =  PluginsSolarEnginePath+"iOS/wrappers/SESDKRemoteConfigUnityBridge.h";
-   
+   private const string RemoteConfigsPathiOSXml = RemoteConfigXmlPath+"/iOS";
    //androidpath
    private const string RemoteConfigsPathAndroidCS = "Assets/SolarEngineSDK/RemoteConfigWrapper/SESDKRemoteConfigAndroidWrapper.cs";
    private const string ConfigsPathAndroidJar = PluginsSolarEnginePath+"Android/libs/se_remote_config_unity_bridge.jar";
-   
-   
+   private const string RemoteConfigsPathAndroidXml = RemoteConfigXmlPath+"/Android";
+
+   [MenuItem(DisableAll, false, 0)]
+   public static void disableAll ()
+   {
+      DisableFile(MiniGameRemoteConfigsPathMiniDll);
+      DisableFile(RemoteConfigsPathiOSMM);
+      DisableFile(RemoteConfigsPathiOSH);
+      DisableFile(ConfigsPathAndroidJar);
+      
+      DisablePath(RemoteConfigsCSPath);
+      DisablePath(RemoteConfigXmlPath);
+      
+   }
   
    [MenuItem(DisableMiniGame, false, 0)]
    public static void disableMiniGame ()
@@ -53,7 +61,7 @@ public class SolarEngineEdtior : MonoBehaviour
     DisableFile(RemoteConfigsPathiOSCS);
     DisableFile(RemoteConfigsPathiOSMM);
     DisableFile(RemoteConfigsPathiOSH);
-    
+    DisablePath(RemoteConfigsPathiOSXml);
    }
    
    [MenuItem(DisableAndroid, false, 0)]
@@ -61,19 +69,8 @@ public class SolarEngineEdtior : MonoBehaviour
    {
       DisableFile(RemoteConfigsPathAndroidCS);
       DisableFile(ConfigsPathAndroidJar);
-    
+      DisablePath(RemoteConfigsPathAndroidXml);
    }
-   
-   // [MenuItem(RemoteConfigShowAll, false, 0)]
-   // public static void showAllRemoteConfig ()
-   // {
-   //       ShowPath(MiniGameRemoteConfigsPath);
-   //    
-   // }
-   
-  
-   
-
    
    private static void DisablePath(string path)
    {
