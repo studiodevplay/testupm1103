@@ -6,12 +6,13 @@ namespace SolarEngine
 {
     public partial class Analytics : MonoBehaviour
     {
-        public static readonly string sdk_version = "1.2.8.3";
+        public static readonly string sdk_version = "1.2.9.0";
         private static readonly string SEConstant_CHECK_ID = "_first_event_check_id";
         private static readonly string SEConstant_EVENT_TYPE = "_event_type";
 
 
         private static readonly string SEConstant_CUSTOM_EVENT_NAME = "_custom_event_name";
+        private static readonly string SEConstant_Pre_Properties = "_pre_properties";
         private static readonly string SEConstant_CUSTOM = "_custom_event";
         private static readonly string SEConstant_Custom_CustomProperties = "_customProperties";
 

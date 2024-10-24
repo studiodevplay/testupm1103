@@ -323,9 +323,13 @@ namespace SolarEngine
 
                 if (customAttributes.customProperties != null)
                 {
-                    attributesDict.Add(SolarEngine.Analytics.SEConstant_Custom_CustomProperties,
-                        customAttributes.customProperties);
+                    attributesDict.Add(SolarEngine.Analytics.SEConstant_Custom_CustomProperties,customAttributes.customProperties);
                 }
+				
+				if (customAttributes.preProperties != null)
+				{
+				    attributesDict.Add(SolarEngine.Analytics.SEConstant_Pre_Properties,customAttributes.preProperties);
+				}
 
                 if (customAttributes.checkId != null)
                 {
@@ -620,6 +624,9 @@ namespace SolarEngine
     {
         // 自定义事件名
         public string custom_event_name { get; set; }
+		
+		// 自定义事件预置属性
+        public Dictionary<string, object> preProperties { get; set; }
 
         // 自定义属性, json字符串
         public Dictionary<string, object> customProperties { get; set; }

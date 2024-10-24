@@ -53,6 +53,9 @@ namespace SolarEngine
         // 自定义属性, json字符串
         public Dictionary<string, object> customProperties { get; set; }
 
+        // 自定义事件预置属性
+        public Dictionary<string, object> preProperties { get; set; }
+
         // 实现 SEBaseAttributes 接口中的 checkId 属性
         public string checkId { get; set; }
     }
@@ -314,7 +317,7 @@ namespace SolarEngine
     public partial class Analytics : MonoBehaviour
     {
 
-        private static readonly string sdk_version = "1.2.8.3";
+        private static readonly string sdk_version = "1.2.9.0";
 
 
         private SEAttributionCallback attributionCallback_private = null;
@@ -408,6 +411,7 @@ namespace SolarEngine
 
 
         private static readonly string SEConstant_CUSTOM_EVENT_NAME = "_custom_event_name";
+        private static readonly string SEConstant_Pre_Properties = "_pre_properties";
         private static readonly string SEConstant_CUSTOM = "_custom_event";
         private static readonly string SEConstant_Custom_CustomProperties = "_customProperties";
 
@@ -1803,6 +1807,10 @@ namespace SolarEngine
                 if (customAttributes.customProperties != null) {
                     attributesDict.Add(SolarEngine.Analytics.SEConstant_Custom_CustomProperties, customAttributes.customProperties);
                 }
+
+                if (customAttributes.preProperties != null){
+				    attributesDict.Add(SolarEngine.Analytics.SEConstant_Pre_Properties,customAttributes.preProperties);
+				}
 
                 if (customAttributes.checkId != null)
                 {
