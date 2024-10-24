@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 #import <objc/runtime.h>
 
-#define SERCSDKVersion @"1.2.8.2"
+#define SERCSDKVersion @"1.2.9.0"
 
 NS_ASSUME_NONNULL_BEGIN
 
