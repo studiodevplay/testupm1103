@@ -6,7 +6,7 @@
   <androidPackages>
     <androidPackage spec="com.reyun.solar.engine.oversea:solar-engine-core:1.2.8.3">
       <repositories>
-        <repository>https://dl-maven-android.mintegral.com/repository/se_sdk_for_android/</repository>
+        <repository>https://maven-android.solar-engine.com/repository/se_sdk_for_android/</repository>
       </repositories>
     </androidPackage>
   </androidPackages>
