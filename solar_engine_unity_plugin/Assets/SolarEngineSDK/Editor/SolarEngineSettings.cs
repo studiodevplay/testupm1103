@@ -4,22 +4,42 @@ using UnityEditor;
 #endif
 using UnityEngine;
 using System.IO;
+using System.Linq;
+using System.Xml.Linq;
 
 
 namespace SolarEngine
 {
 
+	
 	#if UNITY_EDITOR
     [InitializeOnLoad]
 	#endif
     public class SolarEngineSettings : ScriptableObject
 	{
+		
 		private const string ASSET_NAME = "SolarEngineSettings";
-		private const string ASSET_PATH = "SolarEngineSDK/Editor/Resources";
+		private const string ASSET_PATH = "Resources";
 		private const string ASSET_EXT = ".asset";
 
 		private static SolarEngineSettings instance;
 
+		[SerializeField]
+		private bool _China;
+		[SerializeField]
+		private bool _Oversea;
+		[SerializeField]
+		private bool _All;
+		[SerializeField]
+		private bool _iOS;
+		[SerializeField]
+		private bool _Android;
+		[SerializeField]
+		private bool _MiniGame;
+		
+		[SerializeField]
+		private bool _DisOaid;
+		
 		[SerializeField]
 		private string _iOSUrlIdentifier;
 		[SerializeField]
@@ -73,14 +93,30 @@ namespace SolarEngine
 			set { Instance._iOSUniversalLinksDomains = value; }
 		}
 
+		public static bool isCN
+		{
+			get{return  Instance._China;}
+			
+		}
+		
+		public static bool isOversea
+		{
+			get{return  Instance._Oversea;}
+			
+		}
+
 		#if UNITY_EDITOR
-		[MenuItem("SolarEngineSDK/iOS/Edit Settings", false, 0)]
+		[MenuItem("SolarEngineSDK/Edit Settings", false, 0)]
 	    public static void EditSettings ()
 	    {
 	        Selection.activeObject = Instance;
 	    }
 		#endif
 
+		
+		
+	
+		
 	}
 
 }

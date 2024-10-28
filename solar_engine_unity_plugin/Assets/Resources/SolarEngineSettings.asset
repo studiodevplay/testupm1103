@@ -9,9 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ac7ffc059b7c45618900d008903d98c, type: 3}
+  m_Script: {fileID: 11500000, guid: b6da413d3f4ab40caaea2fb5e06dc955, type: 3}
   m_Name: SolarEngineSettings
   m_EditorClassIdentifier: 
+  _China: 0
+  _Oversea: 0
+  _UseRemoteConfig: 1
+  _DisableiOSRemoteConfig: 0
+  _UseOaid: 1
   _iOSUrlIdentifier: 
   _iOSUrlSchemes: []
   _iOSUniversalLinksDomains: []
