@@ -38,6 +38,7 @@ using System.Collections;
         private bool oldDisiOSValue;
         private bool oldDisAndroidValue;
         private bool oldDisMiniGameValue;
+        private bool oldDisOaidValue;
         
 
         private object SolarEngineSettings;
@@ -53,8 +54,15 @@ using System.Collections;
             disiOSRemoteConfig= serializedObject.FindProperty("_iOS");
             disAndroidRemoteConfig= serializedObject.FindProperty("_Android");
             disMiniGameRemoteConfig= serializedObject.FindProperty("_MiniGame");
-            
             disOaid= serializedObject.FindProperty("_DisOaid");
+            
+            oldChinaValue= chinaProperty.boolValue;
+            oldOverseaValue= overseaProperty.boolValue;
+            oldDisAllValue= disAllRemoteConfig.boolValue;
+            oldDisiOSValue= disiOSRemoteConfig.boolValue;
+            oldDisAndroidValue= disAndroidRemoteConfig.boolValue;
+            oldDisMiniGameValue= disMiniGameRemoteConfig.boolValue;
+            oldDisOaidValue= disOaid.boolValue;
         }
 
 
@@ -70,6 +78,7 @@ using System.Collections;
         {  
             EditorGUILayout.PropertyField(chinaProperty);
             EditorGUILayout.PropertyField(overseaProperty);
+      
             if (serializedObject.ApplyModifiedProperties())
             {
                 // 处理 China 值变化
@@ -97,36 +106,66 @@ using System.Collections;
             EditorGUILayout.PropertyField(disMiniGameRemoteConfig);
             if (serializedObject.ApplyModifiedProperties())
             {
-                ProcessPropertyChange(disAllRemoteConfig, ref oldDisAllValue, "", test, () =>
+                ProcessPropertyChange(disAllRemoteConfig, ref oldDisAllValue, "_disAllRemoteConfig", DisableAll, () =>
                 {
-                    
+                    Debug.LogError("disAllRemoteConfig");
 
                 });
+                ProcessPropertyChange(disiOSRemoteConfig, ref oldDisiOSValue, "_disiOSRemoteConfig", DisableiOS);
+                ProcessPropertyChange(disAndroidRemoteConfig, ref oldDisAndroidValue, "_disAndroidRemoteConfig", DisableAndroid);
+                ProcessPropertyChange(disMiniGameRemoteConfig, ref oldDisMiniGameValue, "_disMiniGameRemoteConfig", DisableMiniGame);
             }
             
          
         }
+        private void Oaid()
+        {
+            EditorGUILayout.PropertyField(disOaid);
+            if (serializedObject.ApplyModifiedProperties())
+            {
+                ProcessPropertyChange( disOaid, ref oldDisOaidValue, "_disOaid", DisableOaid);
+            }
+        }
 
-        void test(bool value)
+        private void DisableOaid(bool value)
         {
             if (value)
             {
-                EditorGUI.BeginDisabledGroup(true);
-              
-                EditorGUILayout.PropertyField(disiOSRemoteConfig);
-                EditorGUI.EndDisabledGroup();
-              
-                disAndroidRemoteConfig.boolValue = true;
-                disMiniGameRemoteConfig.boolValue = true;
-                EditorGUI.EndDisabledGroup();
+                PluginsEdtior.disableOaid();
             }
           
         }
 
-        private void Oaid()
+        void DisableAll(bool value)
         {
-            EditorGUILayout.PropertyField(disOaid);
+            if (value)
+            {
+                disiOSRemoteConfig.boolValue = true;
+                disAndroidRemoteConfig.boolValue = true;
+                disMiniGameRemoteConfig.boolValue = true;
+               PluginsEdtior.disableAll();
+            }
+          
         }
+
+        void DisableiOS(bool value)
+        {
+            if(value)
+                PluginsEdtior.disableiOS(); 
+        }
+        void DisableAndroid(bool value)
+        {
+            if(value)
+                PluginsEdtior.disableAndroid();
+        }
+        void DisableMiniGame(bool value)
+        {
+            if(value)
+                PluginsEdtior.disableMiniGame();
+        }
+        
+
+       
         
         
         private void ProcessPropertyChange(SerializedProperty property, ref bool oldValue, string propertyName, System.Action<bool> xmlAction, System.Action additionalAction = null)

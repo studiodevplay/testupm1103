@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using SolarEngine;
 using UnityEngine;
 
 public class XmlModifier
@@ -136,15 +137,26 @@ public class XmlModifier
         try
         {
             XDocument doc = LoadXmlDocument(SDK_XML_FILE_PATH);
-            XDocument docRemote = LoadXmlDocument(ANDROID_REMOTECONFIG_PATH);
+       
+         
             if (doc!= null)
             {
                 ModifyIOSNodesForOversea(doc);
                 ModifyAndroidNodesForOversea(doc, ANDROID_PACKAGE_OVERSEA_SPEC);
                 SaveXmlDocument(doc, SDK_XML_FILE_PATH);
                 
-                ModifyAndroidNodesForOversea(docRemote, ANDROID_REMOTECONFIGE_OVERSEA_SPEC);
-                SaveXmlDocument(docRemote, ANDROID_REMOTECONFIG_PATH);
+               
+            }
+
+            if (!SolarEngineSettings.isDisAndroid)
+            {
+                XDocument docRemote = LoadXmlDocument(ANDROID_REMOTECONFIG_PATH);
+                if (docRemote != null)
+                {
+                    ModifyAndroidNodesForOversea(docRemote, ANDROID_REMOTECONFIGE_OVERSEA_SPEC);
+                    SaveXmlDocument(docRemote, ANDROID_REMOTECONFIG_PATH);
+                }
+                    
             }
         }
         catch (Exception ex)
@@ -211,15 +223,25 @@ public class XmlModifier
         try
         {
             XDocument doc = LoadXmlDocument(SDK_XML_FILE_PATH);
-            XDocument docRemote = LoadXmlDocument(ANDROID_REMOTECONFIG_PATH);
+           
             if (doc!= null)
             {
                 ModifyIOSNodesForCN(doc);
                 ModifyAndroidNodesForCN(doc,ANDROID_PACKAGE_CN_SPEC);
                 SaveXmlDocument(doc, SDK_XML_FILE_PATH);
                 
-                ModifyAndroidNodesForOversea(docRemote, ANDROID_REMOTECONFIGE_CN_SPEC);
-                SaveXmlDocument(docRemote, ANDROID_REMOTECONFIG_PATH);
+              
+            }
+
+            if (!SolarEngineSettings.isDisAndroid)
+            {
+                XDocument docRemote = LoadXmlDocument(ANDROID_REMOTECONFIG_PATH);
+                if (docRemote != null)
+                {
+                    ModifyAndroidNodesForOversea(docRemote, ANDROID_REMOTECONFIGE_CN_SPEC);
+                    SaveXmlDocument(docRemote, ANDROID_REMOTECONFIG_PATH);
+                }
+                    
             }
         }
         catch (Exception ex)
