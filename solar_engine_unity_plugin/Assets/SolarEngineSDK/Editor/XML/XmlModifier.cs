@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using SolarEngine;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class XmlModifier
@@ -13,26 +14,33 @@ public class XmlModifier
     private const string SDK_XML_FILE_PATH = SolarEngineNet + DEPENDDANCIDES;
     private const string REMOTECONFIG_PATH = SolarEngineNet + "SolarEnginePlugins/RemoteConfigSDK/";
     private const string ANDROID_REMOTECONFIG_PATH = REMOTECONFIG_PATH + "Android/" + DEPENDDANCIDES;
+    private const string IOS_REMOTECONFIG_PATH = REMOTECONFIG_PATH + "iOS/" + DEPENDDANCIDES;
+    private const string ANDROID_OAID_PATH = SolarEngineNet+"SolarEnginePlugins/Oaid/"  + DEPENDDANCIDES;
 
     private const string IOS_POD_NODE_NAME = "iosPod";
     private const string IOS_POD_NAME_ATTR = "name";
     private const string IOS_POD_VERSION_ATTR = "version";
-
-    // Oversea相关常量
+    // private static string IOS_POD_VERSION =SolarEngineSettings.iOSSDKVersion;
+    // private static string ANDROID_VERSION =SolarEngineSettings.AndroidSDKVersion;
+    
+    // Oversea
     private const string IOS_POD_OVERSEA_NAME = "SolarEngineSDKiOSInter";
-    private const string IOS_POD_OVERSEA_VERSION = "1.2.8.3";
-    private const string ANDROID_OVERSEA_VERSION = "1.2.8.3";
-    private const string ANDROID_PACKAGE_OVERSEA_SPEC = "com.reyun.solar.engine.oversea:solar-engine-core:" + ANDROID_OVERSEA_VERSION;
+  
+     private const string ANDROID_PACKAGE_OVERSEA_SPEC = "com.reyun.solar.engine.oversea:solar-engine-core:";
+    //
+     private const string ANDROID_REMOTECONFIGE_OVERSEA_SPEC = "com.reyun.solar.engine.oversea:solar-remote-config:";
     
-    private const string ANDROID_REMOTECONFIGE_OVERSEA_SPEC = "com.reyun.solar.engine.oversea:solar-remote-config:" + ANDROID_OVERSEA_VERSION;
-    
-    // CN相关常量
+  
+    // CN
     private const string IOS_POD_CN_NAME = "SolarEngineSDK";
-    private const string IOS_POD_CN_VERSION = "1.2.9.0";
-    private const string ANDROID_CN_VERSION = "1.2.9.0";
-    private const string ANDROID_PACKAGE_CN_SPEC = "com.reyun.solar.engine.china:solar-engine-core:" + ANDROID_CN_VERSION;
-    private const string ANDROID_REMOTECONFIGE_CN_SPEC = "com.reyun.solar.engine.china:solar-remote-config:" + ANDROID_CN_VERSION;
 
+    private static string ANDROID_PACKAGE_CN_SPEC = "com.reyun.solar.engine.china:solar-engine-core:";
+    private static string ANDROID_REMOTECONFIGE_CN_SPEC = "com.reyun.solar.engine.china:solar-remote-config:";
+
+    
+    private const string IOS_REMOTECONFIGE_SPEC = "SESDKRemoteConfig";
+    private const string ANDROID_OAID_SPEC = "com.reyun.solar.engine:se-plugin-oaid:";
+    
 
     /// <summary>
     /// 加载XML文档
@@ -82,136 +90,136 @@ public class XmlModifier
     /// 修改iOS相关节点的属性（针对Oversea情况）
     /// </summary>
     /// <param name="doc">要修改的XDocument对象</param>
-    private static void ModifyIOSNodesForOversea(XDocument doc)
+    private static  bool ModifyIOSNodes(XDocument doc,string _name)
     {
-        // 修改iosPod节点的name和version属性
+        bool name = false;
+        bool version = false;
         var iosPod = doc.Descendants(IOS_POD_NODE_NAME).FirstOrDefault();
         if (iosPod!= null)
         {
             var nameAttribute = iosPod.Attribute(IOS_POD_NAME_ATTR);
             if (nameAttribute!= null)
             {
-                nameAttribute.Value = IOS_POD_OVERSEA_NAME;
+                nameAttribute.Value = _name;
+                name = true;
             }
 
             var versionAttribute = iosPod.Attribute(IOS_POD_VERSION_ATTR);
             if (versionAttribute!= null)
             {
-                versionAttribute.Value = IOS_POD_OVERSEA_VERSION;
+                versionAttribute.Value = SolarEngineSettings.iOSSDKVersion;
+                version= true;
             }
 
-            Debug.Log("changle iOS to Oversea");
+          
         }
+        return  name&&version;
     }
-
-    /// <summary>
-    /// 修改安卓相关节点的属性（针对Oversea情况）
-    /// </summary>
-    /// <param name="doc">要修改的XDocument对象</param>
-    private static void ModifyAndroidNodesForOversea(XDocument doc,string _spec)
+    private static bool iOSRC()
     {
-        // 修改androidPackages下节点的spec属性
-        var androidPackages = doc.Descendants("androidPackages");
-        var androidPackagesToModify = from androidPackage in androidPackages.Elements("androidPackage")
-                                       where androidPackage.Attribute("spec")!= null
-                                       select androidPackage;
+        bool isModified=false;
 
-        foreach (var androidPackage in androidPackagesToModify)
+        if (SolarEngineSettings.isDixiOS)
+            return true;
+        else
         {
-            var specAttr = androidPackage.Attribute("spec");
-            if (specAttr!= null)
+            XDocument docRemote = LoadXmlDocument(IOS_REMOTECONFIG_PATH);
+            if (docRemote != null)
             {
-                specAttr.Value = _spec;
-                Debug.Log("changle Android to Oversea");
+                isModified=  ModifyIOSNodes(docRemote,IOS_REMOTECONFIGE_SPEC);
+                SaveXmlDocument(docRemote, IOS_REMOTECONFIG_PATH);
             }
-        }
-    }
-
-    /// <summary>
-    /// 整体执行修改XML文件操作（针对Oversea情况），包括加载、修改和保存
-    /// </summary>
-    /// <param name="boolVale">控制是否执行修改操作的布尔值</param>
-    public static void Overseaxml(bool boolVale)
-    {
-    
-        try
-        {
-            XDocument doc = LoadXmlDocument(SDK_XML_FILE_PATH);
-       
-         
-            if (doc!= null)
-            {
-                ModifyIOSNodesForOversea(doc);
-                ModifyAndroidNodesForOversea(doc, ANDROID_PACKAGE_OVERSEA_SPEC);
-                SaveXmlDocument(doc, SDK_XML_FILE_PATH);
                 
-               
-            }
-
-            if (!SolarEngineSettings.isDisAndroid)
-            {
-                XDocument docRemote = LoadXmlDocument(ANDROID_REMOTECONFIG_PATH);
-                if (docRemote != null)
-                {
-                    ModifyAndroidNodesForOversea(docRemote, ANDROID_REMOTECONFIGE_OVERSEA_SPEC);
-                    SaveXmlDocument(docRemote, ANDROID_REMOTECONFIG_PATH);
-                }
-                    
-            }
         }
-        catch (Exception ex)
-        {
-            Debug.LogError($"修改XML文件（Oversea）时出错: {ex.Message}");
-        }
+        return  isModified;
     }
 
-    /// <summary>
-    /// 修改iOS相关节点的属性（针对CN情况）
-    /// </summary>
-    /// <param name="doc">要修改的XDocument对象</param>
-    private static void ModifyIOSNodesForCN(XDocument doc)
+    private static bool AndroidRC(bool iscn)
     {
-        // 修改iosPod节点的name和version属性
-        var iosPod = doc.Descendants(IOS_POD_NODE_NAME).FirstOrDefault();
-        if (iosPod!= null)
+        bool isModified=false;
+
+        if (SolarEngineSettings.isDisAndroid)
+            return true;
+        else
         {
-            var nameAttribute = iosPod.Attribute(IOS_POD_NAME_ATTR);
-            if (nameAttribute!= null)
-            {
-            nameAttribute.Value = IOS_POD_CN_NAME;
+            XDocument docRemote = LoadXmlDocument(ANDROID_REMOTECONFIG_PATH);
+            if (docRemote != null)
+            { 
+                if(iscn)
+                isModified= ModifyAndroidNode(docRemote, ANDROID_REMOTECONFIGE_CN_SPEC+SolarEngineSettings.AndroidSDKVersion);
+                else
+                
+                    isModified= ModifyAndroidNode(docRemote, ANDROID_REMOTECONFIGE_OVERSEA_SPEC+SolarEngineSettings.AndroidSDKVersion);
+                
+                
+                SaveXmlDocument(docRemote, ANDROID_REMOTECONFIG_PATH);
             }
 
-            var versionAttribute = iosPod.Attribute(IOS_POD_VERSION_ATTR);
-            if (versionAttribute!= null)
-            {
-                versionAttribute.Value = IOS_POD_CN_VERSION;
-            }
+            return isModified;
+        }
+            
+    }
+    
+    public static bool AndroidOaid()
+    {
+        
+        bool isModified=false;
 
-            Debug.Log("changle iOS to CN");
+        if (SolarEngineSettings.isDisOaid)
+            return true;
+        else {
+            XDocument docOaid = LoadXmlDocument(ANDROID_OAID_PATH);
+            
+            if (docOaid != null)
+            {
+               
+                isModified= ModifyAndroidNode(docOaid, ANDROID_OAID_SPEC+SolarEngineSettings.AndroidSDKVersion);
+              
+               
+                SaveXmlDocument(docOaid,ANDROID_OAID_PATH );
+            }
+            return isModified;
+            
         }
     }
+   
+  
 
+  
+   
+   
+    
+  
     /// <summary>
     /// 修改安卓相关节点的性能（针对CN情况）
     /// </summary>
     /// <param name="doc">要修改的XDocument对象</param>
-    private static void ModifyAndroidNodesForCN(XDocument doc,string  _spec)
+    private static bool ModifyAndroidNode(XDocument doc,string  _spec)
     {
         // 修改androidPackages下节点的spec属性
-        var androidPackages = doc.Descendants("androidPackages");
-        var androidPackagesToModify = from androidPackage in androidPackages.Elements("androidPackage")
-                                       where androidPackage.Attribute("spec")!= null
-                                       select androidPackage;
+        var firstAndroidPackages = doc.Descendants("androidPackages").FirstOrDefault();
 
-        foreach (var androidPackage in androidPackagesToModify)
+        if (firstAndroidPackages != null)
         {
-            var specAttr = androidPackage.Attribute("spec");
-            if (specAttr!= null)
+            // 查找第一个androidPackages元素下包含spec属性的子元素androidPackage
+            var androidPackagesToModify = from androidPackage in firstAndroidPackages.Elements("androidPackage")
+                where androidPackage.Attribute("spec") != null
+                select androidPackage;
+            
+
+            foreach (var androidPackage in androidPackagesToModify)
             {
-                specAttr.Value = _spec;
-                Debug.Log("changle Android to CN");
+                var specAttr = androidPackage.Attribute("spec");
+                if (specAttr != null)
+                {
+                
+                    specAttr.Value = _spec;
+                   return  true;
+                }
             }
         }
+
+        return false;
     }
 
     /// <summary>
@@ -220,33 +228,80 @@ public class XmlModifier
     /// <param name="boolVale">控制是否执行修改操作的布尔值</param>
     public static void cnxml(bool boolVale)
     {
+        Debug.Log(SolarEngineSettings.iOSSDKVersion);
+        Debug.Log(SolarEngineSettings.AndroidSDKVersion);
+        if (string.IsNullOrEmpty(SolarEngineSettings.iOSSDKVersion) || string.IsNullOrEmpty(SolarEngineSettings.AndroidSDKVersion))
+        {
+       
+            Debug.LogError("请先设置依赖包版本号");
+            return;
+        }
+   
         try
         {
-            XDocument doc = LoadXmlDocument(SDK_XML_FILE_PATH);
-           
-            if (doc!= null)
-            {
-                ModifyIOSNodesForCN(doc);
-                ModifyAndroidNodesForCN(doc,ANDROID_PACKAGE_CN_SPEC);
-                SaveXmlDocument(doc, SDK_XML_FILE_PATH);
-                
-              
-            }
-
-            if (!SolarEngineSettings.isDisAndroid)
-            {
-                XDocument docRemote = LoadXmlDocument(ANDROID_REMOTECONFIG_PATH);
-                if (docRemote != null)
-                {
-                    ModifyAndroidNodesForOversea(docRemote, ANDROID_REMOTECONFIGE_CN_SPEC);
-                    SaveXmlDocument(docRemote, ANDROID_REMOTECONFIG_PATH);
-                }
-                    
-            }
+            if(sdkSetting(true)&&AndroidRC(true)&& AndroidOaid()&& iOSRC())
+                Debug.Log("set SDK to CN");
         }
         catch (Exception ex)
         {
             Debug.LogError($"修改XML文件（CN）时出错: ex.Message");
         }
     }
+    
+    /// <summary>
+    /// 整体执行修改XML文件操作（针对Oversea情况），包括加载、修改和保存
+    /// </summary>
+    /// <param name="boolVale">控制是否执行修改操作的布尔值</param>
+    public static void Overseaxml(bool boolVale)
+    {
+        if (string.IsNullOrEmpty(SolarEngineSettings.iOSSDKVersion) || string.IsNullOrEmpty(SolarEngineSettings.AndroidSDKVersion))
+        {
+       
+            Debug.LogError("请先设置依赖包版本号");
+            return;
+        }
+        try
+        {
+          
+if(sdkSetting(false)&&AndroidRC(false)&& AndroidOaid()&& iOSRC())
+    Debug.Log("set SDK to Oversea");
+    
+          
+           
+
+
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"修改XML文件（Oversea）时出错: {ex.Message}");
+        }
+    }
+
+  static  bool sdkSetting(bool isCN)
+    {
+        bool ios = false;
+        bool android = false;
+        XDocument doc = LoadXmlDocument(SDK_XML_FILE_PATH);
+       
+        if (doc!= null)
+        {
+            if (isCN)
+            {
+                ios=  ModifyIOSNodes(doc, IOS_POD_CN_NAME);
+                android= ModifyAndroidNode(doc, ANDROID_PACKAGE_CN_SPEC+SolarEngineSettings.AndroidSDKVersion);
+               
+            }
+            else
+            {
+                ios=  ModifyIOSNodes(doc, IOS_POD_OVERSEA_NAME);
+                android= ModifyAndroidNode(doc, ANDROID_PACKAGE_OVERSEA_SPEC+SolarEngineSettings.AndroidSDKVersion);
+            }
+         
+            SaveXmlDocument(doc, SDK_XML_FILE_PATH);
+                
+               
+        }
+        return  ios&&android;
+    }
+
 }

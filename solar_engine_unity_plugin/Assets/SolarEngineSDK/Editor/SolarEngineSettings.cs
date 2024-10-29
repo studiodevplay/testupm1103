@@ -10,8 +10,6 @@ using System.Xml.Linq;
 
 namespace SolarEngine
 {
-
-	
 	#if UNITY_EDITOR
     [InitializeOnLoad]
 	#endif
@@ -40,6 +38,10 @@ namespace SolarEngine
 		[SerializeField]
 		private bool _DisOaid;
 		
+		[SerializeField]
+		private string _iOSSDKVersion;
+		[SerializeField]
+		private string _AndroidSDKVersion;
 		[SerializeField]
 		private string _iOSUrlIdentifier;
 		[SerializeField]
@@ -105,38 +107,50 @@ namespace SolarEngine
 			get{return  Instance._Oversea;}
 			
 		}
+
 		
 		public static bool isDisMiniGame
 		{
 			get{return  Instance._MiniGame;}
-			set { Instance._MiniGame = value;}
+		
 		}
 
 		public static bool isDisAndroid
 		{
 			get{return  Instance._Android;}
-			set { Instance._Android = value;}
+			
 			
 		}
 		public static  bool isDixiOS
 			{
 			get{return  Instance._iOS;}
-			set { Instance._iOS = value;}
+		
 			
 		}
 		public static bool isDisAll
 		{
 			get{return  Instance._All;}
-			set { Instance._All = value;}
+		
+		}
+
+		public static bool isDisOaid
+		{
+			get{return  Instance._DisOaid;}
 			
 		}
-		
-		
-			
-		
 
+		public static string iOSSDKVersion
+		{
+			get{return  Instance._iOSSDKVersion;}
+			set{Instance._iOSSDKVersion = value;}
+		}
+		public static string AndroidSDKVersion
+		{
+			get{return  Instance._AndroidSDKVersion;}
+			set{Instance._AndroidSDKVersion = value;}
+		}
 		#if UNITY_EDITOR
-		[MenuItem("SolarEngineSDK/Edit Settings", false, 0)]
+		[MenuItem("SolarEngineSDK/SDK Edit Settings", false, 0)]
 	    public static void EditSettings ()
 	    {
 	        Selection.activeObject = Instance;

@@ -9,17 +9,8 @@ using UnityEngine.Windows;
 public class PluginsEdtior : MonoBehaviour
 {
    private const string SolarEngineSDK = "SolarEngineSDK";
-   private const string RemoteConfig = SolarEngineSDK + "/RemoteConfig";
    
-   
-   
-   
-   
-   private const string RemoteConfigDisable= RemoteConfig + "/Disable";
-   private const string DisableAll = RemoteConfigDisable + "/DisableAll";
-   private const string DisableMiniGame = RemoteConfigDisable + "/DisableMiniGame";
-   private const string DisableiOS= RemoteConfigDisable + "/DisableiOS";
-   private const string DisableAndroid = RemoteConfigDisable + "/DisableAndroid";
+
 
 
 
@@ -51,7 +42,7 @@ public class PluginsEdtior : MonoBehaviour
    private const string ConfigsPathAndroidJar = PluginsSolarEnginePath+"Android/libs/se_remote_config_unity_bridge.jar";
    private const string RemoteConfigsPathAndroidXml = RemoteConfigXmlPath+"/Android";
 
-   [MenuItem(DisableAll, false, 0)]
+  // [MenuItem(DisableAll, false, 0)]
    public static void disableAll ()
    {
       DisableFile(MiniGameRemoteConfigsPathMiniDll);
@@ -64,14 +55,14 @@ public class PluginsEdtior : MonoBehaviour
       
    }
   
-   [MenuItem(DisableMiniGame, false, 0)]
+  // [MenuItem(DisableMiniGame, false, 0)]
    public static void disableMiniGame ()
    {
       DisableFile(MiniGameRemoteConfigsPathMiniDll);
       DisableFile(MiniGameRemoteConfigsPathMiniCS);
       
    }
-   [MenuItem(DisableiOS, false, 0)]
+  // [MenuItem(DisableiOS, false, 0)]
    public static void disableiOS ()
    {
     DisableFile(RemoteConfigsPathiOSCS);
@@ -80,7 +71,7 @@ public class PluginsEdtior : MonoBehaviour
     DisablePath(RemoteConfigsPathiOSXml);
    }
    
-   [MenuItem(DisableAndroid, false, 0)]
+  // [MenuItem(DisableAndroid, false, 0)]
    public static void disableAndroid ()
    {
       DisableFile(RemoteConfigsPathAndroidCS);

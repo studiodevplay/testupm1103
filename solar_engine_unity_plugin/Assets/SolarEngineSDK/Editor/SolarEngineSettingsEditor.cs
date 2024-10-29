@@ -30,6 +30,8 @@ using System.Collections;
         SerializedProperty iOSUrlIdentifier;
         SerializedProperty iOSUrlSchemes;
         SerializedProperty iOSUniversalLinksDomains;
+        SerializedProperty iOSSDKVersion;
+        SerializedProperty AndroidSDKVersion;
         
         
         private bool oldChinaValue;
@@ -39,12 +41,18 @@ using System.Collections;
         private bool oldDisAndroidValue;
         private bool oldDisMiniGameValue;
         private bool oldDisOaidValue;
+
+        private string oldiOSVersion;
+        private string oldAndroidVersion;
         
 
-        private object SolarEngineSettings;
+        private object SolarEngineSetting;
 
         void OnEnable()
         {
+            iOSSDKVersion= serializedObject.FindProperty("_iOSSDKVersion");
+            AndroidSDKVersion= serializedObject.FindProperty("_AndroidSDKVersion");
+            
             iOSUrlIdentifier = serializedObject.FindProperty("_iOSUrlIdentifier");
             iOSUrlSchemes = serializedObject.FindProperty("_iOSUrlSchemes");
             iOSUniversalLinksDomains = serializedObject.FindProperty("_iOSUniversalLinksDomains");
@@ -63,24 +71,48 @@ using System.Collections;
             oldDisAndroidValue= disAndroidRemoteConfig.boolValue;
             oldDisMiniGameValue= disMiniGameRemoteConfig.boolValue;
             oldDisOaidValue= disOaid.boolValue;
+            
+            oldiOSVersion= iOSSDKVersion.stringValue;
+            oldAndroidVersion= AndroidSDKVersion.stringValue;
         }
 
 
         public override void OnInspectorGUI()
         {
-            SolarEngineSettings = target as SolarEngineSettings;
+            SolarEngineSetting = target as SolarEngineSettings;
             this.GUI();
             
         }
 
+        private void SdkVersion()
+        {
+            EditorGUI.indentLevel += 1;
+            EditorGUILayout.PropertyField(iOSSDKVersion);
+            EditorGUILayout.PropertyField(AndroidSDKVersion);
+            EditorGUI.indentLevel -= 1;
+            if (!iOSSDKVersion.stringValue.Equals(SolarEngineSettings.iOSSDKVersion))
+                SolarEngineSettings.iOSSDKVersion=iOSSDKVersion.stringValue;
+            if( !AndroidSDKVersion.stringValue.Equals(SolarEngineSettings.AndroidSDKVersion))
+                SolarEngineSettings.AndroidSDKVersion = AndroidSDKVersion.stringValue;
+       
+           
+        }
 
         private void ChinaOrOversea()
-        {  
+        {
+            if (string.IsNullOrEmpty(SolarEngineSettings.iOSSDKVersion)||string.IsNullOrEmpty (AndroidSDKVersion.stringValue))
+           
+                return;
+        
+            EditorGUI.indentLevel += 1;
             EditorGUILayout.PropertyField(chinaProperty);
             EditorGUILayout.PropertyField(overseaProperty);
-      
+            EditorGUI.indentLevel -= 1;
+        
+           
             if (serializedObject.ApplyModifiedProperties())
             {
+                
                 // 处理 China 值变化
                 ProcessPropertyChange(chinaProperty, ref oldChinaValue, "_China",XmlModifier. cnxml, () =>
                 {
@@ -100,10 +132,12 @@ using System.Collections;
 
         private void RemoteConfig()
         {
+            EditorGUI.indentLevel += 1;
             EditorGUILayout.PropertyField(disAllRemoteConfig);
             EditorGUILayout.PropertyField(disiOSRemoteConfig);
             EditorGUILayout.PropertyField(disAndroidRemoteConfig);
             EditorGUILayout.PropertyField(disMiniGameRemoteConfig);
+            EditorGUI.indentLevel -= 1;
             if (serializedObject.ApplyModifiedProperties())
             {
                 ProcessPropertyChange(disAllRemoteConfig, ref oldDisAllValue, "_disAllRemoteConfig", DisableAll, () =>
@@ -120,7 +154,9 @@ using System.Collections;
         }
         private void Oaid()
         {
+            EditorGUI.indentLevel += 1;
             EditorGUILayout.PropertyField(disOaid);
+            EditorGUI.indentLevel -= 1;
             if (serializedObject.ApplyModifiedProperties())
             {
                 ProcessPropertyChange( disOaid, ref oldDisOaidValue, "_disOaid", DisableOaid);
@@ -190,6 +226,9 @@ using System.Collections;
             darkerCyanTextFieldStyles.normal.textColor = new Color(0f / 255f, 190f / 255f, 190f / 255f);
             
             DrawH2Title("SDK Setting");
+
+            EditorGUILayout.LabelField("Please Set iOS and Android Version",darkerCyanTextFieldStyles);
+            SdkVersion();
             EditorGUILayout.LabelField("Please choose China or overseas:(require)", darkerCyanTextFieldStyles);
           
             ChinaOrOversea();
