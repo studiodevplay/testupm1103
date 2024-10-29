@@ -1,28 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <dependencies>
-    
-    <androidPackages>
-     <androidPackage spec="com.reyun.solar.engine:se-plugin-oaid:1.2.7.4">
-        <repositories>
-          <repository>https://dl-maven-android.mintegral.com/repository/se_sdk_for_android/</repository>
-        </repositories>
-      </androidPackage>
-     </androidPackages>
-
-     <androidPackages>
-      <androidPackage spec="com.huawei.hms:ads-identifier:3.4.62.300">
-        <repositories>
-          <repository>https://developer.huawei.com/repo/</repository>
-        </repositories>
-      </androidPackage>
-     </androidPackages>
-
-     <androidPackages>
-      <androidPackage spec="com.hihonor.mcs:ads-identifier:1.0.2.301">
-        <repositories>
-          <repository>https://developer.hihonor.com/repo</repository>
-        </repositories>
-      </androidPackage>
-     </androidPackages>
-    
+  <androidPackages>
+    <androidPackage spec="com.reyun.solar.engine:se-plugin-oaid:1.2.9.0">
+      <repositories>
+        <repository>https://dl-maven-android.mintegral.com/repository/se_sdk_for_android/</repository>
+      </repositories>
+    </androidPackage>
+  </androidPackages>
+  <androidPackages>
+    <androidPackage spec="com.huawei.hms:ads-identifier:3.4.62.300">
+      <repositories>
+        <repository>https://developer.huawei.com/repo/</repository>
+      </repositories>
+    </androidPackage>
+  </androidPackages>
+  <androidPackages>
+    <androidPackage spec="com.hihonor.mcs:ads-identifier:1.0.2.301">
+      <repositories>
+        <repository>https://developer.hihonor.com/repo</repository>
+      </repositories>
+    </androidPackage>
+  </androidPackages>
 </dependencies>
-

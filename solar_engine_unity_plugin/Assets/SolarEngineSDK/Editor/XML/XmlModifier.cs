@@ -256,14 +256,12 @@ public class XmlModifier
     {
         if (string.IsNullOrEmpty(SolarEngineSettings.iOSSDKVersion) || string.IsNullOrEmpty(SolarEngineSettings.AndroidSDKVersion))
         {
-       
             Debug.LogError("请先设置依赖包版本号");
             return;
         }
         try
         {
-          
-if(sdkSetting(false)&&AndroidRC(false)&& AndroidOaid()&& iOSRC())
+       if(sdkSetting(false)&&AndroidRC(false)&& AndroidOaid()&& iOSRC())
     Debug.Log("set SDK to Oversea");
     
           

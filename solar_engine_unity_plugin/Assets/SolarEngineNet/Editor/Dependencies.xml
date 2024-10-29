@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <dependencies>
   <iosPods>
-    <iosPod name="SolarEngineSDKiOSInter" version="1.2.8.3" />
+    <iosPod name="SolarEngineSDK" version="1.2.9.0" />
   </iosPods>
   <androidPackages>
-    <androidPackage spec="com.reyun.solar.engine.oversea:solar-engine-core:1.2.8.3">
+    <androidPackage spec="com.reyun.solar.engine.china:solar-engine-core:1.2.9.0">
       <repositories>
         <repository>https://maven-android.solar-engine.com/repository/se_sdk_for_android/</repository>
       </repositories>
