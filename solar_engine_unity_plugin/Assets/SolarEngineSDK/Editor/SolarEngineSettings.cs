@@ -48,6 +48,10 @@ namespace SolarEngine
 		private string[] _iOSUrlSchemes = new string[0];
 		[SerializeField]
 		private string[] _iOSUniversalLinksDomains = new string[0];
+		
+		
+		[SerializeField]
+		private string[] _AndroidUrlSchemes = new string[0];
 
 		private static SolarEngineSettings Instance
 	    {
@@ -93,6 +97,11 @@ namespace SolarEngine
 		{
 			get { return Instance._iOSUniversalLinksDomains; }
 			set { Instance._iOSUniversalLinksDomains = value; }
+		}
+		public static string[] AndroidUrlSchemes
+		{
+			get { return Instance._AndroidUrlSchemes; }
+			set { Instance._AndroidUrlSchemes = value; }
 		}
 
 		public static bool isCN

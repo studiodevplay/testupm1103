@@ -13,16 +13,9 @@ using Distinct = SolarEngine.Distinct;
 public class SolarEngineDemo : MonoBehaviour
 {
     public Texture2D texture;
-    SESDKRemoteConfig remoteConfig = new SESDKRemoteConfig();
-
-
     public void InitSDK()
     {
-
-
-        string appkey = "";
-
-
+        
         Debug.Log("[unity] init click");
         String AppKey = "e78185651df3202f";
     //  String AppKey = "455cd0c9843e503e";
@@ -32,14 +25,12 @@ public class SolarEngineDemo : MonoBehaviour
         initParams.openid = "openid";
         SEConfig seConfig = new SEConfig();
         seConfig.miniGameInitParams = initParams;
-        RCConfig rcConfig = new RCConfig();
+        RCConfig rc = new RCConfig();
+        rc.enable = true;
         seConfig.logEnabled = true;
         seConfig.isDebugModel = false;
-        rcConfig.mergeType = SERCMergeType.SERCMergeTypeUser;
-        rcConfig.enable = true;
-        rcConfig.customIDProperties = new Dictionary<string, object> { { "c", 1 } };
-        rcConfig.customIDEventProperties = new Dictionary<string, object> { { "e", 1 } };
-        rcConfig.customIDUserProperties = new Dictionary<string, object> { { "u", 1 } };
+        Debug.Log("[unity] init with config");
+       
         //
         Analytics.SEAttributionCallback callback = new Analytics.SEAttributionCallback(attributionCallback);
         seConfig.attributionCallback = callback;
@@ -48,15 +39,14 @@ public class SolarEngineDemo : MonoBehaviour
         seConfig.initCompletedCallback = initCallback;
         setRemoteDefaultConfig();
         initRemoteConfig();
-
         SolarEngine.Analytics.preInitSeSdk(AppKey);
-        SolarEngine.Analytics.initSeSdk(AppKey, seConfig, rcConfig);
+        SolarEngine.Analytics.initSeSdk(AppKey, seConfig,rc);
 
 
     }
     public void initRemoteConfig()
     {
-
+       SESDKRemoteConfig remoteConfig = new SESDKRemoteConfig();
         Dictionary<string, object> eventProperties = new Dictionary<string, object>
         {
             { "event", "value1" },
@@ -78,15 +68,16 @@ public class SolarEngineDemo : MonoBehaviour
 
     public void setRemoteDefaultConfig()
     {
+        SESDKRemoteConfig remoteConfig = new SESDKRemoteConfig();
         Dictionary<string, object> defaultConfig1 = remoteConfig.stringItem("qq", "test");
         Dictionary<string, object> defaultConfig2 = remoteConfig.jsonItem("testjson", "{\"test\":\"test\"}");
         Dictionary<string, object> defaultConfig3 = remoteConfig.boolItem("testbool", true);
         Dictionary<string, object> defaultConfig4 = remoteConfig.intItem("testint", 1);
-
-
+        
+        
         Dictionary<string, object>[] defaultConfigArray = new Dictionary<string, object>[]
             { defaultConfig1, defaultConfig2, defaultConfig3, defaultConfig4 };
-
+        
         remoteConfig.SetRemoteDefaultConfig(defaultConfigArray);
 
     }
@@ -363,9 +354,10 @@ public class SolarEngineDemo : MonoBehaviour
     CreateButton("Set Super Properties", SetSuperPropertiesHandler);
     CreateButton("Set Preset Event", SetPresetEventHandler);
     CreateButton("Login", LoginHandler);
-    CreateButton("Logout", LogoutHandler);
     CreateButton("Get Account ID", GetAccountIdHandler);
+    CreateButton("Logout", LogoutHandler);
     CreateButton("Set Visitor ID", SetVisitorIdHandler);
+    CreateButton("Get Visitor ID", GetVisitorIdHandler);
     CreateButton("Get Distinct ID", GetDistinctIdHandler);
     CreateButton("Event Start", EventStartHandler);
     CreateButton("Event Finish", EventFinishHandler);
@@ -374,7 +366,10 @@ public class SolarEngineDemo : MonoBehaviour
     CreateButton("Clear Super Properties", ClearSuperPropertiesHandler);
     CreateButton("Report Immediately", ReportEventImmediatelyHandler);
     CreateButton("Get Attribution", GetAttributionHandler);
-    CreateButton("Set Channel Again", SetChannelAgainHandler);
+    CreateButton("Set Channel", SetChannelAgainHandler);
+    CreateButton("Set Gaids", SetGaidHandler);
+    CreateButton("Set GDPRArea", SetGDPRAreaHandle);
+
     CreateButton("Set Referrer Title", SetReferrerTitleHandler);
     CreateButton("Set Xcx Page Title", SetXcxPageTitleHandler);
     CreateButton("Get Preset Properties", GetPresetPropertiesHandler);
@@ -454,6 +449,7 @@ private void LogoutHandler()
     Analytics.logout();
 }
 
+
 private void GetAccountIdHandler()
 {
     Debug.Log(Analytics.getAccountId());
@@ -464,10 +460,16 @@ private void SetVisitorIdHandler()
     Analytics.setVisitorId("99999999999");
 }
 
+private void GetVisitorIdHandler()
+{
+    Debug.Log(Analytics.getVisitorId());
+}
 private void GetDistinctIdHandler()
 {
-#if SOLARENGINE_BYTEDANCE || SOLARENGINE_WECHAT
-    Analytics.getDistinct(_distinct);
+#if SOLARENGINE_BYTEDANCE || SOLARENGINE_WECHAT||SOLARENGINE_KUAISHOU
+    Analytics.getDistinctId(_distinct);
+    #else
+    Analytics.getDistinctId();
 #endif
 }
 
@@ -515,6 +517,15 @@ private void SetChannelAgainHandler()
     Analytics.setChannel("google");
 }
 
+private void SetGaidHandler()
+{
+    Analytics.setGaid("testgaid");
+}
+
+private void SetGDPRAreaHandle()
+{
+    Analytics.setGDPRArea(false);
+}
 private void SetReferrerTitleHandler()
 {
     Analytics.setReferrerTitle("setReferrerTitle");
@@ -606,9 +617,10 @@ private void UserDeleteHandler()
 
 private void FastFetchSingleHandler()
 {
+    SESDKRemoteConfig remoteConfig = new SESDKRemoteConfig();
     try
     {
-        string str = remoteConfig.FastFetchRemoteConfig("testint");
+        string str = remoteConfig.FastFetchRemoteConfig("qq");
         Debug.Log(str);
     }
     catch (Exception e)
@@ -621,6 +633,7 @@ private void FastFetchAllHandler()
 {
     try
     {
+        SESDKRemoteConfig remoteConfig = new SESDKRemoteConfig();
         Dictionary<string, object> str = remoteConfig.FastFetchRemoteConfig();
         foreach (var VARIABLE in str)
         {
@@ -635,6 +648,7 @@ private void FastFetchAllHandler()
 
 private void AsyncFetchSingleHandler()
 {
+    SESDKRemoteConfig remoteConfig = new SESDKRemoteConfig();
     try
     {
         remoteConfig.AsyncFetchRemoteConfig("testint", onFetchRemoteConfigCallbacks);
@@ -647,6 +661,7 @@ private void AsyncFetchSingleHandler()
 
 private void AsyncFetchAllHandler()
 {
+    SESDKRemoteConfig remoteConfig = new SESDKRemoteConfig();
     try
     {
         remoteConfig.AsyncFetchRemoteConfig(onFetchRemoteConfigCallback);

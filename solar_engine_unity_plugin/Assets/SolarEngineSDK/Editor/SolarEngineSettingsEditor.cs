@@ -31,6 +31,9 @@ using System.Collections;
         SerializedProperty iOSUrlSchemes;
         SerializedProperty iOSUniversalLinksDomains;
         SerializedProperty iOSSDKVersion;
+        
+        SerializedProperty AndroidUrlSchemes;
+        
         SerializedProperty AndroidSDKVersion;
         
         
@@ -56,6 +59,9 @@ using System.Collections;
             iOSUrlIdentifier = serializedObject.FindProperty("_iOSUrlIdentifier");
             iOSUrlSchemes = serializedObject.FindProperty("_iOSUrlSchemes");
             iOSUniversalLinksDomains = serializedObject.FindProperty("_iOSUniversalLinksDomains");
+            
+            AndroidUrlSchemes= serializedObject.FindProperty("_AndroidUrlSchemes");
+            
             chinaProperty = serializedObject.FindProperty("_China");
             overseaProperty = serializedObject.FindProperty("_Oversea");
             disAllRemoteConfig= serializedObject.FindProperty("_All");
@@ -84,6 +90,10 @@ using System.Collections;
             
         }
 
+        private void AndroidGUI()
+        {
+            
+        }
         private void SdkVersion()
         {
             EditorGUI.indentLevel += 1;
@@ -261,6 +271,14 @@ using System.Collections;
                 true);
 
             EditorGUI.indentLevel -= 1;
+            
+            DrawH2Title("Android");
+            EditorGUILayout.LabelField("DEEP LINKING:", darkerCyanTextFieldStyles);
+            EditorGUI.indentLevel += 1;
+            EditorGUILayout.PropertyField(AndroidUrlSchemes);
+            EditorGUI.indentLevel -= 1;
+            
+            
             serializedObject.ApplyModifiedProperties();
         }
 

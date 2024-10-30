@@ -34,10 +34,13 @@ internal class ExportPackage {
 		private static readonly string sdkVersion = SolarEngine.Analytics.sdk_version;
 
 		private const string solarenginePath = "Assets/SolarEngineSDK/";
+		
+		private const string externalDependencyManager = "Assets/ExternalDependencyManager/";
+		private const string solarEngineNet = "Assets/SolarEngineNet/";
 
-		private const string pluginsPath = "Assets/Plugins/";
-		private const string editorPath = "Assets/Editor/";
-		private const string resourcesPath = "Assets/Resources/";
+		private const string pluginsPath = "Assets/Plugins/SolarEngine";
+		//private const string editorPath = "Assets/Editor/";
+	
 	
 
 		public enum Target
@@ -85,17 +88,17 @@ internal class ExportPackage {
 				string[] solarengineFiles = (string[])Directory.GetFiles(solarenginePath, "*.*", SearchOption.AllDirectories);
 			
 				string[] pluginsFiles = (string[])Directory.GetFiles(pluginsPath, "*.*", SearchOption.AllDirectories);
-				string[] editorFiles = (string[])Directory.GetFiles(editorPath, "*.*", SearchOption.AllDirectories);
+				string[] externalDependencyFiles = (string[])Directory.GetFiles(externalDependencyManager, "*.*", SearchOption.AllDirectories);
 			
-				string[] resourcesFiles = (string[])Directory.GetFiles(resourcesPath, "*.*", SearchOption.AllDirectories);
+				string[] solarEngineNetFiles = (string[])Directory.GetFiles(solarEngineNet, "*.*", SearchOption.AllDirectories);
 			
 			
-			string[] files = new string[solarengineFiles.Length + pluginsFiles.Length+editorFiles.Length+resourcesFiles.Length];
+			string[] files = new string[solarengineFiles.Length + pluginsFiles.Length+externalDependencyFiles.Length+solarEngineNetFiles.Length];
 			
 				solarengineFiles.CopyTo(files, 0);
 				pluginsFiles.CopyTo(files, solarengineFiles.Length);
-				editorFiles.CopyTo(files, solarengineFiles.Length + pluginsFiles.Length);
-				resourcesFiles.CopyTo(files, solarengineFiles.Length + pluginsFiles.Length + editorFiles.Length);
+				externalDependencyFiles.CopyTo(files, solarengineFiles.Length + pluginsFiles.Length);
+				solarEngineNetFiles.CopyTo(files, solarengineFiles.Length + pluginsFiles.Length + externalDependencyFiles.Length);
 				
 			
 				AssetDatabase.ExportPackage(

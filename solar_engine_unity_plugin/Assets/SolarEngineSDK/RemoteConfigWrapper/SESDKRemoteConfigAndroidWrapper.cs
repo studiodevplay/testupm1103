@@ -14,7 +14,6 @@ namespace SolarEngine
     {
 
         protected static AndroidJavaClass SeRemoteConfigAndroidSDK = new AndroidJavaClass("com.reyun.se.remote.config.unity.bridge.UnityAndroidSeRemoteConfigManager");
-        protected static AndroidJavaObject SeRemoteConfigAndroidSDKObject = new AndroidJavaObject("com.reyun.se.remote.config.unity.bridge.UnityAndroidSeRemoteConfigManager");
 
         private void SESDKSetRemoteDefaultConfig(Dictionary<string, object>[] defaultConfig)
         {

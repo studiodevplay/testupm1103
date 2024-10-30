@@ -2,9 +2,7 @@
 <dependencies>
   <androidPackages>
     <androidPackage spec="com.reyun.solar.engine:se-plugin-oaid:1.2.9.0">
-      <repositories>
-        <repository>https://dl-maven-android.mintegral.com/repository/se_sdk_for_android/</repository>
-      </repositories>
+      <repositories></repositories>
     </androidPackage>
   </androidPackages>
   <androidPackages>

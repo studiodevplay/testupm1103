@@ -20,9 +20,7 @@ public class XmlModifier
     private const string IOS_POD_NODE_NAME = "iosPod";
     private const string IOS_POD_NAME_ATTR = "name";
     private const string IOS_POD_VERSION_ATTR = "version";
-    // private static string IOS_POD_VERSION =SolarEngineSettings.iOSSDKVersion;
-    // private static string ANDROID_VERSION =SolarEngineSettings.AndroidSDKVersion;
-    
+
     // Oversea
     private const string IOS_POD_OVERSEA_NAME = "SolarEngineSDKiOSInter";
   
@@ -221,19 +219,17 @@ public class XmlModifier
 
         return false;
     }
-
+    private const string SolorEngine = "[SolorEngine]e";
     /// <summary>
     /// 整体执行修改XML文件操作（针对CN情况），包括加载、省略号)
     /// </summary>
     /// <param name="boolVale">控制是否执行修改操作的布尔值</param>
     public static void cnxml(bool boolVale)
     {
-        Debug.Log(SolarEngineSettings.iOSSDKVersion);
-        Debug.Log(SolarEngineSettings.AndroidSDKVersion);
+    
         if (string.IsNullOrEmpty(SolarEngineSettings.iOSSDKVersion) || string.IsNullOrEmpty(SolarEngineSettings.AndroidSDKVersion))
         {
-       
-            Debug.LogError("请先设置依赖包版本号");
+            Debug.LogError( string.Format(SolorEngine+"Please set the dependency package version number first  "));
             return;
         }
    
@@ -244,7 +240,7 @@ public class XmlModifier
         }
         catch (Exception ex)
         {
-            Debug.LogError($"修改XML文件（CN）时出错: ex.Message");
+            Debug.LogError(SolorEngine+"Error modifying XML file (CN) ex.Message");
         }
     }
     
@@ -256,13 +252,13 @@ public class XmlModifier
     {
         if (string.IsNullOrEmpty(SolarEngineSettings.iOSSDKVersion) || string.IsNullOrEmpty(SolarEngineSettings.AndroidSDKVersion))
         {
-            Debug.LogError("请先设置依赖包版本号");
+            Debug.LogError( string.Format(SolorEngine+"Please set the dependency package version number first  "));
             return;
         }
         try
         {
        if(sdkSetting(false)&&AndroidRC(false)&& AndroidOaid()&& iOSRC())
-    Debug.Log("set SDK to Oversea");
+         Debug.Log("set SDK to Oversea");
     
           
            
@@ -271,7 +267,7 @@ public class XmlModifier
         }
         catch (Exception ex)
         {
-            Debug.LogError($"修改XML文件（Oversea）时出错: {ex.Message}");
+            Debug.LogError(SolorEngine+"Error modifying XML file (oversea) ex.Message");
         }
     }
 

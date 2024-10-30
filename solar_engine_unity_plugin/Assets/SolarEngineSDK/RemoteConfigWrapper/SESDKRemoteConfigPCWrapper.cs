@@ -1,11 +1,10 @@
-﻿#if UNITY_EDITOR 
+﻿#if UNITY_EDITOR||SOLORENGINE_DISABLE_REMOTECONFIG
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Text;
 using System.Runtime.InteropServices;
 using Newtonsoft.Json;
-// using SolarEngine.Sample;
 using AOT;
 
 namespace SolarEngine

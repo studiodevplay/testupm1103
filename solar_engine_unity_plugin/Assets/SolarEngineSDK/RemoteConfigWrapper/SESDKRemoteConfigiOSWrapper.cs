@@ -128,13 +128,6 @@ namespace SolarEngine
 
 
 
-
-
-
-
-
-
-
         [DllImport("__Internal")]
         private static extern void __iOSSESDKSetDefaultConfig(string config);
 
