@@ -277,7 +277,11 @@ namespace SolarEngine
         {
             return GetDistinctId();
         }
-        public static void getDistinct(Action<Distinct>distinct)
+        /// <summary>
+        /// 仅minigame 平台使用
+        /// </summary>
+        /// <param name="distinct"></param>
+        public static void getDistinctId(Action<Distinct>distinct)
         {
             GetDistinctId(distinct);
         }   

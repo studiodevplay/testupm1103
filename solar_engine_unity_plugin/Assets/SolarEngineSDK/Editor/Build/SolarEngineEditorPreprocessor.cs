@@ -31,9 +31,18 @@ namespace SolarEngine.Build
 #if UNITY_ANDROID
                     RunPostProcessTasksAndroid();
                     CheckConfusion();
+                    
 
 #endif
+                }else if (target == BuildTarget.iOS)
+                {
+                    PostProcessBuild_iOS(target, path);
                 }
+            }
+
+            private static void PostProcessBuild_iOS(BuildTarget target, string buildPath)
+            {
+                
             }
 
 
@@ -117,10 +126,7 @@ namespace SolarEngine.Build
 
                     Debug.Log(string.Format(SolorEngine)+"Successfully added URI schemes to AndroidManifest.xml");
                 }
-                else
-                {
-                    Debug.Log(string.Format(SolorEngine)+"AndroidManifest.xml already has URI schemes");
-                }
+              
             }
 
             private static bool AddURISchemes(XmlDocument manifest)

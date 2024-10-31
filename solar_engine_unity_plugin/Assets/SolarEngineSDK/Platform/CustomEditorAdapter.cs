@@ -1,4 +1,4 @@
-#if SOLARENGINE_CustomEditor
+#if SOLARENGINE_CustomEditor&&(!UNITY_EDITOR||SOLORENGINE_DEVELOPEREDITOR)
 using System;
 using System.Collections.Generic;
 using System.Linq;

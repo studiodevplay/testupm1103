@@ -1,5 +1,5 @@
 
-#if SOLARENGINE_WECHAT
+#if SOLARENGINE_WECHAT&&(!UNITY_EDITOR||SOLORENGINE_DEVELOPEREDITOR)
 
 using System;
 using System.Collections;

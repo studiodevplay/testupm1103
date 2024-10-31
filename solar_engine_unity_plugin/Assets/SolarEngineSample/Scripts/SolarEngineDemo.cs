@@ -395,6 +395,9 @@ public class SolarEngineDemo : MonoBehaviour
     CreateButton("Fast Fetch (All)", FastFetchAllHandler);
     CreateButton("Async Fetch (Single)", AsyncFetchSingleHandler);
     CreateButton("Async Fetch (All)", AsyncFetchAllHandler);
+    
+    
+    CreateButton("iOS CallBack", iOSCallBackHandler);
     GUILayout.EndVertical();
     GUILayout.EndHorizontal();
 
@@ -409,6 +412,32 @@ private void CreateButton(string buttonText, Action onClickHandler)
         onClickHandler();
     }
     GUILayout.Space(5);
+}
+
+private void iOSCallBackHandler()
+{
+    SolarEngine.Analytics.updatePostbackConversionValue(1, mySkanCallback);
+    Analytics.requestTrackingAuthorizationWithCompletionHandler( OnRequestTrackingAuthorizationCompletedHandler);
+    Analytics.updateConversionValueCoarseValue(2,"value", UpdateConversionValueCoarseValue);
+    Analytics.updateConversionValueCoarseValueLockWindow( 3,"value" ,true, UpdateConversionValueCoarseValueLockWindow);
+
+}
+private void mySkanCallback(int code ,string result)
+{
+    Debug.Log("SEUunity: mySkanCallback : " + result);
+}
+private void OnRequestTrackingAuthorizationCompletedHandler(int code)
+    {
+        Debug.Log("SEUnity: OnRequestTrackingAuthorizationCompletedHandler : " + code);
+    }
+private void UpdateConversionValueCoarseValue(int errorCode, String errorMsg)
+    {
+        Debug.Log("SEUnity: UpdateConversionValueCoarseValue : " + errorCode + " " + errorMsg);
+       
+    }
+private void UpdateConversionValueCoarseValueLockWindow(int errorCode, String errorMsg)
+{
+    Debug.Log("SEUnity: UpdateConversionValueCoarseValueLockWindow : " + errorCode + " " + errorMsg);
 }
 
 private void SetSuperPropertiesHandler()

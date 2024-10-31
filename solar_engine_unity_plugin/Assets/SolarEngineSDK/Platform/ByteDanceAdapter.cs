@@ -1,11 +1,11 @@
-#if SOLARENGINE_BYTEDANCE
+#if SOLARENGINE_BYTEDANCE&&(!UNITY_EDITOR||SOLORENGINE_DEVELOPEREDITOR)
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using SolarEngine.MiniGames.info;
 using SolarEngine.MiniGames.Utils;
-using StarkSDKSpace;
+using TTSDK;
 using UnityEngine;
 
 namespace SolarEngine.Platform
@@ -15,7 +15,7 @@ namespace SolarEngine.Platform
        
         public SEDeviceInfo setDeviceInfo()
         {
-            var sysInfo = StarkSDK.API.GetSystemInfo();
+            var sysInfo = TT.GetSystemInfo();
             LogTool.DebugLog("sysInfo" + JsonConvert.SerializeObject(sysInfo));
             string[] tempSys = (sysInfo.system?.Split(' ')) ?? new string[0]; // 最细粒度的系统版本号
             SEDeviceInfo seDeviceInfo = new SEDeviceInfo
@@ -48,49 +48,49 @@ namespace SolarEngine.Platform
         {
             if (value.GetType() == typeof(int))
             {
-                StarkSDK.API.PlayerPrefs.SetInt(key, (int)value);
+                TT.PlayerPrefs.SetInt(key, (int)value);
             }
             else if (value.GetType() == typeof(float))
             {
 
-                StarkSDK.API.PlayerPrefs.SetFloat(key, (float)value);
+                TT.PlayerPrefs.SetFloat(key, (float)value);
             }
             else if (value.GetType() == typeof(string))
             {
 
-                StarkSDK.API.PlayerPrefs.SetString(key, (string)value);
+                TT.PlayerPrefs.SetString(key, (string)value);
             }
 
-            StarkSDK.API.PlayerPrefs.Save();
+            TT.PlayerPrefs.Save();
         }
         public bool  hasKey(string key)
         {
-           return StarkSDK.API.PlayerPrefs.HasKey(key);
+           return TT.PlayerPrefs.HasKey(key);
         }
 
         public void clearQueue(string str)
         {
-            StarkSDK.API.GetStarkFileSystemManager().RmdirSync(Application.persistentDataPath+"/"+str);
+            TT.GetFileSystemManager().RmdirSync(Application.persistentDataPath+"/"+str);
         }
         public object getData(string key, Type type)
         {
-            if (!string.IsNullOrEmpty(key) && StarkSDK.API.PlayerPrefs.HasKey(key))
+            if (!string.IsNullOrEmpty(key) && TT.PlayerPrefs.HasKey(key))
             {
 
                 if (type == typeof(int))
                 {
-                    return StarkSDK.API.PlayerPrefs.GetInt(key);
+                    return TT.PlayerPrefs.GetInt(key);
                 }
                 else if (type == typeof(float))
                 {
-                    return StarkSDK.API.PlayerPrefs.GetFloat(key);
+                    return TT.PlayerPrefs.GetFloat(key);
                 }
                 else if (type == typeof(string))
                 {
-                    return StarkSDK.API.PlayerPrefs.GetString(key);
+                    return TT.PlayerPrefs.GetString(key);
                 }
 
-                StarkSDK.API.PlayerPrefs.Save();
+                TT.PlayerPrefs.Save();
             }
 
             return null;
@@ -101,9 +101,9 @@ namespace SolarEngine.Platform
             if (!string.IsNullOrEmpty(key))
             {
 
-                if (StarkSDK.API.PlayerPrefs.HasKey(key))
+                if (TT.PlayerPrefs.HasKey(key))
                 {
-                    StarkSDK.API.PlayerPrefs.DeleteKey(key);
+                    TT.PlayerPrefs.DeleteKey(key);
                 }
 
             }
@@ -111,13 +111,13 @@ namespace SolarEngine.Platform
 
         public void deleteAll()
         {
-            StarkSDK.API.PlayerPrefs.DeleteAll();
+            TT.PlayerPrefs.DeleteAll();
         }
 
 
         public EnterOptionsInfo getEnterOptionsInfo()
         {
-            LaunchOption launchOptionsSync = StarkSDK.API.GetLaunchOptionsSync();
+            LaunchOption launchOptionsSync = TT.GetLaunchOptionsSync();
 
             string scene = launchOptionsSync.Scene;
             Dictionary<string, object> newRefererInfo = new Dictionary<string, object>();
@@ -152,7 +152,7 @@ namespace SolarEngine.Platform
             SEAdapterInterface.OnLoginFailedCallback failedCallback, bool forceLogin = true)
         {
 
-            StarkSDK.API.GetAccountManager().Login(
+            TT.Login(
                 (c1, c2, isLogin) => successCallback?.Invoke(c1, c2, isLogin),
                 (errMsg) => failedCallback?.Invoke(errMsg),
                 forceLogin
@@ -162,23 +162,56 @@ namespace SolarEngine.Platform
 
         public void triggerOnShow(SEAdapterInterface.OnShowEvent showEvent)
         {
-            StarkSDK.API.GetStarkAppLifeCycle().OnShow += (scene, query, refererInfo) =>
+            TT.GetAppLifeCycle().OnShow += (dic) =>
             {
+              
+
+                string scene = "";
+                Dictionary<string, string> query = new Dictionary<string, string>();
                 Dictionary<string, object> RefererInfo = new Dictionary<string, object>();
-                foreach (var kvp in refererInfo)
+                if (dic.Count != 0)
                 {
-                    RefererInfo.Add(kvp.Key, kvp.Value);
-                }
+                    if (dic.ContainsKey("scene"))
+                    {
+                        scene = dic["scene"].ToString();
+                    }
 
-                // 触发 OnShow 事件
-                showEvent?.Invoke(scene, query, RefererInfo);
+                    if (dic.ContainsKey("query"))
+                    {
+
+                        query = (Dictionary<string, string>)dic["query"];
+                        
+                    }
+
+                    if (dic.ContainsKey("refererInfo"))
+                            {
+                            Dictionary<string ,string> refererInfo = (Dictionary<string, string>)dic["refererInfo"];
+                                foreach (var VARIABLE in refererInfo)
+                                {
+                                    
+                                    RefererInfo.Add(VARIABLE.Key, VARIABLE.Value);
+                                    
+                                }
+
+                                // 在这里可以继续对获取到的scene、query、refererInfo进行后续的联合操作等
+
+                            }
+
+                            showEvent?.Invoke(scene, query, RefererInfo);
+
+                            // 触发 OnShow 事件
+
+                        }
+
+                    
+                
             };
-
         }
+
 
         public void triggerOnHide(SEAdapterInterface.OnHideEvent hideEvent)
         {
-            StarkSDK.API.GetStarkAppLifeCycle().OnHide += () =>
+            TT.GetAppLifeCycle().OnHide += () =>
             {
                 // 触发 OnHide 事件
                 hideEvent?.Invoke();

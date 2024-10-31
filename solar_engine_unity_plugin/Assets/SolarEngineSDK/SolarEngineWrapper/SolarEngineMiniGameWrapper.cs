@@ -1,4 +1,4 @@
-﻿#if (SOLARENGINE_BYTEDANCE||SOLARENGINE_WECHAT||SOLARENGINE_KUAISHOU)&&(!UNITY_EDITOR||DeveloperEditor)
+﻿#if (SOLARENGINE_BYTEDANCE||SOLARENGINE_WECHAT||SOLARENGINE_KUAISHOU)&&(!UNITY_EDITOR||SOLORENGINE_DEVELOPEREDITOR)
 
 using System;
 using System.Collections.Generic;
@@ -22,7 +22,6 @@ namespace SolarEngine
         {
             return SolarEngineSDK4MiniGames.getPresetProperties();
         }
-
 
         private static void PreInitSeSdk(string appKey)
         {
@@ -54,7 +53,7 @@ namespace SolarEngine
 
             if (config.miniGameInitParams != null)
             {
-                initParams.miniGameInitParams = new MiniGames.MiniGameInitParams();
+                initParams.miniGameInitParams = new MiniGames. MiniGameInitParams();
 
 #if SOLARENGINE_WECHAT
                 initParams.miniGameInitParams.anonymous_openid = "";
