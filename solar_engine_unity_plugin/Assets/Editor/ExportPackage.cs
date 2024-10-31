@@ -81,7 +81,7 @@ internal class ExportPackage {
 			Debug.Log("Exporting SolarEngineSDK Unity Package...");
 			string path = outputPath;
 			
-			BeforeExport ();
+			//BeforeExport ();
 			
 			try
 			{
@@ -120,9 +120,9 @@ internal class ExportPackage {
 
 		private static void BeforeExport()
 		{
-			string versionFile = Path.Combine (Directory.GetCurrentDirectory (), "VERSION");
-			string versionStr = "Version: " + sdkVersion;
-			File.WriteAllText (versionFile, versionStr);
+			// string versionFile = Path.Combine (Directory.GetCurrentDirectory (), "VERSION");
+			// string versionStr = "Version: " + sdkVersion;
+			// File.WriteAllText (versionFile, versionStr);
 		}
 
 		private static void AfterExport()
@@ -130,9 +130,10 @@ internal class ExportPackage {
 			string projectRoot = Directory.GetCurrentDirectory();
 			string outdir = Path.Combine (projectRoot, Path.Combine("release", "solarengine-unity-sdk-" + sdkVersion));
 
-			string srcPath = Directory.GetCurrentDirectory ();
+			//string srcPath = Directory.GetCurrentDirectory ();
+		
 
-			File.Copy (Path.Combine (srcPath, "VERSION"), Path.Combine(outdir, "VERSION"), true);
+			//File.Copy (Path.Combine (srcPath, "VERSION"), Path.Combine(outdir, "VERSION"), true);
 			string folderPath = outdir;
 
 			// 在 macOS 中使用 "open" 命令打开文件夹

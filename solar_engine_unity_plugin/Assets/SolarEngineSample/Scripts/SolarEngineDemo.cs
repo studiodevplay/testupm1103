@@ -19,12 +19,12 @@ public class SolarEngineDemo : MonoBehaviour
         Debug.Log("[unity] init click");
         String AppKey = "e78185651df3202f";
     //  String AppKey = "455cd0c9843e503e";
-        MiniGameInitParams initParams = new MiniGameInitParams();
-        initParams.anonymous_openid = "anonymous_openid";
-        initParams.unionid = "unionid";
-        initParams.openid = "openid";
+        // MiniGameInitParams initParams = new MiniGameInitParams();
+        // initParams.anonymous_openid = "anonymous_openid";
+        // initParams.unionid = "unionid";
+        // initParams.openid = "openid";
         SEConfig seConfig = new SEConfig();
-        seConfig.miniGameInitParams = initParams;
+       // seConfig.miniGameInitParams = initParams;
         RCConfig rc = new RCConfig();
         rc.enable = true;
         seConfig.logEnabled = true;
