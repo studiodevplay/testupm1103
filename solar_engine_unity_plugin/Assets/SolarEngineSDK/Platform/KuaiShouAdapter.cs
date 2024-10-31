@@ -1,7 +1,7 @@
 #if SOLARENGINE_KUAISHOU&&(!UNITY_EDITOR||SOLORENGINE_DEVELOPEREDITOR)
 
 using System;
-
+using KSWASM;
 using SolarEngine.MiniGames.info;
 using SolarEngine.Platform;
 using UnityEngine;
@@ -148,9 +148,9 @@ return;
     public void deleteData(string key)
     {
 #if UNITY_EDITOR
-        if (PlayerPrefs.HasKey(key))
+        if (UnityEngine. PlayerPrefs.HasKey(key))
         {
-            PlayerPrefs.DeleteKey(key);
+            UnityEngine.PlayerPrefs.DeleteKey(key);
         }
         return;
 #endif
@@ -168,7 +168,7 @@ return;
     public void deleteAll()
     {
 #if UNITY_EDITOR
-         PlayerPrefs.DeleteAll();
+        UnityEngine. PlayerPrefs.DeleteAll();
         return;
 #endif
        KS.StorageDeleteAllSync();
@@ -213,7 +213,7 @@ return;
 #endif
         KS.OnShow(result =>
         {
-            showEvent?.Invoke(result.from, result.query, new ());
+            showEvent?.Invoke(result.showFrom, result.query, new ());
         });
     }
 

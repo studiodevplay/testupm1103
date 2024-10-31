@@ -36,3 +36,10 @@
 }
 -dontwarn org.json.**
 -keep class org.json.**{*;}
+
+-dontwarn com.reyun.remote.config.**
+-keep class com.reyun.remote.config.** { *; }
+-dontwarn com.reyun.se.remote.config.**
+-keep class com.reyun.se.remote.config.** { *; }
+-dontwarn org.json.**
+-keep class org.json.**{*;}
