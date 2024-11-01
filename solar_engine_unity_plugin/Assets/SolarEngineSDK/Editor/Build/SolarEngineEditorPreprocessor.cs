@@ -28,7 +28,7 @@ namespace SolarEngine.Build
             {
                 if (target == BuildTarget.Android)
                 {
-#if UNITY_ANDROID
+#if UNITY_ANDROID&&!SOLARENGINE_BYTEDANCE
                     RunPostProcessTasksAndroid();
                     CheckConfusion();
                     
@@ -96,7 +96,7 @@ namespace SolarEngine.Build
                     }
              }
             }
-            [MenuItem("SolarEngineSDK/RunPostProcessTasksAndroid ", false, 0)]
+           // [MenuItem("SolarEngineSDK/RunPostProcessTasksAndroid ", false, 0)]
             
             public static void RunPostProcessTasksAndroid()
             {
