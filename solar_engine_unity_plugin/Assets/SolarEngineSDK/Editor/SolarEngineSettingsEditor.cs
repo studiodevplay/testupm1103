@@ -30,11 +30,11 @@ using System.Collections;
         SerializedProperty iOSUrlIdentifier;
         SerializedProperty iOSUrlSchemes;
         SerializedProperty iOSUniversalLinksDomains;
-        SerializedProperty iOSSDKVersion;
+        SerializedProperty iOSVersion;
         
         SerializedProperty AndroidUrlSchemes;
         
-        SerializedProperty AndroidSDKVersion;
+        SerializedProperty AndroidVersion;
         
         
         private bool oldChinaValue;
@@ -45,16 +45,15 @@ using System.Collections;
         private bool oldDisMiniGameValue;
         private bool oldDisOaidValue;
 
-        private string oldiOSVersion;
-        private string oldAndroidVersion;
-        
+      
 
         private object SolarEngineSetting;
 
         void OnEnable()
         {
-            iOSSDKVersion= serializedObject.FindProperty("_iOSSDKVersion");
-            AndroidSDKVersion= serializedObject.FindProperty("_AndroidSDKVersion");
+            SolarEngineSetting = target as SolarEngineSettings;
+            iOSVersion= serializedObject.FindProperty("_iOSVersion");
+            AndroidVersion= serializedObject.FindProperty("_AndroidVersion");
             
             iOSUrlIdentifier = serializedObject.FindProperty("_iOSUrlIdentifier");
             iOSUrlSchemes = serializedObject.FindProperty("_iOSUrlSchemes");
@@ -77,15 +76,13 @@ using System.Collections;
             oldDisAndroidValue= disAndroidRemoteConfig.boolValue;
             oldDisMiniGameValue= disMiniGameRemoteConfig.boolValue;
             oldDisOaidValue= disOaid.boolValue;
-            
-            oldiOSVersion= iOSSDKVersion.stringValue;
-            oldAndroidVersion= AndroidSDKVersion.stringValue;
+         
         }
 
 
         public override void OnInspectorGUI()
         {
-            SolarEngineSetting = target as SolarEngineSettings;
+          
             this.GUI();
             
         }
@@ -97,20 +94,20 @@ using System.Collections;
         private void SdkVersion()
         {
             EditorGUI.indentLevel += 1;
-            EditorGUILayout.PropertyField(iOSSDKVersion);
-            EditorGUILayout.PropertyField(AndroidSDKVersion);
+            EditorGUILayout.PropertyField(iOSVersion);
+            EditorGUILayout.PropertyField(AndroidVersion);
             EditorGUI.indentLevel -= 1;
-            if (!iOSSDKVersion.stringValue.Equals(SolarEngineSettings.iOSSDKVersion))
-                SolarEngineSettings.iOSSDKVersion=iOSSDKVersion.stringValue;
-            if( !AndroidSDKVersion.stringValue.Equals(SolarEngineSettings.AndroidSDKVersion))
-                SolarEngineSettings.AndroidSDKVersion = AndroidSDKVersion.stringValue;
+            if (!iOSVersion.stringValue.Equals(SolarEngineSettings.iOSVersion))
+                SolarEngineSettings.iOSVersion=iOSVersion.stringValue;
+            if( !AndroidVersion.stringValue.Equals(SolarEngineSettings.AndroidVersion))
+                SolarEngineSettings.AndroidVersion = AndroidVersion.stringValue;
        
            
         }
 
         private void ChinaOrOversea()
         {
-            if (string.IsNullOrEmpty(SolarEngineSettings.iOSSDKVersion)||string.IsNullOrEmpty (AndroidSDKVersion.stringValue))
+            if (string.IsNullOrEmpty(SolarEngineSettings.iOSVersion)||string.IsNullOrEmpty (AndroidVersion.stringValue))
            
                 return;
         
@@ -124,19 +121,47 @@ using System.Collections;
             {
                 
                 // 处理 China 值变化
-                ProcessPropertyChange(chinaProperty, ref oldChinaValue, "_China",XmlModifier. cnxml, () =>
+                ProcessPropertyChange(chinaProperty, ref oldChinaValue, "_China",changeToCN, () =>
                 {
                     overseaProperty.boolValue = false;
                     oldOverseaValue = overseaProperty.boolValue;
+                    
                 });
 
                 // 处理 Oversea 值变化
-                ProcessPropertyChange(overseaProperty, ref oldOverseaValue, "_Oversea",XmlModifier. Overseaxml, () =>
+                ProcessPropertyChange(overseaProperty, ref oldOverseaValue, "_Oversea",changeToOversea, () =>
                 {
                     chinaProperty.boolValue = false;
                     oldChinaValue = chinaProperty.boolValue;
+                  
                 });
             }
+        }
+
+
+        void changeToCN(bool value)
+        {
+            if (value)
+            {
+                PluginsEdtior.showOaid();
+                disOaid.boolValue = false;
+                SolarEngineSettings.isDisOaid = disOaid.boolValue;
+                XmlModifier.cnxml(value);
+                Debug.Log("cn onenable oaid");
+            }
+            
+        }
+        void changeToOversea(bool value)
+        {
+            if (value)
+            {
+                PluginsEdtior.disableOaid();
+                disOaid.boolValue = true;
+                SolarEngineSettings.isDisOaid = disOaid.boolValue;
+                XmlModifier.Overseaxml(value);
+                Debug.Log("oversea disable oaid");
+            }
+            
         }
 
 
@@ -152,7 +177,7 @@ using System.Collections;
             {
                 ProcessPropertyChange(disAllRemoteConfig, ref oldDisAllValue, "_disAllRemoteConfig", DisableAll, () =>
                 {
-                    Debug.LogError("disAllRemoteConfig");
+                    Debug.Log("disAllRemoteConfig");
 
                 });
                 ProcessPropertyChange(disiOSRemoteConfig, ref oldDisiOSValue, "_disiOSRemoteConfig", DisableiOS);
@@ -179,6 +204,10 @@ using System.Collections;
             {
                 PluginsEdtior.disableOaid();
             }
+            else
+            {
+                PluginsEdtior.showOaid();
+            }
           
         }
 
@@ -186,28 +215,54 @@ using System.Collections;
         {
             if (value)
             {
+                PluginsEdtior.disableAll();
                 disiOSRemoteConfig.boolValue = true;
                 disAndroidRemoteConfig.boolValue = true;
                 disMiniGameRemoteConfig.boolValue = true;
-               PluginsEdtior.disableAll();
+             
+            }else
+                {
+                PluginsEdtior.showAll();
+                disiOSRemoteConfig.boolValue = false;
+                disAndroidRemoteConfig.boolValue = false;
+                disMiniGameRemoteConfig.boolValue = false;
+                
             }
+            
           
         }
 
         void DisableiOS(bool value)
         {
+          
+            Debug.Log("DisableiOS: "+value);
             if(value)
-                PluginsEdtior.disableiOS(); 
+                PluginsEdtior.disableiOS();
+            else
+            {
+                PluginsEdtior.showiOS();
+            }
         }
         void DisableAndroid(bool value)
         {
+         
             if(value)
                 PluginsEdtior.disableAndroid();
+            else
+            {
+                PluginsEdtior.showAndroid();
+            }
         }
         void DisableMiniGame(bool value)
         {
+          
             if(value)
                 PluginsEdtior.disableMiniGame();
+            else
+            {
+                
+                PluginsEdtior.showMiniGame();
+            }
         }
         
 
@@ -221,11 +276,7 @@ using System.Collections;
                 Debug.Log($"{propertyName} value changed.");
                 oldValue = property.boolValue;
 
-                if (oldValue)
-                {
-                    xmlAction(oldValue);
-                }
-
+                xmlAction(oldValue);
                 additionalAction?.Invoke();
             }
         }
@@ -252,8 +303,8 @@ using System.Collections;
             
             EditorGUILayout.Space();
             
-            DrawH2Title("iOS");
-            EditorGUILayout.LabelField("DEEP LINKING:", darkerCyanTextFieldStyles);
+            DrawH2Title("DEEP LINKING");
+            EditorGUILayout.LabelField("iOS:", darkerCyanTextFieldStyles);
             EditorGUI.indentLevel += 1;
             EditorGUILayout.PropertyField(iOSUrlIdentifier,
                 new GUIContent("iOS URL Identifier",
@@ -272,8 +323,8 @@ using System.Collections;
 
             EditorGUI.indentLevel -= 1;
             
-            DrawH2Title("Android");
-            EditorGUILayout.LabelField("DEEP LINKING:", darkerCyanTextFieldStyles);
+          
+            EditorGUILayout.LabelField("Android:", darkerCyanTextFieldStyles);
             EditorGUI.indentLevel += 1;
             EditorGUILayout.PropertyField(AndroidUrlSchemes);
             EditorGUI.indentLevel -= 1;

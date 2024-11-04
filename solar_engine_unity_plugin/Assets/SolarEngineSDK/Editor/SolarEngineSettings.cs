@@ -39,9 +39,9 @@ namespace SolarEngine
 		private bool _DisOaid;
 		
 		[SerializeField]
-		private string _iOSSDKVersion;
+		private string _iOSVersion;
 		[SerializeField]
-		private string _AndroidSDKVersion;
+		private string _AndroidVersion;
 		[SerializeField]
 		private string _iOSUrlIdentifier;
 		[SerializeField]
@@ -145,18 +145,19 @@ namespace SolarEngine
 		public static bool isDisOaid
 		{
 			get{return  Instance._DisOaid;}
+			set{Instance._DisOaid = value;}
 			
 		}
 
-		public static string iOSSDKVersion
+		public static string iOSVersion
 		{
-			get{return  Instance._iOSSDKVersion;}
-			set{Instance._iOSSDKVersion = value;}
+			get{return  Instance._iOSVersion;}
+			set{Instance._iOSVersion = value;}
 		}
-		public static string AndroidSDKVersion
+		public static string AndroidVersion
 		{
-			get{return  Instance._AndroidSDKVersion;}
-			set{Instance._AndroidSDKVersion = value;}
+			get{return  Instance._AndroidVersion;}
+			set{Instance._AndroidVersion = value;}
 		}
 		#if UNITY_EDITOR
 		[MenuItem("SolarEngineSDK/SDK Edit Settings", false, 0)]

@@ -105,7 +105,7 @@ public class XmlModifier
             var versionAttribute = iosPod.Attribute(IOS_POD_VERSION_ATTR);
             if (versionAttribute!= null)
             {
-                versionAttribute.Value = SolarEngineSettings.iOSSDKVersion;
+                versionAttribute.Value = SolarEngineSettings.iOSVersion;
                 version= true;
             }
 
@@ -144,10 +144,10 @@ public class XmlModifier
             if (docRemote != null)
             { 
                 if(iscn)
-                isModified= ModifyAndroidNode(docRemote, ANDROID_REMOTECONFIGE_CN_SPEC+SolarEngineSettings.AndroidSDKVersion);
+                isModified= ModifyAndroidNode(docRemote, ANDROID_REMOTECONFIGE_CN_SPEC+SolarEngineSettings.AndroidVersion);
                 else
                 
-                    isModified= ModifyAndroidNode(docRemote, ANDROID_REMOTECONFIGE_OVERSEA_SPEC+SolarEngineSettings.AndroidSDKVersion);
+                    isModified= ModifyAndroidNode(docRemote, ANDROID_REMOTECONFIGE_OVERSEA_SPEC+SolarEngineSettings.AndroidVersion);
                 
                 
                 SaveXmlDocument(docRemote, ANDROID_REMOTECONFIG_PATH);
@@ -163,6 +163,7 @@ public class XmlModifier
         
         bool isModified=false;
 
+        Debug.LogError(SolarEngineSettings.isDisOaid);
         if (SolarEngineSettings.isDisOaid)
             return true;
         else {
@@ -171,7 +172,7 @@ public class XmlModifier
             if (docOaid != null)
             {
                
-                isModified= ModifyAndroidNode(docOaid, ANDROID_OAID_SPEC+SolarEngineSettings.AndroidSDKVersion);
+                isModified= ModifyAndroidNode(docOaid, ANDROID_OAID_SPEC+SolarEngineSettings.AndroidVersion);
               
                
                 SaveXmlDocument(docOaid,ANDROID_OAID_PATH );
@@ -219,15 +220,16 @@ public class XmlModifier
 
         return false;
     }
-    private const string SolorEngine = "[SolorEngine]e";
+    private const string SolorEngine = "[SolorEngine]";
     /// <summary>
     /// 整体执行修改XML文件操作（针对CN情况），包括加载、省略号)
     /// </summary>
     /// <param name="boolVale">控制是否执行修改操作的布尔值</param>
     public static void cnxml(bool boolVale)
     {
-    
-        if (string.IsNullOrEmpty(SolarEngineSettings.iOSSDKVersion) || string.IsNullOrEmpty(SolarEngineSettings.AndroidSDKVersion))
+    if(!boolVale)
+        return;
+        if (string.IsNullOrEmpty(SolarEngineSettings.iOSVersion) || string.IsNullOrEmpty(SolarEngineSettings.AndroidVersion))
         {
             Debug.LogError( string.Format(SolorEngine+"Please set the dependency package version number first  "));
             return;
@@ -250,19 +252,19 @@ public class XmlModifier
     /// <param name="boolVale">控制是否执行修改操作的布尔值</param>
     public static void Overseaxml(bool boolVale)
     {
-        if (string.IsNullOrEmpty(SolarEngineSettings.iOSSDKVersion) || string.IsNullOrEmpty(SolarEngineSettings.AndroidSDKVersion))
+        if(!boolVale)
+            return;
+        if (string.IsNullOrEmpty(SolarEngineSettings.iOSVersion) || string.IsNullOrEmpty(SolarEngineSettings.AndroidVersion))
         {
             Debug.LogError( string.Format(SolorEngine+"Please set the dependency package version number first  "));
             return;
         }
         try
         {
+            
        if(sdkSetting(false)&&AndroidRC(false)&& AndroidOaid()&& iOSRC())
          Debug.Log("set SDK to Oversea");
     
-          
-           
-
 
         }
         catch (Exception ex)
@@ -282,13 +284,13 @@ public class XmlModifier
             if (isCN)
             {
                 ios=  ModifyIOSNodes(doc, IOS_POD_CN_NAME);
-                android= ModifyAndroidNode(doc, ANDROID_PACKAGE_CN_SPEC+SolarEngineSettings.AndroidSDKVersion);
+                android= ModifyAndroidNode(doc, ANDROID_PACKAGE_CN_SPEC+SolarEngineSettings.AndroidVersion);
                
             }
             else
             {
                 ios=  ModifyIOSNodes(doc, IOS_POD_OVERSEA_NAME);
-                android= ModifyAndroidNode(doc, ANDROID_PACKAGE_OVERSEA_SPEC+SolarEngineSettings.AndroidSDKVersion);
+                android= ModifyAndroidNode(doc, ANDROID_PACKAGE_OVERSEA_SPEC+SolarEngineSettings.AndroidVersion);
             }
          
             SaveXmlDocument(doc, SDK_XML_FILE_PATH);

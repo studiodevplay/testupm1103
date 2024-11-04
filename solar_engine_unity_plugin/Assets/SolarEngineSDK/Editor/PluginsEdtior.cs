@@ -28,61 +28,100 @@ public class PluginsEdtior : MonoBehaviour
    private const string oaidPath = SolarEngineNet+"SolarEnginePlugins/Oaid";
    
    //minigamepath
-   private const string MiniGameRemoteConfigsPathMiniCS = "Assets/SolarEngineSDK/RemoteConfigWrapper/SESDKRemoteConfigMiniGameWrapper.cs";
+  // private const string MiniGameRemoteConfigsPathMiniCS = "Assets/SolarEngineSDK/RemoteConfigWrapper/SESDKRemoteConfigMiniGameWrapper.cs";
    private const string MiniGameRemoteConfigsPathMiniDll = PluginsSolarEnginePath+"MiniGame/MiniGameRemoteConfig.dll";
 
    
    //iospath
-   private const string RemoteConfigsPathiOSCS = "Assets/SolarEngineSDK/RemoteConfigWrapper/SESDKRemoteConfigiOSWrapper.cs";
+  // private const string RemoteConfigsPathiOSCS = "Assets/SolarEngineSDK/RemoteConfigWrapper/SESDKRemoteConfigiOSWrapper.cs";
    private const string RemoteConfigsPathiOSMM = PluginsSolarEnginePath+"iOS/wrappers/SESDKRemoteConfigUnityBridge.mm";
    private const string RemoteConfigsPathiOSH =  PluginsSolarEnginePath+"iOS/wrappers/SESDKRemoteConfigUnityBridge.h";
    private const string RemoteConfigsPathiOSXml = RemoteConfigXmlPath+"/iOS";
    //androidpath
-   private const string RemoteConfigsPathAndroidCS = "Assets/SolarEngineSDK/RemoteConfigWrapper/SESDKRemoteConfigAndroidWrapper.cs";
+  // private const string RemoteConfigsPathAndroidCS = "Assets/SolarEngineSDK/RemoteConfigWrapper/SESDKRemoteConfigAndroidWrapper.cs";
    private const string ConfigsPathAndroidJar = PluginsSolarEnginePath+"Android/libs/se_remote_config_unity_bridge.jar";
    private const string RemoteConfigsPathAndroidXml = RemoteConfigXmlPath+"/Android";
 
   // [MenuItem(DisableAll, false, 0)]
    public static void disableAll ()
    {
-      DisableFile(MiniGameRemoteConfigsPathMiniDll);
-      DisableFile(RemoteConfigsPathiOSMM);
-      DisableFile(RemoteConfigsPathiOSH);
-      DisableFile(ConfigsPathAndroidJar);
+      //  HideFile(MiniGameRemoteConfigsPathMiniDll);
+      //  HideFile(RemoteConfigsPathiOSMM);
+      //  HideFile(RemoteConfigsPathiOSH);
+      // HideFile(ConfigsPathAndroidJar);
+      //
+      // HidePath(RemoteConfigsCSPath);
+      // HidePath(RemoteConfigXmlPath);
+
+      // disableMiniGame();
+      // disableiOS();
+      // disableAndroid();
+      HidePath(RemoteConfigsCSPath);
       
-      DisablePath(RemoteConfigsCSPath);
-      DisablePath(RemoteConfigXmlPath);
-      
+
+   }
+   public static void showAll ()
+   {
+      // showMiniGame();
+      // showiOS();
+      // showAndroid();
+      ShowPath(RemoteConfigsCSPath);
+
    }
   
   // [MenuItem(DisableMiniGame, false, 0)]
    public static void disableMiniGame ()
    {
-      DisableFile(MiniGameRemoteConfigsPathMiniDll);
-      DisableFile(MiniGameRemoteConfigsPathMiniCS);
+       HideFile(MiniGameRemoteConfigsPathMiniDll);
+     //  HideFile(MiniGameRemoteConfigsPathMiniCS);
+      
+   }
+   
+   public static void showMiniGame ()
+   {
+       ShowFile(MiniGameRemoteConfigsPathMiniDll);
+       //  HideFile(MiniGameRemoteConfigsPathMiniCS);
       
    }
   // [MenuItem(DisableiOS, false, 0)]
    public static void disableiOS ()
    {
-    DisableFile(RemoteConfigsPathiOSCS);
-    DisableFile(RemoteConfigsPathiOSMM);
-    DisableFile(RemoteConfigsPathiOSH);
-    DisablePath(RemoteConfigsPathiOSXml);
+    //   HideFile(RemoteConfigsPathiOSCS);
+       HideFile(RemoteConfigsPathiOSMM);
+       HideFile(RemoteConfigsPathiOSH); 
+       HidePath(RemoteConfigsPathiOSXml);
    }
+   public static void showiOS ()
+   {
+       //   HideFile(RemoteConfigsPathiOSCS);
+       ShowFile(RemoteConfigsPathiOSMM);
+       ShowFile(RemoteConfigsPathiOSH); 
+       ShowPath(RemoteConfigsPathiOSXml);
+   }
+   
    
   // [MenuItem(DisableAndroid, false, 0)]
    public static void disableAndroid ()
    {
-      DisableFile(RemoteConfigsPathAndroidCS);
-      DisableFile(ConfigsPathAndroidJar);
-      DisablePath(RemoteConfigsPathAndroidXml);
+     //  HideFile(RemoteConfigsPathAndroidCS);
+       HideFile(ConfigsPathAndroidJar);
+      HidePath(RemoteConfigsPathAndroidXml);
+   }
+   public static void showAndroid ()
+   {
+       //  HideFile(RemoteConfigsPathAndroidCS);
+       ShowFile(ConfigsPathAndroidJar);
+       ShowPath(RemoteConfigsPathAndroidXml);
    }
 
 
    public static void disableOaid()
    {
-      DisablePath(oaidPath);
+       HidePath(oaidPath);
+   }
+   public static void showOaid()
+   {
+       ShowPath(oaidPath);
    }
    private static void DisablePath(string path)
    {
@@ -118,8 +157,74 @@ public class PluginsEdtior : MonoBehaviour
             }
         }
 
-
+   
  
+   public static void HideFile(string path)
+   {
+       if (File.Exists(path))
+       {
+           System.IO. File.Move(path, path + "~");
+           Debug.Log($"Successfully moved the file from '{path}' to '{path + "~"}'. The file at path '{path}' is now hidden.");
+       }
+       else
+       {
+           Debug.LogError($"The file at path '{path}' does not exist, so it cannot be hidden. It appears to be already disabled.");
+       }
+   }
+
+   public static void HidePath(string path)
+   {
+       if (System.IO.Directory.Exists(path))
+       {
+           System.IO.Directory.Move(path, path + "~");
+           Debug.Log($"Successfully moved the directory from '{path}' to '{path + "~"}'. The directory at path '{path}' is now hidden.");
+       }
+       else if (System.IO.Directory.Exists(path + "~"))
+       {
+           Debug.Log($"The directory with the '~' suffix at path '{path + "~"}' already exists. It seems the directory was already hidden previously.");
+       }
+       else
+       {
+           Debug.LogError($"The directory at path '{path}' does not exist, so it cannot be hidden. It appears to be already disabled.");
+       }
+   }
+
+   public static void ShowFile(string path)
+   {
+       if (File.Exists(path))
+       {
+           Debug.Log($"The file at path '{path}' already exists.");
+       }
+       else if (File.Exists(path + "~"))
+       {
+           System.IO. File.Move(path + "~", path);
+           Debug.Log($"Successfully moved the file from '{path + "~"}' to '{path}'.");
+       }
+       else
+       {
+           Debug.LogError($"The file at path '{path}' does not exist and there is no backup file at '{path + "~"}'.");
+       }
+   }
+ 
+
+   public static void ShowPath(string path)
+   {
+    
+        if (System.IO.Directory.Exists(path + "~"))
+       {
+           if (System.IO.Directory.Exists(path))
+           {
+               System.IO.Directory.Delete(path) ;
+           }
+           System.IO.Directory.Move(path + "~", path);
+        
+           Debug.Log($"Successfully moved the directory from '{path + "~"}' to '{path}'.");
+       }
+       else
+       {
+           Debug.LogError($"The directory at path '{path}' does not exist and there is no backup directory at '{path + "~"}'.");
+       }
+   }
   
    
    
