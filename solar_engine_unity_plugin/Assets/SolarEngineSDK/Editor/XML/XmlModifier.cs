@@ -163,7 +163,6 @@ public class XmlModifier
         
         bool isModified=false;
 
-        Debug.LogError(SolarEngineSettings.isDisOaid);
         if (SolarEngineSettings.isDisOaid)
             return true;
         else {

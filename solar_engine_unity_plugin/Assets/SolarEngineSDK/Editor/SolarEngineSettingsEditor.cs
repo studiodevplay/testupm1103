@@ -7,8 +7,9 @@ using System.Collections;
  using System.Linq;
  using System.Reflection;
  using System.Xml.Linq;
+using SolarEngine.Build;
 
- namespace SolarEngine
+namespace SolarEngine
 {
     [CustomEditor(typeof(SolarEngineSettings))]
     public class SolarEngineSettingsEditor : Editor
@@ -177,7 +178,7 @@ using System.Collections;
             {
                 ProcessPropertyChange(disAllRemoteConfig, ref oldDisAllValue, "_disAllRemoteConfig", DisableAll, () =>
                 {
-                    Debug.Log("disAllRemoteConfig");
+                   // Debug.Log("disAllRemoteConfig");
 
                 });
                 ProcessPropertyChange(disiOSRemoteConfig, ref oldDisiOSValue, "_disiOSRemoteConfig", DisableiOS);
@@ -215,17 +216,17 @@ using System.Collections;
         {
             if (value)
             {
-                PluginsEdtior.disableAll();
                 disiOSRemoteConfig.boolValue = true;
                 disAndroidRemoteConfig.boolValue = true;
                 disMiniGameRemoteConfig.boolValue = true;
+                PluginsEdtior.disableAll();
              
             }else
                 {
-                PluginsEdtior.showAll();
                 disiOSRemoteConfig.boolValue = false;
                 disAndroidRemoteConfig.boolValue = false;
                 disMiniGameRemoteConfig.boolValue = false;
+                PluginsEdtior.showAll();
                 
             }
             
@@ -234,34 +235,53 @@ using System.Collections;
 
         void DisableiOS(bool value)
         {
-          
-            Debug.Log("DisableiOS: "+value);
-            if(value)
+            if (value)
+            {
                 PluginsEdtior.disableiOS();
+                if(!disAllRemoteConfig.boolValue)
+                DefineSymbolsEditor.add_DISABLE_REMOTECONFIG(BuildTargetGroup.iOS);
+
+            }
+               
             else
             {
                 PluginsEdtior.showiOS();
+                DefineSymbolsEditor.delete_DISABLE_REMOTECONFIG(BuildTargetGroup.iOS);
+
             }
         }
         void DisableAndroid(bool value)
         {
-         
-            if(value)
+
+            if (value)
+            {
                 PluginsEdtior.disableAndroid();
+                if(!disAllRemoteConfig.boolValue)
+                DefineSymbolsEditor.add_DISABLE_REMOTECONFIG(BuildTargetGroup.Android);
+
+            }
+              
             else
             {
                 PluginsEdtior.showAndroid();
+                DefineSymbolsEditor.delete_DISABLE_REMOTECONFIG(BuildTargetGroup.Android);
+
             }
         }
         void DisableMiniGame(bool value)
         {
-          
-            if(value)
-                PluginsEdtior.disableMiniGame();
+
+            if (value)
+            {   PluginsEdtior.disableMiniGame();
+                if(!disAllRemoteConfig.boolValue)
+                DefineSymbolsEditor.add_DISABLE_REMOTECONFIG(BuildTargetGroup.WebGL);
+            }
+             
             else
             {
                 
                 PluginsEdtior.showMiniGame();
+                DefineSymbolsEditor.delete_DISABLE_REMOTECONFIG(BuildTargetGroup.WebGL);
             }
         }
         

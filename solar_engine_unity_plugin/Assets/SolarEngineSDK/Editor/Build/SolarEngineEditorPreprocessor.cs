@@ -61,7 +61,7 @@ namespace SolarEngine.Build
                     
              
 
-                    if (!File.Exists(seproguardPath))
+                    if (!File.Exists(appproguardPath))
                     {
                         if (!Directory.Exists(androidPluginsPath))
                         {

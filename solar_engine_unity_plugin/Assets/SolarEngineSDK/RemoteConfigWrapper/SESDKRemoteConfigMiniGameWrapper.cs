@@ -1,11 +1,10 @@
-﻿#if (SOLARENGINE_BYTEDANCE||SOLARENGINE_WECHAT||SOLARENGINE_KUAISHOU)&&(!UNITY_EDITOR||SOLORENGINE_DEVELOPEREDITOR)
+﻿#if (SOLARENGINE_BYTEDANCE||SOLARENGINE_WECHAT||SOLARENGINE_KUAISHOU)&&(!UNITY_EDITOR||SOLORENGINE_DEVELOPEREDITOR)&&!SOLORENGINE_DISABLE_REMOTECONFIG
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Text;
 using System.Runtime.InteropServices;
 using Newtonsoft.Json;
-// using SolarEngine.Sample;
 using AOT;
 using SolarEngine.MiniGameRemoteConfig;
 using SolarEngine.MiniGameRemoteConfig.Info;

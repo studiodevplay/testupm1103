@@ -28,36 +28,24 @@ public class PluginsEdtior : MonoBehaviour
    private const string oaidPath = SolarEngineNet+"SolarEnginePlugins/Oaid";
    
    //minigamepath
-  // private const string MiniGameRemoteConfigsPathMiniCS = "Assets/SolarEngineSDK/RemoteConfigWrapper/SESDKRemoteConfigMiniGameWrapper.cs";
+   private const string MiniGameRemoteConfigsPathMiniCS = "Assets/SolarEngineSDK/RemoteConfigWrapper/SESDKRemoteConfigMiniGameWrapper.cs";
    private const string MiniGameRemoteConfigsPathMiniDll = PluginsSolarEnginePath+"MiniGame/MiniGameRemoteConfig.dll";
 
    
    //iospath
-  // private const string RemoteConfigsPathiOSCS = "Assets/SolarEngineSDK/RemoteConfigWrapper/SESDKRemoteConfigiOSWrapper.cs";
+  private const string RemoteConfigsPathiOSCS = "Assets/SolarEngineSDK/RemoteConfigWrapper/SESDKRemoteConfigiOSWrapper.cs";
    private const string RemoteConfigsPathiOSMM = PluginsSolarEnginePath+"iOS/wrappers/SESDKRemoteConfigUnityBridge.mm";
    private const string RemoteConfigsPathiOSH =  PluginsSolarEnginePath+"iOS/wrappers/SESDKRemoteConfigUnityBridge.h";
    private const string RemoteConfigsPathiOSXml = RemoteConfigXmlPath+"/iOS";
    //androidpath
-  // private const string RemoteConfigsPathAndroidCS = "Assets/SolarEngineSDK/RemoteConfigWrapper/SESDKRemoteConfigAndroidWrapper.cs";
+   private const string RemoteConfigsPathAndroidCS = "Assets/SolarEngineSDK/RemoteConfigWrapper/SESDKRemoteConfigAndroidWrapper.cs";
    private const string ConfigsPathAndroidJar = PluginsSolarEnginePath+"Android/libs/se_remote_config_unity_bridge.jar";
    private const string RemoteConfigsPathAndroidXml = RemoteConfigXmlPath+"/Android";
 
   // [MenuItem(DisableAll, false, 0)]
    public static void disableAll ()
    {
-      //  HideFile(MiniGameRemoteConfigsPathMiniDll);
-      //  HideFile(RemoteConfigsPathiOSMM);
-      //  HideFile(RemoteConfigsPathiOSH);
-      // HideFile(ConfigsPathAndroidJar);
-      //
-      // HidePath(RemoteConfigsCSPath);
-      // HidePath(RemoteConfigXmlPath);
-
-      // disableMiniGame();
-      // disableiOS();
-      // disableAndroid();
       HidePath(RemoteConfigsCSPath);
-      
 
    }
    public static void showAll ()
@@ -73,27 +61,27 @@ public class PluginsEdtior : MonoBehaviour
    public static void disableMiniGame ()
    {
        HideFile(MiniGameRemoteConfigsPathMiniDll);
-     //  HideFile(MiniGameRemoteConfigsPathMiniCS);
+       HideFile(MiniGameRemoteConfigsPathMiniCS);
       
    }
    
    public static void showMiniGame ()
    {
-       ShowFile(MiniGameRemoteConfigsPathMiniDll);
-       //  HideFile(MiniGameRemoteConfigsPathMiniCS);
+       ShowFile(MiniGameRemoteConfigsPathMiniDll); 
+       ShowFile(MiniGameRemoteConfigsPathMiniCS);
       
    }
   // [MenuItem(DisableiOS, false, 0)]
    public static void disableiOS ()
    {
-    //   HideFile(RemoteConfigsPathiOSCS);
+      HideFile(RemoteConfigsPathiOSCS);
        HideFile(RemoteConfigsPathiOSMM);
        HideFile(RemoteConfigsPathiOSH); 
        HidePath(RemoteConfigsPathiOSXml);
    }
    public static void showiOS ()
    {
-       //   HideFile(RemoteConfigsPathiOSCS);
+       ShowFile(RemoteConfigsPathiOSCS);
        ShowFile(RemoteConfigsPathiOSMM);
        ShowFile(RemoteConfigsPathiOSH); 
        ShowPath(RemoteConfigsPathiOSXml);
@@ -102,14 +90,14 @@ public class PluginsEdtior : MonoBehaviour
    
   // [MenuItem(DisableAndroid, false, 0)]
    public static void disableAndroid ()
-   {
-     //  HideFile(RemoteConfigsPathAndroidCS);
+   { 
+       HideFile(RemoteConfigsPathAndroidCS);
        HideFile(ConfigsPathAndroidJar);
       HidePath(RemoteConfigsPathAndroidXml);
    }
    public static void showAndroid ()
    {
-       //  HideFile(RemoteConfigsPathAndroidCS);
+       ShowFile(RemoteConfigsPathAndroidCS);
        ShowFile(ConfigsPathAndroidJar);
        ShowPath(RemoteConfigsPathAndroidXml);
    }
@@ -168,7 +156,7 @@ public class PluginsEdtior : MonoBehaviour
        }
        else
        {
-           Debug.LogError($"The file at path '{path}' does not exist, so it cannot be hidden. It appears to be already disabled.");
+           Debug.LogWarning($"The file at path '{path}' does not exist, so it cannot be hidden. It appears to be already disabled.");
        }
    }
 
@@ -185,7 +173,7 @@ public class PluginsEdtior : MonoBehaviour
        }
        else
        {
-           Debug.LogError($"The directory at path '{path}' does not exist, so it cannot be hidden. It appears to be already disabled.");
+           Debug.LogWarning($"The directory at path '{path}' does not exist.");
        }
    }
 
@@ -202,7 +190,7 @@ public class PluginsEdtior : MonoBehaviour
        }
        else
        {
-           Debug.LogError($"The file at path '{path}' does not exist and there is no backup file at '{path + "~"}'.");
+           Debug.LogWarning($"The file at path '{path}' does not exist");
        }
    }
  
@@ -222,7 +210,7 @@ public class PluginsEdtior : MonoBehaviour
        }
        else
        {
-           Debug.LogError($"The directory at path '{path}' does not exist and there is no backup directory at '{path + "~"}'.");
+           Debug.LogWarning($"The directory at path '{path}' does not exist");
        }
    }
   

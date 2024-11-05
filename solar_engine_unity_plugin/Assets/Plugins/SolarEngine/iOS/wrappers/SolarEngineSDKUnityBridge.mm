@@ -7,7 +7,6 @@
 
 #import <Foundation/Foundation.h>
 #import <SolarEngineSDK/SolarEngineSDK.h>
-#import <SESDKRemoteConfig/SESDKRemoteConfig.h>
 
 #if  __has_include(<SolarEngineSDK/SESDKForCN.h>)
     #import <SolarEngineSDK/SESDKForCN.h>
