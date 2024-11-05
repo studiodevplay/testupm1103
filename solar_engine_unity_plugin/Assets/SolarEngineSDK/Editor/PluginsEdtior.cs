@@ -8,9 +8,8 @@ using UnityEngine.Windows;
 
 public class PluginsEdtior : MonoBehaviour
 {
-   private const string SolarEngineSDK = "SolarEngineSDK";
    
-
+   private const string SolorEngine = "[SolorEngine]";
 
 
 
@@ -117,7 +116,7 @@ public class PluginsEdtior : MonoBehaviour
       {
        
          System.IO.Directory.Delete(path,true);
-         Debug.Log("Disable:  " + path);
+         Debug.Log($"{SolorEngine}Disable:  " + path);
       }
       else if (System.IO.Directory.Exists(path + "~"))
       {
@@ -125,7 +124,7 @@ public class PluginsEdtior : MonoBehaviour
       }
       else
       {
-         Debug.LogError("不存在 " + path);
+         Debug.LogError($"{SolorEngine}不存在 " + path);
       }
 
    }
@@ -137,11 +136,11 @@ public class PluginsEdtior : MonoBehaviour
             {
               // System.IO. File.Move(path, path + "~");
               System.IO.File.Delete(path);
-               Debug.Log("Disable:  " + path);
+               Debug.Log($"{SolorEngine}Disable:  " + path);
             }
             else
             {
-                Debug.LogError("不存在 " + path);
+                Debug.LogError($"{SolorEngine}不存在 " + path);
             }
         }
 
@@ -152,11 +151,11 @@ public class PluginsEdtior : MonoBehaviour
        if (File.Exists(path))
        {
            System.IO. File.Move(path, path + "~");
-           Debug.Log($"Successfully moved the file from '{path}' to '{path + "~"}'. The file at path '{path}' is now hidden.");
+           Debug.Log($"{SolorEngine}Successfully moved the file from '{path}' to '{path + "~"}'. The file at path '{path}' is now hidden.");
        }
        else
        {
-           Debug.LogWarning($"The file at path '{path}' does not exist, so it cannot be hidden. It appears to be already disabled.");
+           Debug.LogWarning($"{SolorEngine}The file at path '{path}' does not exist, so it cannot be hidden. It appears to be already disabled.");
        }
    }
 
@@ -165,15 +164,15 @@ public class PluginsEdtior : MonoBehaviour
        if (System.IO.Directory.Exists(path))
        {
            System.IO.Directory.Move(path, path + "~");
-           Debug.Log($"Successfully moved the directory from '{path}' to '{path + "~"}'. The directory at path '{path}' is now hidden.");
+           Debug.Log($"{SolorEngine}Successfully moved the directory from '{path}' to '{path + "~"}'. The directory at path '{path}' is now hidden.");
        }
        else if (System.IO.Directory.Exists(path + "~"))
        {
-           Debug.Log($"The directory with the '~' suffix at path '{path + "~"}' already exists. It seems the directory was already hidden previously.");
+           Debug.Log($"{SolorEngine}The directory with the '~' suffix at path '{path + "~"}' already exists. It seems the directory was already hidden previously.");
        }
        else
        {
-           Debug.LogWarning($"The directory at path '{path}' does not exist.");
+           Debug.LogWarning($"{SolorEngine}The directory at path '{path}' does not exist.");
        }
    }
 
@@ -181,16 +180,16 @@ public class PluginsEdtior : MonoBehaviour
    {
        if (File.Exists(path))
        {
-           Debug.Log($"The file at path '{path}' already exists.");
+           Debug.Log($"{SolorEngine}The file at path '{path}' already exists.");
        }
        else if (File.Exists(path + "~"))
        {
            System.IO. File.Move(path + "~", path);
-           Debug.Log($"Successfully moved the file from '{path + "~"}' to '{path}'.");
+           Debug.Log($"{SolorEngine}Successfully moved the file from '{path + "~"}' to '{path}'.");
        }
        else
        {
-           Debug.LogWarning($"The file at path '{path}' does not exist");
+           Debug.LogWarning($"{SolorEngine}The file at path '{path}' does not exist");
        }
    }
  
@@ -206,11 +205,11 @@ public class PluginsEdtior : MonoBehaviour
            }
            System.IO.Directory.Move(path + "~", path);
         
-           Debug.Log($"Successfully moved the directory from '{path + "~"}' to '{path}'.");
+           Debug.Log($"{SolorEngine}Successfully moved the directory from '{path + "~"}' to '{path}'.");
        }
        else
        {
-           Debug.LogWarning($"The directory at path '{path}' does not exist");
+           Debug.LogWarning($"{SolorEngine}The directory at path '{path}' does not exist");
        }
    }
   

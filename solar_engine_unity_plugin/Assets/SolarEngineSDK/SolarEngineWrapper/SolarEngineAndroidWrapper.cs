@@ -25,7 +25,7 @@ namespace SolarEngine
         private static Dictionary<string, object> GetPresetProperties()
         {
             string presetProperties = SolarEngineAndroidSDK.CallStatic<string>("getPresetProperties");
-            Debug.Log("SEUunity-presetProperties: " + presetProperties);
+              Debug.Log($"{SolorEngine}SEUunity-presetProperties: " + presetProperties);
             if (presetProperties != null)
             {
                 try
@@ -110,7 +110,7 @@ namespace SolarEngine
 
         private static void GetDistinctId(Action<Distinct>dis)
         {
-            
+             Debug.Log($"{SolorEngine}Only MiniGame can use , Android not support");
         }
         private static void SetSuperProperties(Dictionary<string, object> userProperties)
         {
@@ -289,7 +289,7 @@ namespace SolarEngine
             }
             else
             {
-                Debug.Log("url is invalid");
+                  Debug.Log($"{SolorEngine}url is invalid");
             }
         }
 
@@ -373,15 +373,15 @@ namespace SolarEngine
 
         private static  void SetReferrerTitle(string title)
         {
-            Debug.Log("Current on Android,Only MiniGame can SetReferrerTitle ");
+              Debug.Log($"{SolorEngine}Current on Android,Only MiniGame can SetReferrerTitle ");
         }
 
         private static void SetXcxPageTitle(string title)
         {
-            Debug.Log("Current on Android,Only MiniGame can SetXcxPageTitle ");
+              Debug.Log($"{SolorEngine}Current on Android,Only MiniGame can SetXcxPageTitle ");
         } 
         private static void RequestTrackingAuthorizationWithCompletionHandler(SESDKATTCompletedCallback callback) {
-            Debug.Log("Current on Android,requestTrackingAuthorizationWithCompletionHandler only iOS");
+              Debug.Log($"{SolorEngine}Current on Android,requestTrackingAuthorizationWithCompletionHandler only iOS");
         }
 
         /// <summary>
@@ -391,7 +391,7 @@ namespace SolarEngine
         private static void UpdatePostbackConversionValue(int conversionValue, SKANUpdateCompletionHandler callback)
         {
 
-            Debug.Log("Current on Android,requestTrackingAuthorizationWithCompletionHandler only iOS");
+              Debug.Log($"{SolorEngine}Current on Android,requestTrackingAuthorizationWithCompletionHandler only iOS");
 
 
         }
@@ -401,7 +401,7 @@ namespace SolarEngine
         /// </summary>
         private static void UpdateConversionValueCoarseValue(int fineValue, String coarseValue, SKANUpdateCompletionHandler callback)
         {
-            Debug.Log("Current on Android,requestTrackingAuthorizationWithCompletionHandler only iOS");
+              Debug.Log($"{SolorEngine}Current on Android,requestTrackingAuthorizationWithCompletionHandler only iOS");
 
 
         }
@@ -410,7 +410,7 @@ namespace SolarEngine
         /// </summary>
         private static void UpdateConversionValueCoarseValueLockWindow(int fineValue, String coarseValue, bool lockWindow, SKANUpdateCompletionHandler callback)
         {
-            Debug.Log("Current on Android,requestTrackingAuthorizationWithCompletionHandler only iOS");
+              Debug.Log($"{SolorEngine}Current on Android,requestTrackingAuthorizationWithCompletionHandler only iOS");
 
         }
         

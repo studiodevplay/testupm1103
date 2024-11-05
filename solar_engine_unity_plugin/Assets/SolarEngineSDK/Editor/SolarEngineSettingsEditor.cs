@@ -14,6 +14,8 @@ namespace SolarEngine
     [CustomEditor(typeof(SolarEngineSettings))]
     public class SolarEngineSettingsEditor : Editor
     {
+        private const string SolorEngine = "[SolorEngine]";
+
         private SerializedProperty chinaProperty;
         private SerializedProperty overseaProperty;
         
@@ -144,11 +146,15 @@ namespace SolarEngine
         {
             if (value)
             {
-                PluginsEdtior.showOaid();
-                disOaid.boolValue = false;
-                SolarEngineSettings.isDisOaid = disOaid.boolValue;
+                if (disOaid.boolValue)
+                {
+                    PluginsEdtior.showOaid();
+                    disOaid.boolValue = false;
+                    SolarEngineSettings.isDisOaid = disOaid.boolValue;
+                }
+              
                 XmlModifier.cnxml(value);
-                Debug.Log("cn onenable oaid");
+                Debug.Log($"{SolorEngine}cn onenable oaid");
             }
             
         }
@@ -156,11 +162,17 @@ namespace SolarEngine
         {
             if (value)
             {
-                PluginsEdtior.disableOaid();
-                disOaid.boolValue = true;
-                SolarEngineSettings.isDisOaid = disOaid.boolValue;
+             
+                if (!disOaid.boolValue)
+                {
+                    PluginsEdtior.disableOaid();
+                    disOaid.boolValue = true;
+                    SolarEngineSettings.isDisOaid = disOaid.boolValue;
+                }
+             
                 XmlModifier.Overseaxml(value);
-                Debug.Log("oversea disable oaid");
+              
+                Debug.Log($"{SolorEngine}oversea disable oaid");
             }
             
         }
@@ -293,7 +305,7 @@ namespace SolarEngine
         {
             if (property.boolValue!= oldValue)
             {
-                Debug.Log($"{propertyName} value changed.");
+                Debug.Log($"{SolorEngine}{propertyName} value changed.");
                 oldValue = property.boolValue;
 
                 xmlAction(oldValue);

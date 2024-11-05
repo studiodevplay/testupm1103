@@ -14,232 +14,232 @@ namespace SolarEngine
       
         private static Dictionary<string, object> GetPresetProperties()
         {
-          Debug.Log("Unity Editor: GetPresetProperties");
+            Debug.Log($"{SolorEngine}Unity Editor: GetPresetProperties");
           return null;
         }
 
         private static void PreInitSeSdk(string appKey)
         {
-          Debug.Log("Unity Editor: PreInitSeSdk");
+            Debug.Log($"{SolorEngine}Unity Editor: PreInitSeSdk");
         }
 
 
         private static void Init(string appKey, object userId, SEConfig config)
         {
            
-           Debug.Log("Unity Editor: Init");
+             Debug.Log($"{SolorEngine}Unity Editor: Init");
         }
 
         private static void Init(string appKey, string userId, SEConfig config, RCConfig rcConfig)
         {
-         Debug.Log("Unity Editor: Init");
+           Debug.Log($"{SolorEngine}Unity Editor: Init");
         }
 
         private static void SetVisitorID(string visitorId)
         {
-           Debug.Log("Unity Editor: SetVisitorID");
+             Debug.Log($"{SolorEngine}Unity Editor: SetVisitorID");
         }
 
         private static string GetVisitorID()
         {
-          Debug.Log("Unity Editor: GetVisitorID");
+            Debug.Log($"{SolorEngine}Unity Editor: GetVisitorID");
           return null;
         }
 
         private static void Login(string accountId)
         {
-         Debug.Log("Unity Editor: Login");
+           Debug.Log($"{SolorEngine}Unity Editor: Login");
         }
 
         private static string GetAccountId()
         {
-          Debug.Log("Unity Editor: GetAccountId");
+            Debug.Log($"{SolorEngine}Unity Editor: GetAccountId");
           return null;
         }
 
         private static void Logout()
         {
-          Debug.Log("Unity Editor: Logout");
+            Debug.Log($"{SolorEngine}Unity Editor: Logout");
         }
 
         private static void SetGaid(string gaid)
         {
-          Debug.Log("Unity Editor: SetGaid");
+            Debug.Log($"{SolorEngine}Unity Editor: SetGaid");
         }
 
         private static void SetChannel(string channel)
         {
-            Debug.Log("Unity Editor: SetChannel");
+              Debug.Log($"{SolorEngine}Unity Editor: SetChannel");
         }
 
         private static void SetGDPRArea(bool isGDPRArea)
         {
-            Debug.Log("Unity Editor: SetGDPRArea");
+              Debug.Log($"{SolorEngine}Unity Editor: SetGDPRArea");
         }
 
         private static string GetDistinctId()
         {
-         Debug.Log("Unity Editor: GetDistinctId");
+           Debug.Log($"{SolorEngine}Unity Editor: GetDistinctId");
          return null;
         }
 
         private static void GetDistinctId(Action<Distinct>dis)
         {
-            Debug.Log("Unity Editor: GetDistinctId");
+              Debug.Log($"{SolorEngine}Unity Editor: GetDistinctId");
         }
 
         private static void SetSuperProperties(Dictionary<string, object> userProperties)
         {
-            Debug.Log("Unity Editor: SetSuperProperties");
+              Debug.Log($"{SolorEngine}Unity Editor: SetSuperProperties");
         }
 
         private static void UnsetSuperProperty(string key)
         {
-           Debug.Log("Unity Editor: UnsetSuperProperty");
+             Debug.Log($"{SolorEngine}Unity Editor: UnsetSuperProperty");
         }
 
         private static void ClearSuperProperties()
         {
-           Debug.Log("Unity Editor: ClearSuperProperties");
+             Debug.Log($"{SolorEngine}Unity Editor: ClearSuperProperties");
         }
 
         private static void EventStart(string timerEventName)
         {
-            Debug.Log("Unity Editor: EventStart");
+              Debug.Log($"{SolorEngine}Unity Editor: EventStart");
         }
 
         private static void EventFinish(string timerEventName, Dictionary<string, object> attributes)
         {
-           Debug.Log("Unity Editor: EventFinish");
+             Debug.Log($"{SolorEngine}Unity Editor: EventFinish");
         }
 
        
 
         private static void UserUpdate(Dictionary<string, object> userProperties)
         {
-           Debug.Log("Unity Editor: UserUpdate");
+             Debug.Log($"{SolorEngine}Unity Editor: UserUpdate");
         }
 
         private static void UserInit(Dictionary<string, object> userProperties)
         {
-          Debug.Log("Unity Editor: UserInit");
+            Debug.Log($"{SolorEngine}Unity Editor: UserInit");
         }
 
         private static void UserAdd(Dictionary<string, object> userProperties)
         {
-         Debug.Log("Unity Editor: UserAdd");
+           Debug.Log($"{SolorEngine}Unity Editor: UserAdd");
         }
 
         private static void UserAppend(Dictionary<string, object> userProperties)
         {
-            Debug.Log("Unity Editor: UserAppend");
+              Debug.Log($"{SolorEngine}Unity Editor: UserAppend");
         }
 
         private static void UserUnset(string[] keys)
         {
-           Debug.Log("Unity Editor: UserUnset");
+             Debug.Log($"{SolorEngine}Unity Editor: UserUnset");
         }
 
         private static void UserDelete(SEUserDeleteType deleteType)
         {
-            Debug.Log("Unity Editor: UserDelete");
+              Debug.Log($"{SolorEngine}Unity Editor: UserDelete");
         }
 
         private static string GetAttribution()
         {
-            Debug.Log("Unity Editor: GetAttribution");
+              Debug.Log($"{SolorEngine}Unity Editor: GetAttribution");
             return null;
 
         }
 
         private static void TrackFirstEvent(SEBaseAttributes attributes)
         {
-           Debug.Log("Unity Editor: TrackFirstEvent");
+             Debug.Log($"{SolorEngine}Unity Editor: TrackFirstEvent");
         }
 
         private static void ReportIAPEvent(ProductsAttributes attributes)
         {
-         Debug.Log("Unity Editor: ReportIAPEvent");
+           Debug.Log($"{SolorEngine}Unity Editor: ReportIAPEvent");
         }
 
         private static void ReportIAIEvent(AppImpressionAttributes attributes)
         {
-          Debug.Log("Unity Editor: ReportIAIEvent");
+            Debug.Log($"{SolorEngine}Unity Editor: ReportIAIEvent");
         }
 
         private static void ReportAdClickEvent(AdClickAttributes attributes)
         {
-         Debug.Log("Unity Editor: ReportAdClickEvent");
+           Debug.Log($"{SolorEngine}Unity Editor: ReportAdClickEvent");
         }
 
         private static void ReportRegisterEvent(RegisterAttributes attributes)
         {
-         Debug.Log("Unity Editor: ReportRegisterEvent");
+           Debug.Log($"{SolorEngine}Unity Editor: ReportRegisterEvent");
         }
 
         private static void ReportLoginEvent(LoginAttributes attributes)
         {
-          Debug.Log("Unity Editor: ReportLoginEvent");
+            Debug.Log($"{SolorEngine}Unity Editor: ReportLoginEvent");
         }
 
         private static void ReportOrderEvent(OrderAttributes attributes)
         {
-          Debug.Log("Unity Editor: ReportOrderEvent");
+            Debug.Log($"{SolorEngine}Unity Editor: ReportOrderEvent");
         }
 
         private static void AppAttrEvent(AppAttributes attributes)
         {
-          Debug.Log("Unity Editor: AppAttrEvent");
+            Debug.Log($"{SolorEngine}Unity Editor: AppAttrEvent");
         }
 
 
         private static void SetPresetEvent(SEConstant_Preset_EventType eventType, Dictionary<string, object> attributes)
         {
-          Debug.Log("Unity Editor: SetPresetEvent");
+            Debug.Log($"{SolorEngine}Unity Editor: SetPresetEvent");
         }
 
         private static void ReportCustomEvent(string customEventName, Dictionary<string, object> attributes)
         {
-         Debug.Log("Unity Editor: ReportCustomEvent");
+           Debug.Log($"{SolorEngine}Unity Editor: ReportCustomEvent");
         }
 
         private static void ReportCustomEventWithPreAttributes(string customEventName,
             Dictionary<string, object> customAttributes, Dictionary<string, object> preAttributes)
         {
-         Debug.Log("Unity Editor: ReportCustomEventWithPreAttributes");
+           Debug.Log($"{SolorEngine}Unity Editor: ReportCustomEventWithPreAttributes");
         }
 
         private static void ReportEventImmediately()
         {
-            Debug.Log("Unity Editor: ReportEventImmediately");
+              Debug.Log($"{SolorEngine}Unity Editor: ReportEventImmediately");
         }
 
         private static void HandleDeepLinkUrl(string url)
         {
-            Debug.Log("Unity Editor: HandleDeepLinkUrl not found");
+              Debug.Log($"{SolorEngine}Unity Editor: HandleDeepLinkUrl not found");
         }
 
 
         private static void DeeplinkCompletionHandler(SESDKDeeplinkCallback callback)
         {
-            Debug.Log("Unity Editor: DeeplinkCompletionHandler not found");
+              Debug.Log($"{SolorEngine}Unity Editor: DeeplinkCompletionHandler not found");
 
         }
 
 
         private static void DelayDeeplinkCompletionHandler(SESDKDelayDeeplinkCallback callback)
         {
-            Debug.Log("Unity Editor: DelayDeeplinkCompletionHandler not found");
+              Debug.Log($"{SolorEngine}Unity Editor: DelayDeeplinkCompletionHandler not found");
         }
 
         private static  void SetReferrerTitle(string title)
         {
-            Debug.Log("Unity Editor: SetReferrerTitle ");
+              Debug.Log($"{SolorEngine}Unity Editor: SetReferrerTitle ");
         }
 
         private static void SetXcxPageTitle(string title)
         {
-           Debug.Log("Unity Editor: SetXcxPageTitle ");
+             Debug.Log($"{SolorEngine}Unity Editor: SetXcxPageTitle ");
         }
         
         
@@ -250,7 +250,7 @@ namespace SolarEngine
         /// callback 回调用户授权状态: 0: Not Determined；1: Restricted；2: Denied；3: Authorized ；999: system error
         /// </summary>
         private static void RequestTrackingAuthorizationWithCompletionHandler(SESDKATTCompletedCallback callback) {
-         Debug.Log("Unity Editor: RequestTrackingAuthorizationWithCompletionHandler");
+           Debug.Log($"{SolorEngine}Unity Editor: RequestTrackingAuthorizationWithCompletionHandler");
 
         }
 
@@ -261,7 +261,7 @@ namespace SolarEngine
         private static void UpdatePostbackConversionValue(int conversionValue, SKANUpdateCompletionHandler callback)
         {
 
-            Debug.Log("Unity Editor: UpdatePostbackConversionValue");
+              Debug.Log($"{SolorEngine}Unity Editor: UpdatePostbackConversionValue");
 
         }
         /// <summary>
@@ -271,7 +271,7 @@ namespace SolarEngine
         private static void UpdateConversionValueCoarseValue(int fineValue, String coarseValue, SKANUpdateCompletionHandler callback)
         {
 
-            Debug.Log("Unity Editor: UpdateConversionValueCoarseValue");
+              Debug.Log($"{SolorEngine}Unity Editor: UpdateConversionValueCoarseValue");
 
 
         }
@@ -281,7 +281,7 @@ namespace SolarEngine
         private static void UpdateConversionValueCoarseValueLockWindow(int fineValue, String coarseValue, bool lockWindow, SKANUpdateCompletionHandler callback)
         {
 
-            Debug.Log("Unity Editor: UpdateConversionValueCoarseValueLockWindow");
+              Debug.Log($"{SolorEngine}Unity Editor: UpdateConversionValueCoarseValueLockWindow");
 
         }
 

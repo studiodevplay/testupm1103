@@ -192,7 +192,7 @@ namespace SolarEngine
 
         private static void SetGDPRArea(bool isGDPRArea)
         {
-            Debug.Log("minigame not support");
+              Debug.Log($"{SolorEngine}minigame not support");
         }
 
 
@@ -283,7 +283,7 @@ namespace SolarEngine
         }
         private static void TrackFirstEvent(SEBaseAttributes attributes)
         {
-            Debug.Log("minigame not support");
+              Debug.Log($"{SolorEngine}minigame not support");
         }
 
         private static void ReportIAPEvent(ProductsAttributes attributes)
@@ -352,28 +352,28 @@ namespace SolarEngine
 
         private static void HandleDeepLinkUrl(string url)
         {
-            Debug.Log("Only Android can use , minigame not support");
+              Debug.Log($"{SolorEngine}Only Android can use , minigame not support");
         }
 
         #region  not support function
 
         private static void DeeplinkCompletionHandler(SESDKDeeplinkCallback callback)
         {
-            Debug.Log("MiniGame not support");
+              Debug.Log($"{SolorEngine}MiniGame not support");
         }
 
         private static void DelayDeeplinkCompletionHandler(SESDKDelayDeeplinkCallback callback)
         {
-            Debug.Log("MiniGame not support");
+              Debug.Log($"{SolorEngine}MiniGame not support");
         }
 
         private static string GetDistinctId()
         {
-            Debug.Log("MiniGame not support");
+              Debug.Log($"{SolorEngine}MiniGame not support");
             return "";
         }
         private static void RequestTrackingAuthorizationWithCompletionHandler(SESDKATTCompletedCallback callback) {
-             Debug.Log("Current on MiniGame,requestTrackingAuthorizationWithCompletionHandler only iOS");
+               Debug.Log($"{SolorEngine}Current on MiniGame,requestTrackingAuthorizationWithCompletionHandler only iOS");
          }
 
          /// <summary>
@@ -383,7 +383,7 @@ namespace SolarEngine
          private static void UpdatePostbackConversionValue(int conversionValue, SKANUpdateCompletionHandler callback)
          {
 
-             Debug.Log("Current on MiniGame,requestTrackingAuthorizationWithCompletionHandler only iOS");
+               Debug.Log($"{SolorEngine}Current on MiniGame,requestTrackingAuthorizationWithCompletionHandler only iOS");
 
 
          }
@@ -393,7 +393,7 @@ namespace SolarEngine
          /// </summary>
          private static void UpdateConversionValueCoarseValue(int fineValue, String coarseValue, SKANUpdateCompletionHandler callback)
          {
-             Debug.Log("Current on MiniGame,requestTrackingAuthorizationWithCompletionHandler only iOS");
+               Debug.Log($"{SolorEngine}Current on MiniGame,requestTrackingAuthorizationWithCompletionHandler only iOS");
 
          }
          /// 仅支持iOS
@@ -401,13 +401,13 @@ namespace SolarEngine
          /// </summary>
          private static void UpdateConversionValueCoarseValueLockWindow(int fineValue, String coarseValue, bool lockWindow, SKANUpdateCompletionHandler callback)
          {
-             Debug.Log("Current on MiniGame,requestTrackingAuthorizationWithCompletionHandler only iOS");
+               Debug.Log($"{SolorEngine}Current on MiniGame,requestTrackingAuthorizationWithCompletionHandler only iOS");
 
          }
          
          private static void SetGaid(string gaid)
          {
-             Debug.Log("Current on MiniGame，Only Android can set gaid");
+               Debug.Log($"{SolorEngine}Current on MiniGame，Only Android can set gaid");
          }
          
          

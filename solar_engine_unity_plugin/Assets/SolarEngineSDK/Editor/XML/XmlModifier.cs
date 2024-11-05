@@ -8,6 +8,7 @@ using UnityEngine;
 
 public class XmlModifier
 {
+    private const string SolorEngine = "[SolorEngine]";
     // 配置常量
     private const string SolarEngineNet = "Assets/SolarEngineNet/";
     private const string DEPENDDANCIDES = "Editor/Dependencies.xml";
@@ -57,7 +58,7 @@ public class XmlModifier
         }
         else
         {
-            Debug.LogError($"文件 {filePath} 不存在");
+            Debug.LogError($"{SolorEngine}文件 {filePath} 不存在");
             return null;
         }
 
@@ -90,6 +91,7 @@ public class XmlModifier
     /// <param name="doc">要修改的XDocument对象</param>
     private static  bool ModifyIOSNodes(XDocument doc,string _name)
     {
+    
         bool name = false;
         bool version = false;
         var iosPod = doc.Descendants(IOS_POD_NODE_NAME).FirstOrDefault();
@@ -105,6 +107,7 @@ public class XmlModifier
             var versionAttribute = iosPod.Attribute(IOS_POD_VERSION_ATTR);
             if (versionAttribute!= null)
             {
+                Debug.Log($"{SolorEngine}iOSVersion："+SolarEngineSettings.iOSVersion);
                 versionAttribute.Value = SolarEngineSettings.iOSVersion;
                 version= true;
             }
@@ -143,6 +146,7 @@ public class XmlModifier
             XDocument docRemote = LoadXmlDocument(ANDROID_REMOTECONFIG_PATH);
             if (docRemote != null)
             { 
+                Debug.Log($"{SolorEngine}AndroidVersion："+SolarEngineSettings.AndroidVersion);
                 if(iscn)
                 isModified= ModifyAndroidNode(docRemote, ANDROID_REMOTECONFIGE_CN_SPEC+SolarEngineSettings.AndroidVersion);
                 else
@@ -219,7 +223,7 @@ public class XmlModifier
 
         return false;
     }
-    private const string SolorEngine = "[SolorEngine]";
+  
     /// <summary>
     /// 整体执行修改XML文件操作（针对CN情况），包括加载、省略号)
     /// </summary>
@@ -237,7 +241,7 @@ public class XmlModifier
         try
         {
             if(sdkSetting(true)&&AndroidRC(true)&& AndroidOaid()&& iOSRC())
-                Debug.Log("set SDK to CN");
+                Debug.Log($"{SolorEngine}set SDK to CN");
         }
         catch (Exception ex)
         {
@@ -262,7 +266,7 @@ public class XmlModifier
         {
             
        if(sdkSetting(false)&&AndroidRC(false)&& AndroidOaid()&& iOSRC())
-         Debug.Log("set SDK to Oversea");
+         Debug.Log($"{SolorEngine}set SDK to Oversea");
     
 
         }

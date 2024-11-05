@@ -72,7 +72,7 @@ namespace SolarEngine
 
         private static void SetChannel(string channel)
         {
-            Debug.Log("iOS not support SetChannel");
+            Debug.Log($"{SolorEngine}iOS not support SetChannel");
         }
 
         private static void SetGDPRArea(bool isGDPRArea)
@@ -86,7 +86,7 @@ namespace SolarEngine
         }
         private static void GetDistinctId(Action<Distinct>dic)
         {
-           
+              Debug.Log($"{SolorEngine}Only MiniGame can use , iOS not support");
         }
 
         private static void SetSuperProperties(Dictionary<string, object> userProperties)
@@ -279,7 +279,7 @@ namespace SolarEngine
         private static void HandleDeepLinkUrl(string url)
         {
 
-               Debug.Log("Only Android can use , iOS not support");
+                 Debug.Log($"{SolorEngine}Only Android can use , iOS not support");
 
         }
 
@@ -543,16 +543,16 @@ namespace SolarEngine
 
         private static void SetGaid(string gaid)
         {
-            Debug.Log("Current on iOS，Only Android can set gaid");
+              Debug.Log($"{SolorEngine}Current on iOS，Only Android can set gaid");
         }
         private static  void SetReferrerTitle(string title)
         {
-            Debug.Log("Current on iOS,Only MiniGame can SetReferrerTitle ");
+              Debug.Log($"{SolorEngine}Current on iOS,Only MiniGame can SetReferrerTitle ");
         }
 
         private static void SetXcxPageTitle(string title)
         {
-            Debug.Log("Current on iOS,Only MiniGame can SetXcxPageTitle ");
+              Debug.Log($"{SolorEngine}Current on iOS,Only MiniGame can SetXcxPageTitle ");
         }
 
         #endregion
