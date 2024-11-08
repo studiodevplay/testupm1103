@@ -48,7 +48,7 @@ namespace SolarEngine.Build
 
             private const string SolorEngine = "[SolorEngine]";
 
-            // [MenuItem("SolarEngineSDK/CheckConfusion ", false, 0)]
+            //[MenuItem("SolarEngineSDK/CheckConfusion ", false, 0)]
             public static void CheckConfusion()
             {
                 if (PlayerSettings.Android.minifyRelease || PlayerSettings.Android.minifyDebug)
@@ -95,11 +95,60 @@ namespace SolarEngine.Build
                         
                     }
              }
+                
+                
             }
-           // [MenuItem("SolarEngineSDK/RunPostProcessTasksAndroid ", false, 0)]
+            
+            
+         private static bool AddPermissions(XmlDocument manifest)
+        {
+           
+            var manifestHasChanged = false;
+
+            // If enabled by the user && android.permission.INTERNET permission is missing, add it.
+          
+                manifestHasChanged |= AddPermission(manifest, "android.permission.INTERNET");
+           
+            // If enabled by the user && com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE permission is missing, add it.
+          
+                manifestHasChanged |= AddPermission(manifest, "android.permission.ACCESS_NETWORK_STATE");
+           
+        
+                manifestHasChanged |= AddPermission(manifest, "android.permission.ACCESS_WIFI_STATE");
+        
+           
+                manifestHasChanged |= AddPermission(manifest, "android.permission.ACCESS_NETWORK_STATE");
+         
+
+            return manifestHasChanged;
+        }
+                
+                private static bool AddPermission(XmlDocument manifest, string permissionValue)
+                {
+                    if (DoesPermissionExist(manifest, permissionValue))
+                    {
+                        Debug.Log(string.Format(SolorEngine+ " Your app's AndroidManifest.xml file already contains {0} permission.", permissionValue));
+                        return false;
+                    }
+
+                    var element = manifest.CreateElement("uses-permission");
+                    AddAndroidNamespaceAttribute(manifest, "name", permissionValue, element);
+                    manifest.DocumentElement.AppendChild(element);
+                    Debug.Log(string.Format(SolorEngine+" {0} permission successfully added to your app's AndroidManifest.xml file.", permissionValue));
+
+                    return true;
+                }
+                
+                private static bool DoesPermissionExist(XmlDocument manifest, string permissionValue)
+                {
+                    var xpath = string.Format("/manifest/uses-permission[@android:name='{0}']", permissionValue);
+                    return manifest.DocumentElement.SelectSingleNode(xpath, GetNamespaceManager(manifest)) != null;
+                }
+           [MenuItem("SolarEngineSDK/RunPostProcessTasksAndroid ", false, 0)]
             
             public static void RunPostProcessTasksAndroid()
             {
+                var isSEManifestUsed = false;
                 var androidPluginsPath = Path.Combine(Application.dataPath, "Plugins/Android");
                 var seManifestPath =
                     Path.Combine(Application.dataPath, "Plugins/SolarEngine/Android/AndroidManifest.xml");
@@ -112,13 +161,19 @@ namespace SolarEngine.Build
                         Directory.CreateDirectory(androidPluginsPath);
                     }
 
+                    isSEManifestUsed = true;
                  
                     File.Copy(seManifestPath, appManifestPath);
 
                 }
                 var manifestFile = new XmlDocument();
                 manifestFile.Load(appManifestPath);
-                
+
+                if (!isSEManifestUsed)
+                {
+                    manifestHasChanged |= AddPermissions(manifestFile);
+
+                }
                 manifestHasChanged |= AddURISchemes(manifestFile);
                 if (manifestHasChanged)
                 {
@@ -138,6 +193,7 @@ namespace SolarEngine.Build
                 var usedIntentFiltersChanged = false;
                 var usedIntentFilters = GetIntentFilter(manifest);
                 
+                Debug.Log(string.Format(SolorEngine)+"Adding URI schemes to AndroidManifest.xml"+SolarEngineSettings.AndroidUrlSchemes[0]);
                 foreach (var uriScheme in SolarEngineSettings.AndroidUrlSchemes)
                 {
                     Uri uri;
@@ -164,7 +220,7 @@ namespace SolarEngine.Build
                         Debug.Log("[SolorEngine]: Adding new URI with scheme: " + uri.Scheme + ", and host: " + uri.Host);
                         var androidSchemeNode = manifest.CreateElement("data");
                         AddAndroidNamespaceAttribute(manifest, "scheme", uri.Scheme, androidSchemeNode);
-                        AddAndroidNamespaceAttribute(manifest, "host", uri.Host, androidSchemeNode);
+                        // AddAndroidNamespaceAttribute(manifest, "host", uri.Host, androidSchemeNode);
                         usedIntentFilters.AppendChild(androidSchemeNode);
                         usedIntentFiltersChanged = true;
 
@@ -180,33 +236,126 @@ namespace SolarEngine.Build
             }
 
         }
-        
+
         private static XmlElement GetIntentFilter(XmlDocument manifest)
         {
-           // var xpath = "/manifest/application/activity/intent-filter[data/@android:scheme and data/@android:host]";
-           var xpath = "/manifest/application/activity/intent-filter";
+            // var xpath = "/manifest/application/activity/intent-filter[data/@android:scheme and data/@android:host]";
+            var xpath = "/manifest/application/activity/intent-filter";
+
+            var intentFilter =
+                manifest.DocumentElement.SelectSingleNode(xpath, GetNamespaceManager(manifest)) as XmlElement;
+            Debug.Log("[SolorEngine]: Adding missing android.intent.action.VIEW to intent filter in AndroidManifest.xml");
+          
+            if (intentFilter == null)
+            {
+                const string androidName = "name";
+                const string category = "category";
+
+                intentFilter = manifest.CreateElement("intent-filter");
+
+                var actionElement = manifest.CreateElement("action");
+                AddAndroidNamespaceAttribute(manifest, androidName, "android.intent.action.VIEW", actionElement);
+                intentFilter.AppendChild(actionElement);
+
+                var defaultCategory = manifest.CreateElement(category);
+                AddAndroidNamespaceAttribute(manifest, androidName, "android.intent.category.DEFAULT", defaultCategory);
+                intentFilter.AppendChild(defaultCategory);
+
+                var browsableCategory = manifest.CreateElement(category);
+                AddAndroidNamespaceAttribute(manifest, androidName, "android.intent.category.BROWSABLE",
+                    browsableCategory);
+                intentFilter.AppendChild(browsableCategory);
+            } // 检查是否存在android.intent.action.VIEW
+            else
+            {
+                Debug.Log("[SolorEngine]: Found existing intent filter in AndroidManifest.xml");
+                XmlNodeList actionNodes = intentFilter.GetElementsByTagName("action");
+                
+            bool hasViewAction = false;
+            foreach (XmlElement actionNode in actionNodes)
+            {
+                string actionValue = actionNode.GetAttribute("name");
+                if (actionValue == "android.intent.action.VIEW")
+                {
+                    hasViewAction = true;
+                    break;
+                }
+            }
+
+            // 检查是否存在android.intent.category.DEFAULT
+            XmlNodeList categoryNodes = intentFilter.GetElementsByTagName("category");
+            bool hasDefaultCategory = false;
+            foreach (XmlElement categoryNode in categoryNodes)
+            {
+                string categoryValue = categoryNode.GetAttribute("name");
+                if (categoryValue == "android.intent.category.DEFAULT")
+                {
+                    hasDefaultCategory = true;
+                    break;
+                }
+            }
+
+            // 检查是否存在android.intent.category.BROWSABLE
+            bool hasBrowsableCategory = false;
+            foreach (XmlElement categoryNode in categoryNodes)
+            {
+                string categoryValue = categoryNode.GetAttribute("name");
+                if (categoryValue == "android.intent.category.BROWSABLE")
+                {
+                    hasBrowsableCategory = true;
+                    break;
+                }
+            }
+            const string androidName = "name";
+            const string category = "category";
+            if (!hasViewAction)
+            {
+             
+                Debug.Log("[SolorEngine]: Adding missing android.intent.action.VIEW to intent filter in AndroidManifest.xml");
+                var actionElement = manifest.CreateElement("action");
+          
+                AddAndroidNamespaceAttribute(manifest, androidName, "android.intent.action.VIEW", actionElement);
+                intentFilter.AppendChild(actionElement);
            
-            var intentFilter = manifest.DocumentElement.SelectSingleNode(xpath, GetNamespaceManager(manifest)) as XmlElement;
-      
-            return intentFilter;
+            }
+
+            // 如果不存在android.intent.category.DEFAULT，则添加
+            if (!hasDefaultCategory)
+            {
+
+                var defaultCategory = manifest.CreateElement(category);
+                AddAndroidNamespaceAttribute(manifest, androidName, "android.intent.category.DEFAULT", defaultCategory);
+                intentFilter.AppendChild(defaultCategory);
+            }
+
+            // 如果不存在android.intent.category.BROWSABLE，则添加
+            if (!hasBrowsableCategory)
+            {
+                var browsableCategory = manifest.CreateElement(category);
+                AddAndroidNamespaceAttribute(manifest, androidName, "android.intent.category.BROWSABLE", browsableCategory);
+                intentFilter.AppendChild(browsableCategory);
+            }
+    
+        }
+        return intentFilter;
         }
         private static void AddAndroidNamespaceAttribute(XmlDocument manifest, string key, string value, XmlElement node)
         {
             var androidSchemeAttribute = manifest.CreateAttribute("android", key, "http://schemas.android.com/apk/res/android");
             androidSchemeAttribute.InnerText = value;
             node.SetAttributeNode(androidSchemeAttribute);
+           
         }
         
         private static bool IsIntentFilterAlreadyExist(XmlDocument manifest, Uri link)
         {
-            var xpath = string.Format("/manifest/application/activity/intent-filter/data[@android:scheme='{0}' and @android:host='{1}']", link.Scheme, link.Host);
+            var xpath = string.Format("/manifest/application/activity/intent-filter/data[@android:scheme='{0}']", link.Scheme);
             return manifest.DocumentElement.SelectSingleNode(xpath, GetNamespaceManager(manifest)) != null;
         }
         private static XmlNamespaceManager GetNamespaceManager(XmlDocument manifest)
         {
             var namespaceManager = new XmlNamespaceManager(manifest.NameTable);
             namespaceManager.AddNamespace("android", "http://schemas.android.com/apk/res/android");
-            Debug.Log(namespaceManager);
             return namespaceManager;
         }
     }

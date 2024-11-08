@@ -150,6 +150,7 @@ namespace SolarEngine
                 {
                     PluginsEdtior.showOaid();
                     disOaid.boolValue = false;
+                    oldDisOaidValue = disOaid.boolValue;
                     SolarEngineSettings.isDisOaid = disOaid.boolValue;
                 }
               
@@ -162,16 +163,15 @@ namespace SolarEngine
         {
             if (value)
             {
-             
+                XmlModifier.Overseaxml(value);
                 if (!disOaid.boolValue)
                 {
                     PluginsEdtior.disableOaid();
+                 
                     disOaid.boolValue = true;
+                    oldDisOaidValue = disOaid.boolValue;
                     SolarEngineSettings.isDisOaid = disOaid.boolValue;
                 }
-             
-                XmlModifier.Overseaxml(value);
-              
                 Debug.Log($"{SolorEngine}oversea disable oaid");
             }
             
@@ -220,6 +220,7 @@ namespace SolarEngine
             else
             {
                 PluginsEdtior.showOaid();
+                // XmlModifier.AndroidOaid();
             }
           
         }
@@ -303,6 +304,7 @@ namespace SolarEngine
         
         private void ProcessPropertyChange(SerializedProperty property, ref bool oldValue, string propertyName, System.Action<bool> xmlAction, System.Action additionalAction = null)
         {
+       
             if (property.boolValue!= oldValue)
             {
                 Debug.Log($"{SolorEngine}{propertyName} value changed.");
@@ -320,9 +322,9 @@ namespace SolarEngine
             
             DrawH2Title("SDK Setting");
 
-            EditorGUILayout.LabelField("Please Set iOS and Android Version",darkerCyanTextFieldStyles);
+            EditorGUILayout.LabelField("Please Set iOS and Android Version(require)",darkerCyanTextFieldStyles);
             SdkVersion();
-            EditorGUILayout.LabelField("Please choose China or overseas:(require)", darkerCyanTextFieldStyles);
+            EditorGUILayout.LabelField("Please choose China or overseas(require)", darkerCyanTextFieldStyles);
           
             ChinaOrOversea();
        
