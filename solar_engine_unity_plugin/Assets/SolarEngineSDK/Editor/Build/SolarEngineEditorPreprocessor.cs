@@ -193,33 +193,34 @@ namespace SolarEngine.Build
                 var usedIntentFiltersChanged = false;
                 var usedIntentFilters = GetIntentFilter(manifest);
                 
+          
                 Debug.Log(string.Format(SolorEngine)+"Adding URI schemes to AndroidManifest.xml"+SolarEngineSettings.AndroidUrlSchemes[0]);
                 foreach (var uriScheme in SolarEngineSettings.AndroidUrlSchemes)
                 {
                     Uri uri;
-                    try
+                    // try
+                    // {
+                    //     // The first element is android:scheme and the second one is android:host.
+                    //     uri = new Uri(uriScheme);
+                    //
+                    //     // Uri class converts implicit file paths to explicit file paths with the file:// scheme.
+                    //     if (!uriScheme.StartsWith(uri.Scheme))
+                    //     {
+                    //         throw new UriFormatException();
+                    //     }
+                    // }
+                    // catch (UriFormatException)
+                    // {
+                    //     Debug.LogError(string.Format("[SolorEngine]: Android deeplink URI scheme \"{0}\" is invalid and will be ignored.", uriScheme));
+                    //     Debug.LogWarning(string.Format("[SolorEngine]: Make sure that your URI scheme entry ends with ://"));
+                    //     continue;
+                    // }
+                    //
+                    if (!IsIntentFilterAlreadyExist(manifest, uriScheme))
                     {
-                        // The first element is android:scheme and the second one is android:host.
-                        uri = new Uri(uriScheme);
-
-                        // Uri class converts implicit file paths to explicit file paths with the file:// scheme.
-                        if (!uriScheme.StartsWith(uri.Scheme))
-                        {
-                            throw new UriFormatException();
-                        }
-                    }
-                    catch (UriFormatException)
-                    {
-                        Debug.LogError(string.Format("[SolorEngine]: Android deeplink URI scheme \"{0}\" is invalid and will be ignored.", uriScheme));
-                        Debug.LogWarning(string.Format("[SolorEngine]: Make sure that your URI scheme entry ends with ://"));
-                        continue;
-                    }
-                    
-                    if (!IsIntentFilterAlreadyExist(manifest, uri))
-                    {
-                        Debug.Log("[SolorEngine]: Adding new URI with scheme: " + uri.Scheme + ", and host: " + uri.Host);
+                        Debug.Log("[SolorEngine]: Adding new URI with scheme: " + uriScheme );
                         var androidSchemeNode = manifest.CreateElement("data");
-                        AddAndroidNamespaceAttribute(manifest, "scheme", uri.Scheme, androidSchemeNode);
+                        AddAndroidNamespaceAttribute(manifest, "scheme", uriScheme, androidSchemeNode);
                         // AddAndroidNamespaceAttribute(manifest, "host", uri.Host, androidSchemeNode);
                         usedIntentFilters.AppendChild(androidSchemeNode);
                         usedIntentFiltersChanged = true;
@@ -270,11 +271,13 @@ namespace SolarEngine.Build
             {
                 Debug.Log("[SolorEngine]: Found existing intent filter in AndroidManifest.xml");
                 XmlNodeList actionNodes = intentFilter.GetElementsByTagName("action");
+          
                 
             bool hasViewAction = false;
             foreach (XmlElement actionNode in actionNodes)
             {
-                string actionValue = actionNode.GetAttribute("name");
+                string actionValue = actionNode.GetAttribute("android:name");
+            
                 if (actionValue == "android.intent.action.VIEW")
                 {
                     hasViewAction = true;
@@ -287,7 +290,7 @@ namespace SolarEngine.Build
             bool hasDefaultCategory = false;
             foreach (XmlElement categoryNode in categoryNodes)
             {
-                string categoryValue = categoryNode.GetAttribute("name");
+                string categoryValue = categoryNode.GetAttribute("android:name");
                 if (categoryValue == "android.intent.category.DEFAULT")
                 {
                     hasDefaultCategory = true;
@@ -299,7 +302,7 @@ namespace SolarEngine.Build
             bool hasBrowsableCategory = false;
             foreach (XmlElement categoryNode in categoryNodes)
             {
-                string categoryValue = categoryNode.GetAttribute("name");
+                string categoryValue = categoryNode.GetAttribute("android:name");
                 if (categoryValue == "android.intent.category.BROWSABLE")
                 {
                     hasBrowsableCategory = true;
@@ -347,9 +350,9 @@ namespace SolarEngine.Build
            
         }
         
-        private static bool IsIntentFilterAlreadyExist(XmlDocument manifest, Uri link)
+        private static bool IsIntentFilterAlreadyExist(XmlDocument manifest, string link)
         {
-            var xpath = string.Format("/manifest/application/activity/intent-filter/data[@android:scheme='{0}']", link.Scheme);
+            var xpath = string.Format("/manifest/application/activity/intent-filter/data[@android:scheme='{0}']", link);
             return manifest.DocumentElement.SelectSingleNode(xpath, GetNamespaceManager(manifest)) != null;
         }
         private static XmlNamespaceManager GetNamespaceManager(XmlDocument manifest)

@@ -20,13 +20,13 @@ public class SolorEnginePackageManager : MonoBehaviour
         }
 
     }
-    [MenuItem("SolarEngineSDK/Historical Configuration ", false, 0)]
+    [MenuItem("SolarEngineSDK/Matching Settings Panel", false, 0)]
     static void finishHandle()
     {
         checkXmlHandle();
         checkPlugins();
         AssetDatabase.Refresh();
-        ShowTips("Successfully",  "SolarEngineSDK successfully updated historical configuration");
+        ShowTips("Successfully",  "SolarEngineSDK Successfully Matching Settings Panel");
     }
     
     private static void checkXmlHandle()

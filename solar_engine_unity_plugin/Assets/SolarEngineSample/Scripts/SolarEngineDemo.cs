@@ -13,37 +13,77 @@ using Distinct = SolarEngine.Distinct;
 public class SolarEngineDemo : MonoBehaviour
 {
     public Texture2D texture;
+
+    public static readonly  string  SolarEngineDemoLOG="SolarEngineDemo: ";
+
+    private void Start()
+    {
+        InitSDK();
+        Analytics.deeplinkCompletionHandler(deeplinkCallback);
+        //
+        ///Application.deepLinkActivated += handleSchemeUrl1;
+        //如果是在2022版本上开发者可以通过以下方式获取deeplink url并传递给SDK
+        handleSchemeUrl(Application.absoluteURL);
+        
+       
+    }
+    
+    
+   
     public void InitSDK()
     {
-        
-        Debug.Log("[unity] init click");
-        String AppKey = "e78185651df3202f";
-    //  String AppKey = "455cd0c9843e503e";
-        // MiniGameInitParams initParams = new MiniGameInitParams();
-        // initParams.anonymous_openid = "anonymous_openid";
-        // initParams.unionid = "unionid";
-        // initParams.openid = "openid";
+
+        Debug.Log(SolarEngineDemoLOG+" init click");
+        //安卓
+       String AppKey = "8b17c04df5df162a";
+        //iOS
+       // String AppKey = "455cd0c9843e503e";
+       
+    
+        MiniGameInitParams initParams = new MiniGameInitParams();
+        initParams.anonymous_openid = "anonymous_openid";
+        initParams.unionid = "unionid";
+        initParams.openid = "openid";
         SEConfig seConfig = new SEConfig();
-       // seConfig.miniGameInitParams = initParams;
+        seConfig.attAuthorizationWaitingInterval = 120;
+         seConfig.miniGameInitParams = initParams;
+         
         RCConfig rc = new RCConfig();
-        rc.enable = true;
+        
+        rc.enable = false;
         seConfig.logEnabled = true;
         seConfig.isDebugModel = false;
-        Debug.Log("[unity] init with config");
-       
-        //
+     
+        //delayDeeplinkEnable
+        // seConfig.delayDeeplinkEnable = true;       
+        // setDelayDeeplinkCompletionHandler();
+        
+     
+        
         Analytics.SEAttributionCallback callback = new Analytics.SEAttributionCallback(attributionCallback);
         seConfig.attributionCallback = callback;
 
         Analytics.SESDKInitCompletedCallback initCallback = initSuccessCallback;
         seConfig.initCompletedCallback = initCallback;
-        setRemoteDefaultConfig();
-        initRemoteConfig();
+      
         SolarEngine.Analytics.preInitSeSdk(AppKey);
-        SolarEngine.Analytics.initSeSdk(AppKey, seConfig,rc);
-
-
+        SolarEngine.Analytics.initSeSdk(AppKey, seConfig);
+        
+      
+        
     }
+
+    private void setDelayDeeplinkCompletionHandler()
+    {
+        SolarEngine.Analytics.delayDeeplinkCompletionHandler(delayDeeplinkCallback);  //必须在初始化之前开启，否则无法监听到deeplink回调
+    }
+
+    private void delayDeeplinkCallback(int code, Dictionary<string, object> data)
+    {
+     Debug.Log(SolarEngineDemoLOG+code +JsonConvert.SerializeObject(data));
+    }
+
+
     public void initRemoteConfig()
     {
        SESDKRemoteConfig remoteConfig = new SESDKRemoteConfig();
@@ -82,9 +122,14 @@ public class SolarEngineDemo : MonoBehaviour
 
     }
 
+ 
+   
+
+
+
     public void trackAdClick()
     {
-        Debug.Log("[unity] trackAdClick click");
+        Debug.Log(SolarEngineDemoLOG+ "trackAdClick click");
 
         AdClickAttributes AdClickAttributes = new AdClickAttributes();
         AdClickAttributes.ad_platform = "izz";
@@ -99,7 +144,7 @@ public class SolarEngineDemo : MonoBehaviour
 
     public void trackRegister()
     {
-        Debug.Log("[unity] trackRegister click");
+        Debug.Log(SolarEngineDemoLOG+ " trackRegister click");
 
         RegisterAttributes RegisterAttributes = new RegisterAttributes();
         RegisterAttributes.register_type = "QQ_test";
@@ -114,7 +159,7 @@ public class SolarEngineDemo : MonoBehaviour
     public void track()
     {
 
-        Debug.Log("[unity] track custom click");
+        Debug.Log(SolarEngineDemoLOG+ " track custom click");
 
         Dictionary<string, object> customProperties = new Dictionary<string, object>();
         customProperties.Add("event001", 111);
@@ -137,7 +182,7 @@ public class SolarEngineDemo : MonoBehaviour
     public void trackAppAtrr()
     {
 
-        Debug.Log("[unity] trackAppAtrr click");
+        Debug.Log(SolarEngineDemoLOG+ " trackAppAtrr click");
         AppAttributes AppAttributes = new AppAttributes();
         AppAttributes.ad_network = "toutiao";
         AppAttributes.sub_channel = "103300";
@@ -158,7 +203,7 @@ public class SolarEngineDemo : MonoBehaviour
 
     public void trackIAP()
     {
-        Debug.Log("[unity] trackIAP click");
+        Debug.Log(SolarEngineDemoLOG+ " trackIAP click");
 
         ProductsAttributes productsAttributes = new ProductsAttributes();
         productsAttributes.product_name = "product_name";
@@ -176,7 +221,7 @@ public class SolarEngineDemo : MonoBehaviour
 
     public void trackAdImpression()
     {
-        Debug.Log("[unity] trackAdImpression click");
+        Debug.Log(SolarEngineDemoLOG+ " trackAdImpression click");
 
         AppImpressionAttributes impressionAttributes = new AppImpressionAttributes();
         impressionAttributes.ad_platform = "AdMob";
@@ -195,7 +240,7 @@ public class SolarEngineDemo : MonoBehaviour
 
     public void trackLogin()
     {
-        Debug.Log("[unity] trackLogin click");
+        Debug.Log(SolarEngineDemoLOG+ " trackLogin click");
 
         LoginAttributes LoginAttributes = new LoginAttributes();
         LoginAttributes.login_type = "QQ_test";
@@ -207,7 +252,7 @@ public class SolarEngineDemo : MonoBehaviour
 
     public void trackOrder()
     {
-        Debug.Log("[unity] trackOrderclick");
+        Debug.Log(SolarEngineDemoLOG+ " trackOrderclick");
 
         OrderAttributes OrderAttributes = new OrderAttributes();
         OrderAttributes.order_id = "order_id_test";
@@ -224,7 +269,7 @@ public class SolarEngineDemo : MonoBehaviour
 
     public void userInit()
     {
-        Debug.Log("[unity] userInit click");
+        Debug.Log(SolarEngineDemoLOG+ " userInit click");
 
         Dictionary<string, object> userProperties = new Dictionary<string, object>();
         userProperties.Add("K1", "V1");
@@ -239,7 +284,7 @@ public class SolarEngineDemo : MonoBehaviour
 
     public void userUpdate()
     {
-        Debug.Log("[unity] userUpdate click");
+        Debug.Log(SolarEngineDemoLOG+ " userUpdate click");
 
         Dictionary<string, object> userProperties = new Dictionary<string, object>();
         userProperties.Add("K1", "V1");
@@ -251,7 +296,7 @@ public class SolarEngineDemo : MonoBehaviour
 
     public void userAdd()
     {
-        Debug.Log("[unity] userAdd click");
+        Debug.Log(SolarEngineDemoLOG+ " userAdd click");
 
         Dictionary<string, object> userProperties = new Dictionary<string, object>();
         userProperties.Add("K1", 10);
@@ -263,7 +308,7 @@ public class SolarEngineDemo : MonoBehaviour
 
     public void userUnset()
     {
-        Debug.Log("[unity] userUnset click");
+        Debug.Log(SolarEngineDemoLOG+ " userUnset click");
 
         SolarEngine.Analytics.userUnset(new string[] { "K1", "K2" });
 
@@ -271,7 +316,7 @@ public class SolarEngineDemo : MonoBehaviour
 
     public void userAppend()
     {
-        Debug.Log("[unity] userAppend click");
+        Debug.Log(SolarEngineDemoLOG+ " userAppend click");
 
         Dictionary<string, object> userProperties = new Dictionary<string, object>();
         userProperties.Add("K1", "V1");
@@ -285,7 +330,7 @@ public class SolarEngineDemo : MonoBehaviour
 
     public void userDelete()
     {
-        Debug.Log("[unity] SEUserDeleteTypeByAccountId click");
+        Debug.Log(SolarEngineDemoLOG+ " SEUserDeleteTypeByAccountId click");
 
         SolarEngine.Analytics.userDelete(SEUserDeleteType.SEUserDeleteTypeByAccountId);
         SolarEngine.Analytics.userDelete(SEUserDeleteType.SEUserDeleteTypeByVisitorId);
@@ -295,20 +340,20 @@ public class SolarEngineDemo : MonoBehaviour
 
     private void initSuccessCallback(int code)
     {
-        Debug.Log("SEUnity:initSuccessCallback  code : " + code);
+        Debug.Log(SolarEngineDemoLOG+ "initSuccessCallback  code : " + code);
 
     }
 
 
     private void attributionCallback(int code, Dictionary<string, object> attribution)
     {
-        Debug.Log("SEUnity: errorCode : " + code);
+        Debug.Log(SolarEngineDemoLOG+ " errorCode : " + code);
 
         if (code == 0)
         {
             foreach (var VARIABLE in attribution)
             {
-                Debug.Log("SEUnity: attribution : " + VARIABLE);
+                Debug.Log(SolarEngineDemoLOG+ " attribution : " + VARIABLE);
             }
         }
         else
@@ -350,32 +395,32 @@ public class SolarEngineDemo : MonoBehaviour
     GUILayout.BeginHorizontal();
     // 左列按钮
     GUILayout.BeginVertical();
-    CreateButton("Init SDK", InitSDK);
-    CreateButton("Set Super Properties", SetSuperPropertiesHandler);
-    CreateButton("Set Preset Event", SetPresetEventHandler);
+    CreateButton("InitSDK", InitSDK);
+    
+    CreateButton("SetSuperProperties", SetSuperPropertiesHandler);
+    CreateButton("SetPresetEvent", SetPresetEventHandler);
     CreateButton("Login", LoginHandler);
-    CreateButton("Get Account ID", GetAccountIdHandler);
+    CreateButton("GetAccount", GetAccountIdHandler);
     CreateButton("Logout", LogoutHandler);
-    CreateButton("Set Visitor ID", SetVisitorIdHandler);
-    CreateButton("Get Visitor ID", GetVisitorIdHandler);
-    CreateButton("Get Distinct ID", GetDistinctIdHandler);
-    CreateButton("Event Start", EventStartHandler);
-    CreateButton("Event Finish", EventFinishHandler);
-    CreateButton("Set Channel", SetChannelHandler);
+    CreateButton("SetVisitor", SetVisitorIdHandler);
+    CreateButton("GetVisitor", GetVisitorIdHandler);
+    CreateButton("GetDistinct", GetDistinctIdHandler);
+    CreateButton("EventStart", EventStartHandler);
+    CreateButton("EventFinish", EventFinishHandler);
+    CreateButton("SetChannel", SetChannelHandler);
     CreateButton("Unset Super Property", UnsetSuperPropertyHandler);
     CreateButton("Clear Super Properties", ClearSuperPropertiesHandler);
     CreateButton("Report Immediately", ReportEventImmediatelyHandler);
-    CreateButton("Get Attribution", GetAttributionHandler);
-    CreateButton("Set Channel", SetChannelAgainHandler);
-    CreateButton("Set Gaids", SetGaidHandler);
-    CreateButton("Set GDPRArea", SetGDPRAreaHandle);
+    CreateButton("GetAttribution", GetAttributionHandler);
+    CreateButton("SetChannel", SetChannelAgainHandler);
+    CreateButton("SetGaids", SetGaidHandler);
+    CreateButton("SetGDPRArea", SetGDPRAreaHandle);
 
-    CreateButton("Set Referrer Title", SetReferrerTitleHandler);
-    CreateButton("Set Xcx Page Title", SetXcxPageTitleHandler);
-    CreateButton("Get Preset Properties", GetPresetPropertiesHandler);
+    CreateButton("SetReferrerTitle", SetReferrerTitleHandler);
+    CreateButton("SetXcxPageTitle", SetXcxPageTitleHandler);
+    CreateButton("GetPresetProperties", GetPresetPropertiesHandler);
     GUILayout.EndVertical();
 
-    // 右列按钮
     GUILayout.BeginVertical();
     CreateButton("Track Ad Click", TrackAdClickHandler);
     CreateButton("Track Register", TrackRegisterHandler);
@@ -407,7 +452,7 @@ public class SolarEngineDemo : MonoBehaviour
 
 private void CreateButton(string buttonText, Action onClickHandler)
 {
-    if (GUILayout.Button(buttonText, GUILayout.Height(90), GUILayout.Width(300)))
+    if (GUILayout.Button(buttonText, GUILayout.Height(70), GUILayout.Width(300)))
     {
         onClickHandler();
     }
@@ -420,24 +465,26 @@ private void iOSCallBackHandler()
     Analytics.requestTrackingAuthorizationWithCompletionHandler( OnRequestTrackingAuthorizationCompletedHandler);
     Analytics.updateConversionValueCoarseValue(2,"value", UpdateConversionValueCoarseValue);
     Analytics.updateConversionValueCoarseValueLockWindow( 3,"value" ,true, UpdateConversionValueCoarseValueLockWindow);
+    SolarEngine.Analytics.deeplinkCompletionHandler(deeplinkCallback);
 
 }
 private void mySkanCallback(int code ,string result)
 {
-    Debug.Log("SEUunity: mySkanCallback : " + result);
+    Debug.Log(SolarEngineDemoLOG+" mySkanCallback : " + result);
 }
 private void OnRequestTrackingAuthorizationCompletedHandler(int code)
     {
-        Debug.Log("SEUnity: OnRequestTrackingAuthorizationCompletedHandler : " + code);
+        Debug.Log(SolarEngineDemoLOG+ " OnRequestTrackingAuthorizationCompletedHandler : " + code);
+        InitSDK();
     }
 private void UpdateConversionValueCoarseValue(int errorCode, String errorMsg)
     {
-        Debug.Log("SEUnity: UpdateConversionValueCoarseValue : " + errorCode + " " + errorMsg);
+        Debug.Log(SolarEngineDemoLOG+ " UpdateConversionValueCoarseValue : " + errorCode + " " + errorMsg);
        
     }
 private void UpdateConversionValueCoarseValueLockWindow(int errorCode, String errorMsg)
 {
-    Debug.Log("SEUnity: UpdateConversionValueCoarseValueLockWindow : " + errorCode + " " + errorMsg);
+    Debug.Log(SolarEngineDemoLOG+ " UpdateConversionValueCoarseValueLockWindow : " + errorCode + " " + errorMsg);
 }
 
 private void SetSuperPropertiesHandler()
@@ -481,7 +528,7 @@ private void LogoutHandler()
 
 private void GetAccountIdHandler()
 {
-    Debug.Log(Analytics.getAccountId());
+    Debug.Log(SolarEngineDemoLOG+Analytics.getAccountId());
 }
 
 private void SetVisitorIdHandler()
@@ -491,14 +538,14 @@ private void SetVisitorIdHandler()
 
 private void GetVisitorIdHandler()
 {
-    Debug.Log(Analytics.getVisitorId());
+    Debug.Log(SolarEngineDemoLOG+Analytics.getVisitorId());
 }
 private void GetDistinctIdHandler()
 {
 #if SOLARENGINE_BYTEDANCE || SOLARENGINE_WECHAT||SOLARENGINE_KUAISHOU
     Analytics.getDistinctId(_distinct);
-    #else
-    Analytics.getDistinctId();
+#else
+   Debug.Log( SolarEngineDemoLOG+ Analytics.getDistinctId());
 #endif
 }
 
@@ -535,10 +582,11 @@ private void ReportEventImmediatelyHandler()
 private void GetAttributionHandler()
 {
     Dictionary<string, object> dic = Analytics.getAttribution();
-    foreach (var variable in dic)
+    if (dic != null)
     {
-        Debug.Log(variable);
+        Debug.Log(SolarEngineDemoLOG+JsonConvert.SerializeObject(dic));
     }
+
 }
 
 private void SetChannelAgainHandler()
@@ -571,7 +619,7 @@ private void GetPresetPropertiesHandler()
 {
     Dictionary<string, object> dic = Analytics.getPresetProperties();
     string str = JsonConvert.SerializeObject(dic);
-    Debug.Log(str);
+    Debug.Log(SolarEngineDemoLOG+str);
 }
 
 private void TrackAdClickHandler()
@@ -650,11 +698,11 @@ private void FastFetchSingleHandler()
     try
     {
         string str = remoteConfig.FastFetchRemoteConfig("qq");
-        Debug.Log(str);
+        Debug.Log(SolarEngineDemoLOG+str);
     }
     catch (Exception e)
     {
-        Debug.LogError("Error in FastFetchSingleHandler: " + e.Message);
+        Debug.LogError(SolarEngineDemoLOG+"Error in FastFetchSingleHandler: " + e.Message);
     }
 }
 
@@ -666,12 +714,12 @@ private void FastFetchAllHandler()
         Dictionary<string, object> str = remoteConfig.FastFetchRemoteConfig();
         foreach (var VARIABLE in str)
         {
-            Debug.Log(VARIABLE.Key + " " + VARIABLE.Value);
+            Debug.Log(SolarEngineDemoLOG+VARIABLE.Key + " " + VARIABLE.Value);
         }
     }
     catch (Exception e)
     {
-        Debug.LogError("Error in FastFetchAllHandler: " + e.Message);
+        Debug.LogError(SolarEngineDemoLOG+"Error in FastFetchAllHandler: " + e.Message);
     }
 }
 
@@ -701,24 +749,44 @@ private void AsyncFetchAllHandler()
     }
 }
 
+
+
+
+#region CallBack
+
+private void handleSchemeUrl(string url)
+{
+    //将url传递给SDK，注意此步骤一定要在SDK初始化成功之后执行，否则不生效，可参考下放添加deeplink回调示例使用方法
+    SolarEngine.Analytics.handleDeepLinkUrl(url);
+}
+
 private void onFetchRemoteConfigCallbacks(string result)
 {
     // 异步获取参数下发的回调为 string 类型，需要开发者根据自己的业务配置进行属性转换，此处以 bool 类型为例
-    Debug.Log(result);
+    Debug.Log(SolarEngineDemoLOG+result);
 }
 
 private void onFetchRemoteConfigCallback(Dictionary<string, object> result)
 {
     // 异步获取参数下发的回调为 string 类型，需要开发者根据自己的业务配置进行属性转换，此处以 bool 类型为例
     string str = JsonConvert.SerializeObject(result);
-    Debug.Log(str);
+    Debug.Log(SolarEngineDemoLOG+str);
 }
 
 
 private void _distinct(Distinct distinct)
 {
-    Debug.Log(string.Format("distinct_id: {0} \n distinct_id_type: {1}", distinct.distinct_id, distinct.distinct_id_type));
+    Debug.Log(string.Format(SolarEngineDemoLOG+"distinct_id: {0} \n distinct_id_type: {1}", distinct.distinct_id, distinct.distinct_id_type));
 }
+
+
+private void deeplinkCallback(int code, Dictionary<string, object> data)
+{
+  
+    Debug.Log(SolarEngineDemoLOG + code + " " + JsonConvert.SerializeObject(data) );
+
+}
+#endregion
 
 
     }

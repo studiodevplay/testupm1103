@@ -161,10 +161,16 @@ public class PluginsEdtior : MonoBehaviour
 
    public static void HidePath(string path)
    {
+       if (System.IO.Directory.Exists(path + "~"))
+       {
+           Debug.Log($"{SolorEngine}{path } already Hide. ");
+           return;
+       }
        if (System.IO.Directory.Exists(path))
        {
            System.IO.Directory.Move(path, path + "~");
            Debug.Log($"{SolorEngine}Successfully moved the directory from '{path}' to '{path + "~"}'. The directory at path '{path}' is now hidden.");
+         
        }
        else if (System.IO.Directory.Exists(path + "~"))
        {
