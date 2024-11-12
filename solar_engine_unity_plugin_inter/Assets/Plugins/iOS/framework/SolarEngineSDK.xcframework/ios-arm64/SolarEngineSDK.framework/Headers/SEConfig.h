@@ -49,6 +49,26 @@ ENUM：SERCMergeTypeUser 在App版本更新时会清除缓存配置
 
 @end
 
+
+@interface SECustomDomain : NSObject
+
+/// 是否开启 私有化部署（不设置时默认不开启 ）
+@property (nonatomic, assign) BOOL enable;
+
+/// 设置私有化部署http域名：事件上报、debug模式事件上报、归因、延迟deeplink
+@property (nonatomic, strong) NSString *receiverDomain;
+/// 设置私有化部署http域名：在线参数
+@property (nonatomic, strong) NSString *ruleDomain;
+/// 设置私有化部署tcp host:  归因、debug模式事件上报
+@property (nonatomic, strong) NSString *receiverTcpHost;
+/// 设置私有化部署tcp host:  在线参数
+@property (nonatomic, strong) NSString *ruleTcpHost;
+/// 设置私有化部署tcp host:  事件上报
+@property (nonatomic, strong) NSString *gatewayTcpHost;
+
+@end
+
+
 @interface SEConfig : NSObject
 
 /// 是否开启 本地调试日志（不设置时默认不开启 本地日志）
@@ -84,7 +104,13 @@ ENUM：SERCMergeTypeUser 在App版本更新时会清除缓存配置
 /// 在线参数config (不使用在线参数则不需要设置)
 @property (nonatomic, strong) SERemoteConfig * remoteConfig;
 
+
+/// 私有化部署配置，saas用户不用设置
+@property (nonatomic, strong) SECustomDomain * customDomain;
+
 @end
+
+
 
 
 NS_ASSUME_NONNULL_END
