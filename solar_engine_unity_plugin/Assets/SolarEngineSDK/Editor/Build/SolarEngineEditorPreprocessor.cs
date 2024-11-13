@@ -144,7 +144,7 @@ namespace SolarEngine.Build
                     var xpath = string.Format("/manifest/uses-permission[@android:name='{0}']", permissionValue);
                     return manifest.DocumentElement.SelectSingleNode(xpath, GetNamespaceManager(manifest)) != null;
                 }
-           [MenuItem("SolarEngineSDK/RunPostProcessTasksAndroid ", false, 0)]
+         //  [MenuItem("SolarEngineSDK/RunPostProcessTasksAndroid ", false, 0)]
             
             public static void RunPostProcessTasksAndroid()
             {
@@ -241,7 +241,7 @@ namespace SolarEngine.Build
         private static XmlElement GetIntentFilter(XmlDocument manifest)
         {
             // var xpath = "/manifest/application/activity/intent-filter[data/@android:scheme and data/@android:host]";
-            var xpath = "/manifest/application/activity/intent-filter";
+            var xpath = "/manifest/application/activity/intent-filter[data/@android:scheme]";
 
             var intentFilter =
                 manifest.DocumentElement.SelectSingleNode(xpath, GetNamespaceManager(manifest)) as XmlElement;
@@ -267,79 +267,79 @@ namespace SolarEngine.Build
                     browsableCategory);
                 intentFilter.AppendChild(browsableCategory);
             } // 检查是否存在android.intent.action.VIEW
-            else
-            {
-                Debug.Log("[SolorEngine]: Found existing intent filter in AndroidManifest.xml");
-                XmlNodeList actionNodes = intentFilter.GetElementsByTagName("action");
-          
-                
-            bool hasViewAction = false;
-            foreach (XmlElement actionNode in actionNodes)
-            {
-                string actionValue = actionNode.GetAttribute("android:name");
-            
-                if (actionValue == "android.intent.action.VIEW")
-                {
-                    hasViewAction = true;
-                    break;
-                }
-            }
-
-            // 检查是否存在android.intent.category.DEFAULT
-            XmlNodeList categoryNodes = intentFilter.GetElementsByTagName("category");
-            bool hasDefaultCategory = false;
-            foreach (XmlElement categoryNode in categoryNodes)
-            {
-                string categoryValue = categoryNode.GetAttribute("android:name");
-                if (categoryValue == "android.intent.category.DEFAULT")
-                {
-                    hasDefaultCategory = true;
-                    break;
-                }
-            }
-
-            // 检查是否存在android.intent.category.BROWSABLE
-            bool hasBrowsableCategory = false;
-            foreach (XmlElement categoryNode in categoryNodes)
-            {
-                string categoryValue = categoryNode.GetAttribute("android:name");
-                if (categoryValue == "android.intent.category.BROWSABLE")
-                {
-                    hasBrowsableCategory = true;
-                    break;
-                }
-            }
-            const string androidName = "name";
-            const string category = "category";
-            if (!hasViewAction)
-            {
-             
-                Debug.Log("[SolorEngine]: Adding missing android.intent.action.VIEW to intent filter in AndroidManifest.xml");
-                var actionElement = manifest.CreateElement("action");
-          
-                AddAndroidNamespaceAttribute(manifest, androidName, "android.intent.action.VIEW", actionElement);
-                intentFilter.AppendChild(actionElement);
-           
-            }
-
-            // 如果不存在android.intent.category.DEFAULT，则添加
-            if (!hasDefaultCategory)
-            {
-
-                var defaultCategory = manifest.CreateElement(category);
-                AddAndroidNamespaceAttribute(manifest, androidName, "android.intent.category.DEFAULT", defaultCategory);
-                intentFilter.AppendChild(defaultCategory);
-            }
-
-            // 如果不存在android.intent.category.BROWSABLE，则添加
-            if (!hasBrowsableCategory)
-            {
-                var browsableCategory = manifest.CreateElement(category);
-                AddAndroidNamespaceAttribute(manifest, androidName, "android.intent.category.BROWSABLE", browsableCategory);
-                intentFilter.AppendChild(browsableCategory);
-            }
-    
-        }
+        //     else
+        //     {
+        //         Debug.Log("[SolorEngine]: Found existing intent filter in AndroidManifest.xml");
+        //         XmlNodeList actionNodes = intentFilter.GetElementsByTagName("action");
+        //   
+        //         
+        //     bool hasViewAction = false;
+        //     foreach (XmlElement actionNode in actionNodes)
+        //     {
+        //         string actionValue = actionNode.GetAttribute("android:name");
+        //     
+        //         if (actionValue == "android.intent.action.VIEW")
+        //         {
+        //             hasViewAction = true;
+        //             break;
+        //         }
+        //     }
+        //
+        //     // 检查是否存在android.intent.category.DEFAULT
+        //     XmlNodeList categoryNodes = intentFilter.GetElementsByTagName("category");
+        //     bool hasDefaultCategory = false;
+        //     foreach (XmlElement categoryNode in categoryNodes)
+        //     {
+        //         string categoryValue = categoryNode.GetAttribute("android:name");
+        //         if (categoryValue == "android.intent.category.DEFAULT")
+        //         {
+        //             hasDefaultCategory = true;
+        //             break;
+        //         }
+        //     }
+        //
+        //     // 检查是否存在android.intent.category.BROWSABLE
+        //     bool hasBrowsableCategory = false;
+        //     foreach (XmlElement categoryNode in categoryNodes)
+        //     {
+        //         string categoryValue = categoryNode.GetAttribute("android:name");
+        //         if (categoryValue == "android.intent.category.BROWSABLE")
+        //         {
+        //             hasBrowsableCategory = true;
+        //             break;
+        //         }
+        //     }
+        //     const string androidName = "name";
+        //     const string category = "category";
+        //     if (!hasViewAction)
+        //     {
+        //      
+        //         Debug.Log("[SolorEngine]: Adding missing android.intent.action.VIEW to intent filter in AndroidManifest.xml");
+        //         var actionElement = manifest.CreateElement("action");
+        //   
+        //         AddAndroidNamespaceAttribute(manifest, androidName, "android.intent.action.VIEW", actionElement);
+        //         intentFilter.AppendChild(actionElement);
+        //    
+        //     }
+        //
+        //     // 如果不存在android.intent.category.DEFAULT，则添加
+        //     if (!hasDefaultCategory)
+        //     {
+        //
+        //         var defaultCategory = manifest.CreateElement(category);
+        //         AddAndroidNamespaceAttribute(manifest, androidName, "android.intent.category.DEFAULT", defaultCategory);
+        //         intentFilter.AppendChild(defaultCategory);
+        //     }
+        //
+        //     // 如果不存在android.intent.category.BROWSABLE，则添加
+        //     if (!hasBrowsableCategory)
+        //     {
+        //         var browsableCategory = manifest.CreateElement(category);
+        //         AddAndroidNamespaceAttribute(manifest, androidName, "android.intent.category.BROWSABLE", browsableCategory);
+        //         intentFilter.AppendChild(browsableCategory);
+        //     }
+        //
+        // }
         return intentFilter;
         }
         private static void AddAndroidNamespaceAttribute(XmlDocument manifest, string key, string value, XmlElement node)
