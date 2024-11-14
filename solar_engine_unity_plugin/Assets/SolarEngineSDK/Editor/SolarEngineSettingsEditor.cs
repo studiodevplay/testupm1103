@@ -318,7 +318,8 @@ namespace SolarEngine
         public void GUI()
         {
             GUIStyle darkerCyanTextFieldStyles = new GUIStyle(EditorStyles.boldLabel);
-            darkerCyanTextFieldStyles.normal.textColor = new Color(0f / 255f, 190f / 255f, 190f / 255f);
+            darkerCyanTextFieldStyles.normal.textColor = Color.white;
+            //new Color(0f / 255f, 190f / 255f, 190f / 255f);
             
             DrawH2Title("SDK Setting");
 
