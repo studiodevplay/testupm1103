@@ -23,10 +23,37 @@ public class SolorEnginePackageManager : MonoBehaviour
     [MenuItem("SolarEngineSDK/Matching Settings Panel", false, 0)]
     static void finishHandle()
     {
-        checkXmlHandle();
+    
         checkPlugins();
+        checkXmlHandle();
+       // SolarEngineSettingsEditor.a
+        
         AssetDatabase.Refresh();
         ShowTips("Successfully",  "SolarEngineSDK Successfully Matching Settings Panel");
+    }
+    
+    // [MenuItem("SolarEngineSDK/Documentation", false, 0)]
+    // static void documentation()
+    // {
+    //     Application.OpenURL("https://help.solar-engine.com/cn/docs/ugKp8t");
+    // }
+    
+    
+    [MenuItem("SolarEngineSDK/Documentation/UnityDocumentation", false, 0)]
+    static void unityDocumentation()
+    {
+        Application.OpenURL("https://help.solar-engine.com/cn/docs/ugKp8t");
+    }
+    
+    [MenuItem("SolarEngineSDK/Documentation/iOS ChangleLog", false, 0)]
+    static void solarEngineDocsiOS()
+    {
+        Application.OpenURL("https://help.solar-engine.com/cn/docs/geng-xin-ri-zhi-RAvv");
+    }
+    [MenuItem("SolarEngineSDK/Documentation/Android ChangleLog", false, 0)]
+    static void solarEngineDocsAndroid()
+    {
+        Application.OpenURL("https://help.solar-engine.com/cn/docs/geng-xin-ri-zhi");
     }
     
     private static void checkXmlHandle()
@@ -39,16 +66,32 @@ public class SolorEnginePackageManager : MonoBehaviour
 
     private static void checkPlugins()
     {
-        if (SolarEngineSettings.isDisAll)
-            PluginsEdtior.disableAll();
-        if (SolarEngineSettings.isDixiOS)
+        // if (SolarEngineSettings.isDisAll)
+        //     PluginsEdtior.disableAll();
+        if (!SolarEngineSettings.isUseiOS)
             PluginsEdtior.disableiOS();
-        if (SolarEngineSettings.isDisAndroid)
+        else
+        {
+            PluginsEdtior.showiOS();
+        }
+        if (!SolarEngineSettings.isUseAndroid)
             PluginsEdtior.disableAndroid();
-        if (SolarEngineSettings.isDisMiniGame)
+        else
+        {
+            PluginsEdtior.showAndroid();
+        }
+        if (!SolarEngineSettings.isUseMiniGame)
             PluginsEdtior.disableMiniGame();
-        if(SolarEngineSettings.isDisOaid)
+        else
+        {
+            PluginsEdtior.showMiniGame();
+        }
+        if(!SolarEngineSettings.isUseOaid)
             PluginsEdtior.disableOaid();
+        else
+        {
+            PluginsEdtior.showOaid();
+        }
     }
 
     /// <summary>

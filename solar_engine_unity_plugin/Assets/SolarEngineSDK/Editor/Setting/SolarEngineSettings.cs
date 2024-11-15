@@ -26,17 +26,30 @@ namespace SolarEngine
 		private bool _China;
 		[SerializeField]
 		private bool _Oversea;
+		
+		
+		//默认开启
 		[SerializeField]
-		private bool _All;
+		private bool _RemoteConfig=true;
 		[SerializeField]
-		private bool _iOS;
+		private bool _All=true;
 		[SerializeField]
-		private bool _Android;
+		private bool _iOS=true;
 		[SerializeField]
-		private bool _MiniGame;
+		private bool _Android=true;
+		[SerializeField]
+		private bool _MiniGame=true;
 		
 		[SerializeField]
-		private bool _DisOaid;
+		private bool _Oaid=true;
+		
+		
+		[SerializeField]
+		private bool _DeepLink;
+		[SerializeField]
+		private bool _SpecifyVersion;
+		
+		
 		
 		[SerializeField]
 		private string _iOSVersion;
@@ -118,34 +131,34 @@ namespace SolarEngine
 		}
 
 		
-		public static bool isDisMiniGame
+		public static bool isUseMiniGame
 		{
 			get{return  Instance._MiniGame;}
 		
 		}
 
-		public static bool isDisAndroid
+		public static bool isUseAndroid
 		{
 			get{return  Instance._Android;}
 			
 			
 		}
-		public static  bool isDixiOS
+		public static  bool isUseiOS
 			{
 			get{return  Instance._iOS;}
 		
 			
 		}
-		public static bool isDisAll
+		public static bool isUseAll
 		{
 			get{return  Instance._All;}
 		
 		}
 
-		public static bool isDisOaid
+		public static bool isUseOaid
 		{
-			get{return  Instance._DisOaid;}
-			set{Instance._DisOaid = value;}
+			get{return  Instance._Oaid;}
+			set{Instance._Oaid = value;}
 			
 		}
 

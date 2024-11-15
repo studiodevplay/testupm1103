@@ -42,7 +42,20 @@ namespace SolarEngine.Build
 
             private static void PostProcessBuild_iOS(BuildTarget target, string buildPath)
             {
-                
+                if (target == BuildTarget.iOS)
+                {
+                    string textToCheck = ">=0"; // 要查找是否存在的特定文本内容，替换为你实际想找的内容
+                    string podfileContent = File.ReadAllText(buildPath + "/Podfile");
+
+                    if (podfileContent.Contains(textToCheck))
+                    {
+                        Console.WriteLine($"文件中包含 '{textToCheck}' 内容");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"文件中不包含 '{textToCheck}' 内容");
+                    }
+                }
             }
 
 
