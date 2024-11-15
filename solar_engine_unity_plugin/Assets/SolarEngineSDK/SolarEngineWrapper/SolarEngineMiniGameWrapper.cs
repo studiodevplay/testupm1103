@@ -354,6 +354,10 @@ namespace SolarEngine
         {
               Debug.Log($"{SolorEngine}Only Android can use , minigame not support");
         }
+        private  static void SetOaid(string oaid)
+        {
+            Debug.Log($"{SolorEngine}Only Android can use , minigame not support");
+        }
 
         #region  not support function
 

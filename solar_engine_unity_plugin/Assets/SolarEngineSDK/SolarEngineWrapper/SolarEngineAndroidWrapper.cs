@@ -92,6 +92,10 @@ namespace SolarEngine
         {
             SolarEngineAndroidSDK.CallStatic("setGaid", gaid);
         }
+        private  static void SetOaid(string oaid)
+        {
+            SolarEngineAndroidSDK.CallStatic("setOaid", oaid);
+        }
 
         private static void SetChannel(string channel)
         {

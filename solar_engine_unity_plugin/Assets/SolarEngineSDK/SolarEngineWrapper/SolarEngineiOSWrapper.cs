@@ -540,6 +540,10 @@ namespace SolarEngine
 
         
         #region notsupport
+       private  static void SetOaid(string oaid)
+        {
+           Debug.Log($"{SolorEngine}Current on iOS，Only Android can set oaid");
+        }
 
         private static void SetGaid(string gaid)
         {

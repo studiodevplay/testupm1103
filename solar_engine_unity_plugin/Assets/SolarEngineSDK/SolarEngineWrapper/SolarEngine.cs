@@ -257,6 +257,10 @@ namespace SolarEngine
             SetGDPRArea(isGDPRArea);
         }
 
+        public static void setOaid(string oaid)
+        {
+            SetOaid(oaid);
+        }
 
         public static void setReferrerTitle(string title)
         {

@@ -66,6 +66,10 @@ namespace SolarEngine
         {
             Debug.Log($"{SolorEngine}Unity Editor: SetGaid");
         }
+        private  static void SetOaid(string oaid)
+        {
+            Debug.Log($"{SolorEngine}Unity Editor: SetOaid");
+        }
 
         private static void SetChannel(string channel)
         {
