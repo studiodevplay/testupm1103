@@ -27,6 +27,7 @@ using UnityEditor;
 using System.Collections;
 using System.Diagnostics;
 using System.IO;
+using Packages.Rider.Editor;
 using Debug = UnityEngine.Debug;
 
 
@@ -81,7 +82,7 @@ internal class ExportPackage {
 			Debug.Log("Exporting SolarEngineSDK Unity Package...");
 			string path = outputPath;
 			
-			//BeforeExport ();
+			BeforeExport ();
 			
 			try
 			{
@@ -120,9 +121,17 @@ internal class ExportPackage {
 
 		private static void BeforeExport()
 		{
-			// string versionFile = Path.Combine (Directory.GetCurrentDirectory (), "VERSION");
-			// string versionStr = "Version: " + sdkVersion;
-			// File.WriteAllText (versionFile, versionStr);
+
+			PluginsEdtior.showiOS();
+			PluginsEdtior.showAndroid();
+			PluginsEdtior.showMiniGame();
+			PluginsEdtior.showOaid();
+			
+			XmlModifier.defaultXml();
+			
+
+
+
 		}
 
 		private static void AfterExport()
