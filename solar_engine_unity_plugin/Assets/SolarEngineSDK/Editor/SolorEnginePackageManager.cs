@@ -16,20 +16,26 @@ public class SolorEnginePackageManager : MonoBehaviour
     {
         if (packageName ==_packageName)
         {
-            finishHandle();
+            finishHandle(false);
         }
 
     }
-    [MenuItem("SolarEngineSDK/Matching Settings Panel", false, 0)]
+    
+   //[MenuItem("SolarEngineSDK/SDK Edit Settings/Apply Settings Panel", false, 0)]
+
     static void finishHandle()
     {
-    
-        checkPlugins();
-        checkXmlHandle();
-       // SolarEngineSettingsEditor.a
+     
         
-        AssetDatabase.Refresh();
-        ShowTips("Successfully",  "SolarEngineSDK Successfully Matching Settings Panel");
+     
+    }
+
+  
+    
+    static void finishHandle(bool isShow=false)
+    {
+
+        ApplySetting._applySetting(isShow);
     }
     
     // [MenuItem("SolarEngineSDK/Documentation", false, 0)]
@@ -56,54 +62,13 @@ public class SolorEnginePackageManager : MonoBehaviour
         Application.OpenURL("https://help.solar-engine.com/cn/docs/geng-xin-ri-zhi");
     }
     
-    private static void checkXmlHandle()
-    {
-        if (SolarEngineSettings.isCN)
-          XmlModifier.cnxml(true);
-        else if(SolarEngineSettings.isOversea)
-            XmlModifier.Overseaxml(true);
-    }
+    private const string storageWarning = "You can only choose either China or Overseas！";
+    private const string nostorageWarning = "You must choose either China or Overseas!";
+  
 
-    private static void checkPlugins()
-    {
-        // if (SolarEngineSettings.isDisAll)
-        //     PluginsEdtior.disableAll();
-        if (!SolarEngineSettings.isUseiOS)
-            PluginsEdtior.disableiOS();
-        else
-        {
-            PluginsEdtior.showiOS();
-        }
-        if (!SolarEngineSettings.isUseAndroid)
-            PluginsEdtior.disableAndroid();
-        else
-        {
-            PluginsEdtior.showAndroid();
-        }
-        if (!SolarEngineSettings.isUseMiniGame)
-            PluginsEdtior.disableMiniGame();
-        else
-        {
-            PluginsEdtior.showMiniGame();
-        }
-        if(!SolarEngineSettings.isUseOaid)
-            PluginsEdtior.disableOaid();
-        else
-        {
-            PluginsEdtior.showOaid();
-        }
-    }
+  
 
-    /// <summary>
-    /// 展示提示.
-    /// </summary>
-    /// <param name="title">标题.</param>
-    /// <param name="content">具体内容.</param>
-    public static void ShowTips(string title, string content)
-    {
-        // 展示提示信息.
-        EditorUtility.DisplayDialog(title, content, "OK");
-    }
+  
 
     
 }

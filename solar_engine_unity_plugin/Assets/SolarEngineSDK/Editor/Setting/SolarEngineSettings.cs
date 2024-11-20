@@ -6,6 +6,7 @@ using UnityEngine;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using JetBrains.Annotations;
 
 
 namespace SolarEngine
@@ -160,6 +161,11 @@ namespace SolarEngine
 			get{return  Instance._Oaid;}
 			set{Instance._Oaid = value;}
 			
+		}
+		public static bool isSpecifyVersio
+		{
+			get{return  Instance._SpecifyVersion;}
+			set{Instance._SpecifyVersion = value;}
 		}
 
 		public static string iOSVersion

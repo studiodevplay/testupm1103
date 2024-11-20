@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using SolarEngine.Build;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Windows;
@@ -60,6 +61,8 @@ public class PluginsEdtior : MonoBehaviour
   // [MenuItem(DisableMiniGame, false, 0)]
    public static bool disableMiniGame ()
    {
+       DefineSymbolsEditor.add_DISABLE_REMOTECONFIG(BuildTargetGroup.WebGL);
+
      return  HideFile(MiniGameRemoteConfigsPathMiniDll)&&
        HideFile(MiniGameRemoteConfigsPathMiniCS);
       
@@ -67,6 +70,8 @@ public class PluginsEdtior : MonoBehaviour
    
    public static bool showMiniGame ()
    {
+       DefineSymbolsEditor.delete_DISABLE_REMOTECONFIG(BuildTargetGroup.WebGL);
+
      return  ShowFile(MiniGameRemoteConfigsPathMiniDll)&&
        ShowFile(MiniGameRemoteConfigsPathMiniCS);
       
@@ -74,6 +79,7 @@ public class PluginsEdtior : MonoBehaviour
   // [MenuItem(DisableiOS, false, 0)]
    public static bool disableiOS ()
    {
+       DefineSymbolsEditor.add_DISABLE_REMOTECONFIG(BuildTargetGroup.iOS);
        return  
         HideFile(RemoteConfigsPathiOSCS)&&
        HideFile(RemoteConfigsPathiOSMM)&&
@@ -82,7 +88,7 @@ public class PluginsEdtior : MonoBehaviour
    }
    public static bool showiOS ()
    {
-   
+       DefineSymbolsEditor.delete_DISABLE_REMOTECONFIG(BuildTargetGroup.iOS);
       return
        ShowFile(RemoteConfigsPathiOSCS)&&
        ShowFile(RemoteConfigsPathiOSMM)&&
@@ -94,12 +100,16 @@ public class PluginsEdtior : MonoBehaviour
   // [MenuItem(DisableAndroid, false, 0)]
    public static bool disableAndroid ()
    { 
+       DefineSymbolsEditor.add_DISABLE_REMOTECONFIG(BuildTargetGroup.Android);
+
      return HideFile(RemoteConfigsPathAndroidCS)&&
        HideFile(ConfigsPathAndroidJar)&&
       HidePath(RemoteConfigsPathAndroidXml);
    }
    public static bool showAndroid ()
    {
+       DefineSymbolsEditor.delete_DISABLE_REMOTECONFIG(BuildTargetGroup.Android);
+
        return ShowFile(RemoteConfigsPathAndroidCS)&&
        ShowFile(ConfigsPathAndroidJar)&&
        ShowPath(RemoteConfigsPathAndroidXml);

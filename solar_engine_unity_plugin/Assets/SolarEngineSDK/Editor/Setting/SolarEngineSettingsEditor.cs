@@ -8,56 +8,61 @@ using System.Collections;
  using System.Reflection;
  using System.Xml.Linq;
 using SolarEngine.Build;
+using SolarEngineSDK.Editor;
 
 namespace SolarEngine
 {
     [CustomEditor(typeof(SolarEngineSettings))]
     public class SolarEngineSettingsEditor : Editor
     {
+      
 
-        private const string storageWarning = "You can only choose either China or Overseas！";
-        private const string nostorageWarning = "You must choose either China or Overseas!";
-        private const string confirm = "confirm";
-        private const string cancel = "cancel";
-        private const string SolorEngine = "[SolorEngine]";
-
+// 序列化属性，用于表示是否选择中国存储区域的设置，方便在编辑器中操作和获取对应的值
         private SerializedProperty chinaProperty;
+// 序列化属性，用于表示是否选择海外存储区域的设置，方便在编辑器中操作和获取对应的值
         private SerializedProperty overseaProperty;
-        
+
+// 序列化属性，用于表示是否使用远程配置的设置
         private SerializedProperty useRemoteConfig;
+// 序列化属性，用于表示是否使用 OAID 的设置
         private SerializedProperty useOaid;
+// 序列化属性，用于表示是否使用深度链接的设置
         private SerializedProperty useDeepLink;
-        private  SerializedProperty useSpecifyVersion;
-        
-        
-        
-        
-        private  SerializedProperty iOSRemoteConfig;
+// 序列化属性，用于表示是否使用指定版本的设置
+        private SerializedProperty useSpecifyVersion;
+
+// 序列化属性，用于表示 iOS 平台远程配置相关的设置
+        private SerializedProperty iOSRemoteConfig;
+// 序列化属性，用于表示 Android 平台远程配置相关的设置
         private SerializedProperty androidRemoteConfig;
+// 序列化属性，用于表示小游戏平台远程配置相关的设置
         private SerializedProperty miniGameRemoteConfig;
-        
-        
-        
-        
-    
-        
+
+// 序列化属性，用于表示 iOS 平台 URL 标识符相关的设置
         SerializedProperty iOSUrlIdentifier;
+// 序列化属性，用于表示 iOS 平台 URL 方案相关的设置
         SerializedProperty iOSUrlSchemes;
+// 序列化属性，用于表示 iOS 平台通用链接域名相关的设置
         SerializedProperty iOSUniversalLinksDomains;
+// 序列化属性，用于表示 iOS 平台版本相关的设置
         SerializedProperty iOSVersion;
-        
+
+// 序列化属性，用于表示 Android 平台 URL 方案相关的设置
         SerializedProperty AndroidUrlSchemes;
-        
+// 序列化属性，用于表示 Android 平台版本相关的设置
         SerializedProperty AndroidVersion;
-        
-        
+
+// 用于记录之前中国存储区域选择的布尔值，方便对比属性值变化
         private bool oldChinaValue;
+// 用于记录之前海外存储区域选择的布尔值，方便对比属性值变化
         private bool oldOverseaValue;
+// 以下类似的多个布尔值用于记录对应属性之前的旧值，便于处理属性变更逻辑
         private bool oldDisAllValue;
         private bool oldDisiOSValue;
         private bool oldDisAndroidValue;
         private bool oldDisMiniGameValue;
         private bool oldDisOaidValue;
+
 
       
 
@@ -65,63 +70,63 @@ namespace SolarEngine
 
         void OnEnable()
         {
+            // 获取当前正在编辑的SolarEngineSettings类型的目标对象实例
             SolarEngineSetting = target as SolarEngineSettings;
-            iOSVersion= serializedObject.FindProperty("_iOSVersion");
-            AndroidVersion= serializedObject.FindProperty("_AndroidVersion");
-            
+
+            // 通过序列化对象查找并获取对应的属性，以下依次是获取iOS版本、Android版本相关的序列化属性
+            iOSVersion = serializedObject.FindProperty("_iOSVersion");
+            AndroidVersion = serializedObject.FindProperty("_AndroidVersion");
+
+            // 获取iOS平台URL相关的几个序列化属性，如标识符、方案、通用链接域名等
             iOSUrlIdentifier = serializedObject.FindProperty("_iOSUrlIdentifier");
             iOSUrlSchemes = serializedObject.FindProperty("_iOSUrlSchemes");
             iOSUniversalLinksDomains = serializedObject.FindProperty("_iOSUniversalLinksDomains");
-            
-            AndroidUrlSchemes= serializedObject.FindProperty("_AndroidUrlSchemes");
-            
+
+            // 获取Android平台URL方案相关的序列化属性
+            AndroidUrlSchemes = serializedObject.FindProperty("_AndroidUrlSchemes");
+
+            // 获取表示中国、海外存储区域选择的序列化属性
             chinaProperty = serializedObject.FindProperty("_China");
             overseaProperty = serializedObject.FindProperty("_Oversea");
-            useRemoteConfig = serializedObject.FindProperty("_RemoteConfig");
-            useOaid= serializedObject.FindProperty("_Oaid");
-            useDeepLink= serializedObject.FindProperty("_DeepLink");
-            useSpecifyVersion = serializedObject.FindProperty("_SpecifyVersion");
-            
-            
-            
-            
-            // disAllRemoteConfig= serializedObject.FindProperty("_All");
-            iOSRemoteConfig= serializedObject.FindProperty("_iOS");
-            androidRemoteConfig= serializedObject.FindProperty("_Android");
-            miniGameRemoteConfig= serializedObject.FindProperty("_MiniGame");
 
-            
-            oldChinaValue= chinaProperty.boolValue;
-            oldOverseaValue= overseaProperty.boolValue;
-            // oldDisAllValue= disAllRemoteConfig.boolValue;
-            // oldDisiOSValue= disiOSRemoteConfig.boolValue;
-            // oldDisAndroidValue= disAndroidRemoteConfig.boolValue;
-            // oldDisMiniGameValue= disMiniGameRemoteConfig.boolValue;
-            oldDisOaidValue= useOaid.boolValue;
-         
+            // 获取是否使用远程配置、OAID、深度链接、指定版本等相关的序列化属性
+            useRemoteConfig = serializedObject.FindProperty("_RemoteConfig");
+            useOaid = serializedObject.FindProperty("_Oaid");
+            useDeepLink = serializedObject.FindProperty("_DeepLink");
+            useSpecifyVersion = serializedObject.FindProperty("_SpecifyVersion");
+
+            // 获取不同平台（iOS、Android、小游戏）远程配置相关的序列化属性
+            iOSRemoteConfig = serializedObject.FindProperty("_iOS");
+            androidRemoteConfig = serializedObject.FindProperty("_Android");
+            miniGameRemoteConfig = serializedObject.FindProperty("_MiniGame");
+
+            // 记录初始时中国存储区域选择的布尔值
+            oldChinaValue = chinaProperty.boolValue;
+            // 记录初始时海外存储区域选择的布尔值
+            oldOverseaValue = overseaProperty.boolValue;
+
+            // 记录初始时是否使用OAID的布尔值
+            oldDisOaidValue = useOaid.boolValue;
         }
 
 
         public override void OnInspectorGUI()
         {
           
-            this.GUI();
-            
+            this._GUI();
         }
      
         private void ChinaOrOversea(  GUIStyle darkerCyanTextFieldStyles)
         {
-        
-           // EditorGUILayout.LabelField("Please set up your data storage area.", darkerCyanTextFieldStyles);
-            EditorGUILayout.HelpBox("Please set up your data storage area.", MessageType.Info);
+            EditorGUILayout.HelpBox(ConstString.storageAreaMessage, MessageType.Info);
             
             EditorGUI.indentLevel += 1;
-            EditorGUILayout.PropertyField(chinaProperty);
-            EditorGUILayout.PropertyField(overseaProperty);
+            EditorGUILayout.PropertyField(chinaProperty,new GUIContent(ConstString.chinaMainland));
+            EditorGUILayout.PropertyField(overseaProperty,new GUIContent(ConstString.nonChinaMainland));
             EditorGUI.indentLevel -= 1;
             if (chinaProperty.boolValue && overseaProperty.boolValue)
             {
-                EditorGUILayout.HelpBox(storageWarning, MessageType.Warning);
+                EditorGUILayout.HelpBox(ConstString.storageWarning, MessageType.Warning);
             }
            
             if (serializedObject.ApplyModifiedProperties())
@@ -167,16 +172,18 @@ namespace SolarEngine
             return false;
 
         }
-     
+
+        private bool _useRemoteConfig = false;
         private void RemoteConfig()
         {
           
             
-            EditorGUILayout.PropertyField(useRemoteConfig);
-            if (!useRemoteConfig.boolValue)
+           // EditorGUILayout.PropertyField(useRemoteConfig);
+           _useRemoteConfig = EditorGUILayout.Foldout(_useRemoteConfig, "Remote Config");
+            if (_useRemoteConfig)
             {  
                
-                EditorGUILayout.HelpBox("You can choose which platform's RemoteConfig to cancel", MessageType.Info);
+                EditorGUILayout.HelpBox(ConstString.remoteConfigMsg, MessageType.Info);
                 
                 EditorGUI.indentLevel += 1;
                 // EditorGUILayout.PropertyField(disAllRemoteConfig);
@@ -186,19 +193,19 @@ namespace SolarEngine
                 EditorGUI.indentLevel -= 1;
                 
             }
-            else
-            {
-                iOSRemoteConfig.boolValue = true;
-                androidRemoteConfig.boolValue = true;
-                miniGameRemoteConfig.boolValue = true;
-            }
+            // else
+            // {
+            //     iOSRemoteConfig.boolValue = true;
+            //     androidRemoteConfig.boolValue = true;
+            //     miniGameRemoteConfig.boolValue = true;
+            // }
 
         }
         private void UseOaid()
         {
             if (chinaProperty.boolValue)
             {
-                EditorGUILayout.HelpBox("Oaid cannot be disable in the China storage", MessageType.Info);
+                EditorGUILayout.HelpBox(ConstString.storageEnableOaidCN, MessageType.Info);
                 useOaid.boolValue = true;
 
             }
@@ -209,14 +216,14 @@ namespace SolarEngine
 
                 if (useOaid.boolValue)
                 {
-                    EditorGUILayout.HelpBox("Please confirm whether you want to enable Oaid in Oversea", MessageType.Warning);
+                     EditorGUILayout.HelpBox(ConstString.oaidEnable, MessageType.Warning);
                 }
                 else
                 {
-                    EditorGUILayout.HelpBox("Oaid is disable in the Oversea storage", MessageType.Info);
+                 //   EditorGUILayout.HelpBox(ConstString.storageDisableOaid, MessageType.Info);
                 }
             }
-            EditorGUILayout.PropertyField(useOaid);
+            EditorGUILayout.PropertyField(useOaid,new GUIContent(ConstString.oaid));
           
         }
 
@@ -226,7 +233,7 @@ namespace SolarEngine
         {
             
             EditorGUILayout.PropertyField(useDeepLink, new GUIContent("DeepLink"));
-            if (useDeepLink.boolValue)
+            if (useDeepLink.boolValue) 
             {
                 EditorGUI.indentLevel += 1;
                 EditorGUILayout.LabelField("iOS:", darkerCyanTextFieldStyles);
@@ -256,27 +263,61 @@ namespace SolarEngine
             }
         }
         
+        // private void SdkVersion(GUIStyle darkerCyanTextFieldStyles)
+        // {
+        //     EditorGUILayout.PropertyField(useSpecifyVersion);
+        //     if (useSpecifyVersion.boolValue)
+        //     {
+        //         EditorGUILayout.HelpBox("Please Set iOS and Android Version", MessageType.Info);
+        //
+        //         EditorGUI.indentLevel += 1;
+        //         EditorGUILayout.PropertyField(iOSVersion,new GUIContent("iOS Version"));
+        //         EditorGUILayout.PropertyField(AndroidVersion);
+        //         EditorGUI.indentLevel -= 1;
+        //         if (!iOSVersion.stringValue.Equals(SolarEngineSettings.iOSVersion))
+        //             SolarEngineSettings.iOSVersion=iOSVersion.stringValue;
+        //         if( !AndroidVersion.stringValue.Equals(SolarEngineSettings.AndroidVersion))
+        //             SolarEngineSettings.AndroidVersion = AndroidVersion.stringValue;
+        //     }
+        //     else
+        //     {
+        //         iOSVersion.stringValue = "";
+        //         AndroidVersion.stringValue = "";
+        //     }
+        //  
+        //
+        //    
+        // }
+
+        private bool _useSpecifyVersion = false;
         private void SdkVersion(GUIStyle darkerCyanTextFieldStyles)
         {
-            EditorGUILayout.PropertyField(useSpecifyVersion);
-            if (useSpecifyVersion.boolValue)
-            {
-                EditorGUILayout.HelpBox("Please Set iOS and Android Version", MessageType.Info);
+            
+         
 
-                EditorGUI.indentLevel += 1;
-                EditorGUILayout.PropertyField(iOSVersion,new GUIContent("iOS Version"));
+            // 使用Foldout创建可折叠区域，初始状态设为false，即默认折叠起来，关联的布尔变量用于记录折叠状态
+            _useSpecifyVersion = EditorGUILayout.Foldout(_useSpecifyVersion, "SDK Version");
+            if (_useSpecifyVersion)
+            {
+                // EditorGUILayout.PropertyField(useSpecifyVersion);
+
+                EditorGUILayout.HelpBox(ConstString.confirmVersion, MessageType.Warning);
+                EditorGUI.indentLevel++;
+                EditorGUILayout.PropertyField(iOSVersion, new GUIContent("iOS Version"));
                 EditorGUILayout.PropertyField(AndroidVersion);
-                EditorGUI.indentLevel -= 1;
+                EditorGUI.indentLevel--;
                 if (!iOSVersion.stringValue.Equals(SolarEngineSettings.iOSVersion))
-                    SolarEngineSettings.iOSVersion=iOSVersion.stringValue;
-                if( !AndroidVersion.stringValue.Equals(SolarEngineSettings.AndroidVersion))
+                    SolarEngineSettings.iOSVersion = iOSVersion.stringValue;
+                if (!AndroidVersion.stringValue.Equals(SolarEngineSettings.AndroidVersion))
                     SolarEngineSettings.AndroidVersion = AndroidVersion.stringValue;
             }
-         
-       
-           
+            // else
+            //     {
+            //         iOSVersion.stringValue = "";
+            //         AndroidVersion.stringValue = "";
+            //     }
+            // }
         }
-
 
        
         
@@ -292,11 +333,13 @@ namespace SolarEngine
             }
         }
        
-        public void GUI()
+        public void _GUI()
         {
             GUIStyle darkerCyanTextFieldStyles = new GUIStyle(EditorStyles.boldLabel);
             //darkerCyanTextFieldStyles.normal.textColor = Color.white;
          
+          
+            GUI.color= Color.white;
             DrawH2Title("SDK Setting");
 
           
@@ -312,61 +355,84 @@ namespace SolarEngine
             
             SdkVersion(darkerCyanTextFieldStyles);
 
-
             ApplyButton();
-            
-        
+
           
-            
             serializedObject.ApplyModifiedProperties();
+       
         }
+      
+       
+ private void ApplyButton()
+{
+    // 创建一个用于按钮样式的GUIStyle对象
+    GUIStyle buttonStyle = new GUIStyle();
+    buttonStyle.normal.textColor = Color.white;
+
+    // 创建一个单像素的纹理对象，用于设置按钮的背景颜色等样式
+    Texture2D backgroundTexture = new Texture2D(1, 1);
+    backgroundTexture.SetPixel(0, 0, Color.white);
+    backgroundTexture.Apply();
+    buttonStyle.normal.background = backgroundTexture;
+
+    // 设置按钮的固定高度、固定宽度以及文本对齐方式等样式属性
+    buttonStyle.fixedHeight = 25;
+    buttonStyle.fixedWidth = 100;
+    buttonStyle.alignment = TextAnchor.MiddleCenter;
 
 
-        private void ApplyButton()
-        {
-            GUIStyle buttonStyle = new GUIStyle();
-            buttonStyle.normal.textColor = Color.white;
-            Texture2D backgroundTexture = new Texture2D(1, 1);
-            backgroundTexture.SetPixel(0, 0, Color.gray);
-            backgroundTexture.Apply();
-            buttonStyle.normal.background = backgroundTexture;
-            buttonStyle.fixedHeight = 25;
-            buttonStyle.fixedWidth = 100;
-            buttonStyle.alignment = TextAnchor.MiddleCenter;
-            
-            
-            if (GUILayout.Button("Apply", buttonStyle))          
-            {
-                if (chinaProperty.boolValue && overseaProperty.boolValue)
-                {
-                    EditorUtility.DisplayDialog("fail", storageWarning, confirm);
-                    return;
-                    
-                }else if (!chinaProperty.boolValue && !overseaProperty.boolValue)
-                {
-                    EditorUtility.DisplayDialog("fail", nostorageWarning, confirm);
-                    return;
-                }
-                string storage = chinaProperty.boolValue ? "China" : "Oversea";
-                
-                bool result = EditorUtility.DisplayDialog("Confirm Operation",
-                    $"The current data storage area is set to  {storage}.\n " +
-                    $"Are you sure you want to perform this operation? ",
-                    confirm,
-                    cancel);
-                if (result)
-                {
-                    if (Apply())
-                    {
-                        ShowTips("Successfully",  "SolarEngineSDK Successfully Matching Settings Panel");
-                    }
-                      
-                }
-                
-                else
-                    Debug.Log("You cancelled the operation");
-            }
-        }
+    // 设置绘制按钮边框时的颜色
+    GUI.color = new Color(200f / 255f, 200f / 255f, 200f / 255f);
+  
+    
+    // 当用户点击按钮区域时执行以下逻辑
+    if (GUILayout.Button( "Apply"))
+    {
+        // // 检查如果同时选择了中国和海外存储区域，弹出错误提示对话框并返回，不执行后续操作
+        // if (chinaProperty.boolValue && overseaProperty.boolValue)
+        // {
+        //     EditorUtility.DisplayDialog("fail", storageWarning, "OK");
+        //     return;
+        // }
+        // // 检查如果中国和海外存储区域都没选择，弹出相应错误提示对话框并返回，不执行后续操作
+        // else if (!chinaProperty.boolValue &&!overseaProperty.boolValue)
+        // {
+        //     EditorUtility.DisplayDialog("fail", nostorageWarning, "OK");
+        //     return;
+        // }
+        //
+        // // 根据选择的存储区域确定相应的存储区域名称字符串
+        // string storage = chinaProperty.boolValue? "China" : "Oversea";
+        //
+        // // 弹出确认对话框，询问用户是否确定要执行当前操作，获取用户的选择结果
+        // bool result = EditorUtility.DisplayDialog("Confirm Operation",
+        //     $"The current data storage area is set to  {storage}.\n " +
+        //     $"Are you sure you want to perform this operation? ",
+        //     confirm,
+        //     cancel);
+        //
+        // // 如果用户确认执行操作
+        // if (result)
+        // {
+            // 调用Apply方法应用设置，如果成功则显示成功提示，否则显示失败提示并让用户查看控制台错误信息
+            // if (ApplySetting._applySetting())
+            // {
+            //     ShowTips("Successfully", "SolarEngineSDK Successfully Matching Settings Panel");
+            // }
+            // else
+            // {
+            //     EditorUtility.DisplayDialog("fail", "Failed. Please check the console for error messages", "OK");
+            // }
+        // }
+        // // 如果用户取消操作，在控制台输出相应的日志信息
+        // else
+        // {
+        //     Debug.Log("You cancelled the operation");
+        // }
+
+        ApplySetting._applySetting(true);
+    }
+}
 
         //用户应用
         public  bool Apply()
@@ -401,17 +467,12 @@ namespace SolarEngine
         {
             if (iOSRemoteConfig.boolValue)
             {
-              
-                DefineSymbolsEditor.delete_DISABLE_REMOTECONFIG(BuildTargetGroup.iOS);
                 return  PluginsEdtior.showiOS();
             }
                
             else
             {
-               
-                DefineSymbolsEditor.add_DISABLE_REMOTECONFIG(BuildTargetGroup.iOS);
                 return  PluginsEdtior.disableiOS();
-
 
             }
         }
@@ -421,7 +482,6 @@ namespace SolarEngine
             if (androidRemoteConfig.boolValue)
             {
               
-                DefineSymbolsEditor.delete_DISABLE_REMOTECONFIG(BuildTargetGroup.Android);
               return  PluginsEdtior.showAndroid();
             
 
@@ -430,7 +490,6 @@ namespace SolarEngine
             else
             {
               
-                DefineSymbolsEditor.add_DISABLE_REMOTECONFIG(BuildTargetGroup.Android);
                  return PluginsEdtior.disableAndroid();
                
 
@@ -442,27 +501,16 @@ namespace SolarEngine
             if (miniGameRemoteConfig.boolValue)
             {  
                
-                DefineSymbolsEditor.delete_DISABLE_REMOTECONFIG(BuildTargetGroup.WebGL);
                return  PluginsEdtior.showMiniGame();
             }
              
             else
             {
-                
-            
               
-                DefineSymbolsEditor.add_DISABLE_REMOTECONFIG(BuildTargetGroup.WebGL);
                 return   PluginsEdtior.disableMiniGame();
             }
             
         }
-        
-
-       
-        
-        
-        
-        
         
     
         // 通用标签间的间距
@@ -531,3 +579,4 @@ namespace SolarEngine
 
 
 }
+
