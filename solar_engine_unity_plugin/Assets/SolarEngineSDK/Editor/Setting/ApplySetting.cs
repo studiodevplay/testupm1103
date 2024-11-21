@@ -126,6 +126,7 @@ namespace SolarEngine
             {
                 oaid = PluginsEdtior.showOaid();
             }
+            
             return ios && android && miniGame && oaid;
         }
         

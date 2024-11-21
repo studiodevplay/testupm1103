@@ -102,6 +102,7 @@ public class PluginsEdtior : MonoBehaviour
    { 
        DefineSymbolsEditor.add_DISABLE_REMOTECONFIG(BuildTargetGroup.Android);
 
+      
      return HideFile(RemoteConfigsPathAndroidCS)&&
        HideFile(ConfigsPathAndroidJar)&&
       HidePath(RemoteConfigsPathAndroidXml);
@@ -110,6 +111,7 @@ public class PluginsEdtior : MonoBehaviour
    {
        DefineSymbolsEditor.delete_DISABLE_REMOTECONFIG(BuildTargetGroup.Android);
 
+    
        return ShowFile(RemoteConfigsPathAndroidCS)&&
        ShowFile(ConfigsPathAndroidJar)&&
        ShowPath(RemoteConfigsPathAndroidXml);
@@ -132,33 +134,56 @@ public class PluginsEdtior : MonoBehaviour
       
        if (File.Exists(path))
        {
+
+           if (File.Exists(path + "~"))
+           {
+               System.IO. File.Delete(path + "~");
+           }
            System.IO. File.Move(path, path + "~");
 
            return true;
            //  Debug.LogWarning($"{SolorEngine} The file at path '{path}' is successfully hidden.");
        }
+        if (File.Exists(path + "~"))
+       {
+           return true;
+       }
        else
        {
-           
-           //Debug.LogWarning($"{SolorEngine}The file at path '{path}' does not exist, so it cannot be hidden. It appears to be already disabled.");
+           Debug.LogError(($"{SolorEngine}The file at path '{path}' does not exist"));
        }
+      
        return false;
+   }
+   
+   
+   static bool IsDirectoryEmpty(string directoryPath)
+   {
+       return! System.IO.Directory.EnumerateFileSystemEntries(directoryPath).Any();
    }
 
    public static bool HidePath(string path)
    {
     
-           if (System.IO.Directory.Exists(path + "~"))
-           {
-           
-               return true;
-           }
            if (System.IO.Directory.Exists(path))
            {
+              
+               if( System.IO.Directory.Exists(path + "~"))
+                   System.IO.Directory.Delete(path + "~",true);
                System.IO.Directory.Move(path, path + "~");
+               System.IO.File.Delete(path+".meta");
                return true;
            
          
+           }
+
+           if (System.IO.Directory.Exists(path + "~"))
+               return true;
+         
+            
+           else
+           {
+               Debug.LogError(($"{SolorEngine}The file at path '{path}' does not exist"));
            }
    
 
@@ -179,6 +204,12 @@ public class PluginsEdtior : MonoBehaviour
            {
                System.IO. File.Move(path + "~", path);
                return true;
+           }
+           else
+           {
+               
+               Debug.LogError(($"{SolorEngine}The file at path '{path}' does not exist"));
+
            }
        }
        catch (Exception e)
@@ -215,6 +246,8 @@ public class PluginsEdtior : MonoBehaviour
            }
            else
            {
+               Debug.LogError(($"{SolorEngine}The file at path '{path}' does not exist"));
+
                return false;
            }
       }
