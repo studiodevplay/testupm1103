@@ -27,7 +27,12 @@ namespace SolarEngine.Build
         {
             if (target == BuildTarget.Android || target == BuildTarget.iOS)
             {
-#if UNITY_ANDROID||UNITY_IOS
+                
+#if UNITY_ANDROID&&!SOLARENGINE_BYTEDANCE
+                RunPostProcessTasksAndroid();
+                CheckConfusion();
+#endif 
+#if (UNITY_ANDROID||UNITY_IOS)&&!SOLARENGINE_BYTEDANCE
                 if (ApplySetting.checkApplyWithAndroidPackage())
                 {
 
@@ -55,7 +60,6 @@ namespace SolarEngine.Build
 
         private const string SolorEngine = "[SolorEngine]";
 
-        //[MenuItem("SolarEngineSDK/CheckConfusion ", false, 0)]
         public static void CheckConfusion()
         {
             if (PlayerSettings.Android.minifyRelease || PlayerSettings.Android.minifyDebug)
@@ -157,8 +161,10 @@ namespace SolarEngine.Build
         {
             var xpath = string.Format("/manifest/uses-permission[@android:name='{0}']", permissionValue);
             return manifest.DocumentElement.SelectSingleNode(xpath, GetNamespaceManager(manifest)) != null;
-        }
-        //  [MenuItem("SolarEngineSDK/RunPostProcessTasksAndroid ", false, 0)]
+        } 
+        
+        
+      //  [MenuItem("SolarEngineSDK/RunPostProcessTasksAndroid ", false, 0)]
 
         public static void RunPostProcessTasksAndroid()
         {

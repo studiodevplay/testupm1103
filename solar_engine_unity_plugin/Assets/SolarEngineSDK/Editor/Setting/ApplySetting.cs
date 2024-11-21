@@ -26,20 +26,26 @@ namespace SolarEngine
             }
         
             string storage = SolarEngineSettings.isCN ? ConstString.chinaMainland : ConstString.nonChinaMainland;
-                
-            bool result = EditorUtility.DisplayDialog(ConstString.pleaseConfirm,
+            bool  result = true;
+            if (isShowFail)
+            {
+                 result = EditorUtility.DisplayDialog(ConstString.pleaseConfirm,
                     string.Format("{0} {1}\n {2}", ConstString.currentData, storage, ConstString.confirmMessage2),
                 
-                ConstString.confirm,
-                ConstString.cancel);
+                    ConstString.confirm,
+                    ConstString.cancel);
+            }
+           
+         
             if (result)
             {
+             
                 if (checkPlugins() &&
                     checkXmlHandle())
                 {
                     AssetDatabase.Refresh();
                     if(isShowSuccess)
-                    ShowTips(ConstString.success,  ConstString.applySuccess);
+                    ShowTips(ConstString.success,"");
 
                     return true;
                 }
@@ -75,6 +81,7 @@ namespace SolarEngine
               
                 }
                 
+             
                 result=  checkPlugins()&&checkXmlHandle();
               //  EditorApplication.ExecuteMenuItem("Assets/External Dependency Manager/Android Resolver/Force Resolve ");
 
