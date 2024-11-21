@@ -41,7 +41,7 @@ namespace SolarEngineSDK.Editor
         public const string confirmMessage2 = "Are you sure you want to perform this operation?";
             
         //Please set up your data storage area.
-        public const string storageAreaMessage = "Are you sure you want to proceed with this action.";
+        public const string storageAreaMessage = "Please select the data storage region for the products created in the SolarEngine backend.";
         
         //Confirm Operation
         public const string pleaseConfirm = "Please Confirm";
