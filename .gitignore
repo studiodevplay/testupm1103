@@ -57,6 +57,10 @@ ExportedObj/
 *.pdb.meta
 *.mdb.meta
 
+*.meta
+solar_engine_unity_plugin/Temp/
+
+
 # Unity3D generated file on crash reports
 sysinfo.txt
 
