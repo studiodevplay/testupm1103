@@ -200,9 +200,10 @@ public class PluginsEdtior : MonoBehaviour
        {
            if (System.IO.Directory.Exists(path + "~"))
            {
+             
                if (System.IO.Directory.Exists(path))
                {
-                   System.IO.Directory.Delete(path) ;
+                   System.IO.Directory.Delete(path,true) ;
                }
                System.IO.Directory.Move(path + "~", path);
 
@@ -216,13 +217,13 @@ public class PluginsEdtior : MonoBehaviour
            {
                return false;
            }
-       }
+      }
        catch (Exception e)
        {
-           Debug.LogError(SolorEngine+e);
+          Debug.LogError(SolorEngine+e);
            return false;
           
-       }
+   }
     
       
    }
