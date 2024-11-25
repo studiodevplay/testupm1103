@@ -44,6 +44,8 @@ namespace SolarEngine
 
         private static Analytics _instance = null;
 
+        
+
         public static Analytics Instance
         {
             get
@@ -277,12 +279,14 @@ namespace SolarEngine
         /// 获取distinct_id
         /// </summary>
         /// <returns>distinct_id</returns>
+        [Obsolete("This method is obsolete. Please use getDistinctId(Action<Distinct>distinct) instead.")]
+
         public static string getDistinctId()
         {
             return GetDistinctId();
         }
         /// <summary>
-        /// 仅minigame 平台使用
+        /// 仅minigame 平台使用，已兼容iOS/Android
         /// </summary>
         /// <param name="distinct"></param>
         public static void getDistinctId(Action<Distinct>distinct)
@@ -344,20 +348,42 @@ namespace SolarEngine
         /// 上报应用内购买事件
         /// </summary>
         /// <param name="attributes">ProductsAttributes 实例</param>
+        [Obsolete("This method is obsolete. Please use trackPurchase instead.")]
+
         public static void trackIAP(ProductsAttributes attributes)
         {
             ReportIAPEvent(attributes);
+        }
+
+        
+        /// <summary>
+        /// 上报应用内购买事件
+        /// </summary>
+        /// <param name="attributes">ProductsAttributes 实例</param>
+        public static void trackPurchase(ProductsAttributes attributes)
+        {
+            ReportIAPEvent(attributes);
+        }
+        /// <summary>
+        /// 上报变现广告展示事件
+        /// </summary>
+        /// <param name="attributes">AppImpressionAttributes 实例</param>
+        [Obsolete("This method is obsolete. Please use trackAdImpression instead.")]
+        public static void trackIAI(AppImpressionAttributes attributes)
+        {
+            ReportIAIEvent(attributes);
         }
 
         /// <summary>
         /// 上报变现广告展示事件
         /// </summary>
         /// <param name="attributes">AppImpressionAttributes 实例</param>
-        public static void trackIAI(AppImpressionAttributes attributes)
+        /// 
+        public static void trackAdImpression(AppImpressionAttributes attributes)
         {
             ReportIAIEvent(attributes);
         }
-
+        
         /// <summary>
         /// 上报变现广告点击事件
         /// </summary>
@@ -408,11 +434,23 @@ namespace SolarEngine
         /// </summary>
         /// <param name="customEventName">自定义事件名称</param>
         /// <param name="customAttributes">自定义事件属性</param>
+        [Obsolete("This method is obsolete. Please use track instead.")]
+
         public static void trackCustom(string customEventName, Dictionary<string, object> customAttributes)
         {
             ReportCustomEvent(customEventName, customAttributes);
         }
 
+        
+        /// <summary>
+        /// 上报自定义事件
+        /// </summary>
+        /// <param name="customEventName">自定义事件名称</param>
+        /// <param name="customAttributes">自定义事件属性</param>
+        public static void track(string customEventName, Dictionary<string, object> customAttributes)
+        {
+            ReportCustomEvent(customEventName, customAttributes);
+        }
 
         /// <summary>
         /// 上报自定义事件
@@ -420,12 +458,22 @@ namespace SolarEngine
         /// <param name="customEventName">自定义事件名称</param>
         /// <param name="customAttributes">自定义事件属性</param>
         /// <param name="preAttributes">SDK预置属性</param>
+        [Obsolete("This method is obsolete. Please use track instead.")]
         public static void trackCustom(string customEventName, Dictionary<string, object> customAttributes, Dictionary<string, object> preAttributes)
         {
             ReportCustomEventWithPreAttributes(customEventName, customAttributes, preAttributes);
         }
 
-
+        /// <summary>
+        /// 上报自定义事件
+        /// </summary>
+        /// <param name="customEventName">自定义事件名称</param>
+        /// <param name="customAttributes">自定义事件属性</param>
+        /// <param name="preAttributes">SDK预置属性</param>
+        public static void track(string customEventName, Dictionary<string, object> customAttributes, Dictionary<string, object> preAttributes)
+        {
+            ReportCustomEventWithPreAttributes(customEventName, customAttributes, preAttributes);
+        }
      
 		/// <summary>
 		/// 创建时长事件
@@ -460,7 +508,7 @@ namespace SolarEngine
         /// </summary>
         /// <param name="setPresetEvent">事件类型</param>
         /// <param name="properties">事件属性</param>
-        public static void setPresetEvent(SEConstant_Preset_EventType eventType, Dictionary<string, object> properties)
+        public static void setPresetEvent(PresetEventType eventType, Dictionary<string, object> properties)
         {
             SetPresetEvent(eventType, properties);
         }
@@ -525,7 +573,7 @@ namespace SolarEngine
         /// <summary>
         /// 删除用户
         /// </summary>
-        public static void userDelete(SEUserDeleteType deleteType)
+        public static void userDelete(UserDeleteType deleteType)
         {
             UserDelete(deleteType);
         }

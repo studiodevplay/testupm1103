@@ -190,11 +190,7 @@ namespace SolarEngine
             SolarEngineSDK4MiniGames.setChannel(channel);
         }
 
-        private static void SetGDPRArea(bool isGDPRArea)
-        {
-              Debug.Log($"{SolorEngine}minigame not support");
-        }
-
+      
 
         private static void GetDistinctId(Action<Distinct> distinct)
         {
@@ -270,7 +266,7 @@ namespace SolarEngine
             SolarEngineSDK4MiniGames.userUnset(keys);
         }
 
-        private static void UserDelete(SEUserDeleteType deleteType)
+        private static void UserDelete(UserDeleteType deleteType)
         {
             miniGameUserDeleteType miniGameUserDeleteType = (miniGameUserDeleteType)(int)deleteType;
             SolarEngineSDK4MiniGames.userDelete(miniGameUserDeleteType);
@@ -327,7 +323,7 @@ namespace SolarEngine
         }
 
 
-        private static void SetPresetEvent(SEConstant_Preset_EventType eventType, Dictionary<string, object> attributes)
+        private static void SetPresetEvent(PresetEventType eventType, Dictionary<string, object> attributes)
         {
             miniGamePreset_EventType miniGamePresetEvent = (miniGamePreset_EventType)(int)eventType;
 
@@ -414,7 +410,11 @@ namespace SolarEngine
                Debug.Log($"{SolorEngine}Current on MiniGame，Only Android can set gaid");
          }
          
-         
+         private static void SetGDPRArea(bool isGDPRArea)
+         {
+             Debug.Log($"{SolorEngine}minigame not support");
+         }
+
         #endregion
     }
 }

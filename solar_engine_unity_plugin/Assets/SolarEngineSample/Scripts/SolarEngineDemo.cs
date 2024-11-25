@@ -2,10 +2,13 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
+using Newtonsoft.Json;
 using SolarEngine;
+
+// using SolarEngine;
 using SolarEngine.MiniGames.info;
+using TTSDK;
 using UnityEngine.UI;
 using Distinct = SolarEngine.Distinct;
 
@@ -18,14 +21,15 @@ public class SolarEngineDemo : MonoBehaviour
 
     private void Start()
     {
-        InitSDK();
+        
+       
+      
         Analytics.deeplinkCompletionHandler(deeplinkCallback);
         //
         ///Application.deepLinkActivated += handleSchemeUrl1;
         //如果是在2022版本上开发者可以通过以下方式获取deeplink url并传递给SDK
         handleSchemeUrl(Application.absoluteURL);
         
-       
     }
     
     
@@ -35,22 +39,24 @@ public class SolarEngineDemo : MonoBehaviour
 
         Debug.Log(SolarEngineDemoLOG+" init click");
         //安卓
-       String AppKey = "8b17c04df5df162a";
+      String AppKey = "8b17c04df5df162a";
         //iOS
-       // String AppKey = "455cd0c9843e503e";
+     //  String AppKey = "455cd0c9843e503e";
        
     
         MiniGameInitParams initParams = new MiniGameInitParams();
+    
+        SEConfig seConfig = new SEConfig();
         initParams.anonymous_openid = "anonymous_openid";
         initParams.unionid = "unionid";
         initParams.openid = "openid";
-        SEConfig seConfig = new SEConfig();
+        seConfig.miniGameInitParams = initParams;
         seConfig.attAuthorizationWaitingInterval = 120;
-         seConfig.miniGameInitParams = initParams;
+     
          
         RCConfig rc = new RCConfig();
         
-        rc.enable = false;
+        rc.enable = true;
         seConfig.logEnabled = true;
         seConfig.isDebugModel = false;
      
@@ -67,7 +73,7 @@ public class SolarEngineDemo : MonoBehaviour
         seConfig.initCompletedCallback = initCallback;
       
         SolarEngine.Analytics.preInitSeSdk(AppKey);
-        SolarEngine.Analytics.initSeSdk(AppKey, seConfig);
+        SolarEngine.Analytics.initSeSdk(AppKey, seConfig,rc);
         
       
         
@@ -170,8 +176,9 @@ public class SolarEngineDemo : MonoBehaviour
         preProperties.Add("_pay_amount", 0.55);
         preProperties.Add("_currency_type", "USD");
 
-        SolarEngine.Analytics.trackCustom("trackCustom", customProperties, preProperties);
+        //SolarEngine.Analytics.trackCustom("trackCustom", customProperties, preProperties);
 
+        SolarEngine.Analytics.track("trackCustom", customProperties, preProperties);
 
 
     }
@@ -212,11 +219,13 @@ public class SolarEngineDemo : MonoBehaviour
         productsAttributes.currency_type = "CNY";
         productsAttributes.order_id = "order_id";
         productsAttributes.fail_reason = "fail_reason";
-        productsAttributes.paystatus = SEConstant_IAP_PayStatus.SEConstant_IAP_PayStatus_success;
+        productsAttributes.paystatus = PayStatus.success;
         productsAttributes.pay_type = "wechat";
         productsAttributes.pay_amount = 9.9;
         productsAttributes.customProperties = getCustomProperties();
-        SolarEngine.Analytics.trackIAP(productsAttributes);
+        SolarEngine.Analytics.trackPurchase(productsAttributes);
+       // SolarEngine.Analytics.trackIAP(productsAttributes);
+        
     }
 
     public void trackAdImpression()
@@ -233,7 +242,12 @@ public class SolarEngineDemo : MonoBehaviour
         impressionAttributes.currency_type = "CNY";
         impressionAttributes.is_rendered = true;
         impressionAttributes.customProperties = getCustomProperties();
-        SolarEngine.Analytics.trackIAI(impressionAttributes);
+        
+        SolarEngine.Analytics.trackAdImpression(impressionAttributes);
+        
+      // SolarEngine.Analytics.trackIAI(impressionAttributes);
+     
+   
 
     }
 
@@ -332,8 +346,8 @@ public class SolarEngineDemo : MonoBehaviour
     {
         Debug.Log(SolarEngineDemoLOG+ " SEUserDeleteTypeByAccountId click");
 
-        SolarEngine.Analytics.userDelete(SEUserDeleteType.SEUserDeleteTypeByAccountId);
-        SolarEngine.Analytics.userDelete(SEUserDeleteType.SEUserDeleteTypeByVisitorId);
+        SolarEngine.Analytics.userDelete(UserDeleteType.byAccountId);
+        SolarEngine.Analytics.userDelete(UserDeleteType.byVisitorId);
     }
 
 
@@ -414,6 +428,7 @@ public class SolarEngineDemo : MonoBehaviour
     CreateButton("GetAttribution", GetAttributionHandler);
     CreateButton("SetChannel", SetChannelAgainHandler);
     CreateButton("SetGaids", SetGaidHandler);
+    CreateButton("SetOaid", SetOaidHandler);
     CreateButton("SetGDPRArea", SetGDPRAreaHandle);
 
     CreateButton("SetReferrerTitle", SetReferrerTitleHandler);
@@ -496,12 +511,12 @@ private void SetSuperPropertiesHandler()
     };
     Analytics.setSuperProperties(properties);
 
-    Dictionary<string, object> propertiess = new Dictionary<string, object>
-    {
-        { "Preset1", "test" },
-        { "propertySuper2", 999 }
-    };
-    Analytics.setSuperProperties(propertiess);
+    // Dictionary<string, object> propertiess = new Dictionary<string, object>
+    // {
+    //     { "Preset1", "test" },
+    //     { "propertySuper2", 999 }
+    // };
+    // Analytics.setSuperProperties(propertiess);
 }
 
 private void SetPresetEventHandler()
@@ -511,8 +526,8 @@ private void SetPresetEventHandler()
         { "Preset1", "这是 Preset" },
         { "Preset2", 9.99 }
     };
-    Analytics.setPresetEvent(SEConstant_Preset_EventType.SEConstant_Preset_EventType_All, propertiess);
-    Analytics.setPresetEvent(SEConstant_Preset_EventType.SEConstant_Preset_EventType_AppStart, null);
+    Analytics.setPresetEvent(PresetEventType.all, propertiess);
+    Analytics.setPresetEvent(PresetEventType.appStart, null);
 }
 
 private void LoginHandler()
@@ -542,11 +557,11 @@ private void GetVisitorIdHandler()
 }
 private void GetDistinctIdHandler()
 {
-#if SOLARENGINE_BYTEDANCE || SOLARENGINE_WECHAT||SOLARENGINE_KUAISHOU
+// #if SOLARENGINE_BYTEDANCE || SOLARENGINE_WECHAT||SOLARENGINE_KUAISHOU
     Analytics.getDistinctId(_distinct);
-#else
+//#else
    Debug.Log( SolarEngineDemoLOG+ Analytics.getDistinctId());
-#endif
+//#endif
 }
 
 private void EventStartHandler()
@@ -597,6 +612,11 @@ private void SetChannelAgainHandler()
 private void SetGaidHandler()
 {
     Analytics.setGaid("testgaid");
+}
+
+private void SetOaidHandler()
+{
+    Analytics.setOaid("testoaid");
 }
 
 private void SetGDPRAreaHandle()

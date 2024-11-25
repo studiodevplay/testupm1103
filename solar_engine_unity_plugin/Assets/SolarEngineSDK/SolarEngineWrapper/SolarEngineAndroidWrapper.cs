@@ -49,7 +49,7 @@ namespace SolarEngine
 
         private static void Init(string appKey, string userId, SEConfig config)
         {
-          
+            initCallBack(config);
             SolarEngineAndroidSDK.CallStatic("initialize", Context, appKey, userId, initSeDict(config),
                 config.attributionCallback != null ? new OnAttributionReceivedData() : null,
                 config.initCompletedCallback != null ? new OnUnityInitCompletedCallback() : null);
@@ -57,6 +57,7 @@ namespace SolarEngine
 
         private static void Init(string appKey, string userId, SEConfig config, RCConfig rcConfig)
         {
+            initCallBack(config);
             SolarEngineAndroidSDK.CallStatic("initialize", Context, appKey, userId, initSeDict(config),
                 initRcDict(rcConfig),
                 config.attributionCallback != null ? new OnAttributionReceivedData() : null,
@@ -114,7 +115,13 @@ namespace SolarEngine
 
         private static void GetDistinctId(Action<Distinct>dis)
         {
-             Debug.Log($"{SolorEngine}Only MiniGame can use , Android not support");
+            Distinct dist = new Distinct();
+            dist.distinct_id = GetDistinctId();
+
+            dist.distinct_id_type = -1;
+            
+            dis?.Invoke(dist);
+            //  Debug.Log($"{SolorEngine}Only MiniGame can use , Android not support");
         }
         private static void SetSuperProperties(Dictionary<string, object> userProperties)
         {
@@ -182,9 +189,9 @@ namespace SolarEngine
             SolarEngineAndroidSDK.CallStatic("userUnset", keysJSONStr);
         }
 
-        private static void UserDelete(SEUserDeleteType deleteType)
+        private static void UserDelete(UserDeleteType deleteType)
         {
-            int seUserDeleteType = deleteType == SEUserDeleteType.SEUserDeleteTypeByAccountId ? 0 : 1;
+            int seUserDeleteType = deleteType == UserDeleteType.byAccountId ? 0 : 1;
 
             SolarEngineAndroidSDK.CallStatic("userDelete", seUserDeleteType);
         }
@@ -253,7 +260,7 @@ namespace SolarEngine
         }
 
 
-        private static void SetPresetEvent(SEConstant_Preset_EventType eventType, Dictionary<string, object> attributes)
+        private static void SetPresetEvent(PresetEventType eventType, Dictionary<string, object> attributes)
         {
             string eventDataJSONString = JsonConvert.SerializeObject(attributes);
 

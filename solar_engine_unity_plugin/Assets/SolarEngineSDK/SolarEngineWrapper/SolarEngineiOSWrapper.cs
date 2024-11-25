@@ -35,11 +35,29 @@ namespace SolarEngine
 
         private static void Init(string appKey, string userId, SEConfig config)
         {
+            initCallBack(config);
+            if (config.initCompletedCallback != null) {
+                __iOSSESDKSetInitCompletedCallback(OnInitCompletedCallback);
+            }
+
+            if (config.attributionCallback != null) {
+                __iOSSESDKSetAttributionDataCallback(OnAttributionCallback);
+            }
             __iOSSolarEngineSDKInit(appKey, userId, initSeDict(config), null);
+            
+          
         }
 
         private static void Init(string appKey, string userId, SEConfig config, RCConfig rcConfig)
         {
+            initCallBack(config);
+            if (config.initCompletedCallback != null) {
+                __iOSSESDKSetInitCompletedCallback(OnInitCompletedCallback);
+            }
+
+            if (config.attributionCallback != null) {
+                __iOSSESDKSetAttributionDataCallback(OnAttributionCallback);
+            }
             __iOSSolarEngineSDKInit(appKey, userId, initSeDict(config), initRcDict(rcConfig));
         }
 
@@ -84,9 +102,13 @@ namespace SolarEngine
         {
             return __iOSSolarEngineSDKGetDistinctId();
         }
-        private static void GetDistinctId(Action<Distinct>dic)
+        private static void GetDistinctId(Action<Distinct>dis)
         {
-              Debug.Log($"{SolorEngine}Only MiniGame can use , iOS not support");
+            Distinct dist = new Distinct();
+            dist.distinct_id = GetDistinctId();
+            dist.distinct_id_type = -1;
+            dis?.Invoke(dist);
+            // Debug.Log($"{SolorEngine}Only MiniGame can use , iOS not support");
         }
 
         private static void SetSuperProperties(Dictionary<string, object> userProperties)
@@ -158,9 +180,9 @@ namespace SolarEngine
                 __iOSSolarEngineSDKUserUnset(keysJSONStr);
         }
 
-        private static void UserDelete(SEUserDeleteType deleteType)
+        private static void UserDelete(UserDeleteType deleteType)
         {
-            int seUserDeleteType = deleteType == SEUserDeleteType.SEUserDeleteTypeByAccountId ? 0 : 1;
+            int seUserDeleteType = deleteType == UserDeleteType.byAccountId ? 0 : 1;
 
                 __iOSSolarEngineSDKUserDelete(seUserDeleteType);
 
@@ -244,7 +266,7 @@ namespace SolarEngine
         }
 
 
-        private static void SetPresetEvent(SEConstant_Preset_EventType eventType, Dictionary<string, object> attributes)
+        private static void SetPresetEvent(PresetEventType eventType, Dictionary<string, object> attributes)
         {
             string eventDataJSONString = JsonConvert.SerializeObject(attributes);
 

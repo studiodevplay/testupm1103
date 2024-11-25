@@ -35,7 +35,6 @@ namespace SolarEngine
             seDict.Add("delayDeeplinkEnable", config.delayDeeplinkEnable);
             seDict.Add("isCoppaEnabled", config.isCoppaEnabled);
             seDict.Add("isKidsAppEnabled", config.isKidsAppEnabled);
-            initCallBack(config);
             string seJonString = JsonConvert.SerializeObject(seDict);
             return seJonString;
         }
@@ -549,22 +548,22 @@ namespace SolarEngine
        }
 
 
-       private static string getPresetEventName(SEConstant_Preset_EventType eventType)
+       private static string getPresetEventName(PresetEventType eventType)
        {
            string eventName = "";
-           if (eventType == SEConstant_Preset_EventType.SEConstant_Preset_EventType_AppInstall)
+           if (eventType == PresetEventType.appInstall)
            {
                eventName = "SEPresetEventTypeAppInstall";
            }
-           else if (eventType == SEConstant_Preset_EventType.SEConstant_Preset_EventType_AppStart)
+           else if (eventType == PresetEventType.appStart)
            {
                eventName = "SEPresetEventTypeAppStart";
            }
-           else if (eventType == SEConstant_Preset_EventType.SEConstant_Preset_EventType_AppEnd)
+           else if (eventType == PresetEventType.appEnd)
            {
                eventName = "SEPresetEventTypeAppEnd";
            }
-           else if (eventType == SEConstant_Preset_EventType.SEConstant_Preset_EventType_All)
+           else if (eventType == PresetEventType.all)
            {
                eventName = "SEPresetEventTypeAppAll";
            }
@@ -578,38 +577,38 @@ namespace SolarEngine
     
 
     [Serializable]
-    public enum SEUserDeleteType
+    public enum UserDeleteType
     {
         // 通过AccountId删除用户
-        SEUserDeleteTypeByAccountId = 0,
+        byAccountId = 0,
 
         // 通过VisitorId删除用户
-        SEUserDeleteTypeByVisitorId = 1,
+        byVisitorId = 1,
     }
 
 
     [Serializable]
-    public enum SEConstant_IAP_PayStatus
+    public enum PayStatus
     {
         // 成功
-        SEConstant_IAP_PayStatus_success = 1,
+        success = 1,
         // 失败
-        SEConstant_IAP_PayStatus_fail = 2,
+        fail = 2,
         // 恢复
-        SEConstant_IAP_PayStatus_restored = 3      
+        restored = 3      
     };
 
     [Serializable]
-    public enum SEConstant_Preset_EventType
+    public enum PresetEventType
     {
         // _appInstall预置事件
-        SEConstant_Preset_EventType_AppInstall ,
+       appInstall ,
         // _appStart
-        SEConstant_Preset_EventType_AppStart  ,
+        appStart  ,
         // _appEnd
-        SEConstant_Preset_EventType_AppEnd   ,
+        appEnd   ,
         // _appInstall、_appStart、_appEnd三者
-        SEConstant_Preset_EventType_All  
+        all  
 
     };
 
@@ -651,7 +650,7 @@ namespace SolarEngine
         // 支付失败的原因 可以为空
         public string fail_reason { get; set; }
         // 支付状态 详见 SEConstant_IAP_PayStatus 枚举
-        public SEConstant_IAP_PayStatus paystatus { get; set; }
+        public PayStatus paystatus { get; set; }
         // 支付方式：如 alipay、weixin、applepay、paypal 等
         public string pay_type { get; set; }
         // 本次购买支付的金额
@@ -805,10 +804,10 @@ namespace SolarEngine
     public enum SERCMergeType
     {
         // 默认策略，读取缓存配置+默认配置跟服务端配置合并
-        SERCMergeTypeDefault = 0,
+        byDefault = 0,
 
         // App版本更新时，使用默认配置+服务端合并（丢弃缓存配置）
-        SERCMergeTypeUser = 1,
+        byUser = 1,
     }
 
     [Serializable]
@@ -831,8 +830,6 @@ namespace SolarEngine
         // 自定义ID 用户属性，可选字段
         public Dictionary<string, object> customIDUserProperties { get; set; }
 
-        // 自定义ID 设备属性，可选字段
-        // public Dictionary<string, object> customIDDeviceProperties { get; set; }
     }
 
     [Serializable]
@@ -889,4 +886,6 @@ namespace SolarEngine
   
  
     }
+    
+    
 }

@@ -144,7 +144,7 @@ namespace SolarEngine
              Debug.Log($"{SolorEngine}Unity Editor: UserUnset");
         }
 
-        private static void UserDelete(SEUserDeleteType deleteType)
+        private static void UserDelete(UserDeleteType deleteType)
         {
               Debug.Log($"{SolorEngine}Unity Editor: UserDelete");
         }
@@ -197,7 +197,7 @@ namespace SolarEngine
         }
 
 
-        private static void SetPresetEvent(SEConstant_Preset_EventType eventType, Dictionary<string, object> attributes)
+        private static void SetPresetEvent(PresetEventType eventType, Dictionary<string, object> attributes)
         {
             Debug.Log($"{SolorEngine}Unity Editor: SetPresetEvent");
         }
