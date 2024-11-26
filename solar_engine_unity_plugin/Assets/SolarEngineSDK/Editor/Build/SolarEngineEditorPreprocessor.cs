@@ -134,6 +134,7 @@ namespace SolarEngine.Build
             manifestHasChanged |= AddPermission(manifest, "android.permission.ACCESS_NETWORK_STATE");
 
 
+            manifestHasChanged |= AddPermission(manifest, "com.google.android.gms.permission.AD_ID");
             return manifestHasChanged;
         }
 
@@ -164,7 +165,7 @@ namespace SolarEngine.Build
         } 
         
         
-      //  [MenuItem("SolarEngineSDK/RunPostProcessTasksAndroid ", false, 0)]
+     //   [MenuItem("SolarEngineSDK/RunPostProcessTasksAndroid ", false, 0)]
 
         public static void RunPostProcessTasksAndroid()
         {
