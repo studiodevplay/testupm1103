@@ -801,7 +801,7 @@ namespace SolarEngine
     }
 
     [Serializable]
-    public enum SERCMergeType
+    public enum RCMergeType
     {
         // 默认策略，读取缓存配置+默认配置跟服务端配置合并
         byDefault = 0,
@@ -819,7 +819,7 @@ namespace SolarEngine
         // SDK配置合并策略，默认情况下服务端配置跟本地缓存配置合并
         // ENUM：SERCMergeTypeUser 在App版本更新时会清除缓存配置
         // 可选字段
-        public SERCMergeType mergeType { get; set; }
+        public RCMergeType mergeType { get; set; }
 
         // 自定义ID, 用来匹配用户在后台设置规则时设置的自定义ID，可选字段
         public Dictionary<string, object> customIDProperties { get; set; }
