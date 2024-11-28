@@ -136,7 +136,7 @@ namespace SolarEngine
                 }
             }
 
-            if (attributes is AppAttributes appAttributes)
+            if (attributes is AttAttributes appAttributes)
             {
                 // 处理 AppAttributes 类型的逻辑
                 attributesDict.Add(SolarEngine.Analytics.SEConstant_EVENT_TYPE,
@@ -235,7 +235,7 @@ namespace SolarEngine
                 }
             }
 
-            if (attributes is AppImpressionAttributes appImpressionAttributes)
+            if (attributes is ImpressionAttributes appImpressionAttributes)
             {
                 // 处理 AppImpressionAttributes 类型的逻辑
                 attributesDict.Add(SolarEngine.Analytics.SEConstant_EVENT_TYPE, SolarEngine.Analytics.SEConstant_IAI);
@@ -376,7 +376,7 @@ namespace SolarEngine
 
        }
 
-       private static Dictionary<string, object> getIAIDic(AppImpressionAttributes attributes, bool isAddCustomProperties = true)
+       private static Dictionary<string, object> getIAIDic(ImpressionAttributes attributes, bool isAddCustomProperties = true)
        {
            Dictionary<string, object> attributesDict = new Dictionary<string, object>();
 
@@ -482,7 +482,7 @@ namespace SolarEngine
            return  attributesDict;
        }
 
-       public static Dictionary<string, object> getAttrDic(AppAttributes attributes, bool isAddCustomProperties = true)
+       public static Dictionary<string, object> getAttrDic(AttAttributes attributes, bool isAddCustomProperties = true)
        {
     Dictionary<string, object> attributesDict = new Dictionary<string, object>();
 
@@ -551,19 +551,19 @@ namespace SolarEngine
        private static string getPresetEventName(PresetEventType eventType)
        {
            string eventName = "";
-           if (eventType == PresetEventType.appInstall)
+           if (eventType == PresetEventType.Install)
            {
                eventName = "SEPresetEventTypeAppInstall";
            }
-           else if (eventType == PresetEventType.appStart)
+           else if (eventType == PresetEventType.Start)
            {
                eventName = "SEPresetEventTypeAppStart";
            }
-           else if (eventType == PresetEventType.appEnd)
+           else if (eventType == PresetEventType.End)
            {
                eventName = "SEPresetEventTypeAppEnd";
            }
-           else if (eventType == PresetEventType.all)
+           else if (eventType == PresetEventType.All)
            {
                eventName = "SEPresetEventTypeAppAll";
            }
@@ -580,10 +580,10 @@ namespace SolarEngine
     public enum UserDeleteType
     {
         // 通过AccountId删除用户
-        byAccountId = 0,
+        ByAccountId = 0,
 
         // 通过VisitorId删除用户
-        byVisitorId = 1,
+        ByVisitorId = 1,
     }
 
 
@@ -591,24 +591,24 @@ namespace SolarEngine
     public enum PayStatus
     {
         // 成功
-        success = 1,
+        Success = 1,
         // 失败
-        fail = 2,
+        Fail = 2,
         // 恢复
-        restored = 3      
+        Restored = 3      
     };
 
     [Serializable]
     public enum PresetEventType
     {
         // _appInstall预置事件
-       appInstall ,
+        Install ,
         // _appStart
-        appStart  ,
+        Start  ,
         // _appEnd
-        appEnd   ,
+        End   ,
         // _appInstall、_appStart、_appEnd三者
-        all  
+        All  
 
     };
 
@@ -662,7 +662,7 @@ namespace SolarEngine
     }
 
     [Serializable]
-    public struct AppImpressionAttributes : SEBaseAttributes
+    public struct ImpressionAttributes : SEBaseAttributes
     {
         // 变现平台名称 不可为空:
         // csj：穿山甲国内版、pangle：穿山甲国际版、tencent：腾讯优量汇、baidu：百度百青藤、kuaishou：快手、oppo：OPPO、vivo：vivo
@@ -766,7 +766,7 @@ namespace SolarEngine
 
 
     [Serializable]
-    public struct AppAttributes : SEBaseAttributes
+    public struct AttAttributes : SEBaseAttributes
     {
         // 投放广告的渠道 ID，需要与发行平台匹配
         public string ad_network { get; set; }
@@ -804,10 +804,10 @@ namespace SolarEngine
     public enum RCMergeType
     {
         // 默认策略，读取缓存配置+默认配置跟服务端配置合并
-        byDefault = 0,
+        ByDefault = 0,
 
         // App版本更新时，使用默认配置+服务端合并（丢弃缓存配置）
-        byUser = 1,
+        ByUser = 1,
     }
 
     [Serializable]

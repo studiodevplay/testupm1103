@@ -288,7 +288,7 @@ namespace SolarEngine
             SolarEngineSDK4MiniGames.trackIAP(getIAPDic(attributes,false), attributes.customProperties);
         }
 
-        private static void ReportIAIEvent(AppImpressionAttributes attributes)
+        private static void ReportIAIEvent(ImpressionAttributes attributes)
         {
            
             SolarEngineSDK4MiniGames.trackAdImpression(getIAIDic(attributes,false), attributes.customProperties);
@@ -317,7 +317,7 @@ namespace SolarEngine
             SolarEngineSDK4MiniGames.trackOrder(getOrderDic(attributes,false), attributes.customProperties);
         }
 
-        private static void AppAttrEvent(AppAttributes attributes)
+        private static void AppAttrEvent(AttAttributes attributes)
         {
             SolarEngineSDK4MiniGames.trackAppAttr(getAttrDic(attributes,false), attributes.customProperties);
         }

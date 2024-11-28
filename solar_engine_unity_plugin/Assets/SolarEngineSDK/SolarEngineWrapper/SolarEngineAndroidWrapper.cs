@@ -191,7 +191,7 @@ namespace SolarEngine
 
         private static void UserDelete(UserDeleteType deleteType)
         {
-            int seUserDeleteType = deleteType == UserDeleteType.byAccountId ? 0 : 1;
+            int seUserDeleteType = deleteType == UserDeleteType.ByAccountId ? 0 : 1;
 
             SolarEngineAndroidSDK.CallStatic("userDelete", seUserDeleteType);
         }
@@ -215,7 +215,7 @@ namespace SolarEngine
             SolarEngineAndroidSDKObject.CallStatic("trackPurchaseEvent", attributesJSONString);
         }
 
-        private static void ReportIAIEvent(AppImpressionAttributes attributes)
+        private static void ReportIAIEvent(ImpressionAttributes attributes)
         {
             string attributesJSONString = JsonConvert.SerializeObject(getIAIDic(attributes));
 
@@ -252,7 +252,7 @@ namespace SolarEngine
             SolarEngineAndroidSDKObject.CallStatic("trackOrderEvent", attributesJSONString);
         }
 
-        private static void AppAttrEvent(AppAttributes attributes)
+        private static void AppAttrEvent(AttAttributes attributes)
         {
             string attributesJSONString = JsonConvert.SerializeObject(getAttrDic(attributes));
 

@@ -369,7 +369,7 @@ namespace SolarEngine
         /// </summary>
         /// <param name="attributes">AppImpressionAttributes 实例</param>
         [Obsolete("This method is obsolete. Please use trackAdImpression instead.")]
-        public static void trackIAI(AppImpressionAttributes attributes)
+        public static void trackIAI(ImpressionAttributes attributes)
         {
             ReportIAIEvent(attributes);
         }
@@ -379,7 +379,7 @@ namespace SolarEngine
         /// </summary>
         /// <param name="attributes">AppImpressionAttributes 实例</param>
         /// 
-        public static void trackAdImpression(AppImpressionAttributes attributes)
+        public static void trackAdImpression(ImpressionAttributes attributes)
         {
             ReportIAIEvent(attributes);
         }
@@ -424,10 +424,22 @@ namespace SolarEngine
         /// 上报自定义归因安装事件
         /// </summary>
         /// <param name="attributes">AppAttributes 实例</param>
-        public static void trackAppAttr(AppAttributes attributes)
+        [Obsolete("This method is obsolete. Please use trackAttribution instead.")]
+
+        public static void trackAppAttr(AttAttributes attributes)
         {
             AppAttrEvent(attributes);
         }
+        
+        /// <summary>
+        /// 上报自定义归因安装事件
+        /// </summary>
+        /// <param name="attributes">AppAttributes 实例</param>
+        public static void trackAttribution(AttAttributes attributes)
+        {
+            AppAttrEvent(attributes);
+        }
+
 
         /// <summary>
         /// 上报自定义事件

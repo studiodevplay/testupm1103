@@ -182,7 +182,7 @@ namespace SolarEngine
 
         private static void UserDelete(UserDeleteType deleteType)
         {
-            int seUserDeleteType = deleteType == UserDeleteType.byAccountId ? 0 : 1;
+            int seUserDeleteType = deleteType == UserDeleteType.ByAccountId ? 0 : 1;
 
                 __iOSSolarEngineSDKUserDelete(seUserDeleteType);
 
@@ -213,7 +213,7 @@ namespace SolarEngine
             __iOSSolarEngineSDKTrackIAPWithAttributes(attributesJSONString);
         }
 
-        private static void ReportIAIEvent(AppImpressionAttributes attributes)
+        private static void ReportIAIEvent(ImpressionAttributes attributes)
         {
            
 
@@ -257,7 +257,7 @@ namespace SolarEngine
             __iOSSolarEngineSDKTrackOrderWithAttributes(attributesJSONString);
         }
 
-        private static void AppAttrEvent(AppAttributes attributes)
+        private static void AppAttrEvent(AttAttributes attributes)
         {
           
             string attributesJSONString = JsonConvert.SerializeObject(getAttrDic(attributes));

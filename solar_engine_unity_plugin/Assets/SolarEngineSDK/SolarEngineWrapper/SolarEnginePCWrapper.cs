@@ -166,7 +166,7 @@ namespace SolarEngine
            Debug.Log($"{SolorEngine}Unity Editor: ReportIAPEvent");
         }
 
-        private static void ReportIAIEvent(AppImpressionAttributes attributes)
+        private static void ReportIAIEvent(ImpressionAttributes attributes)
         {
             Debug.Log($"{SolorEngine}Unity Editor: ReportIAIEvent");
         }
@@ -191,11 +191,11 @@ namespace SolarEngine
             Debug.Log($"{SolorEngine}Unity Editor: ReportOrderEvent");
         }
 
-        private static void AppAttrEvent(AppAttributes attributes)
+        private static void AppAttrEvent(AttAttributes attributes)
         {
             Debug.Log($"{SolorEngine}Unity Editor: AppAttrEvent");
         }
-
+    
 
         private static void SetPresetEvent(PresetEventType eventType, Dictionary<string, object> attributes)
         {
