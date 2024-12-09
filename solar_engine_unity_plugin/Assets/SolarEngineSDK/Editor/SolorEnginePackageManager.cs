@@ -48,7 +48,7 @@ public class SolorEnginePackageManager : MonoBehaviour
     [MenuItem("SolarEngineSDK/Documentation/UnityDocumentation", false, 0)]
     static void unityDocumentation()
     {
-        Application.OpenURL("https://help.solar-engine.com/cn/docs/ugKp8t");
+        Application.OpenURL("https://help.solar-engine.com/cn/docs/51FROeEQ");
     }
     
     [MenuItem("SolarEngineSDK/Documentation/iOS ChangleLog", false, 0)]

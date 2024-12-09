@@ -547,7 +547,65 @@ namespace SolarEngine
 
        }
 
+       #region  腾讯回传
 
+       public static Dictionary<string, object> getReDic(ReActiveAttributes attributes)
+       {
+           Dictionary<string, object> reDict = new Dictionary<string, object>();
+           reDict.Add(SolarEngine.Analytics.SEConstant_ReActive_BackFlowDay, attributes.backFlowDay);
+           return  reDict;
+           
+       }
+       public static Dictionary<string, object> getWishlistDic(AddToWishlistAttributes attributes)
+       {
+           Dictionary<string, object> wishlistDict = new Dictionary<string, object>();
+           wishlistDict.Add(SolarEngine.Analytics.SEConstant_AddToWishlist_Type, attributes.addToWishlistType);
+           
+           return  wishlistDict;
+          
+       }
+       public static Dictionary<string, object> getShareDic(ShareAttributes attributes)
+       {
+           Dictionary<string, object> shareDict = new Dictionary<string, object>();
+           shareDict.Add(SolarEngine.Analytics.SEConstant_Share_Target, attributes.mpShareTarget);
+           return  shareDict;
+           
+       }
+ 
+       public static Dictionary<string, object> getCreateRoleDic(CreateRoleAttributes attributes)
+       {
+           Dictionary<string, object> createRoleDict = new Dictionary<string, object>();
+           createRoleDict.Add(SolarEngine.Analytics.SEConstant_CreateRole_RoleName, attributes.mpRoleName);
+           return createRoleDict;
+           
+       }
+       public static Dictionary<string, object> getTutorialFinishDic(TutorialFinishAttributes attributes)
+       {
+           Dictionary<string, object> tutorialFinishDict = new Dictionary<string, object>();
+           return tutorialFinishDict;
+       }
+       private static Dictionary<string, object> getUpdateLevel(UpdateLevelAttributes attributes)
+       {
+           Dictionary<string,object> updateLevelDict = new Dictionary<string, object>();
+           updateLevelDict.Add(SolarEngine.Analytics.SEConstant_UpdateLevel_BeforeUpgrade, attributes.beforeUpgrade);
+           updateLevelDict.Add(SolarEngine.Analytics.SEConstant_UpdateLevel_AfterUpgrade, attributes.afterUpgrade);
+           return updateLevelDict;
+           
+       }
+       public static Dictionary<string, object> getViewContentMallDic(ViewContentMallAttributes attributes)
+       {
+           Dictionary<string, object> viewContentMallDict = new Dictionary<string, object>();
+
+           return viewContentMallDict;
+       }
+       private static Dictionary<string, object> getViewContentActivitDic(ViewContentActivitAttributes attributes)
+       {
+           Dictionary<string, object> viewContentActivitDict = new Dictionary<string, object>();
+
+           return viewContentActivitDict;
+       }
+
+       #endregion
        private static string getPresetEventName(PresetEventType eventType)
        {
            string eventName = "";
@@ -659,6 +717,8 @@ namespace SolarEngine
         public Dictionary<string, object> customProperties { get; set; }
         // 实现 SEBaseAttributes 接口中的 checkId 属性
         public string checkId { get; set; }
+        
+        public int reportingToTencentSdk;
     }
 
     [Serializable]
@@ -727,7 +787,7 @@ namespace SolarEngine
 
         // 实现 SEBaseAttributes 接口中的 checkId 属性
         public string checkId { get; set; }
-        
+        public int reportingToTencentSdk;
     }
 
     [Serializable]
@@ -883,9 +943,96 @@ namespace SolarEngine
         public string unionid;
         public string openid;
         public string anonymous_openid;
-  
+        public bool isInitTencentAdvertisingGameSDK;
+        public int reportingToTencentSdk;
+        public TencentAdvertisingGameSDKInitParams tencentAdvertisingGameSDKInitParams;
  
     }
     
-    
+    #region 腾讯回传
+
+
+    public class TencentAdvertisingGameSDKInitParams
+    {
+        public int user_action_set_id;
+        public string secret_key;
+        public string appid;
+
+       
+    }
+    [System.Serializable]
+    public struct ReActiveAttributes
+    {
+        public int reportingToTencentSdk;
+        public int backFlowDay;
+        public Dictionary<string, object> customProperties;
+
+    }
+
+
+    [System.Serializable]
+    public struct AddToWishlistAttributes
+    {
+        public int reportingToTencentSdk;
+        public string addToWishlistType;
+        public Dictionary<string, object> customProperties;
+
+    }
+
+
+    [System.Serializable]
+    public struct ShareAttributes
+    {
+        public int reportingToTencentSdk;
+        public string mpShareTarget;
+        public Dictionary<string, object> customProperties;
+
+    }
+
+    [System.Serializable]
+    public struct CreateRoleAttributes
+    {
+        public int reportingToTencentSdk;
+        public string mpRoleName;
+
+    }
+
+    [System.Serializable]
+    public struct TutorialFinishAttributes
+    {
+        public int reportingToTencentSdk;
+
+
+    }
+
+    [System.Serializable]
+    public struct UpdateLevelAttributes
+    {
+        public int reportingToTencentSdk;
+        public int beforeUpgrade;
+        public int afterUpgrade;
+        public Dictionary<string, object> customProperties;
+
+
+    }
+
+
+    [System.Serializable]
+    public struct ViewContentMallAttributes
+    {
+        public int reportingToTencentSdk;
+        public Dictionary<string, object> customProperties;
+
+
+    }
+
+    [System.Serializable]
+    public struct ViewContentActivitAttributes
+    {
+        public int reportingToTencentSdk;
+        public Dictionary<string, object> customProperties;
+
+
+    }
+    #endregion
 }

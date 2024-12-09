@@ -289,6 +289,45 @@ namespace SolarEngine
 
         }
 
+
+   #region 腾讯回传
+        private static void TrackReActive(ReActiveAttributes attributes)
+        {
+    
+              Debug.Log($"{SolorEngine}Unity Editor: TrackReActive");
+        }
+        private static void TrackAddToWishlist(AddToWishlistAttributes attributes)
+        {  
+ Debug.Log($"{SolorEngine}Unity Editor: TrackAddToWishlist");
+
+        }
+        private static void TrackShare(ShareAttributes attributes)
+        {
+ Debug.Log($"{SolorEngine}Unity Editor: TrackShare");    
+        }
+        private static void TrackCreateRole(CreateRoleAttributes attributes)
+        {
+ Debug.Log($"{SolorEngine}Unity Editor: TrackCreateRole");        }
+
+        private static void TrackTutorialFinish(TutorialFinishAttributes attributes)
+        {
+ Debug.Log($"{SolorEngine}Unity Editor: TrackTutorialFinish");        }
+
+        private static void TrackUpdateLevel( UpdateLevelAttributes attributes){
+ Debug.Log($"{SolorEngine}Unity Editor: TrackUpdateLevel");        }
+
+        private  static void TrackViewContentMall(ViewContentMallAttributes attributes)
+        {
+ Debug.Log($"{SolorEngine}Unity Editor: TrackViewContentMall");        }
+
+        private static void TrackViewContentActivity(ViewContentActivitAttributes attributes)
+        {
+ Debug.Log($"{SolorEngine}Unity Editor: TrackViewContentActivity");        }
+        
+
+        #endregion
+
+
      
 
     }

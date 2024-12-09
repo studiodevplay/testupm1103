@@ -81,7 +81,26 @@ namespace SolarEngine
 
         private static readonly string SEConstant_AppAttr_Ad_CustomProperties = "_customProperties";
         
+        #region 腾讯回传
+
+        private static readonly string SEConstant_ReActive_BackFlowDay = "_back_flow_day";
+        private static readonly string SEConstant_AddToWishlist_Type = "_add_to_wishlist_type";
+        private static readonly string SEConstant_Share_Target = "_mp_share_target";
+        private static readonly string SEConstant_CreateRole_RoleName = "_mp_role_name";
         
+        private static readonly string SEConstant_UpdateLevel_BeforeUpgrade = "_before_upgrade";
+        private static readonly string SEConstant_UpdateLevel_AfterUpgrade = "_after_upgrade";
+        
+           
+        public const string WishlistType_DEFAULT = "default";
+        public const string WishlistType_MY = "my";
+        public const string WishlistType_DESKTOP = "desktop";
+        public const string WishlistType_OTHERS = "others";
+
+        public const string ShareTarget_APP_MESSAGE = "APP_MESSAGE";
+        public const string ShareTarget_TIME_LINE = "TIME_LINE";
+
+        #endregion
         
     }
 }

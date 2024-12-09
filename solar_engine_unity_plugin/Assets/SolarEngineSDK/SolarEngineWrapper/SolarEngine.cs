@@ -441,6 +441,54 @@ namespace SolarEngine
         }
 
 
+        #region 腾讯回传
+        public static void trackReActive(ReActiveAttributes attributes)
+        {
+    
+          TrackReActive(attributes);
+
+        }
+        public static void trackAddToWishlist(AddToWishlistAttributes attributes)
+        {
+
+            TrackAddToWishlist(attributes);
+        }
+        public static void trackShare(ShareAttributes attributes)
+        {
+            TrackShare(attributes);
+    
+        }
+        public static void trackCreateRole(CreateRoleAttributes attributes)
+        {
+            TrackCreateRole(attributes);
+        }
+
+        public static void trackTutorialFinish(TutorialFinishAttributes attributes)
+        {
+            TrackTutorialFinish(attributes);
+        }
+
+        public static void trackUpdateLevel( UpdateLevelAttributes attributes){
+            TrackUpdateLevel(attributes);
+        }
+
+        public static void trackViewContentMall(ViewContentMallAttributes attributes)
+        {
+            TrackViewContentMall(attributes);
+        }
+
+        public  static void trackViewContentActivity(ViewContentActivitAttributes attributes)
+        {
+            TrackViewContentActivity(attributes);
+        }
+        
+
+        #endregion
+        
+        
+        
+        
+        
         /// <summary>
         /// 上报自定义事件
         /// </summary>
@@ -515,6 +563,12 @@ namespace SolarEngine
 			EventFinish(timerEventName,attributes);
 		}
 
+        
+    
+        
+        
+        
+        
         /// <summary>
         /// 设置预置事件属性
         /// </summary>

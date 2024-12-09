@@ -382,6 +382,8 @@ namespace SolarEngine
 
         #region not support
 
+ 
+
         private static  void SetReferrerTitle(string title)
         {
               Debug.Log($"{SolorEngine}Current on Android,Only MiniGame can SetReferrerTitle ");
@@ -425,7 +427,48 @@ namespace SolarEngine
 
         }
         
+           private static readonly string _platform = "Android";
+        #region 腾讯回传
+        private static void TrackReActive(ReActiveAttributes attributes)
+        {
+    
+            Debug.Log($"{SolorEngine}Current on {_platform},Only MiniGame can TrackReActive ");
+        }
+        private static void TrackAddToWishlist(AddToWishlistAttributes attributes)
+        {  
+            Debug.Log($"{SolorEngine}Current on {_platform},Only MiniGame can TrackAddToWishlist ");    
+        }
+        private static void TrackShare(ShareAttributes attributes)
+        {
+            Debug.Log($"{SolorEngine}Current on {_platform},Only MiniGame can TrackShare ");    
+    
+        }
+        private static void TrackCreateRole(CreateRoleAttributes attributes)
+        {
+            Debug.Log($"{SolorEngine}Current on {_platform},Only MiniGame can TrackCreateRole ");    
+        }
+
+        private static void TrackTutorialFinish(TutorialFinishAttributes attributes)
+        {
+            Debug.Log($"{SolorEngine}Current on {_platform},Only MiniGame can TrackTutorialFinish ");    
+        }
+
+        private static void TrackUpdateLevel( UpdateLevelAttributes attributes){
+            Debug.Log($"{SolorEngine}Current on {_platform},Only MiniGame can TrackUpdateLevel ");    
+        }
+
+        private  static void TrackViewContentMall(ViewContentMallAttributes attributes)
+        {
+            Debug.Log($"{SolorEngine}Current on {_platform},Only MiniGame can TrackViewContentMall ");    
+        }
+
+        private static void TrackViewContentActivity(ViewContentActivitAttributes attributes)
+        {
+            Debug.Log($"{SolorEngine}Current on {_platform},Only MiniGame can TrackViewContentActivity ");    
+        }
         
+
+        #endregion
         
         #endregion
 

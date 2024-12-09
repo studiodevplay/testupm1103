@@ -71,6 +71,12 @@ namespace SolarEngine
             initParams.sublibVersion = sdk_version;
 #if  SOLARENGINE_WECHAT
             SEAdapterInterface _adapter = new SolarEngine.Platform. WeChatAdapter();
+            initParams.isInitTencentAdvertisingGameSDK=config.miniGameInitParams.isInitTencentAdvertisingGameSDK;
+            initParams.reportingToTencentSdk=config.miniGameInitParams.reportingToTencentSdk;
+            initParams.tencentAdvertisingGameSDKInitParams=new MiniGames.TencentAdvertisingGameSDKInitParams();
+            initParams.tencentAdvertisingGameSDKInitParams.appid=config.miniGameInitParams.tencentAdvertisingGameSDKInitParams.appid;
+            initParams.tencentAdvertisingGameSDKInitParams.secret_key=config.miniGameInitParams.tencentAdvertisingGameSDKInitParams.secret_key;
+            initParams.tencentAdvertisingGameSDKInitParams.user_action_set_id=config.miniGameInitParams.tencentAdvertisingGameSDKInitParams.user_action_set_id;
 #elif SOLARENGINE_BYTEDANCE
             SEAdapterInterface _adapter = new SolarEngine.Platform.ByteDanceAdapter();
 #elif SOLARENGINE_KUAISHOU
@@ -107,6 +113,13 @@ namespace SolarEngine
                 initParams.miniGameInitParams = new MiniGames.MiniGameInitParams();
 #if SOLARENGINE_WECHAT
             initParams.miniGameInitParams.anonymous_openid = "";
+            
+            initParams.isInitTencentAdvertisingGameSDK=config.miniGameInitParams.isInitTencentAdvertisingGameSDK;
+            initParams.reportingToTencentSdk=config.miniGameInitParams.reportingToTencentSdk;
+            initParams.tencentAdvertisingGameSDKInitParams=new MiniGames.TencentAdvertisingGameSDKInitParams();
+            initParams.tencentAdvertisingGameSDKInitParams.appid=config.miniGameInitParams.tencentAdvertisingGameSDKInitParams.appid;
+            initParams.tencentAdvertisingGameSDKInitParams.secret_key=config.miniGameInitParams.tencentAdvertisingGameSDKInitParams.secret_key;
+            initParams.tencentAdvertisingGameSDKInitParams.user_action_set_id=config.miniGameInitParams.tencentAdvertisingGameSDKInitParams.user_action_set_id;
  #else
             initParams.miniGameInitParams.anonymous_openid = config.miniGameInitParams.anonymous_openid;
 #endif
@@ -114,7 +127,7 @@ namespace SolarEngine
 
                 initParams.miniGameInitParams.openid = config.miniGameInitParams.openid;
                 initParams.miniGameInitParams.unionid = config.miniGameInitParams.unionid;
-
+                
             }
             
             initParams.debugModel = config.isDebugModel;
@@ -285,7 +298,7 @@ namespace SolarEngine
         private static void ReportIAPEvent(ProductsAttributes attributes)
         {
         
-            SolarEngineSDK4MiniGames.trackIAP(getIAPDic(attributes,false), attributes.customProperties);
+            SolarEngineSDK4MiniGames.trackIAP(getIAPDic(attributes,false), attributes.customProperties,attributes.reportingToTencentSdk);
         }
 
         private static void ReportIAIEvent(ImpressionAttributes attributes)
@@ -303,7 +316,7 @@ namespace SolarEngine
         private static void ReportRegisterEvent(RegisterAttributes attributes)
         {
           
-            SolarEngineSDK4MiniGames.trackRegister(getRegisterDic(attributes,false), attributes.customProperties);
+            SolarEngineSDK4MiniGames.trackRegister(getRegisterDic(attributes,false), attributes.customProperties,attributes.reportingToTencentSdk);
         }
 
         private static void ReportLoginEvent(LoginAttributes attributes)
@@ -323,6 +336,65 @@ namespace SolarEngine
         }
 
 
+           #region 腾讯回传
+           private static void TrackReActive(ReActiveAttributes attributes)
+        {
+#if SOLARENGINE_WECHAT
+            SolarEngineSDK4MiniGames.trackReActive(getReDic(attributes),attributes.customProperties,attributes.reportingToTencentSdk);
+#endif
+        }
+           private static void TrackAddToWishlist(AddToWishlistAttributes attributes)
+        {  
+#if SOLARENGINE_WECHAT
+            SolarEngineSDK4MiniGames.trackAddToWishlist(getWishlistDic(attributes),attributes.customProperties,attributes.reportingToTencentSdk);
+#endif
+        }
+           private static void TrackShare(ShareAttributes attributes)
+        {
+#if SOLARENGINE_WECHAT
+            SolarEngineSDK4MiniGames.trackShare(getShareDic(attributes),attributes.customProperties,attributes.reportingToTencentSdk);
+#endif
+        }
+           private static void TrackCreateRole(CreateRoleAttributes attributes)
+        {
+#if SOLARENGINE_WECHAT
+            SolarEngineSDK4MiniGames.trackCreateRole(getCreateRoleDic(attributes),null,attributes.reportingToTencentSdk);
+ #endif
+        }
+
+           private static void TrackTutorialFinish(TutorialFinishAttributes attributes)
+        {
+#if SOLARENGINE_WECHAT
+            SolarEngineSDK4MiniGames.trackTutorialFinish(getTutorialFinishDic(attributes),null,attributes.reportingToTencentSdk );
+#endif            
+        }
+
+           private static void TrackUpdateLevel( UpdateLevelAttributes attributes){
+#if SOLARENGINE_WECHAT
+            SolarEngineSDK4MiniGames.trackUpdateLevel(getUpdateLevel(attributes),attributes.customProperties,attributes.reportingToTencentSdk);
+#endif
+           }
+
+           private  static void TrackViewContentMall(ViewContentMallAttributes attributes)
+        {
+#if SOLARENGINE_WECHAT            
+            SolarEngineSDK4MiniGames.trackViewContentMall(getViewContentMallDic(attributes),attributes.customProperties,attributes.reportingToTencentSdk);
+#endif             
+        }
+
+           private static void TrackViewContentActivity(ViewContentActivitAttributes attributes)
+        {
+#if SOLARENGINE_WECHAT 
+            SolarEngineSDK4MiniGames.trackViewContentActivity(getViewContentActivitDic(attributes),attributes.customProperties,attributes.reportingToTencentSdk);
+#endif           
+        }
+        
+
+        #endregion
+
+     
+ 
+        
         private static void SetPresetEvent(PresetEventType eventType, Dictionary<string, object> attributes)
         {
             miniGamePreset_EventType miniGamePresetEvent = (miniGamePreset_EventType)(int)eventType;
