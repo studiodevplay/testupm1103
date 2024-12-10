@@ -35,6 +35,26 @@ namespace SolarEngine
             seDict.Add("delayDeeplinkEnable", config.delayDeeplinkEnable);
             seDict.Add("isCoppaEnabled", config.isCoppaEnabled);
             seDict.Add("isKidsAppEnabled", config.isKidsAppEnabled);
+            
+            
+            // seDict.Add("enable", config.customDomain.enable);
+            //
+            // if(!string.IsNullOrEmpty(config.customDomain.receiverDomain))
+            //   seDict.Add("receiverDomain", config.customDomain.receiverDomain);
+            //
+            // if(!string.IsNullOrEmpty(config.customDomain.ruleDomain))
+            //   seDict.Add("ruleDomain", config.customDomain.ruleDomain);
+            //
+            // if(!string.IsNullOrEmpty(config.customDomain.receiverTcpHost))
+            //   seDict.Add("receiverTcpHost",config.customDomain.receiverTcpHost);
+            //
+            // if(!string.IsNullOrEmpty(config.customDomain.ruleTcpHost))
+            //   seDict.Add("ruleTcpHost",config.customDomain.ruleTcpHost);
+            //
+            // if (!string.IsNullOrEmpty(config.customDomain.gatewayTcpHost))
+            //     seDict.Add("gatewayTcpHost", config.customDomain.gatewayTcpHost);
+            
+            
             string seJonString = JsonConvert.SerializeObject(seDict);
             return seJonString;
         }
@@ -929,7 +949,8 @@ namespace SolarEngine
 
         // 设置初始化完成回调, 可选
         public Analytics.SESDKInitCompletedCallback initCompletedCallback { get; set; }
-
+        
+      
     }
     
     
@@ -943,11 +964,31 @@ namespace SolarEngine
         public string unionid;
         public string openid;
         public string anonymous_openid;
+        
+        //腾讯事件回传参数 仅支持微信
         public bool isInitTencentAdvertisingGameSDK;
+        //腾讯事件回传参数  仅支持微信
         public int reportingToTencentSdk;
+        //腾讯事件回传参数  仅支持微信
         public TencentAdvertisingGameSDKInitParams tencentAdvertisingGameSDKInitParams;
  
     }
+
+    #region SECustomDomain
+
+    public struct SECustomDomain
+    {
+        public bool enable;
+        public string receiverDomain;
+        public string ruleDomain;
+        public string receiverTcpHost;
+        public string ruleTcpHost;
+        public string gatewayTcpHost;
+
+    }
+    
+
+    #endregion
     
     #region 腾讯回传
 

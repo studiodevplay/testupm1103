@@ -1,4 +1,14 @@
 mergeInto(LibraryManager.library, {
+
+_setDebug:function(){
+     try {
+    GameGlobal.SDK.setDebug(true)
+      } catch (error) {
+          console.log("__setDebug: ", error);
+      }
+ },
+
+
   _init:function(tencentAdvertisingGameSDKInitParams){
    try{
           var _tencentAdvertisingGameSDKInitParams = UTF8ToString(tencentAdvertisingGameSDKInitParams);
@@ -10,7 +20,8 @@ mergeInto(LibraryManager.library, {
              user_action_set_id: parseInt(jsonObject.user_action_set_id),
            
            secret_key: jsonObject.secret_key.toString(),
-           appid: jsonObject.appid.toString()
+           appid: jsonObject.appid.toString(),
+           auto_track:false
           });
       }catch (error) {
           console.log("__init : ", error);
