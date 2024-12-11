@@ -18,8 +18,12 @@ namespace SolarEngine.Platform
             {
       
 #if SOLARENGINE_WECHAT
-            SEAdapterInterface _adapter = new SolarEngine.Platform. WeChatAdapter();
+             SEAdapterInterface _adapter = new SolarEngine.Platform. WeChatAdapter();
              SESDKInfo.setAdapterWapperInterface(_adapter);
+
+             TenCentAdInterface ad = new SolarEngine.Platform.TencentAdvertisingGameSDK();
+             SESDKInfo.setTengCentInterface(ad);
+
 #elif SOLARENGINE_BYTEDANCE
                 SEAdapterInterface _adapter = new  SolarEngine.Platform.ByteDanceAdapter();
                 SESDKInfo.setAdapterWapperInterface(_adapter);
