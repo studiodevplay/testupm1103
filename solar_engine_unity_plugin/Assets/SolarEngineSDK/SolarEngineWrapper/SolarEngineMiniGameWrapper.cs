@@ -1,4 +1,4 @@
-﻿#if (SOLARENGINE_BYTEDANCE||SOLARENGINE_WECHAT||SOLARENGINE_KUAISHOU)&&(!UNITY_EDITOR||SOLORENGINE_DEVELOPEREDITOR)
+﻿#if (SOLARENGINE_BYTEDANCE||SOLARENGINE_WECHAT||SOLARENGINE_KUAISHO||SOLARENGINE_BYTEDANCE_STARKSDK)&&(!UNITY_EDITOR||SOLORENGINE_DEVELOPEREDITOR)
 
 using System;
 using System.Collections.Generic;
@@ -70,20 +70,15 @@ namespace SolarEngine
             initParams.logEnabled = config.logEnabled;
             initParams.sublibVersion = sdk_version;
 #if  SOLARENGINE_WECHAT
-            SEAdapterInterface _adapter = new SolarEngine.Platform. WeChatAdapter();
             initParams.isInitTencentAdvertisingGameSDK=config.miniGameInitParams.isInitTencentAdvertisingGameSDK;
             initParams.reportingToTencentSdk=config.miniGameInitParams.reportingToTencentSdk;
             initParams.tencentAdvertisingGameSDKInitParams=new MiniGames.TencentAdvertisingGameSDKInitParams();
             initParams.tencentAdvertisingGameSDKInitParams.appid=config.miniGameInitParams.tencentAdvertisingGameSDKInitParams.appid;
             initParams.tencentAdvertisingGameSDKInitParams.secret_key=config.miniGameInitParams.tencentAdvertisingGameSDKInitParams.secret_key;
             initParams.tencentAdvertisingGameSDKInitParams.user_action_set_id=config.miniGameInitParams.tencentAdvertisingGameSDKInitParams.user_action_set_id;
-#elif SOLARENGINE_BYTEDANCE
-            SEAdapterInterface _adapter = new SolarEngine.Platform.ByteDanceAdapter();
-#elif SOLARENGINE_KUAISHOU
-            SEAdapterInterface _adapter = new KuaiShouAdapter();
-
+            
 #endif
-            SolarEngineSDK4MiniGames.init(appKey, initParams, _adapter);
+            SolarEngineSDK4MiniGames.init(appKey, initParams);
         }
       
         private static void Init(string appKey, string userId, SEConfig config, RCConfig rcConfig)
@@ -150,7 +145,7 @@ namespace SolarEngine
             SEAdapterInterface _adapter = new KuaiShouAdapter();
 
 #endif
-            SolarEngineSDK4MiniGames.init(appKey, initParams, _adapter, minircConfig);
+            SolarEngineSDK4MiniGames.init(appKey, initParams, minircConfig);
         }
 
   

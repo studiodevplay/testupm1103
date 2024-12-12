@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR&&!SOLORENGINE_DEVELOPEREDITOR
+﻿#if (UNITY_EDITOR&&!SOLORENGINE_DEVELOPEREDITOR)&&!SOLORENGINE_DEVELOPEREDITOR
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;

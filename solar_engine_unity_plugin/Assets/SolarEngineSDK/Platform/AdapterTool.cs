@@ -1,4 +1,4 @@
-#if (SOLARENGINE_BYTEDANCE||SOLARENGINE_WECHAT||SOLARENGINE_KUAISHOU)&&(!UNITY_EDITOR||SOLORENGINE_DEVELOPEREDITOR)
+#if (SOLARENGINE_BYTEDANCE||SOLARENGINE_WECHAT||SOLARENGINE_KUAISHOU||SOLARENGINE_BYTEDANCE_STARKSDK)&&(!UNITY_EDITOR||SOLORENGINE_DEVELOPEREDITOR)
 
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +29,9 @@ namespace SolarEngine.Platform
                 SESDKInfo.setAdapterWapperInterface(_adapter);
 #elif SOLARENGINE_KUAISHOU
                 SEAdapterInterface _adapter = new  KuaiShouAdapter();
+                SESDKInfo.setAdapterWapperInterface(_adapter);
+ #elif SOLARENGINE_BYTEDANCE_STARKSDK
+                SEAdapterInterface _adapter = new SolarEngine.Platform.ByteDanceStarkSDKAdapter();
                 SESDKInfo.setAdapterWapperInterface(_adapter);
 #endif
 

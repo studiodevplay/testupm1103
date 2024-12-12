@@ -1,4 +1,4 @@
-﻿#if (SOLARENGINE_BYTEDANCE||SOLARENGINE_WECHAT||SOLARENGINE_KUAISHOU)&&(!UNITY_EDITOR||SOLORENGINE_DEVELOPEREDITOR)&&!SOLORENGINE_DISABLE_REMOTECONFIG
+﻿#if (SOLARENGINE_BYTEDANCE||SOLARENGINE_WECHAT||SOLARENGINE_KUAISHOU||SOLARENGINE_BYTEDANCE_STARKSDK)&&(!UNITY_EDITOR||SOLORENGINE_DEVELOPEREDITOR)&&!SOLORENGINE_DISABLE_REMOTECONFIG
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,6 +27,9 @@ namespace SolarEngine
 #elif SOLARENGINE_KUAISHOU
                 SEAdapterInterface _adapter = new  KuaiShouAdapter();
                 MiniRemoteConfigInfo.setAdapterInterface(_adapter);
+#elif SOLARENGINE_BYTEDANCE_STARKSDK
+                SEAdapterInterface _adapter = new SolarEngine.Platform.ByteDanceStarkSDKAdapter();MiniRemoteConfigInfo.setAdapterInterface(_adapter);
+
 #endif
 
         }
