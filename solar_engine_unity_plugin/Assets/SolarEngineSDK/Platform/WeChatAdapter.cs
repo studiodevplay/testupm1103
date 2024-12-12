@@ -188,7 +188,17 @@ using WeChatWASM;
          {
              return "wechat";
          }
-
+        public string getsubmptype()
+        {
+         
+              return "native";
+        }
+   public void init()
+        {
+           
+         
+    
+        }
      }
  }
 #endif

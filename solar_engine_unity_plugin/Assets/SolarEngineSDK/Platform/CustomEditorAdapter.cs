@@ -128,7 +128,17 @@ namespace SolarEngine.Platform
             return "douyin";
         }
 
-
+ public string getsubmptype()
+        {
+         
+              return "native";
+        }
+   public void init()
+        {
+           
+         
+    
+        }
    
 
     }

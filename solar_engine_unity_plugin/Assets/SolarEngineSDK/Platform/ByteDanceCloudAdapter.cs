@@ -1,4 +1,4 @@
-#if SOLARENGINE_BYTEDANCE_STARKSDK&&(!UNITY_EDITOR||SOLORENGINE_DEVELOPEREDITOR)
+#if SOLARENGINE_BYTEDANCE_CLOUD&&(!UNITY_EDITOR||SOLORENGINE_DEVELOPEREDITOR)
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,6 +13,7 @@ namespace SolarEngine.Platform
 {
     public class ByteDanceStarkSDKAdapter : SEAdapterInterface
     {
+        private bool islogin = false;
         string filePath = Application.persistentDataPath + "/SolarEngineData.json";
         Dictionary<string ,object> result = new Dictionary<string, object>();
         public SEDeviceInfo setDeviceInfo()
@@ -43,98 +44,59 @@ namespace SolarEngine.Platform
         }
 
 
-        public Dictionary<string,object> newDit()
+        public void CacheDit()
         {
-            if (result.Count==0)
+             
+            if (File.Exists(filePath))
             {
-                if (File.Exists(filePath))
+                string jsonString = File.ReadAllText(filePath);
+                Dictionary<string, object> loadedDic = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonString);
+                if (loadedDic != null)
                 {
-                    string[] lines = File.ReadAllLines(filePath);
-                    foreach (string line in lines)
+                    foreach (var entry in loadedDic)
                     {
-                        string[] parts = line.Split(':');
-                        if (parts.Length == 2)
-                        {
-                            string key = parts[0];
-                            string value = parts[1];
-                            Debug.Log("Key: " + key + ", Value: " + value);
-                            result[key]= value;
-                        }
-                        else
-                        {
-                            Debug.LogWarning("Invalid line format: " + line);
-                        }
+                        result[entry.Key]= entry.Value;
                     }
                 }
-                else
-                {
-                    Debug.LogWarning("File does not exist: " + filePath);
-                }
-
+               
             }
-           
-            return result;
-        }
-     
-        public void saveData(string key, object value)
-        {
-            Dictionary<string, object> dic = newDit();
-            dic[ key]= value;
-            List<string> newLines = new List<string>();
-            foreach (var VARIABLE in dic)
+            else
             {
-                newLines.Add(VARIABLE.Key + ":" + VARIABLE.Value);
-                
+                Debug.LogWarning("File does not exist: " + filePath);
             }
-            File.WriteAllLines(filePath, newLines);
-            // string[] lines = File.ReadAllLines(path);
-            // bool keyFound = false;
-            // using (StreamWriter writer = new StreamWriter(path))
-            // {
-            //     foreach (string line in lines)
-            //     {
-            //         string[] parts = line.Split(':');
-            //         Debug.Log("saveData"+key+":"+ parts[0] +"    "+ parts[0] == key );
-            //         if (parts.Length == 2 && parts[0] == key)
-            //         {
-            //             writer.WriteLine(key + ":" + value);
-            //             keyFound = true;
-            //         }
-            //         else
-            //         {
-            //             writer.WriteLine(line);
-            //         }
-            //     }
-            //     if (!keyFound)
-            //     {
-            //         writer.WriteLine(key + ":" + value);
-            //     }
-            // }
-            // if (value.GetType() == typeof(int))
-            // {
-            //     StarkSDK.API.PlayerPrefs.SetInt(key, (int)value);
-            // }
-            // else if (value.GetType() == typeof(float))
-            // {
-            //
-            //     StarkSDK.API.PlayerPrefs.SetFloat(key, (float)value);
-            // }
-            // else if (value.GetType() == typeof(string))
-            // {
-            //
-            //     StarkSDK.API.PlayerPrefs.SetString(key, (string)value);
-            // }
-            //
-            // StarkSDK.API.PlayerPrefs.Save();
+          
+        }
+
+        public void savePath()
+        {
+            string jsonString = JsonConvert.SerializeObject(result);
+            File.WriteAllText(filePath, jsonString);
+        }
+        public void saveData(string key, object value)
+        { 
+            result[ key]= value;
+          if(islogin)
+              savePath();
+          
         }
         public bool  hasKey(string key)
         {
+          
            return result.ContainsKey(key);
         }
 
+        public void init()
+        {
+           
+           CacheDit();
+           savePath();
+           islogin = true;
+    
+        }
       
         public object getData(string key, Type type)
         {
+            Debug.LogWarning(filePath);
             if (result.ContainsKey(key))
             {
             
@@ -181,33 +143,13 @@ namespace SolarEngine.Platform
 
         public void deleteData(string key)
         {
-            // List<string> newLines = new List<string>();
-            // if (File.Exists(path))
-            // {
-            //     string[] lines = File.ReadAllLines(path);
-            //     foreach (string line in lines)
-            //     {
-            //         string[] parts = line.Split(':');
-            //         if (parts.Length == 2 && parts[0] == key)
-            //         {
-            //             continue;
-            //         }
-            //         else
-            //         {
-            //             newLines.Add(line);
-            //         }
-            //     }
-            // }
-            // File.WriteAllLines(path, newLines);
-            // if (!string.IsNullOrEmpty(key))
-            // {
-            //
-            //     if (StarkSDK.API.PlayerPrefs.HasKey(key))
-            //     {
-            //         StarkSDK.API.PlayerPrefs.DeleteKey(key);
-            //     }
-            //
-            // }
+            
+            if (result.ContainsKey(key))
+            {
+                result.Remove(key);
+               
+              savePath();
+            }
         }
 
         public void deleteAll()
@@ -218,6 +160,7 @@ namespace SolarEngine.Platform
 
         public EnterOptionsInfo getEnterOptionsInfo()
         {
+         
             LaunchOption launchOptionsSync = StarkSDK.API.GetLaunchOptionsSync();
 
             string scene = launchOptionsSync.Scene;
@@ -252,18 +195,21 @@ namespace SolarEngine.Platform
         public void login(SEAdapterInterface.OnLoginSuccessCallback successCallback,
             SEAdapterInterface.OnLoginFailedCallback failedCallback, bool forceLogin = true)
         {
-
+           
+           
             StarkSDK.API.GetAccountManager(). Login(
                 (c1, c2, isLogin) =>
                 {
                     successCallback?.Invoke(c1, c2, isLogin);
-                    Debug.Log("login"+c1);
+                  
+                  
                 },
                     
                 
                 (errMsg) => failedCallback?.Invoke(errMsg),
                 forceLogin
             );
+            
 
         }
 
@@ -271,7 +217,6 @@ namespace SolarEngine.Platform
         {
             StarkSDK.API.GetStarkAppLifeCycle().OnShowWithDict += (dic) =>
             {
-              Debug.Log("OnShowWithDict");
 
                 string scene = "";
                 Dictionary<string, string> query = new Dictionary<string, string>();
@@ -330,9 +275,14 @@ namespace SolarEngine.Platform
             return "douyin";
         }
 
-
-   
-
+        public string getsubmptype()
+        {
+          
+          if(StarkUtils.IsCloudRuntime())
+              return "cloud";
+          else
+              return "native";
+        }
     }
 }
 #endif

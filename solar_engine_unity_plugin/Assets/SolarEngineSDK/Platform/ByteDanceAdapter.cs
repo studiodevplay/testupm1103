@@ -224,8 +224,17 @@ namespace SolarEngine.Platform
         }
 
 
-   
-
+    public string getsubmptype()
+        {
+         
+              return "native";
+        }
+   public void init()
+        {
+           
+         
+    
+        }
     }
 }
 #endif
