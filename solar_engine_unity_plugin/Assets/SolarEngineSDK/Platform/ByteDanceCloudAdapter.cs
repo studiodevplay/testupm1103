@@ -46,7 +46,7 @@ namespace SolarEngine.Platform
 
         public void CacheDit()
         {
-             
+            LogTool.DebugLog(" filePath ：" + filePath);
             if (File.Exists(filePath))
             {
                 string jsonString = File.ReadAllText(filePath);
@@ -62,7 +62,7 @@ namespace SolarEngine.Platform
             }
             else
             {
-                Debug.LogWarning("File does not exist: " + filePath);
+               LogTool.DebugLog("File does not exist: " + filePath);
             }
           
         }
@@ -96,7 +96,7 @@ namespace SolarEngine.Platform
       
         public object getData(string key, Type type)
         {
-            Debug.LogWarning(filePath);
+            
             if (result.ContainsKey(key))
             {
             
@@ -195,8 +195,7 @@ namespace SolarEngine.Platform
         public void login(SEAdapterInterface.OnLoginSuccessCallback successCallback,
             SEAdapterInterface.OnLoginFailedCallback failedCallback, bool forceLogin = true)
         {
-           
-           
+         
             StarkSDK.API.GetAccountManager(). Login(
                 (c1, c2, isLogin) =>
                 {
