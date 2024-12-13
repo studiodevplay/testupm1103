@@ -29,6 +29,7 @@ namespace SolarEngine
                 MiniRemoteConfigInfo.setAdapterInterface(_adapter);
 #elif SOLARENGINE_BYTEDANCE_CLOUD
                 SEAdapterInterface _adapter = new SolarEngine.Platform.ByteDanceStarkSDKAdapter();MiniRemoteConfigInfo.setAdapterInterface(_adapter);
+                MiniRemoteConfigInfo.setAdapterInterface(_adapter);
 
 #endif
 
