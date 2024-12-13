@@ -441,6 +441,18 @@ void __iOSSolarEngineSDKInit(const char * appKey, const char * SEUserId, const c
         config.remoteConfig = remoteConfig;
     }
     
+    NSDictionary *customDomainDict = seDict[@"customDomain"];
+    if ([customDomainDict isKindOfClass:[NSDictionary class]]) {
+        
+        SECustomDomain *customDomain = [[SECustomDomain alloc] init];
+        customDomain.enable             = [customDomainDict[@"enable"] boolValue];
+        customDomain.receiverDomain     = customDomainDict[@"enable"];
+        customDomain.ruleDomain         = customDomainDict[@"ruleDomain"];
+        customDomain.ruleTcpHost        = customDomainDict[@"ruleTcpHost"];
+        customDomain.receiverTcpHost    = customDomainDict[@"receiverTcpHost"];
+        customDomain.gatewayTcpHost     = customDomainDict[@"gatewayTcpHost"];
+        config.customDomain = customDomain;
+    }
     
     [[SolarEngineSDK sharedInstance] startWithAppKey:_appKey config:config];
 }
