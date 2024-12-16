@@ -446,11 +446,11 @@ void __iOSSolarEngineSDKInit(const char * appKey, const char * SEUserId, const c
         
         SECustomDomain *customDomain = [[SECustomDomain alloc] init];
         customDomain.enable             = [customDomainDict[@"enable"] boolValue];
-        customDomain.receiverDomain     = customDomainDict[@"enable"];
+        customDomain.receiverDomain     = customDomainDict[@"receiverDomain"];
         customDomain.ruleDomain         = customDomainDict[@"ruleDomain"];
-        customDomain.ruleTcpHost        = customDomainDict[@"ruleTcpHost"];
-        customDomain.receiverTcpHost    = customDomainDict[@"receiverTcpHost"];
-        customDomain.gatewayTcpHost     = customDomainDict[@"gatewayTcpHost"];
+        customDomain.ruleTcpHost        = customDomainDict[@"tcpRuleHost"];
+        customDomain.receiverTcpHost    = customDomainDict[@"tcpReceiverHost"];
+        customDomain.gatewayTcpHost     = customDomainDict[@"tcpGatewayHost"];
         config.customDomain = customDomain;
     }
     
