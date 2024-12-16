@@ -27,6 +27,9 @@ namespace SolarEngineSDK.Editor
 
         public const string remoteConfigMsg = "Please confirm the platform for the online parameter plugin.";
         
+        
+        public const string removeSDKMsg = "删除.";
+        
       
        
 

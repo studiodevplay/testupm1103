@@ -332,6 +332,7 @@ public class XmlModifier
         iOSRC(StrongType.Default);
     }
 
+   
     /// <summary>
     /// 整体执行修改 XML 文件操作（针对 CN 情况），包括加载、省略号)
     /// </summary>
@@ -355,6 +356,20 @@ public class XmlModifier
             Debug.LogError(SolorEngine + "Error modifying XML file (CN) ex.Message");
             return false;
         }
+    }
+
+    public static bool iOSDefault()
+    {
+      return  iOSSetting(StrongType.Default)&&
+        iOSRC(StrongType.Default);
+    }
+    public  static bool AndroidDefault( )
+    {
+        return androidSetting(StrongType.Default) &&
+               AndroidRC(StrongType.Default) &&
+               AndroidOaid(StrongType.Default);
+
+
     }
 
     /// <summary>
@@ -388,12 +403,15 @@ public class XmlModifier
   
     static bool sdkSetting(StrongType type)
     {
+         return iOSSetting(type)&& androidSetting(type);
+      
+    }
+
+
+    static bool iOSSetting(StrongType type)
+    {
         bool isIosSetSuccess = false;
-        bool isAndroidSetSuccess = false;
-
         var iosDoc = LoadXmlDocument(IOS_SDK_XML_FILE_PATH);
-        var androidDoc = LoadXmlDocument(ANDROID_SDK_XML_FILE_PATH);
-
         if (iosDoc!= null)
         {
             try
@@ -423,6 +441,20 @@ public class XmlModifier
             Debug.LogError("iOS doc null.");
         }
 
+        return isIosSetSuccess;
+        
+    }
+
+    static bool androidSetting(StrongType type)
+    {
+        if (SolarEngineSettings.removeAndroidSDK)
+            return true;
+        bool isAndroidSetSuccess = false;
+
+       
+        var androidDoc = LoadXmlDocument(ANDROID_SDK_XML_FILE_PATH);
+
+        
         if (androidDoc!= null)
         {
             try
@@ -432,7 +464,7 @@ public class XmlModifier
                 {
                     androidDepElement.RemoveAll();
                     var androidVersion = string.IsNullOrEmpty(SolarEngineSettings.AndroidVersion)
-                       ? ANDROID_PACKAGE_Default_VERSION
+                        ? ANDROID_PACKAGE_Default_VERSION
                         : SolarEngineSettings.AndroidVersion;
 
                     switch (type)
@@ -461,9 +493,10 @@ public class XmlModifier
             Debug.LogError("Android doc null.");
         }
 
-        return isIosSetSuccess && isAndroidSetSuccess;
+        return isAndroidSetSuccess;
     }
-
+    
+    
     // [MenuItem("SDk/Test")]
     public static void test()
     {

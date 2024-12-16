@@ -39,8 +39,10 @@ namespace SolarEngine
          
             if (result)
             {
+                
+         
              
-                if (checkPlugins() &&
+                if (checkSDK()&&checkPlugins() &&
                     checkXmlHandle())
                 {
                     AssetDatabase.Refresh();
@@ -93,8 +95,20 @@ namespace SolarEngine
 
             return result;
         }
-        
-        
+
+
+        private static bool checkSDK()
+        {
+            if (SolarEngineSettings.removeAndroidSDK)
+            {
+                return PluginsEdtior.disableAndroidSDK();
+            }
+            else
+            {
+                return PluginsEdtior.enableAndroidSDK();
+            }
+            
+        }
         
         private static bool checkPlugins()
         {

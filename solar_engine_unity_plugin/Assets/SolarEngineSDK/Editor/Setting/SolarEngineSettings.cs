@@ -45,6 +45,14 @@ namespace SolarEngine
 		private bool _Oaid=true;
 		
 		
+		// [SerializeField]
+		// private bool _UseiOSSDK;
+		[SerializeField]
+		private bool _RemoveAndroidSDK;
+		
+		
+		
+		
 		[SerializeField]
 		private bool _DeepLink;
 		[SerializeField]
@@ -129,6 +137,15 @@ namespace SolarEngine
 		{
 			get{return  Instance._Oversea;}
 			
+		}
+
+		// public static bool isUseiOSSDK
+		// {
+		// 	get{return  Instance._UseiOSSDK;}
+		// }
+		public static bool removeAndroidSDK
+		{
+			get { return Instance._RemoveAndroidSDK; }
 		}
 
 		

@@ -21,8 +21,15 @@ public class PluginsEdtior : MonoBehaviour
    
    private const string SolarEngineNet = "Assets/SolarEngineNet/";
    
+   private const string IOS_SDK = SolarEngineNet + "iOS";
+   private const string ANDROID_SDK = SolarEngineNet + "Android";
+
+   private const string ANDROID_OAID_PATH = SolarEngineNet + "SolarEnginePlugins/Oaid";
    
    
+   private const string REMOTECONFIG_PATH = SolarEngineNet + "SolarEnginePlugins/RemoteConfigSDK/";
+   private const string ANDROID_REMOTECONFIG_PATH = REMOTECONFIG_PATH + "Android";
+   private const string IOS_REMOTECONFIG_PATH = REMOTECONFIG_PATH + "iOS" ;
    
    
    
@@ -34,7 +41,7 @@ public class PluginsEdtior : MonoBehaviour
 
    
    //iospath
-  private const string RemoteConfigsPathiOSCS = "Assets/SolarEngineSDK/RemoteConfigWrapper/SESDKRemoteConfigiOSWrapper.cs";
+  private const string  RemoteConfigsPathiOSCS = "Assets/SolarEngineSDK/RemoteConfigWrapper/SESDKRemoteConfigiOSWrapper.cs";
    private const string RemoteConfigsPathiOSMM = PluginsSolarEnginePath+"iOS/wrappers/SESDKRemoteConfigUnityBridge.mm";
    private const string RemoteConfigsPathiOSH =  PluginsSolarEnginePath+"iOS/wrappers/SESDKRemoteConfigUnityBridge.h";
    private const string RemoteConfigsPathiOSXml = RemoteConfigXmlPath+"/iOS";
@@ -43,6 +50,36 @@ public class PluginsEdtior : MonoBehaviour
    private const string ConfigsPathAndroidJar = PluginsSolarEnginePath+"Android/libs/se_remote_config_unity_bridge.jar";
    private const string RemoteConfigsPathAndroidXml = RemoteConfigXmlPath+"/Android";
 
+
+
+   public static bool disableiOSSDK()
+   {
+       DefineSymbolsEditor.add_DISABLE_REMOTECONFIG(BuildTargetGroup.iOS);
+       return
+           HidePath(IOS_SDK);
+   }
+   public static bool disableAndroidSDK()
+   {
+     return  HidePath(ANDROID_SDK);
+     
+   }
+   
+   
+   public static bool enableiOSSDK()
+   {
+
+       return ShowPath(IOS_SDK);
+
+
+   }
+   public static bool enableAndroidSDK()
+   {
+       return  ShowPath(ANDROID_SDK);
+
+   }
+   
+   
+   
   // [MenuItem(DisableAll, false, 0)]
    public static void disableAll ()
    {
@@ -101,8 +138,6 @@ public class PluginsEdtior : MonoBehaviour
    public static bool disableAndroid ()
    { 
        DefineSymbolsEditor.add_DISABLE_REMOTECONFIG(BuildTargetGroup.Android);
-
-      
      return HideFile(RemoteConfigsPathAndroidCS)&&
        HideFile(ConfigsPathAndroidJar)&&
       HidePath(RemoteConfigsPathAndroidXml);

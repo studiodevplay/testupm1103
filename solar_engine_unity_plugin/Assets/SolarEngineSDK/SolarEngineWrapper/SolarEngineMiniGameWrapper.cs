@@ -1,4 +1,4 @@
-﻿#if (SOLARENGINE_BYTEDANCE||SOLARENGINE_WECHAT||SOLARENGINE_KUAISHO||SOLARENGINE_BYTEDANCE_CLOUD)&&(!UNITY_EDITOR||SOLORENGINE_DEVELOPEREDITOR)
+﻿#if (SOLARENGINE_BYTEDANCE||SOLARENGINE_WECHAT||SOLARENGINE_KUAISHO||SOLARENGINE_BYTEDANCE_CLOUD||SOLARENGINE_BYTEDANCE_STARK)&&(!UNITY_EDITOR||SOLORENGINE_DEVELOPEREDITOR)
 
 using System;
 using System.Collections.Generic;
@@ -137,14 +137,14 @@ namespace SolarEngine
             minircConfig.customIDUserProperties = rcConfig.customIDUserProperties;
 
 
-#if SOLARENGINE_WECHAT
-            SEAdapterInterface _adapter = new SolarEngine.Platform. WeChatAdapter();
-#elif SOLARENGINE_BYTEDANCE
-            SEAdapterInterface _adapter = new SolarEngine.Platform.ByteDanceAdapter();
-#elif SOLARENGINE_KUAISHOU
-            SEAdapterInterface _adapter = new KuaiShouAdapter();
-
-#endif
+// #if SOLARENGINE_WECHAT
+//             SEAdapterInterface _adapter = new SolarEngine.Platform. WeChatAdapter();
+// #elif SOLARENGINE_BYTEDANCE
+//             SEAdapterInterface _adapter = new SolarEngine.Platform.ByteDanceAdapter();
+// #elif SOLARENGINE_KUAISHOU
+//             SEAdapterInterface _adapter = new KuaiShouAdapter();
+//
+// #endif
             SolarEngineSDK4MiniGames.init(appKey, initParams, minircConfig);
         }
 

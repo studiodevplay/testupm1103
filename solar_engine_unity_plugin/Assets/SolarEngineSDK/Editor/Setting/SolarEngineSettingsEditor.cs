@@ -46,6 +46,9 @@ namespace SolarEngine
         SerializedProperty iOSUniversalLinksDomains;
 // 序列化属性，用于表示 iOS 平台版本相关的设置
         SerializedProperty iOSVersion;
+        
+        private SerializedProperty useiOSSDK;
+        private SerializedProperty removeAndroidSDK;
 
 // 序列化属性，用于表示 Android 平台 URL 方案相关的设置
         SerializedProperty AndroidUrlSchemes;
@@ -63,6 +66,7 @@ namespace SolarEngine
         private bool oldDisMiniGameValue;
         private bool oldDisOaidValue;
 
+    
 
       
 
@@ -88,6 +92,13 @@ namespace SolarEngine
             // 获取表示中国、海外存储区域选择的序列化属性
             chinaProperty = serializedObject.FindProperty("_China");
             overseaProperty = serializedObject.FindProperty("_Oversea");
+            
+            //是否移除iOS or Android
+            useiOSSDK = serializedObject.FindProperty("_UseiOSSDK");
+            removeAndroidSDK = serializedObject.FindProperty("_RemoveAndroidSDK");
+            
+            
+            
 
             // 获取是否使用远程配置、OAID、深度链接、指定版本等相关的序列化属性
             useRemoteConfig = serializedObject.FindProperty("_RemoteConfig");
@@ -173,6 +184,26 @@ namespace SolarEngine
 
         }
 
+
+        private bool removesdk=false;
+        
+
+        private void removeSDK()
+        {
+            // removesdk =EditorGUILayout.Foldout(removesdk, "SDK");
+            // if (removesdk)
+            // {
+            //     
+                // EditorGUILayout.HelpBox(ConstString.removeSDKMsg, MessageType.Info);
+                EditorGUI.indentLevel += 1;
+               // EditorGUILayout.PropertyField(useiOSSDK,new GUIContent("USE iOS SDK"));
+                EditorGUILayout.PropertyField(removeAndroidSDK,new GUIContent("Remove Android SDK"));
+                EditorGUI.indentLevel -= 1;
+                
+                
+          //  }
+        }
+
         private bool _useRemoteConfig = false;
         private void RemoteConfig()
         {
@@ -193,6 +224,11 @@ namespace SolarEngine
                 EditorGUI.indentLevel -= 1;
                 
             }
+            
+            if (removeAndroidSDK.boolValue)
+            {
+                androidRemoteConfig.boolValue = false;
+            }
             // else
             // {
             //     iOSRemoteConfig.boolValue = true;
@@ -209,11 +245,13 @@ namespace SolarEngine
                 useOaid.boolValue = true;
 
             }
+            if (removeAndroidSDK.boolValue)
+            {
+                useOaid.boolValue = false;
+            }
 
             if (overseaProperty.boolValue)
             {
-              
-
                 if (useOaid.boolValue)
                 {
                      EditorGUILayout.HelpBox(ConstString.oaidEnable, MessageType.Warning);
@@ -263,39 +301,12 @@ namespace SolarEngine
             }
         }
         
-        // private void SdkVersion(GUIStyle darkerCyanTextFieldStyles)
-        // {
-        //     EditorGUILayout.PropertyField(useSpecifyVersion);
-        //     if (useSpecifyVersion.boolValue)
-        //     {
-        //         EditorGUILayout.HelpBox("Please Set iOS and Android Version", MessageType.Info);
-        //
-        //         EditorGUI.indentLevel += 1;
-        //         EditorGUILayout.PropertyField(iOSVersion,new GUIContent("iOS Version"));
-        //         EditorGUILayout.PropertyField(AndroidVersion);
-        //         EditorGUI.indentLevel -= 1;
-        //         if (!iOSVersion.stringValue.Equals(SolarEngineSettings.iOSVersion))
-        //             SolarEngineSettings.iOSVersion=iOSVersion.stringValue;
-        //         if( !AndroidVersion.stringValue.Equals(SolarEngineSettings.AndroidVersion))
-        //             SolarEngineSettings.AndroidVersion = AndroidVersion.stringValue;
-        //     }
-        //     else
-        //     {
-        //         iOSVersion.stringValue = "";
-        //         AndroidVersion.stringValue = "";
-        //     }
-        //  
-        //
-        //    
-        // }
+     
 
         private bool _useSpecifyVersion = false;
         private void SdkVersion(GUIStyle darkerCyanTextFieldStyles)
         {
             
-         
-
-            // 使用Foldout创建可折叠区域，初始状态设为false，即默认折叠起来，关联的布尔变量用于记录折叠状态
             _useSpecifyVersion = EditorGUILayout.Foldout(_useSpecifyVersion, "SDK Version");
             if (_useSpecifyVersion)
             {
@@ -346,6 +357,7 @@ namespace SolarEngine
             ChinaOrOversea(darkerCyanTextFieldStyles);
        
             DrawH2Title("SDK Plugins");
+            removeSDK();
             RemoteConfig();
             UseOaid();
 
@@ -388,48 +400,6 @@ namespace SolarEngine
     // 当用户点击按钮区域时执行以下逻辑
     if (GUILayout.Button( "Apply"))
     {
-        // // 检查如果同时选择了中国和海外存储区域，弹出错误提示对话框并返回，不执行后续操作
-        // if (chinaProperty.boolValue && overseaProperty.boolValue)
-        // {
-        //     EditorUtility.DisplayDialog("fail", storageWarning, "OK");
-        //     return;
-        // }
-        // // 检查如果中国和海外存储区域都没选择，弹出相应错误提示对话框并返回，不执行后续操作
-        // else if (!chinaProperty.boolValue &&!overseaProperty.boolValue)
-        // {
-        //     EditorUtility.DisplayDialog("fail", nostorageWarning, "OK");
-        //     return;
-        // }
-        //
-        // // 根据选择的存储区域确定相应的存储区域名称字符串
-        // string storage = chinaProperty.boolValue? "China" : "Oversea";
-        //
-        // // 弹出确认对话框，询问用户是否确定要执行当前操作，获取用户的选择结果
-        // bool result = EditorUtility.DisplayDialog("Confirm Operation",
-        //     $"The current data storage area is set to  {storage}.\n " +
-        //     $"Are you sure you want to perform this operation? ",
-        //     confirm,
-        //     cancel);
-        //
-        // // 如果用户确认执行操作
-        // if (result)
-        // {
-            // 调用Apply方法应用设置，如果成功则显示成功提示，否则显示失败提示并让用户查看控制台错误信息
-            // if (ApplySetting._applySetting())
-            // {
-            //     ShowTips("Successfully", "SolarEngineSDK Successfully Matching Settings Panel");
-            // }
-            // else
-            // {
-            //     EditorUtility.DisplayDialog("fail", "Failed. Please check the console for error messages", "OK");
-            // }
-        // }
-        // // 如果用户取消操作，在控制台输出相应的日志信息
-        // else
-        // {
-        //     Debug.Log("You cancelled the operation");
-        // }
-
         ApplySetting._applySetting(true);
     }
 }
@@ -437,7 +407,7 @@ namespace SolarEngine
         //用户应用
         public  bool Apply()
         {
-        return  iOSRemoteConfigValue()&&
+          return  iOSRemoteConfigValue()&&
            androidRemoteConfigValue()&&
            miniGameRemoteConfigValue()&&
              
