@@ -46,7 +46,7 @@ namespace SolarEngine.Platform
 
         public void CacheDit()
         {
-             
+             LogTool.DebugLog("Reading from file: " + filePath);
             if (File.Exists(filePath))
             {
                 string jsonString = File.ReadAllText(filePath);
