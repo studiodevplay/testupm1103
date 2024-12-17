@@ -14,7 +14,7 @@ namespace SolarEngine.Platform
     public class ByteDanceStarkSDKAdapter : SEAdapterInterface
     {
         private bool islogin = false;
-       // string filePath = Application.persistentDataPath + "/SolarEngineData.json";
+        string fileName =  "/SolarEngineData.json";
         Dictionary<string ,object> result = new Dictionary<string, object>();
         public SEDeviceInfo setDeviceInfo()
         {
@@ -43,121 +43,98 @@ namespace SolarEngine.Platform
 
         }
 
+        string filePath()
+        {
+#if UNITY_EDITOR
+            return Application.persistentDataPath + fileName;
+#endif
+            return "data/data/"+ Application.identifier +"/files"+ fileName;
+        }
+
 
         public void CacheDit()
         {
-             
-            // if (File.Exists(filePath))
-            // {
-            //     string jsonString = File.ReadAllText(filePath);
-            //     Dictionary<string, object> loadedDic = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonString);
-            //     if (loadedDic != null)
-            //     {
-            //         foreach (var entry in loadedDic)
-            //         {
-            //             result[entry.Key]= entry.Value;
-            //         }
-            //     }
-            //    
-            // }
-            // else
-            // {
-            //    LogTool.DebugLog("File does not exist: " + filePath);
-            // }
+            string path = filePath();
+            LogTool.DebugLog("filePath :"+filePath());
+            if (File.Exists(path))
+            {
+                string jsonString = File.ReadAllText(path);
+                Dictionary<string, object> loadedDic = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonString);
+                if (loadedDic != null)
+                {
+                    foreach (var entry in loadedDic)
+                    {
+                        result[entry.Key]= entry.Value;
+                    }
+                }
+               
+            }
+            else
+            {
+                Debug.LogWarning("File does not exist: " + path);
+            }
           
         }
 
         public void savePath()
         {
-            // string jsonString = JsonConvert.SerializeObject(result);
-            // File.WriteAllText(filePath, jsonString);
+            try
+            {
+                string jsonString = JsonConvert.SerializeObject(result);
+                File.WriteAllText(filePath(), jsonString);
+            }
+            catch (Exception e)
+            {
+              LogTool.Error("savePath"+ e.ToString());
+            }
+          
         }
         public void saveData(string key, object value)
         { 
-          //   result[ key]= value;
-          // if(islogin)
-          //     savePath();
-          
-          if (value.GetType() == typeof(int))
-          {
-      
-              UnityEngine.PlayerPrefs.SetInt(key, (int)value);
-          }
-          else if (value.GetType() == typeof(float))
-          {
-
-              UnityEngine.PlayerPrefs.SetFloat(key, (float)value);
-          }
-          else if (value.GetType() == typeof(string))
-          {
-
-              UnityEngine.PlayerPrefs.SetString(key, (string)value);
-          }
-
-          UnityEngine.PlayerPrefs.Save();
+            result[ key]= value;
+          if(islogin)
+              savePath();
           
         }
         public bool  hasKey(string key)
         {
           
-           // return result.ContainsKey(key);
-           return  UnityEngine.PlayerPrefs.HasKey(key);
-
+           return result.ContainsKey(key);
         }
 
         public void init()
         {
            
-           // CacheDit();
-           // savePath();
-           // islogin = true;
+           CacheDit();
+           savePath();
+           islogin = true;
     
         }
       
         public object getData(string key, Type type)
         {
             
-            // if (result.ContainsKey(key))
-            // {
-            //
-            //     if (type == typeof(int))
-            //     {
-            //         return int.Parse(result[key].ToString());
-            //     }
-            //     else if (type == typeof(float))
-            //     {
-            //         return float.Parse(result[key].ToString());
-            //     }
-            //     else if (type == typeof(string))
-            //     {
-            //        return result[key].ToString();
-            //     }
-            
-            if (!string.IsNullOrEmpty(key) && UnityEngine.PlayerPrefs.HasKey(key))
+            if (result.ContainsKey(key))
             {
-
+            
                 if (type == typeof(int))
                 {
-                    return UnityEngine.PlayerPrefs.GetInt(key);
+                    return int.Parse(result[key].ToString());
                 }
                 else if (type == typeof(float))
                 {
-                    return UnityEngine.PlayerPrefs.GetFloat(key);
+                    return float.Parse(result[key].ToString());
                 }
                 else if (type == typeof(string))
                 {
-                    return UnityEngine.PlayerPrefs.GetString(key);
+                   return result[key].ToString();
                 }
-
-                UnityEngine.PlayerPrefs.Save();
-            }
-
-            return null;
+            
                
             }
             
       
-          
+            return null;
 
             // if (!string.IsNullOrEmpty(key) && StarkSDK.API.PlayerPrefs.HasKey(key))
             // {
@@ -179,33 +156,22 @@ namespace SolarEngine.Platform
             // }
             //
             // return null;
-        
+        }
 
         public void deleteData(string key)
         {
             
-            // if (result.ContainsKey(key))
-            // {
-            //     result.Remove(key);
-            //    
-            //   savePath();
-            // }
-            if (!string.IsNullOrEmpty(key))
+            if (result.ContainsKey(key))
             {
-
-                if (UnityEngine.PlayerPrefs.HasKey(key))
-                {
-                    UnityEngine.PlayerPrefs.DeleteKey(key);
-                }
-
+                result.Remove(key);
+               
+              savePath();
             }
         }
 
         public void deleteAll()
         {
-           // StarkSDK.API.PlayerPrefs.DeleteAll();
-           UnityEngine.PlayerPrefs.DeleteAll();
-
+            StarkSDK.API.PlayerPrefs.DeleteAll();
         }
 
 
@@ -246,13 +212,14 @@ namespace SolarEngine.Platform
         public void login(SEAdapterInterface.OnLoginSuccessCallback successCallback,
             SEAdapterInterface.OnLoginFailedCallback failedCallback, bool forceLogin = true)
         {
-          
+         
+         
             StarkSDK.API.GetAccountManager(). Login(
                 (c1, c2, isLogin) =>
                 {
+
                     successCallback?.Invoke(c1, c2, isLogin);
-                  
-                  
+
                 },
                     
                 
