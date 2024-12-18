@@ -195,10 +195,10 @@ namespace SolarEngine
             // {
             //     
                 // EditorGUILayout.HelpBox(ConstString.removeSDKMsg, MessageType.Info);
-                EditorGUI.indentLevel += 1;
+               // EditorGUI.indentLevel += 1;
                // EditorGUILayout.PropertyField(useiOSSDK,new GUIContent("USE iOS SDK"));
                 EditorGUILayout.PropertyField(removeAndroidSDK,new GUIContent("Remove Android SDK"));
-                EditorGUI.indentLevel -= 1;
+               // EditorGUI.indentLevel -= 1;
                 
                 
           //  }

@@ -28,11 +28,11 @@ namespace SolarEngine.Build
             if (target == BuildTarget.Android || target == BuildTarget.iOS)
             {
                 
-#if UNITY_ANDROID&&!SOLARENGINE_BYTEDANCE
+#if UNITY_ANDROID&&!SOLARENGINE_BYTEDANCE&&!SOLARENGINE_BYTEDANCE_CLOUD&&!SOLARENGINE_BYTEDANCE_STARK
                 RunPostProcessTasksAndroid();
                 CheckConfusion();
 #endif 
-#if (UNITY_ANDROID||UNITY_IOS)&&!SOLARENGINE_BYTEDANCE
+#if (UNITY_ANDROID||UNITY_IOS)&&!SOLARENGINE_BYTEDANCE&&!SOLARENGINE_BYTEDANCE_CLOUD&&!SOLARENGINE_BYTEDANCE_STARK
                 if (ApplySetting.checkApplyWithAndroidPackage())
                 {
 
