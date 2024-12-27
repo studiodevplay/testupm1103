@@ -232,6 +232,16 @@ namespace SolarEngine.Platform
          
     
         }
+   public string createSign(Dictionary<string,object>data)
+        {
+            return AdapterTool.createSign(data);
+        }
+
+        public string createRequestSign(Dictionary<string,object>data)
+        {
+            return AdapterTool.createRequestSign(data);
+        }
+
     }
 }
 #endif

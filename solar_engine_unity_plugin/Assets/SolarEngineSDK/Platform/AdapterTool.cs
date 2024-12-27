@@ -2,7 +2,14 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
+#if !TUANJIE_2022_3_OR_NEWER
+using System.Security.Cryptography;
+#endif
+using System.Text;
+using Newtonsoft.Json;
 using SolarEngine.MiniGames.info;
+using SolarEngineHelper;
 using UnityEngine;
 
 namespace SolarEngine.Platform
@@ -12,11 +19,6 @@ namespace SolarEngine.Platform
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void Initializes()
         {
-      
-            [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-            static void Initializes()
-            {
-      
 #if SOLARENGINE_WECHAT
              SEAdapterInterface _adapter = new SolarEngine.Platform. WeChatAdapter();
              SESDKInfo.setAdapterWapperInterface(_adapter);
@@ -38,7 +40,7 @@ namespace SolarEngine.Platform
                 SESDKInfo.setAdapterWapperInterface(_adapter);
 #endif
 
-            }
+            
 
         }
         public static int getDeviceType(string platform)
@@ -78,6 +80,37 @@ namespace SolarEngine.Platform
 
             string matchingKey = platformMap.Keys.FirstOrDefault(key => key.IndexOf(platform) > -1) ?? "other";
             return platformMap.TryGetValue(matchingKey, out int deviceType) ? deviceType : 0;
+        }
+        
+
+#if  TUANJIE_2022_3_OR_NEWER&&(TUANJIE_WEIXINMINIGAME||UNITY_WEBGL)
+
+        [DllImport("__Internal")]
+        public static extern string _createSign(string  reportData);
+        
+        [DllImport("__Internal")]
+        public static extern string _createRequestSign(string  reportData);
+#endif
+        public static string createSign(Dictionary<string, object> data)
+        {
+           
+#if  TUANJIE_2022_3_OR_NEWER&&(TUANJIE_WEIXINMINIGAME||UNITY_WEBGL)
+         return   _createSign(JsonConvert.SerializeObject(data));
+#else
+          return  SolarEngineUnityTool.createSign(data);
+#endif
+        }
+
+        public static string createRequestSign(Dictionary<string, object> data)
+        {
+#if  TUANJIE_2022_3_OR_NEWER&&(TUANJIE_WEIXINMINIGAME||UNITY_WEBGL)
+
+            return _createRequestSign(JsonConvert.SerializeObject(data));
+ #else 
+            return SolarEngineUnityTool.createRequestSign(data);
+#endif
+
+
         }
 
     }

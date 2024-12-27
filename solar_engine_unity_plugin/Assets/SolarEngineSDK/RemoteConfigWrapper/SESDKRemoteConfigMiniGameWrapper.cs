@@ -13,6 +13,7 @@ namespace SolarEngine
 {
     public partial class SESDKRemoteConfig : MonoBehaviour
     {
+        
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void Initializes()
         {
@@ -44,15 +45,29 @@ namespace SolarEngine
                
         }
    
-        private void SESDKSetRemoteDefaultConfig(Dictionary<string, object>[] defaultConfig)
+        private void SESDKSetRemoteDefaultConfig(SESDKRemoteConfig.Item[] defaultConfig)
         {
 
             if (defaultConfig == null)
             {
                 return;
             }
-           MiniRemoteConfigWrapper.Instance.setRemoteDefaultConfig(defaultConfig);
-      
+            foreach (var item in defaultConfig)
+            {
+                Dictionary<string, object> dic = new Dictionary<string, object>();
+                
+                dic.Add("name", item.name);
+             
+                if(item.type==4)
+                    dic.Add("value",JsonConvert.SerializeObject(item.value));
+                else
+                    dic.Add("value", item.value);
+                
+                dic.Add("type", item.type);
+                
+                MiniRemoteConfigWrapper.Instance.setRemoteDefaultConfig(dic);
+            }
+          
         }
 
 

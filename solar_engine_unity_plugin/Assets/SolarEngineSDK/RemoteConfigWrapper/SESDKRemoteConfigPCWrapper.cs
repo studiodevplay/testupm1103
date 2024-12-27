@@ -1,5 +1,4 @@
-﻿#if( UNITY_EDITOR&&!SOLORENGINE_DEVELOPEREDITOR)||SOLORENGINE_DISABLE_REMOTECONFIG
-
+﻿#if(UNITY_EDITOR&&!SOLORENGINE_DEVELOPEREDITOR)||(SOLARENGINE_DISABLE_REMOTECONFIG&&SOLARENGINE_MINIGAME_DISABLE_REMOTECONFIG)||(SOLARENGINE_DISABLE_REMOTECONFIG&&UNITY_IOS)||(SOLARENGINE_MINIGAME_DISABLE_REMOTECONFIG&&UNITY_WEBGL)
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,11 +12,10 @@ namespace SolarEngine
     public partial class SESDKRemoteConfig : MonoBehaviour
     {
 
-        private void SESDKSetRemoteDefaultConfig(Dictionary<string, object>[] defaultConfig)
+        private void SESDKSetRemoteDefaultConfig(Item[] defaultConfig)
         {
             Debug.Log("Unity Editor: SESDKSetRemoteConfigEventProperties");
-
-
+            
         }
 
 

@@ -6,16 +6,19 @@ using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 // using SolarEngine.Sample;
 using AOT;
+using Newtonsoft.Json.Linq;
+using SolaEngine.MiniGames;
 
 namespace SolarEngine
 {
     public partial class SESDKRemoteConfig : MonoBehaviour
     {
-
         private FetchRemoteConfigCallback fetchRemoteConfigCallback_private = null;
+
         public delegate void FetchRemoteConfigCallback(string result);
 
         private FetchAllRemoteConfigCallback fetchAllRemoteConfigCallback_private = null;
+
         public delegate void FetchAllRemoteConfigCallback(Dictionary<string, object> result);
 
         private static List<Action> waitingTaskList = new List<Action>();
@@ -36,6 +39,7 @@ namespace SolarEngine
                         _instance = am.AddComponent(typeof(SESDKRemoteConfig)) as SESDKRemoteConfig;
                     }
                 }
+
                 return _instance;
             }
         }
@@ -80,9 +84,18 @@ namespace SolarEngine
         /// 设置默认配置，在线参数SDK需要开发者预置一份默认配置到用户app中，方便在线参数SDK使用此默认配置进行兜底操作。
         /// </summary>
         /// <param name="defaultConfig">默认配置/param>
-        public void SetRemoteDefaultConfig(Dictionary<string, object>[] defaultConfig)
+        public void SetRemoteDefaultConfig(Item[] defaultConfig)
         {
-            SESDKSetRemoteDefaultConfig(defaultConfig);
+            if (defaultConfig == null)
+            {
+                return;
+            }
+            // Debug.LogError(JsonConvert.SerializeObject(defaultConfig));
+            // foreach (var VARIABLE in defaultConfig)
+            // {
+            //     Debug.LogError(JsonConvert.SerializeObject(defaultConfig));
+            // }
+           SESDKSetRemoteDefaultConfig(defaultConfig);
         }
 
         /// <summary>
@@ -145,75 +158,63 @@ namespace SolarEngine
             SESDKRemoteConfig.Instance.fetchAllRemoteConfigCallback_private = callback;
             SESDKAsyncFetchAllRemoteConfig();
         }
-        
+
         #region 新增set方法
 
-        public Dictionary<string, object> stringItem(string name, string value)
+        public struct  Item
         {
-            Dictionary<string, object> configDict = new Dictionary<string, object>();
-            configDict.Add("name", name);
-            configDict.Add("value", value);
-            configDict.Add("type", 1);
-            return configDict;
+            public string name;
+            public object value;
+            public int type;
+        }
+        public Item stringItem(string name, string value)
+        {
+           
+            return new Item() { name = name, value = value, type = 1 };
         }
 
-        public Dictionary<string, object> intItem(string name, int value)
+        public Item intItem(string name, int value)
         {
-            Dictionary<string, object> configDict = new Dictionary<string, object>();
-            configDict.Add("name", name);
-            configDict.Add("value", value);
-            configDict.Add("type", 2);
-            return configDict;
+        
+            return new Item() { name = name, value = value, type = 2 };
+
         }
 
 
-        public Dictionary<string, object> boolItem(string name, bool value)
+        public Item boolItem(string name, bool value)
         {
-            Dictionary<string, object> configDict = new Dictionary<string, object>();
-            configDict.Add("name", name);
-            configDict.Add("value", value);
-            configDict.Add("type", 3);
-            return configDict;
+          
+            return  new Item() { name = name, value = value, type = 3 };
         }
-
-        public Dictionary<string, object> jsonItem(string name, string value)
+        public Item jsonItem(string name,Dictionary<string,object> value)
         {
-            Dictionary<string, object> configDict = new Dictionary<string, object>();
-            configDict.Add("name", name);
-            configDict.Add("value", value);
-            configDict.Add("type", 4);
-            return configDict;
+          
+            return new Item() { name = name, value = value, type = 4 };
+
         }
 
         #endregion
 
-    private static void OnFetchAllRemoteConfigCallback(Dictionary<string, object> result)
-    {
-
-        SESDKRemoteConfig.PostTask(() =>
+        private static void OnFetchAllRemoteConfigCallback(Dictionary<string, object> result)
         {
-            if (SESDKRemoteConfig.Instance.fetchAllRemoteConfigCallback_private != null)
+            SESDKRemoteConfig.PostTask(() =>
             {
-                SESDKRemoteConfig.Instance.fetchAllRemoteConfigCallback_private.Invoke(result);
-            }
-        });
+                if (SESDKRemoteConfig.Instance.fetchAllRemoteConfigCallback_private != null)
+                {
+                    SESDKRemoteConfig.Instance.fetchAllRemoteConfigCallback_private.Invoke(result);
+                }
+            });
+        }
 
-    }
-
-  private static void OnFetchRemoteConfigCallback(String result)
-     {
-
-         SESDKRemoteConfig.PostTask(() =>
-         {
-             if (SESDKRemoteConfig.Instance.fetchRemoteConfigCallback_private != null)
-             {
-                 SESDKRemoteConfig.Instance.fetchRemoteConfigCallback_private.Invoke(result);
-             }
-         });
-
-     }
-
+        private static void OnFetchRemoteConfigCallback(String result)
+        {
+            SESDKRemoteConfig.PostTask(() =>
+            {
+                if (SESDKRemoteConfig.Instance.fetchRemoteConfigCallback_private != null)
+                {
+                    SESDKRemoteConfig.Instance.fetchRemoteConfigCallback_private.Invoke(result);
+                }
+            });
+        }
     }
 }
-        
-    

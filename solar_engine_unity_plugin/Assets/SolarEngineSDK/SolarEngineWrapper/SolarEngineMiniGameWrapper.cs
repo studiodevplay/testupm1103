@@ -1,4 +1,4 @@
-﻿#if (SOLARENGINE_BYTEDANCE||SOLARENGINE_WECHAT||SOLARENGINE_KUAISHO||SOLARENGINE_BYTEDANCE_CLOUD||SOLARENGINE_BYTEDANCE_STARK)&&(!UNITY_EDITOR||SOLORENGINE_DEVELOPEREDITOR)
+﻿#if (SOLARENGINE_BYTEDANCE||SOLARENGINE_WECHAT||SOLARENGINE_KUAISHOU||SOLARENGINE_BYTEDANCE_CLOUD||SOLARENGINE_BYTEDANCE_STARK)&&(!UNITY_EDITOR||SOLORENGINE_DEVELOPEREDITOR)
 
 using System;
 using System.Collections.Generic;
@@ -69,6 +69,11 @@ namespace SolarEngine
             initParams.debugModel = config.isDebugModel;
             initParams.logEnabled = config.logEnabled;
             initParams.sublibVersion = sdk_version;
+#if TUANJIE_2022_3_OR_NEWER
+            initParams.sdktype = "tuanjie";
+#else
+            initParams.sdktype = "unity";
+#endif
 #if  SOLARENGINE_WECHAT
             initParams.isInitTencentAdvertisingGameSDK=config.miniGameInitParams.isInitTencentAdvertisingGameSDK;
             initParams.reportingToTencentSdk=config.miniGameInitParams.reportingToTencentSdk;
@@ -128,7 +133,11 @@ namespace SolarEngine
             initParams.debugModel = config.isDebugModel;
             initParams.logEnabled = config.logEnabled;
             initParams.sublibVersion = sdk_version;
-
+#if TUANJIE_2022_3_OR_NEWER
+            initParams.sdktype = "tuanjie";
+#else
+            initParams.sdktype = "unity";
+#endif
             MiniGameRCConfig minircConfig = new MiniGameRCConfig();
             minircConfig.enable = rcConfig.enable;
             minircConfig.mergeType = (MiniRCMergeType)(int)rcConfig.mergeType;
