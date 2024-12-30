@@ -437,6 +437,8 @@ void __iOSSolarEngineSDKInit(const char * appKey, const char * SEUserId, const c
         
         SERemoteConfig *remoteConfig = [[SERemoteConfig alloc] init];
         remoteConfig.enable = [rcDict[@"enable"] boolValue];
+        remoteConfig.logEnabled = config.logEnabled;
+        
         remoteConfig.mergeType = (SERCMergeType)[rcDict[@"mergeType"] integerValue];
 
         remoteConfig.customIDProperties = rcDict[@"customIDProperties"];
