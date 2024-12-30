@@ -36,7 +36,7 @@ public class PluginsEdtior : MonoBehaviour
    private const string oaidPath = SolarEngineNet+"SolarEnginePlugins/Oaid";
    
    //minigamepath
-   private const string MiniGameRemoteConfigsPathMiniCS = "Assets/SolarEngineSDK/RemoteConfigWrapper/SESDKRemoteConfigMiniGameWrapper.cs";
+    private const string MiniGameRemoteConfigsPathMiniCS = "Assets/SolarEngineSDK/RemoteConfigWrapper/SESDKRemoteConfigMiniGameWrapper.cs";
    private const string MiniGameRemoteConfigsPathMiniDll = PluginsSolarEnginePath+"MiniGame/MiniGameRemoteConfig.dll";
 
    
@@ -46,7 +46,7 @@ public class PluginsEdtior : MonoBehaviour
    private const string RemoteConfigsPathiOSH =  PluginsSolarEnginePath+"iOS/wrappers/SESDKRemoteConfigUnityBridge.h";
    private const string RemoteConfigsPathiOSXml = RemoteConfigXmlPath+"/iOS";
    //androidpath
-   private const string RemoteConfigsPathAndroidCS = "Assets/SolarEngineSDK/RemoteConfigWrapper/SESDKRemoteConfigAndroidWrapper.cs";
+    private const string RemoteConfigsPathAndroidCS = "Assets/SolarEngineSDK/RemoteConfigWrapper/SESDKRemoteConfigAndroidWrapper.cs";
    private const string ConfigsPathAndroidJar = PluginsSolarEnginePath+"Android/libs/se_remote_config_unity_bridge.jar";
    private const string RemoteConfigsPathAndroidXml = RemoteConfigXmlPath+"/Android";
 
@@ -54,7 +54,7 @@ public class PluginsEdtior : MonoBehaviour
 
    public static bool disableiOSSDK()
    {
-       DefineSymbolsEditor.add_DISABLE_REMOTECONFIG(BuildTargetGroup.iOS);
+       DefineSymbolsEditor.add_DISABLE_REMOTECONFIG(BuildTargetGroup.iOS,false);
        return
            HidePath(IOS_SDK);
    }
@@ -98,25 +98,31 @@ public class PluginsEdtior : MonoBehaviour
   // [MenuItem(DisableMiniGame, false, 0)]
    public static bool disableMiniGame ()
    {
-       DefineSymbolsEditor.add_DISABLE_REMOTECONFIG(BuildTargetGroup.WebGL);
+       DefineSymbolsEditor.add_DISABLE_REMOTECONFIG(BuildTargetGroup.WebGL,true);
+       DefineSymbolsEditor.add_DISABLE_REMOTECONFIG(BuildTargetGroup.Android,true);
+#if TUANJIE_2022_3_OR_NEWER
+       DefineSymbolsEditor.add_DISABLE_REMOTECONFIG(BuildTargetGroup.WeixinMiniGame,true);
+#endif
+       return HideFile(MiniGameRemoteConfigsPathMiniDll)
+           && HideFile(MiniGameRemoteConfigsPathMiniCS);
 
-     return  HideFile(MiniGameRemoteConfigsPathMiniDll)&&
-       HideFile(MiniGameRemoteConfigsPathMiniCS);
-      
    }
    
    public static bool showMiniGame ()
    {
-       DefineSymbolsEditor.delete_DISABLE_REMOTECONFIG(BuildTargetGroup.WebGL);
+       DefineSymbolsEditor.delete_DISABLE_REMOTECONFIG(BuildTargetGroup.WebGL,true);
+       DefineSymbolsEditor.delete_DISABLE_REMOTECONFIG(BuildTargetGroup.Android,true);
+#if TUANJIE_2022_3_OR_NEWER
+       DefineSymbolsEditor.delete_DISABLE_REMOTECONFIG(BuildTargetGroup.WeixinMiniGame,true);
+#endif
+       return ShowFile(MiniGameRemoteConfigsPathMiniDll)
+        && ShowFile(MiniGameRemoteConfigsPathMiniCS);
 
-     return  ShowFile(MiniGameRemoteConfigsPathMiniDll)&&
-       ShowFile(MiniGameRemoteConfigsPathMiniCS);
-      
    }
   // [MenuItem(DisableiOS, false, 0)]
    public static bool disableiOS ()
    {
-       DefineSymbolsEditor.add_DISABLE_REMOTECONFIG(BuildTargetGroup.iOS);
+       DefineSymbolsEditor.add_DISABLE_REMOTECONFIG(BuildTargetGroup.iOS,false);
        return  
         HideFile(RemoteConfigsPathiOSCS)&&
        HideFile(RemoteConfigsPathiOSMM)&&
@@ -125,7 +131,7 @@ public class PluginsEdtior : MonoBehaviour
    }
    public static bool showiOS ()
    {
-       DefineSymbolsEditor.delete_DISABLE_REMOTECONFIG(BuildTargetGroup.iOS);
+       DefineSymbolsEditor.delete_DISABLE_REMOTECONFIG(BuildTargetGroup.iOS,false);
       return
        ShowFile(RemoteConfigsPathiOSCS)&&
        ShowFile(RemoteConfigsPathiOSMM)&&
@@ -137,19 +143,21 @@ public class PluginsEdtior : MonoBehaviour
   // [MenuItem(DisableAndroid, false, 0)]
    public static bool disableAndroid ()
    { 
-       DefineSymbolsEditor.add_DISABLE_REMOTECONFIG(BuildTargetGroup.Android);
-     return HideFile(RemoteConfigsPathAndroidCS)&&
-       HideFile(ConfigsPathAndroidJar)&&
-      HidePath(RemoteConfigsPathAndroidXml);
+       DefineSymbolsEditor.add_DISABLE_REMOTECONFIG(BuildTargetGroup.Android,false);
+       return HideFile(ConfigsPathAndroidJar) &&
+              HidePath(RemoteConfigsPathAndroidXml)
+              && HideFile(RemoteConfigsPathAndroidCS);
+
    }
    public static bool showAndroid ()
    {
-       DefineSymbolsEditor.delete_DISABLE_REMOTECONFIG(BuildTargetGroup.Android);
+       DefineSymbolsEditor.delete_DISABLE_REMOTECONFIG(BuildTargetGroup.Android,false);
 
-    
-       return ShowFile(RemoteConfigsPathAndroidCS)&&
-       ShowFile(ConfigsPathAndroidJar)&&
-       ShowPath(RemoteConfigsPathAndroidXml);
+
+       return
+           ShowFile(ConfigsPathAndroidJar) &&
+           ShowPath(RemoteConfigsPathAndroidXml) &&
+           ShowFile(RemoteConfigsPathAndroidCS);
    }
 
 

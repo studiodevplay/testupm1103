@@ -4,6 +4,8 @@
 using UnityEditor;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEditor.Callbacks;
 #if UNITY_IOS
@@ -29,6 +31,43 @@ namespace SolarEngine
 				RunPostBuildScript(target: buildTarget, projectPath: pathToBuiltProject);
 			}
 		}
+		
+#if TUANJIE_2022_3_OR_NEWER		
+			// Must be between 40 and 50 to ensure that it's not overriden by Podfile generation (40) and
+			// that it's added before "pod install" (50).
+			[PostProcessBuildAttribute(45)]
+			private static void PostProcessBuild_iOS(BuildTarget target, string buildPath)
+			{
+
+				if (target == BuildTarget.iOS)
+				{
+		
+					string podfilePath = Path.Combine(buildPath, "Podfile");
+					try
+					{
+						string originalContent = File.ReadAllText(podfilePath, Encoding.UTF8);
+						string modifiedContent = Regex.Replace(originalContent, "Unity-iPhone|UnityFramework", match =>
+						{
+							if (match.Value == "Unity-iPhone")
+							{
+								return "Tuanjie-iPhone";
+							}
+							else
+							{
+								return "TuanjieFramework";
+							}
+						});
+						File.WriteAllText(podfilePath, modifiedContent);
+					}
+					catch (IOException e)
+					{
+						Debug.LogError($"SolarEngine {e.Message}");
+					}
+					
+				}
+				
+			}
+		#endif
 
 		public static void AfterBuild (string buildPath)
 		{
@@ -39,14 +78,20 @@ namespace SolarEngine
 				return;
 			}
 
-			AddFrameworks();
+		//	AddFrameworks();
 
             UnityEngine.Debug.Log ("Build success!");
 		}
 
 		private static void AddFrameworks ()
 		{
+#if TUANJIE_2022_3_OR_NEWER
+			string projectFile = Path.Combine (BuildPath, "Tuanjie-iPhone.xcodeproj/project.pbxproj");
+#else
 			string projectFile = Path.Combine (BuildPath, "Unity-iPhone.xcodeproj/project.pbxproj");
+
+#endif
+			
 
 			PBXProject pbxProject = new PBXProject ();
 			pbxProject.ReadFromFile (projectFile);
@@ -75,7 +120,12 @@ namespace SolarEngine
 			{
 #if UNITY_IOS
 
+				#if TUANJIE_2022_3_OR_NEWER
+				string xcodeProjectPath = projectPath + "/Tuanjie-iPhone.xcodeproj/project.pbxproj";
+#else
 				string xcodeProjectPath = projectPath + "/Unity-iPhone.xcodeproj/project.pbxproj";
+#endif
+			//	string xcodeProjectPath = projectPath + "/Unity-iPhone.xcodeproj/project.pbxproj";
 
 				PBXProject xcodeProject = new PBXProject();
 				xcodeProject.ReadFromFile(xcodeProjectPath);

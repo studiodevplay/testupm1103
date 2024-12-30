@@ -6,51 +6,58 @@ namespace SolarEngine.Build
 {
     public class DefineSymbolsEditor
     {
+        const string SOLORENGINE_DISABLE_REMOTECONFIG = "SOLORENGINE_DISABLE_REMOTECONFIG";
+        const string SE_DIS_RC = "SE_DIS_RC";
+        const string SE_MINI_DIS_RC = "SE_MINI_DIS_RC";
 
-      
-         [MenuItem("SolarEngineSDK/test1 ", false, 0)]
-
-        public static void add_DISABLE_REMOTECONFIG(BuildTargetGroup target)
+        public static void add_DISABLE_REMOTECONFIG(BuildTargetGroup target,bool isminigame)
         {
+          
             string str = PlayerSettings.GetScriptingDefineSymbolsForGroup(target);
+            string newvalue=isminigame? SE_MINI_DIS_RC : SE_DIS_RC;
 
-            if (str.Contains("SOLORENGINE_DISABLE_REMOTECONFIG"))
+            if (str.Contains(SOLORENGINE_DISABLE_REMOTECONFIG))
             {
-                
-            }
-            else
-            {
-                // Debug.LogError(str.Contains("SOLARENGINE_BYTEDANCE"));
-                // if (str.Contains("SOLARENGINE_BYTEDANCE"))
-                // {
-                    str += ";SOLORENGINE_DISABLE_REMOTECONFIG";
-                 
-                    PlayerSettings.SetScriptingDefineSymbolsForGroup(target,
-                        str);
-              //  }
-             
+                str = str.Replace(SOLORENGINE_DISABLE_REMOTECONFIG, newvalue);
               
             }
+            else if(!str.Contains(newvalue))
+            {
+                str += $";{newvalue}";                
+            }
+            PlayerSettings.SetScriptingDefineSymbolsForGroup(target,
+                str);
           
           
             
         }
-        [MenuItem("SolarEngineSDK/test2 ", false, 0)]
+        
+      
 
-        public static void delete_DISABLE_REMOTECONFIG(BuildTargetGroup target)
+        public static void delete_DISABLE_REMOTECONFIG(BuildTargetGroup target,bool isMiniGame)
         {
             string str = PlayerSettings.GetScriptingDefineSymbolsForGroup(target);
-
-            if (str.Contains("SOLORENGINE_DISABLE_REMOTECONFIG"))
+            
+            string define=isMiniGame? SE_MINI_DIS_RC : SE_DIS_RC;
+            if (str.Contains(SOLORENGINE_DISABLE_REMOTECONFIG))
             {
-                str = str.Replace("SOLORENGINE_DISABLE_REMOTECONFIG", "");
-                PlayerSettings.SetScriptingDefineSymbolsForGroup(target,
-                    str);
+                str = str.Replace(SOLORENGINE_DISABLE_REMOTECONFIG, "");
+             
             }
 
-            
+            if (str.Contains(define))
+            {
+                str = str.Replace(define, "");
+             
+            }
+            PlayerSettings.SetScriptingDefineSymbolsForGroup(target,
+                str);
         }
         
         
     }
+    
+    
+    
+    // public  class 
 }

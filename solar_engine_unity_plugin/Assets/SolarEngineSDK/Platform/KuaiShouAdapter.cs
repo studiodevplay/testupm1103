@@ -1,4 +1,4 @@
-#if SOLARENGINE_KUAISHOU&&(!UNITY_EDITOR||SOLORENGINE_DEVELOPEREDITOR)
+#if SOLARENGINE_KUAISHOU&&(!UNITY_EDITOR||SE_DEV)
 
 using System;
 using System.Collections.Generic;
@@ -209,14 +209,14 @@ return;
 
     public void triggerOnShow(SEAdapterInterface.OnShowEvent showEvent)
     {
-        
+      
      
   #if UNITY_EDITOR
         return;
 #endif
         KS.OnShow(result =>
         {
-            showEvent?.Invoke(result.from, result.query, new ());
+            showEvent?.Invoke(result.showFrom, result.query, new ());
         });
     }
 

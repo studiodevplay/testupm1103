@@ -33,7 +33,7 @@ namespace SolarEngine
 #if TUANJIE_2022_3_OR_NEWER
              seDict.Add("sdk_type", "tuanjie");
  #else
-            seDict.Add("sdk_type", "unity");
+             seDict.Add("sdk_type", "unity");
           
 #endif
           
