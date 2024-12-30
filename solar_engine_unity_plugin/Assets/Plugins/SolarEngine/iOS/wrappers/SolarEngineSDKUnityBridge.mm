@@ -418,6 +418,11 @@ void __iOSSolarEngineSDKInit(const char * appKey, const char * SEUserId, const c
         [SEWrapperManager sharedInstance].sub_lib_version = sub_lib_version;
     }
     
+    NSString *sdk_type = seDict[@"sdk_type"];
+    if ([sdk_type isKindOfClass:[NSString class]]) {
+        [SEWrapperManager sharedInstance].sdk_type = sdk_type;
+    }
+    
     NSDictionary *rcDict = nil;
     if (rcConfig != NULL) {
         NSString *_rcConfig = [NSString stringWithUTF8String:rcConfig];
