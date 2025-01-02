@@ -20,7 +20,7 @@ using WeChatWASM;
         { 
            
 
-            [MenuItem("SolarEngineSDK/MiNiGame/Tuanjie/ByteDanceConvertCore")]
+            [MenuItem("SolarEngineSDK/MiniGame/Tuanjie/ByteDanceConvertCore")]
             public static void byteDanceConvertCore()
             {
                 string cpJsPath = Path.Combine(dyCpJsPath, "SolarEngineJsHelper.js");
