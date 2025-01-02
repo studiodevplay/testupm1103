@@ -209,7 +209,7 @@ return;
 
     public void triggerOnShow(SEAdapterInterface.OnShowEvent showEvent)
     {
-      
+        
      
   #if UNITY_EDITOR
         return;

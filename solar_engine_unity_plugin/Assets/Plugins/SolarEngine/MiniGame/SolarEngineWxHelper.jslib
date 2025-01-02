@@ -21,7 +21,7 @@ _setDebug:function(){
            
            secret_key: jsonObject.secret_key.toString(),
            appid: jsonObject.appid.toString(),
-           auto_track:false
+           auto_track:jsonObject.tencentSdkIsAutoTrack,
           });
       }catch (error) {
           console.log("__init : ", error);

@@ -13,15 +13,14 @@ using WeChatWASM;
         private const string SolarEngineMiniGameConvertCoreLOG = "SolarEngineMiniGameConvertCore";
         const string dyCpJsPath = "Assets/StreamingAssets/__cp_js_files";
         const string sourceJsPath = "Assets/Plugins/SolarEngine/MiniGame/SolarEngineJsHelper.js";
-    
-
-#if (SOLARENGINE_BYTEDANCE|| SOLARENGINE_BYTEDANCE_CLOUD||SOLARENGINE_BYTEDANCE_STARK)&&TUANJIE_2022_3_OR_NEWER
-
+     
+        #if (SOLARENGINE_BYTEDANCE|| SOLARENGINE_BYTEDANCE_CLOUD||SOLARENGINE_BYTEDANCE_STARK)&&TUANJIE_2022_3_OR_NEWER
+       
         public class ByteDanceConvertCore
         { 
            
 
-            [MenuItem("SolarEngineSDK/MiniGame/Tuanjie/ByteDanceConvertCore")]
+            [MenuItem("SolarEngineSDK/MiNiGame/Tuanjie/ByteDanceConvertCore")]
             public static void byteDanceConvertCore()
             {
                 string cpJsPath = Path.Combine(dyCpJsPath, "SolarEngineJsHelper.js");
@@ -40,9 +39,9 @@ using WeChatWASM;
                 }
             }
         }
-#endif
+        #endif
 
-
+        
 #if SOLARENGINE_WECHAT && TUANJIE_WEIXINMINIGAME
         public class WxChatConvertCore: LifeCycleBase
         {
@@ -91,9 +90,9 @@ using WeChatWASM;
             }
 
         }
-
+        
 #endif
-
+    
     }
 
 

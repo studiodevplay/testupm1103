@@ -31,7 +31,26 @@ namespace SolarEngine
 
         private static void Init(string appKey, string userId, SEConfig config)
         {
-            InitParams initParams = new InitParams();
+          
+            SolarEngineSDK4MiniGames.init(appKey, initSDKInitParams(config));
+        }
+      
+        private static void Init(string appKey, string userId, SEConfig config, RCConfig rcConfig)
+        {
+           
+            MiniGameRCConfig minircConfig = new MiniGameRCConfig();
+            minircConfig.enable = rcConfig.enable;
+            minircConfig.mergeType = (MiniRCMergeType)(int)rcConfig.mergeType;
+            minircConfig.customIDEventProperties = rcConfig.customIDEventProperties;
+            minircConfig.customIDProperties = rcConfig.customIDProperties;
+            minircConfig.customIDUserProperties = rcConfig.customIDUserProperties;
+
+            SolarEngineSDK4MiniGames.init(appKey, initSDKInitParams(config), minircConfig);
+        }
+
+        private static InitParams initSDKInitParams( SEConfig config)
+        {
+              InitParams initParams = new InitParams();
 
             if (config.initCompletedCallback != null)
             {
@@ -64,72 +83,21 @@ namespace SolarEngine
 
                 initParams.miniGameInitParams.openid = config.miniGameInitParams.openid;
                 initParams.miniGameInitParams.unionid = config.miniGameInitParams.unionid;
-
-            }
-            initParams.debugModel = config.isDebugModel;
-            initParams.logEnabled = config.logEnabled;
-            initParams.sublibVersion = sdk_version;
-#if TUANJIE_2022_3_OR_NEWER
-            initParams.sdktype = "tuanjie";
-#else
-            initParams.sdktype = "unity";
-#endif
-#if  SOLARENGINE_WECHAT
-            initParams.isInitTencentAdvertisingGameSDK=config.miniGameInitParams.isInitTencentAdvertisingGameSDK;
-            initParams.reportingToTencentSdk=config.miniGameInitParams.reportingToTencentSdk;
-            initParams.tencentAdvertisingGameSDKInitParams=new MiniGames.TencentAdvertisingGameSDKInitParams();
-            initParams.tencentAdvertisingGameSDKInitParams.appid=config.miniGameInitParams.tencentAdvertisingGameSDKInitParams.appid;
-            initParams.tencentAdvertisingGameSDKInitParams.secret_key=config.miniGameInitParams.tencentAdvertisingGameSDKInitParams.secret_key;
-            initParams.tencentAdvertisingGameSDKInitParams.user_action_set_id=config.miniGameInitParams.tencentAdvertisingGameSDKInitParams.user_action_set_id;
-            
-#endif
-            SolarEngineSDK4MiniGames.init(appKey, initParams);
-        }
-      
-        private static void Init(string appKey, string userId, SEConfig config, RCConfig rcConfig)
-        {
-            InitParams initParams = new InitParams();
-
-            if (config.initCompletedCallback != null)
-            {
-                SolarEngineSDK4MiniGames.MiniGameInitCompletedCallback initCompletedCallback =
-                    (SolarEngineSDK4MiniGames.MiniGameInitCompletedCallback)Delegate.CreateDelegate(
-                        typeof(SolarEngineSDK4MiniGames.MiniGameInitCompletedCallback),
-                        config.initCompletedCallback.Target, config.initCompletedCallback.Method);
-                initParams.miniGameInitCompletedCallback = initCompletedCallback;
-            }
-
-            if (config.attributionCallback != null)
-            {
-                SolarEngineSDK4MiniGames.MiniGameAttributionCallback attributionCallback =
-                    (SolarEngineSDK4MiniGames.MiniGameAttributionCallback)Delegate.CreateDelegate(
-                        typeof(SolarEngineSDK4MiniGames.MiniGameAttributionCallback), config.attributionCallback.Target,
-                        config.attributionCallback.Method);
-                initParams.miniGameAttributionCallback = attributionCallback;
-            }
-
-            if (config.miniGameInitParams != null)
-            {
-                initParams.miniGameInitParams = new MiniGames.MiniGameInitParams();
-#if SOLARENGINE_WECHAT
-            initParams.miniGameInitParams.anonymous_openid = "";
-            
-            initParams.isInitTencentAdvertisingGameSDK=config.miniGameInitParams.isInitTencentAdvertisingGameSDK;
-            initParams.reportingToTencentSdk=config.miniGameInitParams.reportingToTencentSdk;
-            initParams.tencentAdvertisingGameSDKInitParams=new MiniGames.TencentAdvertisingGameSDKInitParams();
-            initParams.tencentAdvertisingGameSDKInitParams.appid=config.miniGameInitParams.tencentAdvertisingGameSDKInitParams.appid;
-            initParams.tencentAdvertisingGameSDKInitParams.secret_key=config.miniGameInitParams.tencentAdvertisingGameSDKInitParams.secret_key;
-            initParams.tencentAdvertisingGameSDKInitParams.user_action_set_id=config.miniGameInitParams.tencentAdvertisingGameSDKInitParams.user_action_set_id;
- #else
-            initParams.miniGameInitParams.anonymous_openid = config.miniGameInitParams.anonymous_openid;
-#endif
-              
-
-                initParams.miniGameInitParams.openid = config.miniGameInitParams.openid;
-                initParams.miniGameInitParams.unionid = config.miniGameInitParams.unionid;
                 
-            }
+                
+#if  SOLARENGINE_WECHAT
+                initParams.isInitTencentAdvertisingGameSDK=config.miniGameInitParams.isInitTencentAdvertisingGameSDK;
+                initParams.reportingToTencentSdk=config.miniGameInitParams.reportingToTencentSdk;
+                initParams.tencentAdvertisingGameSDKInitParams=new MiniGames.TencentAdvertisingGameSDKInitParams();
+                initParams.tencentAdvertisingGameSDKInitParams.appid=config.miniGameInitParams.tencentAdvertisingGameSDKInitParams.appid;
+                initParams.tencentAdvertisingGameSDKInitParams.secret_key=config.miniGameInitParams.tencentAdvertisingGameSDKInitParams.secret_key;
+                initParams.tencentAdvertisingGameSDKInitParams.user_action_set_id=config.miniGameInitParams.tencentAdvertisingGameSDKInitParams.user_action_set_id;
+                initParams.tencentAdvertisingGameSDKInitParams.tencentSdkIsAutoTrack=config.miniGameInitParams.tencentAdvertisingGameSDKInitParams.tencentSdkIsAutoTrack;
             
+            
+#endif
+
+            }
             initParams.debugModel = config.isDebugModel;
             initParams.logEnabled = config.logEnabled;
             initParams.sublibVersion = sdk_version;
@@ -138,25 +106,9 @@ namespace SolarEngine
 #else
             initParams.sdktype = "unity";
 #endif
-            MiniGameRCConfig minircConfig = new MiniGameRCConfig();
-            minircConfig.enable = rcConfig.enable;
-            minircConfig.mergeType = (MiniRCMergeType)(int)rcConfig.mergeType;
-            minircConfig.customIDEventProperties = rcConfig.customIDEventProperties;
-            minircConfig.customIDProperties = rcConfig.customIDProperties;
-            minircConfig.customIDUserProperties = rcConfig.customIDUserProperties;
 
-
-// #if SOLARENGINE_WECHAT
-//             SEAdapterInterface _adapter = new SolarEngine.Platform. WeChatAdapter();
-// #elif SOLARENGINE_BYTEDANCE
-//             SEAdapterInterface _adapter = new SolarEngine.Platform.ByteDanceAdapter();
-// #elif SOLARENGINE_KUAISHOU
-//             SEAdapterInterface _adapter = new KuaiShouAdapter();
-//
-// #endif
-            SolarEngineSDK4MiniGames.init(appKey, initParams, minircConfig);
+            return initParams;
         }
-
   
 
 
