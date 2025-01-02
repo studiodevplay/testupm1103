@@ -1005,8 +1005,9 @@ namespace SolarEngine
         public int user_action_set_id;
         public string secret_key;
         public string appid;
+        public bool tencentSdkIsAutoTrack = true;
 
-       
+
     }
     [System.Serializable]
     public struct ReActiveAttributes

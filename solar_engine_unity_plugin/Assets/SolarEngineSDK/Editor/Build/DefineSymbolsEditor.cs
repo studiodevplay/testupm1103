@@ -142,16 +142,16 @@ namespace SolarEngine.Build
         {
             deleteSymbols(SOLARENGINE_KUAISHOU, BuildTargetGroup.WebGL);
         }
-        [MenuItem(MiniGame+DEV+ADD, false, 0)]
-        public static void addSymbols_DEV()
-        {
-            addSymbols(SE_DEV,BuildTargetGroup.WebGL);
-        }
-        [MenuItem(MiniGame+DEV+DELETE, false, 0)]
-        public static void deleteSymbols_DEV()
-        {
-            deleteSymbols(SE_DEV,BuildTargetGroup.WebGL);
-        }
+        // [MenuItem(MiniGame+DEV+ADD, false, 0)]
+        // public static void addSymbols_DEV()
+        // {
+        //     addSymbols(SE_DEV,BuildTargetGroup.WebGL);
+        // }
+        // [MenuItem(MiniGame+DEV+DELETE, false, 0)]
+        // public static void deleteSymbols_DEV()
+        // {
+        //     deleteSymbols(SE_DEV,BuildTargetGroup.WebGL);
+        // }
 #endif
 
 
@@ -180,16 +180,16 @@ namespace SolarEngine.Build
     {
         deleteSymbols(SOLARENGINE_BYTEDANCE, BuildTargetGroup.Android);
     }
-    [MenuItem(MiniGame+DEV+ADD, false, 0)]
-    public static void addSymbols_DEV()
-    {
-        addSymbols(SE_DEV,BuildTargetGroup.Android);
-    }
-    [MenuItem(MiniGame+DEV+DELETE, false, 0)]
-    public static void deleteSymbols_DEV()
-    {
-        deleteSymbols(SE_DEV,BuildTargetGroup.Android);
-    }
+    // [MenuItem(MiniGame+DEV+ADD, false, 0)]
+    // public static void addSymbols_DEV()
+    // {
+    //     addSymbols(SE_DEV,BuildTargetGroup.Android);
+    // }
+    // [MenuItem(MiniGame+DEV+DELETE, false, 0)]
+    // public static void deleteSymbols_DEV()
+    // {
+    //     deleteSymbols(SE_DEV,BuildTargetGroup.Android);
+    // }
 #endif
 
 
