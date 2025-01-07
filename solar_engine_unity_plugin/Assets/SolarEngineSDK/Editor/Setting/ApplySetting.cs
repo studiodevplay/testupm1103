@@ -71,6 +71,8 @@ namespace SolarEngine
         public static bool checkApplyWithAndroidPackage()
         {
             bool result=false;
+            if (SolarEngineSettings.removeAndroidSDK)
+                return true;
             if (!XmlModifier.isAndroidPackage())
             {
                 
