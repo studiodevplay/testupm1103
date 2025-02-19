@@ -18,7 +18,7 @@
 /[Mm]emoryCaptures/
 
 # Never ignore Asset meta data
-!/[Aa]ssets/**/*.meta
+
 
 # Uncomment this line if you wish to ignore the asset store tools plugin
 # /[Aa]ssets/AssetStoreTools*
@@ -57,7 +57,7 @@ ExportedObj/
 *.pdb.meta
 *.mdb.meta
 
-*.meta
+
 solar_engine_unity_plugin/Temp/
 
 
@@ -111,3 +111,5 @@ solar_engine_unity_plugin/Build
 solar_engine_unity_plugin/Assets/Plugins/Android
 solar_engine_unity_plugin/iOS
 solar_engine_unity_plugin/Assets/WX-WASM-SDK-V2
+solar_engine_unity_plugin_tuanjie
+tet

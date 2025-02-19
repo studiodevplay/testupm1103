@@ -30,6 +30,8 @@ namespace SolarEngine
         private SESDKATTCompletedCallback attCompletedCallback_private = null;
         public delegate void SESDKATTCompletedCallback(int code);
 
+        private static bool islog = false;
+
         // only ios
         public delegate void SKANUpdateCompletionHandler(int errorCode, String errorMsg);
 
@@ -75,8 +77,14 @@ namespace SolarEngine
         {
             lock (waitingTaskList)
             {
+             
                 if (waitingTaskList.Count > 0)
                 {
+                    if (islog)
+                    {
+                        Debug.Log($"{SolorEngine} waitingTaskList.Count: {waitingTaskList.Count}");
+
+                    }
                     executingTaskList.AddRange(waitingTaskList);
 
                     waitingTaskList.Clear();
@@ -122,6 +130,7 @@ namespace SolarEngine
         /// <param name="SEConfig">见SEConfig 说明</param>
         public static void initSeSdk(string appKey, string userID, SEConfig config)
         {
+            islog=config.logEnabled;
             Init(appKey, userID, config);
         }
 
@@ -132,6 +141,7 @@ namespace SolarEngine
         /// <param name="SEConfig">见SEConfig 说明</param>
         public static void initSeSdk(string appKey, SEConfig config)
         {
+            islog=config.logEnabled;
             Init(appKey, null, config);
         }
 
@@ -153,6 +163,7 @@ namespace SolarEngine
         /// <param name="SEConfig">见SEConfig 说明</param>
         public static void initSeSdk(string appKey, SEConfig config, RCConfig rcConfig)
         {
+            islog=config.logEnabled;
             Init(appKey, null, config, rcConfig);
         }
 
@@ -773,10 +784,17 @@ namespace SolarEngine
 
         private static void OnInitCompletedHandler(int code)
         {
+            if (islog)
+            {
+                Debug.Log($"{SolorEngine}OnInitCompletedHandler");
+            }
         
-
             Analytics.PostTask(() =>
             {
+                if (islog)
+                {
+                    Debug.Log($"{SolorEngine}initCompletedCallback_private");
+                }
                 if (Analytics.Instance.initCompletedCallback_private != null)
                 {
                     Analytics.Instance.initCompletedCallback_private.Invoke(code);

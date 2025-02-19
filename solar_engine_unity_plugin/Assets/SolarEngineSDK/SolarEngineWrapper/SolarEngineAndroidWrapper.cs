@@ -331,6 +331,10 @@ namespace SolarEngine
 
             public void onResultForUnity(int code, String result)
             {
+                if (islog)
+                {
+                    Debug.Log($"{SolorEngine}OnAttributionReceivedData");
+                }
                 OnAttributionHandler(code, result);
             }
         }
@@ -371,6 +375,10 @@ namespace SolarEngine
 
             public void onInitializationCompleted(int code)
             {
+                if (islog)
+                {
+                    Debug.Log($"{SolorEngine}OnUnityInitCompletedCallback");
+                }
                 OnInitCompletedHandler(code);
             }
         }

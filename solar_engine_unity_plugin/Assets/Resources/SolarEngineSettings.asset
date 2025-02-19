@@ -13,10 +13,21 @@ MonoBehaviour:
   m_Name: SolarEngineSettings
   m_EditorClassIdentifier: 
   _China: 0
-  _Oversea: 0
-  _UseRemoteConfig: 1
-  _DisableiOSRemoteConfig: 0
-  _UseOaid: 1
-  _iOSUrlIdentifier: 
-  _iOSUrlSchemes: []
-  _iOSUniversalLinksDomains: []
+  _Oversea: 1
+  _RemoteConfig: 1
+  _All: 1
+  _iOS: 1
+  _Android: 1
+  _MiniGame: 1
+  _Oaid: 0
+  _RemoveAndroidSDK: 0
+  _DeepLink: 1
+  _SpecifyVersion: 0
+  _iOSVersion: 
+  _AndroidVersion: 1.2.9.3
+  _iOSUrlIdentifier: solarengine
+  _iOSUrlSchemes:
+  - test1
+  _iOSUniversalLinksDomains:
+  - 'test1.link.solar-engine.com  '
+  _AndroidUrlSchemes: []

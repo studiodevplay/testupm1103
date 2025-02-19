@@ -1,54 +1,139 @@
 
 using UnityEngine;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+// using CloudGame;
 using Newtonsoft.Json;
-
+using Newtonsoft.Json.Linq;
 using SolarEngine;
-using SolarEngine.MiniGames.TencentSDK;
+using SolarEngine.MiniGames.info;
+
+// using StarkSDKSpace;
 using UnityEngine.UI;
 using Distinct = SolarEngine.Distinct;
 
 public class SolarEngineDemo : MonoBehaviour
 {
     public Texture2D texture;
-  
-   
 
-    public void InitSDK()
+    private string SolarEngineDemoLog = "SolarEngineDemo";
+
+    public void InitSDKWithDebug()
+    {
+        // Debug.Log( SolarEngineDemoLog+"init"+StarkUtils.IsCloudRuntime()); 
+        //
+        // //DebugTool.LogDebug( SolarEngineDemoLog+"init",StarkUtils.IsCloudRuntime().ToString()); 
+        //
+        //
+        // Debug.Log( SolarEngineDemoLog+"init"+StarkSDK.IsCloudInitOver); 
+        
+        // string filePath = Application.persistentDataPath + "/SolarEngineData.json";
+        // Debug.Log("filePath"+ filePath);
+       // Debug.Log( SolarEngineDemoLog+"init"+StarkUtils.IsCloudRuntime()); 
+       //       
+       //       //DebugTool.LogDebug( SolarEngineDemoLog+"init",StarkUtils.IsCloudRuntime().ToString()); 
+       //       
+       //       
+       //       Debug.Log( SolarEngineDemoLog+"init"+StarkSDK.IsCloudInitOver); 
+       //       
+       //       // string filePath = Application.persistentDataPath + "/SolarEngineData.json";
+       //       // Debug.Log("filePath"+ filePath);
+       //       if (StarkSDK.IsCloudInitOver)
+       //       {
+       //           InitSDKCallback();
+       //       }
+       //       else
+       //       {
+       //           StarkSDK.StarkCloudInitOverEvent = () => {  InitSDKCallback();};
+       //       }
+       //       
+       //       if (!StarkUtils.IsCloudRuntime())
+       //       {
+       //           Debug.Log("[SolarEngineDemo] init not cloud");
+       //           InitSDKCallback(true);
+       //       }
+       //         if (StarkSDK.IsCloudInitOver)
+       //  {
+       //      InitSDKCallback(true);
+       //  }
+       //  else
+       //  {
+       //      StarkSDK.StarkCloudInitOverEvent = () => {  InitSDKCallback(true);};
+       //  }
+       //  
+       //  if (!StarkUtils.IsCloudRuntime())
+       //  {
+       //      Debug.Log("[SolarEngineDemo] init not cloud");
+       //      InitSDKCallback(true);
+       //  }
+       InitSDKCallback(true);
+    
+    }
+    public void InitSDKWithRelease()
+    {
+        // Debug.Log( SolarEngineDemoLog+"init"+StarkUtils.IsCloudRuntime()); 
+        //
+        // //DebugTool.LogDebug( SolarEngineDemoLog+"init",StarkUtils.IsCloudRuntime().ToString()); 
+        //
+        //
+        // Debug.Log( SolarEngineDemoLog+"init"+StarkSDK.IsCloudInitOver); 
+        //
+        // string filePath = Application.persistentDataPath + "/SolarEngineData.json";
+        // Debug.Log("filePath"+ filePath);
+        // if (StarkSDK.IsCloudInitOver)
+        // {
+        //     InitSDKCallback(false);
+        // }
+        // else
+        // {
+        //     StarkSDK.StarkCloudInitOverEvent = () => {  InitSDKCallback(false);};
+        // }
+        //
+        // if (!StarkUtils.IsCloudRuntime())
+        // {
+        //     Debug.Log("[SolarEngineDemo] init not cloud");
+        //     InitSDKCallback(false);
+        // }
+        //  InitSDKCallback();
+        InitSDKCallback(false);
+    
+    }
+
+    private bool isprinit = false;
+    public void InitSDKCallback(bool isdebug=true)
     {
 
-      
+    
+
+  
         string appkey = "";
 
 
-        Debug.Log("[unity] init click");
+        Debug.Log("[SolarEngineDemo] init click11111");
        //String AppKey = "0e0556667b592636";
        // String AppKey = "11";
 
-      String AppKey = "edb9e2bf00348dc7";
+      String AppKey = "e78185651df3202f";
+ 
         MiniGameInitParams initParams = new MiniGameInitParams();
         initParams.anonymous_openid = "anonymous_openid";
         initParams.unionid = "unionid";
-        initParams.openid = "2DBIKhHEM51icdOJmk9_oF6g3fG7";
+        
+        
+        if(isdebug)
+        initParams.openid = "debug123456789";
+        else
+        { initParams.openid = "release123456789";
+        }
         SEConfig seConfig = new SEConfig();
-        seConfig.miniGameInitParams = initParams;
-        
-        // SECustomDomain secustomDomain = new SECustomDomain();
-        // secustomDomain.enable = true;
-        // secustomDomain.receiverDomain = "receiverDomain";
-        // secustomDomain.ruleDomain = "ruleDomain";
-        // secustomDomain.receiverTcpHost = "receiverTcpHost";
-        // secustomDomain.ruleTcpHost = "ruleTcpHost";
-        // secustomDomain.gatewayTcpHost = "gatewayTcpHost";
-        // seConfig.customDomain = secustomDomain;
-        //
-        
+       
+      
         
         
         RCConfig rcConfig = new RCConfig();
         seConfig.logEnabled = true;
-        seConfig.isDebugModel = true;
+        seConfig.isDebugModel = isdebug;
         rcConfig.mergeType = RCMergeType.ByUser;
         rcConfig.enable = true;
         rcConfig.customIDProperties = new Dictionary<string, object> { { "c", 1 } };
@@ -61,14 +146,15 @@ public class SolarEngineDemo : MonoBehaviour
         tencentAdvertisingGameSDKInitParams.user_action_set_id = 1207670035;
         tencentAdvertisingGameSDKInitParams.secret_key = "4bcd1b1003c96d4d5344a520adfb3205";
         tencentAdvertisingGameSDKInitParams.appid = "wx146cc579585c8a5f";
+        tencentAdvertisingGameSDKInitParams.tencentSdkIsAutoTrack = false;
         
-    
         initParams.tencentAdvertisingGameSDKInitParams= tencentAdvertisingGameSDKInitParams;
-
-        initParams.reportingToTencentSdk = 2;
+        
+        initParams.reportingToTencentSdk = 1;
         initParams.isInitTencentAdvertisingGameSDK = true;
         
         
+        seConfig.miniGameInitParams = initParams;
         
         
         //
@@ -77,11 +163,27 @@ public class SolarEngineDemo : MonoBehaviour
 
         Analytics.SESDKInitCompletedCallback initCallback = initSuccessCallback;
         seConfig.initCompletedCallback = initCallback;
+        seConfig.isGDPRArea = true;
+        // SEAdapterInterface seAdapterInterface = new WeChatAdapter();
+        // seAdapterInterface.deleteAll();
+        // object obj = seAdapterInterface.getData("isprinit", typeof(int)) ;
+       // Debug.Log(obj);
+        //
+        // if (obj==null)
+        // {
+        //     Debug.Log("预初始化");
+            SolarEngine.Analytics.preInitSeSdk(AppKey);
+            
+        //     seAdapterInterface.saveData("isprinit",1);
+        // }
+     
+        
+       
+        seConfig.caid = 
+            "[{\"version\":\"20220111\",\"caid\":\"912ec803b2ce49e4a541068d495ab570\"},{\"version\":\"20211207\",\"caid\":\"e332a76c29654fcb7f6e6b31ced090c7\"}]";
+        SolarEngine.Analytics.initSeSdk(AppKey, seConfig,rcConfig);
         setRemoteDefaultConfig();
         initRemoteConfig();
-
-        SolarEngine.Analytics.preInitSeSdk(AppKey);
-        SolarEngine.Analytics.initSeSdk(AppKey, seConfig, rcConfig);
 
 
     }
@@ -105,27 +207,79 @@ public class SolarEngineDemo : MonoBehaviour
 
     }
 
+    class test
+    {
+        public string user_data;
+        public string account_id;
+        
 
+    }
 
     public void setRemoteDefaultConfig()
     {
+     
+        
+   
         SESDKRemoteConfig remoteConfig = new SESDKRemoteConfig();
-        Dictionary<string, object> defaultConfig1 = remoteConfig.stringItem("qq", "test");
-        Dictionary<string, object> defaultConfig2 = remoteConfig.jsonItem("testjson", "{\"test\":\"test\"}");
-        Dictionary<string, object> defaultConfig3 = remoteConfig.boolItem("testbool", true);
-        Dictionary<string, object> defaultConfig4 = remoteConfig.intItem("testint", 1);
+       
+        //t
+        test t = new test();
+        t.user_data = "test";
+        t.account_id= "test2";
+        
+        //list
+        List<object> list = new List<object>();
+        list.Add(1);
+        list.Add(2);
+        list.Add(3);
+        
+        Dictionary<string, object> defaultConfig6 = new Dictionary<string, object>();
+        defaultConfig6.Add("name", "test");
+        defaultConfig6.Add("age", 1);
+        defaultConfig6.Add("t", t);
+        defaultConfig6.Add("list", list);
+        
+        
 
-
-        Dictionary<string, object>[] defaultConfigArray = new Dictionary<string, object>[]
-            { defaultConfig1, defaultConfig2, defaultConfig3, defaultConfig4 };
-
+        SESDKRemoteConfig.Item itemString = remoteConfig.stringItem("test", "test");
+        SESDKRemoteConfig.Item itemJson = remoteConfig.jsonItem("testjson", defaultConfig6);
+        SESDKRemoteConfig.Item itemBool = remoteConfig.boolItem("testbool", true);
+        SESDKRemoteConfig.Item itemInt = remoteConfig.intItem("testint", 1);
+        SESDKRemoteConfig.Item[] defaultConfigArray= new SESDKRemoteConfig.Item[]{itemString,itemJson,itemBool,itemInt};
+        
+        
         remoteConfig.SetRemoteDefaultConfig(defaultConfigArray);
+    
+     
+        //JObject
+        JObject obj = new JObject();
+        obj.Add("name", "test");
+        obj.Add("age", 1);
+        JToken t1 = JToken.FromObject(t);
+        obj.Add("t1",  t1 );
+        JToken list1 = JToken.FromObject(list);
+        obj.Add("list1",  list1 );
+        
+        
+       //Dictionary  
+      
+        
+     
+        //
+        // Dictionary<string, object> defaultConfig3 = remoteConfig.boolItem("testbool", true);
+        // Dictionary<string, object> defaultConfig4 = remoteConfig.intItem("testint", 1);
+
+
+        // Dictionary<string, object>[] defaultConfigArray = new Dictionary<string, object>[]
+        //     { defaultConfig1, defaultConfig6, defaultConfig3, defaultConfig4 };
+
+       
 
     }
 
     public void trackAdClick()
     {
-        Debug.Log("[unity] trackAdClick click");
+        Debug.Log("[SolarEngineDemo] trackAdClick click");
 
         AdClickAttributes AdClickAttributes = new AdClickAttributes();
         AdClickAttributes.ad_platform = "izz";
@@ -140,7 +294,7 @@ public class SolarEngineDemo : MonoBehaviour
 
     public void trackRegister()
     {
-        Debug.Log("[unity] trackRegister click");
+        Debug.Log("[SolarEngineDemo] trackRegister click");
 
         RegisterAttributes RegisterAttributes = new RegisterAttributes();
         RegisterAttributes.register_type = "QQ_test";
@@ -156,7 +310,7 @@ public class SolarEngineDemo : MonoBehaviour
     public void track()
     {
 
-        Debug.Log("[unity] track custom click");
+        Debug.Log("[SolarEngineDemo] track custom click");
 
         Dictionary<string, object> customProperties = new Dictionary<string, object>();
         customProperties.Add("event001", 111);
@@ -179,7 +333,7 @@ public class SolarEngineDemo : MonoBehaviour
     public void trackAppAtrr()
     {
 
-        Debug.Log("[unity] trackAppAtrr click");
+        Debug.Log("[SolarEngineDemo] trackAppAtrr click");
         AttAttributes AppAttributes = new AttAttributes();
         AppAttributes.ad_network = "toutiao";
         AppAttributes.sub_channel = "103300";
@@ -200,7 +354,7 @@ public class SolarEngineDemo : MonoBehaviour
 
     public void trackIAP()
     {
-        Debug.Log("[unity] trackIAP click");
+        Debug.Log("[SolarEngineDemo] trackIAP click");
 
         ProductsAttributes productsAttributes = new ProductsAttributes();
         productsAttributes.product_name = "product_name";
@@ -216,14 +370,13 @@ public class SolarEngineDemo : MonoBehaviour
         productsAttributes.customProperties = getCustomProperties();
 
         productsAttributes.reportingToTencentSdk = 1;
-        //productsAttributes.reportingToTencentSdk = 1;
         
         SolarEngine.Analytics.trackIAP(productsAttributes);
     }
 
     public void trackAdImpression()
     {
-        Debug.Log("[unity] trackAdImpression click");
+        Debug.Log("[SolarEngineDemo] trackAdImpression click");
 
         ImpressionAttributes impressionAttributes = new ImpressionAttributes();
         impressionAttributes.ad_platform = "AdMob";
@@ -235,14 +388,14 @@ public class SolarEngineDemo : MonoBehaviour
         impressionAttributes.currency_type = "CNY";
         impressionAttributes.is_rendered = true;
         impressionAttributes.customProperties = getCustomProperties();
-        SolarEngine.Analytics.trackIAI(impressionAttributes);
+        SolarEngine.Analytics.trackAdImpression(impressionAttributes);
 
     }
 
 
     public void trackLogin()
     {
-        Debug.Log("[unity] trackLogin click");
+        Debug.Log("[SolarEngineDemo] trackLogin click");
 
         LoginAttributes LoginAttributes = new LoginAttributes();
         LoginAttributes.login_type = "QQ_test";
@@ -254,7 +407,7 @@ public class SolarEngineDemo : MonoBehaviour
 
     public void trackOrder()
     {
-        Debug.Log("[unity] trackOrderclick");
+        Debug.Log("[SolarEngineDemo] trackOrderclick");
 
         OrderAttributes OrderAttributes = new OrderAttributes();
         OrderAttributes.order_id = "order_id_test";
@@ -271,7 +424,7 @@ public class SolarEngineDemo : MonoBehaviour
 
     public void userInit()
     {
-        Debug.Log("[unity] userInit click");
+        Debug.Log("[SolarEngineDemo] userInit click");
 
         Dictionary<string, object> userProperties = new Dictionary<string, object>();
         userProperties.Add("K1", "V1");
@@ -286,7 +439,7 @@ public class SolarEngineDemo : MonoBehaviour
 
     public void userUpdate()
     {
-        Debug.Log("[unity] userUpdate click");
+        Debug.Log("[SolarEngineDemo] userUpdate click");
 
         Dictionary<string, object> userProperties = new Dictionary<string, object>();
         userProperties.Add("K1", "V1");
@@ -298,7 +451,7 @@ public class SolarEngineDemo : MonoBehaviour
 
     public void userAdd()
     {
-        Debug.Log("[unity] userAdd click");
+        Debug.Log("[SolarEngineDemo] userAdd click");
 
         Dictionary<string, object> userProperties = new Dictionary<string, object>();
         userProperties.Add("K1", 10);
@@ -310,7 +463,7 @@ public class SolarEngineDemo : MonoBehaviour
 
     public void userUnset()
     {
-        Debug.Log("[unity] userUnset click");
+        Debug.Log("[SolarEngineDemo] userUnset click");
 
         SolarEngine.Analytics.userUnset(new string[] { "K1", "K2" });
 
@@ -318,7 +471,7 @@ public class SolarEngineDemo : MonoBehaviour
 
     public void userAppend()
     {
-        Debug.Log("[unity] userAppend click");
+        Debug.Log("[SolarEngineDemo] userAppend click");
 
         Dictionary<string, object> userProperties = new Dictionary<string, object>();
         userProperties.Add("K1", "V1");
@@ -332,7 +485,7 @@ public class SolarEngineDemo : MonoBehaviour
 
     public void userDelete()
     {
-        Debug.Log("[unity] SEUserDeleteTypeByAccountId click");
+        Debug.Log("[SolarEngineDemo] SEUserDeleteTypeByAccountId click");
 
         SolarEngine.Analytics.userDelete(UserDeleteType.ByAccountId);
         SolarEngine.Analytics.userDelete(UserDeleteType.ByVisitorId);
@@ -356,6 +509,7 @@ public class SolarEngineDemo : MonoBehaviour
             foreach (var VARIABLE in attribution)
             {
                 Debug.Log("SEUnity: attribution : " + VARIABLE);
+                //DebugTool.LogDebug("SEUnity: attribution", VARIABLE.ToString());
             }
         }
         else
@@ -397,7 +551,9 @@ private Vector2 scrollPosition;
     GUILayout.BeginHorizontal();
     // 左列按钮
     GUILayout.BeginVertical();
-    CreateButton("Init SDK", InitSDK);
+    CreateButton("InitD", InitSDKWithDebug);
+        CreateButton("InitD Release", InitSDKWithRelease);
+    
     CreateButton("Set Super Properties", SetSuperPropertiesHandler);
     CreateButton("Set Preset Event", SetPresetEventHandler);
     CreateButton("Login", LoginHandler);
@@ -451,6 +607,9 @@ private Vector2 scrollPosition;
     CreateButton("Fast Fetch (All)", FastFetchAllHandler);
     CreateButton("Async Fetch (Single)", AsyncFetchSingleHandler);
     CreateButton("Async Fetch (All)", AsyncFetchAllHandler);
+    
+    
+    CreateButton("iOS CallBack",  iOSCallBackHandler1);
     GUILayout.EndVertical();
     GUILayout.EndHorizontal();
 
@@ -458,9 +617,34 @@ private Vector2 scrollPosition;
     GUILayout.EndArea();
 }
 
+ private void iOSCallBackHandler1()
+ {
+     // StartCoroutine(iOSCallBackHandler());
+     
+     Analytics.requestTrackingAuthorizationWithCompletionHandler( OnRequestTrackingAuthorizationCompletedHandler);
+     //yield return new WaitForSeconds(0.5f);
+     InitSDKCallback();
+     Debug.Log( " iOS CallBack ");
+ }
+ // private IEnumerator iOSCallBackHandler()
+ // {
+ //    
+ //     Analytics.requestTrackingAuthorizationWithCompletionHandler( OnRequestTrackingAuthorizationCompletedHandler);
+ //     //yield return new WaitForSeconds(0.5f);
+ //     InitSDKCallback();
+ //     Debug.Log( " iOS CallBack ");
+ //
+ //
+ // }
+ private void OnRequestTrackingAuthorizationCompletedHandler(int code)
+ {
+     Debug.Log( " OnRequestTrackingAuthorizationCompletedHandler : " + code);
+   
+ }
+
 private void CreateButton(string buttonText, Action onClickHandler)
 {
-    if (GUILayout.Button(buttonText, GUILayout.Height(90), GUILayout.Width(300)))
+    if (GUILayout.Button(buttonText, GUILayout.Height(50), GUILayout.Width(200)))
     {
         onClickHandler();
     }
@@ -508,6 +692,8 @@ private void LogoutHandler()
 private void GetAccountIdHandler()
 {
     Debug.Log(Analytics.getAccountId());
+    //DebugTool.LogDebug( SolarEngineDemoLog,Analytics.getAccountId());
+    
 }
 
 private void SetVisitorIdHandler()
@@ -517,9 +703,8 @@ private void SetVisitorIdHandler()
 
 private void GetDistinctIdHandler()
 {
-#if SOLARENGINE_BYTEDANCE || SOLARENGINE_WECHAT
     Analytics.getDistinctId(_distinct);
-#endif
+
 }
 
 private void EventStartHandler()
@@ -558,6 +743,7 @@ private void GetAttributionHandler()
     foreach (var variable in dic)
     {
         Debug.Log(variable);
+        //DebugTool.LogDebug( SolarEngineDemoLog,variable.ToString());
     }
 }
 
@@ -662,6 +848,7 @@ private void FastFetchSingleHandler()
         SESDKRemoteConfig remoteConfig = new SESDKRemoteConfig();
         string str = remoteConfig.FastFetchRemoteConfig("testint");
         Debug.Log(str);
+        //DebugTool.LogDebug( SolarEngineDemoLog,str);
     }
     catch (Exception e)
     {
@@ -678,6 +865,7 @@ private void FastFetchAllHandler()
         foreach (var VARIABLE in str)
         {
             Debug.Log(VARIABLE.Key + " " + VARIABLE.Value);
+            //DebugTool.LogDebug( SolarEngineDemoLog,VARIABLE.Key + " " + VARIABLE.Value);
         }
     }
     catch (Exception e)
@@ -692,6 +880,7 @@ private void AsyncFetchSingleHandler()
     {
         SESDKRemoteConfig remoteConfig = new SESDKRemoteConfig();
         remoteConfig.AsyncFetchRemoteConfig("testint", onFetchRemoteConfigCallbacks);
+        
     }
     catch (Exception e)
     {
@@ -716,6 +905,7 @@ private void onFetchRemoteConfigCallbacks(string result)
 {
     // 异步获取参数下发的回调为 string 类型，需要开发者根据自己的业务配置进行属性转换，此处以 bool 类型为例
     Debug.Log(result);
+    //DebugTool.LogDebug( SolarEngineDemoLog,result);
 }
 
 private void onFetchRemoteConfigCallback(Dictionary<string, object> result)
@@ -723,12 +913,15 @@ private void onFetchRemoteConfigCallback(Dictionary<string, object> result)
     // 异步获取参数下发的回调为 string 类型，需要开发者根据自己的业务配置进行属性转换，此处以 bool 类型为例
     string str = JsonConvert.SerializeObject(result);
     Debug.Log(str);
+    //DebugTool.LogDebug( SolarEngineDemoLog,str);
 }
 
 
 private void _distinct(Distinct distinct)
 {
     Debug.Log(string.Format("distinct_id: {0} \n distinct_id_type: {1}", distinct.distinct_id, distinct.distinct_id_type));
+    
+    //DebugTool.LogDebug( SolarEngineDemoLog,string.Format("distinct_id: {0} \n distinct_id_type: {1}", distinct.distinct_id, distinct.distinct_id_type));
 }
 
 
@@ -804,8 +997,6 @@ public void trackUpdateLevel()
         reportingToTencentSdk=1,
         beforeUpgrade = 10,
         afterUpgrade = 20,
-        
-        
         customProperties = new Dictionary<string, object> { { "one", "1" } }
     };
     SolarEngine.Analytics.trackUpdateLevel(updateLevelData);
