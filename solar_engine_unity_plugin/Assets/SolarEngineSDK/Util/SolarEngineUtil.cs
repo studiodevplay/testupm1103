@@ -9,6 +9,7 @@ namespace SolarEngine
 
    public partial class Analytics : MonoBehaviour
     {
+       
         private static void initCallBack(SEConfig config)
         {
             if (config.initCompletedCallback != null)

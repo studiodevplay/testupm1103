@@ -24,7 +24,8 @@ namespace SolarEngine
                 }
               
             }
-        
+
+            setMainLand();
             string storage = SolarEngineSettings.isCN ? ConstString.chinaMainland : ConstString.nonChinaMainland;
             bool  result = true;
             if (isShowFail)
@@ -67,6 +68,31 @@ namespace SolarEngine
         
      
         }
+
+        [MenuItem("SolarEngine/SetMainLand")]
+        public static void setMainLand()
+        {
+#if     UNITY_STANDALONE_WIN
+            SolarEngineGlobalInfo.setMainLand(SolarEngineSettings.isCN? SolarEngineGlobalInfo.MainLand.China : SolarEngineGlobalInfo.MainLand.Non_China); 
+#endif
+
+        }
+
+        [MenuItem("SolarEngine/CopyMainLand")]
+        public static void copyMainLand()
+        {
+#if     UNITY_STANDALONE_WIN
+            SolarEngineGlobalInfo.copyMainLand();
+#endif            
+        }
+        [MenuItem("SolarEngine/DeleteMainLand")]
+        public static void deleteMainLand()
+        {
+#if     UNITY_STANDALONE_WIN
+            SolarEngineGlobalInfo.deleteMainLand();
+ #endif
+        }
+        
 
         public static bool checkApplyWithAndroidPackage()
         {

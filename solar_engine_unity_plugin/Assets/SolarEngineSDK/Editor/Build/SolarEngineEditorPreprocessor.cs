@@ -27,7 +27,7 @@ namespace SolarEngine.Build
         {
             if (target == BuildTarget.Android || target == BuildTarget.iOS)
             {
-                
+
 #if UNITY_ANDROID&&!SOLARENGINE_BYTEDANCE&&!SOLARENGINE_BYTEDANCE_CLOUD&&!SOLARENGINE_BYTEDANCE_STARK
                 RunPostProcessTasksAndroid();
                 CheckConfusion();
@@ -51,6 +51,15 @@ namespace SolarEngine.Build
 
 
 
+
+            }
+
+
+            if (target==BuildTarget.StandaloneWindows|| target==BuildTarget.StandaloneWindows64)
+            {
+
+                ApplySetting.setMainLand();
+                ApplySetting.copyMainLand();
 
             }
         }
@@ -397,4 +406,25 @@ namespace SolarEngine.Build
             return namespaceManager;
         }
     }
+
+
+
+    public class SolarEngineEditorPostBuildProcessor : IPostprocessBuildWithReport
+    {
+        public int callbackOrder
+        {
+            get { return 0; }
+        }
+
+        public void OnPostprocessBuild(BuildReport report)
+        {
+            if (report.summary.platform == BuildTarget.StandaloneWindows ||
+                report.summary.platform == BuildTarget.StandaloneWindows64)
+            {
+                ApplySetting.deleteMainLand();
+            }
+
+        }
+    }
+
 }

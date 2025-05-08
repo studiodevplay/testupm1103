@@ -290,7 +290,7 @@ namespace SolarEngine
         /// 获取distinct_id
         /// </summary>
         /// <returns>distinct_id</returns>
-        [Obsolete("This method is obsolete. Please use getDistinctId(Action<Distinct>distinct) instead.")]
+      // [Obsolete("This method is obsolete. Please use getDistinctId(Action<Distinct>distinct) instead.")]
 
         public static string getDistinctId()
         {
