@@ -12,7 +12,7 @@ namespace SolarEngine
         public partial class Analytics : MonoBehaviour
         {
 
-            private   static string SolorEnginWin =SolorEngine+"windows not currently supported ";
+            private static string SolorEnginWin =SolorEngine+"windows not currently supported ";
             private static Dictionary<string, object> GetPresetProperties()
             {
               return WinSDKWrapper.Instance.getPresetProperties();

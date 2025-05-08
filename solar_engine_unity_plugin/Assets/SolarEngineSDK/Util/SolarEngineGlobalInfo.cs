@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using SolarEngineInner;
+
 using UnityEngine;
 
 namespace SolarEngine
@@ -16,7 +16,7 @@ namespace SolarEngine
         }
         private static MainLand _mainLand;
         
-        static string  mainlandpath="Assets/Plugins/SolarEngine/MainLand";
+        static string  mainlandpath="Assets/SolarEngine/MainLand";
         static string streamingAssetsPath =Path.Combine(Application.streamingAssetsPath,"SolarEngine") ;
        static string fileName = "se_mainland.txt";
 
