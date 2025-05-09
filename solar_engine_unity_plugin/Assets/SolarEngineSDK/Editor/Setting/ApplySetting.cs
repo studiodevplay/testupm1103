@@ -69,23 +69,23 @@ namespace SolarEngine
      
         }
 
-        [MenuItem("SolarEngine/SetMainLand")]
+       // [MenuItem("SolarEngine/SetMainLand")]
         public static void setMainLand()
         {
-#if     UNITY_STANDALONE_WIN
+//#if     UNITY_STANDALONE_WIN
             SolarEngineGlobalInfo.setMainLand(SolarEngineSettings.isCN? SolarEngineGlobalInfo.MainLand.China : SolarEngineGlobalInfo.MainLand.Non_China); 
-#endif
+//#endif
 
         }
 
-        [MenuItem("SolarEngine/CopyMainLand")]
+      //  [MenuItem("SolarEngine/CopyMainLand")]
         public static void copyMainLand()
         {
 #if     UNITY_STANDALONE_WIN
             SolarEngineGlobalInfo.copyMainLand();
 #endif            
         }
-        [MenuItem("SolarEngine/DeleteMainLand")]
+      //  [MenuItem("SolarEngine/DeleteMainLand")]
         public static void deleteMainLand()
         {
 #if     UNITY_STANDALONE_WIN
