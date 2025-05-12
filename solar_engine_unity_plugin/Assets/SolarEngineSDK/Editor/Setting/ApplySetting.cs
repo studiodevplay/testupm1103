@@ -72,9 +72,12 @@ namespace SolarEngine
        // [MenuItem("SolarEngine/SetMainLand")]
         public static void setMainLand()
         {
-//#if     UNITY_STANDALONE_WIN
-            SolarEngineGlobalInfo.setMainLand(SolarEngineSettings.isCN? SolarEngineGlobalInfo.MainLand.China : SolarEngineGlobalInfo.MainLand.Non_China); 
-//#endif
+
+           if( SolarEngineSettings.isCN || SolarEngineSettings.isOversea)
+            SolarEngineGlobalInfo.setMainLand(SolarEngineSettings.isCN? SolarEngineGlobalInfo.MainLand.China : SolarEngineGlobalInfo.MainLand.Non_China);
+           else
+           { SolarEngineGlobalInfo.setMainLand(SolarEngineGlobalInfo.MainLand.None);
+           }
 
         }
 

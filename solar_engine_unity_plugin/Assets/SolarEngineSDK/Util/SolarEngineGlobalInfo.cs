@@ -60,6 +60,7 @@ namespace SolarEngine
                 }
                 else
                 {
+                    _mainLand=MainLand.None;
                     Debug.Log($"{Analytics.SolorEngine} file not found :{filePath}");
                  
                     
@@ -67,6 +68,7 @@ namespace SolarEngine
             }
             catch (System.Exception e)
             {
+                _mainLand=MainLand.None;
               Debug.LogError($"{Analytics.SolorEngine}Error reading file: {e.Message}");
               
             }

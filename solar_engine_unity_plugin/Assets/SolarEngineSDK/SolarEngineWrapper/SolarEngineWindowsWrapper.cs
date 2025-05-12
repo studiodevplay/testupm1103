@@ -24,11 +24,39 @@ namespace SolarEngine
                 
             }
 
+          
+            private static PackageType MainLand()
+            {
+                PackageType packageType=PackageType.None;
+                SolarEngineGlobalInfo.MainLand land = SolarEngineGlobalInfo.getMainLand();
 
+                if (land == SolarEngineGlobalInfo.MainLand.None)
+                {
+                    Debug.LogError($"{Analytics.SolorEngine} please set mainLand first ");
+                  
+                }
+                else
+                {
+                    if (land == SolarEngineGlobalInfo.MainLand.China)
+                    {
+                        packageType = PackageType.ChinaMainland;
+                    }
+                    else
+                    {
+                        packageType = PackageType.NonChinaMainland;
+                    }
+                }
+                return packageType;
+
+            }
             private static void Init(string appKey, object userId, SEConfig config)
             {
-                PackageType packageType = SolarEngineGlobalInfo.getMainLand() == SolarEngineGlobalInfo.MainLand.China ? PackageType.ChinaMainland : PackageType.NonChinaMainland;
-               WinSDKWrapper.Instance.init(appKey, packageType,winConfig(config));
+            PackageType packageType = MainLand();
+            if (packageType == PackageType.None)
+            {
+                return;
+            }
+                WinSDKWrapper.Instance.init(appKey, packageType,winConfig(config));
             }
 
             private static WinSDKWrapper.WinConfig winConfig(SEConfig config)
@@ -36,6 +64,15 @@ namespace SolarEngine
                 WinSDKWrapper.WinConfig winConfig = new WinSDKWrapper.WinConfig();
                 winConfig.isDebugModel = config.isDebugModel;
                 winConfig.logEnabled = config.logEnabled;
+                winConfig.subLibVersion = sdk_version;
+#if TUANJIE_2022_3_OR_NEWER
+                winConfig.sdkType = "tuanjie";
+#else
+                winConfig.sdkType = "unity";
+          
+#endif
+              
+              
                 if (config.initCompletedCallback != null)
                 {
                     WinSDKWrapper.SESDKInitCompletedCallback initCompletedCallback =
@@ -48,8 +85,11 @@ namespace SolarEngine
             }
             private static void Init(string appKey, string userId, SEConfig config, RCConfig rcConfig)
             {
-                PackageType packageType = SolarEngineGlobalInfo.getMainLand() == SolarEngineGlobalInfo.MainLand.China ? PackageType.ChinaMainland : PackageType.NonChinaMainland;
-
+                PackageType packageType = MainLand();
+                if (packageType == PackageType.None)
+                {
+                    return;
+                }
                WinSDKWrapper.Instance.init(appKey, packageType,winConfig(config));
             }
 
