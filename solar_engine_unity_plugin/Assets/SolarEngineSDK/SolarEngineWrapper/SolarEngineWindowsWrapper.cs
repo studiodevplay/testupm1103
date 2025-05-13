@@ -237,7 +237,12 @@ namespace SolarEngine
                     eventName= customAttributes.custom_event_name;
                     eventType= WinSDKWrapper.FirstEventType.Custom;
                 }
-                LogTool.DebugLog($"ttributes.checkId: {attributes.checkId}");
+                else
+                {
+                    Debug.Log($"{SolorEnginWin} firstevent other than register events and custom events ");
+                    return;
+                }
+                LogTool.DebugLog($"attributes.checkId: {attributes.checkId}");
             
                 WinSDKWrapper.Instance. trackFirstEvent( eventName, eventType, attributes.checkId, attributesDict, null);
             }
