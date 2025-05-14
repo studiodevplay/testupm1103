@@ -220,6 +220,7 @@ namespace SolarEngine
                 Dictionary<string, object> attributesDict = new Dictionary<string, object>();
                 string eventName = "";
                 WinSDKWrapper.FirstEventType eventType = WinSDKWrapper.FirstEventType.None;
+                Dictionary<string, object> customProperties = new Dictionary<string, object>();
                 if (attributes is RegisterAttributes registerAttributes)
                 {
                     attributesDict.Add(SolarEngine.Analytics.SEConstant_EVENT_TYPE,
@@ -229,6 +230,7 @@ namespace SolarEngine
                         registerAttributes.register_status);
                     eventName = SEConstant_Register;
                     eventType= WinSDKWrapper.FirstEventType.Reg;
+                    customProperties=registerAttributes.customProperties;
 
                 }
                 else  if (attributes is CustomAttributes customAttributes)
@@ -236,6 +238,7 @@ namespace SolarEngine
                     attributesDict = customAttributes.preProperties;
                     eventName= customAttributes.custom_event_name;
                     eventType= WinSDKWrapper.FirstEventType.Custom;
+                    customProperties=customAttributes.customProperties;
                 }
                 else
                 {
@@ -244,7 +247,7 @@ namespace SolarEngine
                 }
                 LogTool.DebugLog($"attributes.checkId: {attributes.checkId}");
             
-                WinSDKWrapper.Instance. trackFirstEvent( eventName, eventType, attributes.checkId, attributesDict, null);
+                WinSDKWrapper.Instance. trackFirstEvent( eventName, eventType, attributes.checkId, attributesDict, customProperties);
             }
 
             private static void ReportIAPEvent(ProductsAttributes attributes)
