@@ -1,0 +1,11 @@
+﻿import { SEOpenHarmonyProxy } from "./SEOpenHarmonyProxy";
+import { SERCOpenHarmonyProxy } from "./SERCOpenHarmonyProxy";
+
+export function RegisterNativeBridge() {
+
+  let register :Record<string,object>= {} ;
+  register["SEOpenHarmonyProxy"] =  SEOpenHarmonyProxy;
+   register["SERCOpenHarmonyProxy"] =  SERCOpenHarmonyProxy;
+
+  return register;
+}

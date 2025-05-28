@@ -3,7 +3,6 @@ import { SolarEngineConfig,SEPresetEventType,SolarEngineManager } from '@solaren
 import { SEAdImpEventModel,SEAdClickEventModel,SEPurchaseEventModel,
     SERegisterEventModel,SEOrderEventModel,SELoginEventModel,SEAttributionEventModel,
     SECustomEventModel,SEAppReEngagementModel} from '@solarengine/core';
-import tuanjie from 'libtuanjie.so';
 
 import {AttributionListener,InitSDKListener,DeepLinkListener,
     DeeplinkInfo,DelayDeepLinkListener}from '@solarengine/core';
@@ -38,40 +37,40 @@ export class SEOpenHarmonyProxy {
         if (_log) {
             console.log(`${_SolarEngineLog} config:${config} \n rcConfig: ${rcConfig}`);
         }
-        let solarEngineConfigJsonObject = this.parseJsonStrict(config);
+        try {
+           const  configObj = SEOpenHarmonyProxy.parseJsonStrict(config);
 
-        let solarEngineConfig = new SolarEngineConfig();
-        solarEngineConfig.enable2GReporting = solarEngineConfigJsonObject[SolarEngineConfigConstant.Enable2GReporting];
-        solarEngineConfig.isDebugMode = solarEngineConfigJsonObject[SolarEngineConfigConstant.IsDebugModel];
-        solarEngineConfig.logEnabled = solarEngineConfigJsonObject[SolarEngineConfigConstant.LogEnabled];
-        solarEngineConfig.enableDelayDeeplink = solarEngineConfigJsonObject[SolarEngineConfigConstant.EnableDelayDeeplink];
+            const solarEngineConfig = new SolarEngineConfig();
+            solarEngineConfig.enable2GReporting = configObj[SolarEngineConfigConstant.Enable2GReporting];
+            solarEngineConfig.isDebugMode = configObj[SolarEngineConfigConstant.IsDebugModel];
+            solarEngineConfig.logEnabled = configObj[SolarEngineConfigConstant.LogEnabled];
+            solarEngineConfig.enableDelayDeeplink = configObj[SolarEngineConfigConstant.EnableDelayDeeplink];
 
-        if(!rcConfig){
+            // 处理远程配置
+            if (rcConfig) {
+                const rc = new RemoteConfig();
+                const  rcConfigObj = SEOpenHarmonyProxy.parseJsonStrict(rcConfig);
+                console.log(`${_SolarEngineLog}  \n rcConfig12222: ${JSON.stringify( rcConfigObj)}`);
+
+                rc.enable = rcConfigObj[SolarEngineConfigConstant.RCEnable];
+                rc.mergeType = rcConfigObj[SolarEngineConfigConstant.RCMergeType];
+                rc.customIDProperties = rcConfigObj[SolarEngineConfigConstant.RCCustomIDProperties] as Record<string, Object> || {};
+                console.log(`${_SolarEngineLog}  \n rcConfig111111: ${JSON.stringify( rcConfigObj[SolarEngineConfigConstant.RCCustomIDProperties])}`);
+
+                rc.customIDEventProperties = rcConfigObj[SolarEngineConfigConstant.RCCustomIDEventProperties] as Record<string, Object> || {};
+                rc.customIDUserProperties = rcConfigObj[SolarEngineConfigConstant.RCCustomIDUserProperties] as Record<string, Object> || {};
+
+                solarEngineConfig.remoteConfig = rc;
+                console.log(`${_SolarEngineLog}  \n rcConfig: ${JSON.stringify( solarEngineConfig.remoteConfig)}`);
+
+            }
             SolarEngineManager.initialize(globalThis.context, appkey, solarEngineConfig);
 
-        }else{
-            let _rcConfig: RemoteConfig = new RemoteConfig();
-
-            let rcConfiJsonObject = this.parseJsonStrict(rcConfig);
-
-
-            _rcConfig.enable =  rcConfiJsonObject[SolarEngineConfigConstant.RCEnable];
-            _rcConfig.mergeType =rcConfiJsonObject[SolarEngineConfigConstant.RCMergeType]
-            const customIDProperties = rcConfiJsonObject[SolarEngineConfigConstant.RCCustomIDProperties] || {};
-
-            const userIdEventProperties = rcConfiJsonObject[SolarEngineConfigConstant.RCCustomIDEventProperties] || {};
-
-            const userIdUserProperties = rcConfiJsonObject[SolarEngineConfigConstant.RCCustomIDUserProperties] || {};
-            _rcConfig.customIDProperties = customIDProperties;
-            _rcConfig.customIDEventProperties = userIdEventProperties;
-            _rcConfig.customIDUserProperties = userIdUserProperties;
-            solarEngineConfig.remoteConfig = _rcConfig;
-            SolarEngineManager.initialize(globalThis.context, appkey, solarEngineConfig);
-
+        } catch (error) {
+            console.error(`${_SolarEngineLog} initialize failed:`, error);
         }
-
-
     }
+
 
 
     static setOaId(oaid: string) {
@@ -122,15 +121,22 @@ export class SEOpenHarmonyProxy {
     }
 
     static setSuperProperties(properties: string): void {
-        if (_log) {
-            console.log(_SolarEngineLog, "properties",properties);
-        }
-        let propertiesJsonObject = this.parseJsonStrict(properties);
 
-        Object.keys(propertiesJsonObject).forEach(key => {
-            const value = propertiesJsonObject[key];
-            SolarEngineManager.setSuperProperties(globalThis.context, key,value);
-        });
+        if (_log) {
+            console.log(_SolarEngineLog, "setSuperProperties ",properties);
+        }
+        try{
+            let propertiesJsonObject = SEOpenHarmonyProxy.parseJsonStrict(properties);
+
+            Object.keys(propertiesJsonObject).forEach(key => {
+                const value:Object = propertiesJsonObject[key];
+                SolarEngineManager.setSuperProperties(globalThis.context, key,value);
+            });
+        }
+        catch(error){
+            console.error(`${_SolarEngineLog} setSuperProperties failed:`, error);
+        }
+
     }
 
     static unsetSuperProperty(publicKey: string): void {
@@ -153,13 +159,11 @@ export class SEOpenHarmonyProxy {
         if (_log) {
             console.log(_SolarEngineLog, "setPresetEvent", presetEventType,customProperties);
         }
-        let propertiesJsonObject={};
+        let propertiesJsonObject:Record<string, Object>={};
         if(customProperties!=""){
-            propertiesJsonObject  = this.parseJsonStrict(customProperties) as Record<string,object>||{};
+            propertiesJsonObject  = SEOpenHarmonyProxy.parseJsonStrict(customProperties) as Record<string,object>||{};
 
         }
-
-
 
         switch (presetEventType) {
             case SEConstant.PresetEventTypeAppInstall:
@@ -181,7 +185,7 @@ export class SEOpenHarmonyProxy {
             console.log(_SolarEngineLog, "trackAdImpression",properties);
         }
         let impModel = new SEAdImpEventModel();
-        let propertiesJsonObject = this.parseJsonStrict(properties);
+        let propertiesJsonObject = SEOpenHarmonyProxy.parseJsonStrict(properties);
         impModel.adNetworkPlatform = propertiesJsonObject[SEConstant.IAI_AdPlatform];
         impModel.mediationPlatform = propertiesJsonObject[SEConstant.IAI_MediationPlatform];
         impModel.adType = propertiesJsonObject[SEConstant.IAI_AdType];
@@ -190,7 +194,7 @@ export class SEOpenHarmonyProxy {
         impModel.ecpm =  propertiesJsonObject[SEConstant.IAI_AdEcpm];
         impModel.currencyType = propertiesJsonObject[SEConstant.IAI_CurrencyType];
         impModel.isRenderSuccess = propertiesJsonObject[SEConstant.IAI_IsRendered];
-        const customProperties = propertiesJsonObject[SEConstant.Login_CustomProperties] || {};
+        const customProperties:Record<string,object> = propertiesJsonObject[SEConstant.Login_CustomProperties] || {} ;
         impModel.customProperties = customProperties;
         SolarEngineManager.trackAdImpression( impModel);
     }
@@ -204,14 +208,14 @@ export class SEOpenHarmonyProxy {
             console.log(_SolarEngineLog, "trackAdClick");
         }
         let clickEventModel = new SEAdClickEventModel();
-        let propertiesJsonObject = this.parseJsonStrict(properties);
+        let propertiesJsonObject = SEOpenHarmonyProxy.parseJsonStrict(properties);
 
         clickEventModel.adNetworkPlatform = propertiesJsonObject[SEConstant.AdClick_AdPlatform];
         clickEventModel.mediationPlatform = propertiesJsonObject[SEConstant.AdClick_MediationPlatform];
         clickEventModel.adType = propertiesJsonObject[SEConstant.AdClick_AdType];
         clickEventModel.adNetworkADID = propertiesJsonObject[SEConstant.AdClick_AdId];
 
-        const customProperties = propertiesJsonObject[SEConstant.Login_CustomProperties] || {};
+        const customProperties:Record<string, Object> = propertiesJsonObject[SEConstant.Login_CustomProperties] || {};
         clickEventModel.customProperties = customProperties;
         SolarEngineManager.trackAdClick( clickEventModel);
     }
@@ -225,7 +229,7 @@ export class SEOpenHarmonyProxy {
             console.log(_SolarEngineLog, "trackPurchase");
         }
         let purchaseEventModel = new SEPurchaseEventModel();
-        let propertiesJsonObject = this.parseJsonStrict(properties);
+        let propertiesJsonObject = SEOpenHarmonyProxy.parseJsonStrict(properties);
 
         purchaseEventModel.orderId = propertiesJsonObject[SEConstant.Order_ID];
         purchaseEventModel.payAmount = propertiesJsonObject[SEConstant.Order_Pay_Amount];
@@ -235,7 +239,7 @@ export class SEOpenHarmonyProxy {
         purchaseEventModel.productName = propertiesJsonObject[SEConstant.IAP_PName];
         purchaseEventModel.productNum = propertiesJsonObject[SEConstant.IAP_PCount];
         purchaseEventModel.payStatus = propertiesJsonObject[SEConstant.IAP_Paystatus];
-        const customProperties = propertiesJsonObject[SEConstant.Login_CustomProperties] || {};
+        const customProperties:Record<string, Object> = propertiesJsonObject[SEConstant.Login_CustomProperties] || {};
         purchaseEventModel.customProperties = customProperties;
 
 
@@ -251,7 +255,7 @@ export class SEOpenHarmonyProxy {
             console.log(_SolarEngineLog, "trackOrder");
         }
         const orderEventModel = new SEOrderEventModel();
-        const propertiesJsonObject = this.parseJsonStrict(properties); // 使用类的 JSON 解析方法
+        const propertiesJsonObject = SEOpenHarmonyProxy.parseJsonStrict(properties); // 使用类的 JSON 解析方法
 
         // 映射订单事件属性（基于 SEConstant 常量）
         orderEventModel.orderId = propertiesJsonObject[SEConstant.Order_ID]; // 订单 ID
@@ -261,7 +265,7 @@ export class SEOpenHarmonyProxy {
         orderEventModel.status = propertiesJsonObject[SEConstant.Order_Status]; // 订单状态
 
         // 处理自定义属性
-        const customProperties = propertiesJsonObject[SEConstant.Order_CustomProperties] || {};
+        const customProperties:Record<string, Object> = propertiesJsonObject[SEConstant.Order_CustomProperties] || {};
         orderEventModel.customProperties = customProperties;
 
         // 调用 SDK 追踪订单事件
@@ -277,14 +281,14 @@ export class SEOpenHarmonyProxy {
             console.log(_SolarEngineLog, "trackAppRegister");
         }
         const registerEventModel = new SERegisterEventModel();
-        const propertiesJsonObject = this.parseJsonStrict(properties); // 使用类的 JSON 解析方法
+        const propertiesJsonObject = SEOpenHarmonyProxy.parseJsonStrict(properties); // 使用类的 JSON 解析方法
 
         // 映射注册事件属性（基于 SEConstant 常量）
         registerEventModel.regType = propertiesJsonObject[SEConstant.Register_Type]; // 注册类型
         registerEventModel.status = propertiesJsonObject[SEConstant.Register_Status]; // 注册状态
 
         // 处理自定义属性
-        const customProperties = propertiesJsonObject[SEConstant.Register_CustomProperties] || {};
+        const customProperties:Record<string, Object> = propertiesJsonObject[SEConstant.Register_CustomProperties] || {};
         registerEventModel.customProperties = customProperties;
 
         // 调用 SDK 追踪注册事件
@@ -299,14 +303,14 @@ export class SEOpenHarmonyProxy {
             console.log(_SolarEngineLog, "trackAppLogin");
         }
         const loginEventModel = new SELoginEventModel();
-        const propertiesJsonObject = this.parseJsonStrict(properties); // 使用类的 JSON 解析方法
+        const propertiesJsonObject = SEOpenHarmonyProxy.parseJsonStrict(properties); // 使用类的 JSON 解析方法
 
         // 映射登录事件属性（基于 SEConstant 常量）
         loginEventModel.loginType = propertiesJsonObject[SEConstant.Login_Type]; // 登录类型
         loginEventModel.status = propertiesJsonObject[SEConstant.Login_Status]; // 登录状态
 
         // 处理自定义属性
-        const customProperties = propertiesJsonObject[SEConstant.Login_CustomProperties] || {};
+        const customProperties:Record<string, Object> = propertiesJsonObject[SEConstant.Login_CustomProperties] || {};
         loginEventModel.customProperties = customProperties;
 
         // 调用 SDK 追踪登录事件
@@ -319,7 +323,7 @@ export class SEOpenHarmonyProxy {
             console.log(_SolarEngineLog, "trackAppAttribution");
         }
         let attributionEventModel = new SEAttributionEventModel();
-        let propertiesJsonObject = this.parseJsonStrict(properties);
+        let propertiesJsonObject = SEOpenHarmonyProxy.parseJsonStrict(properties);
 
         attributionEventModel.adNetwork = propertiesJsonObject[SEConstant.AppAttr_Ad_Network];
         attributionEventModel.subChannel = propertiesJsonObject[SEConstant.AppAttr_Sub_Channel];
@@ -333,7 +337,7 @@ export class SEOpenHarmonyProxy {
         attributionEventModel.adCreativeName = propertiesJsonObject[SEConstant.AppAttr_Ad_Creative_Name];
         attributionEventModel.attributionPlatform = propertiesJsonObject[SEConstant.AppAttr_AttributionPlatform];
 
-        const customProperties = propertiesJsonObject[SEConstant.Login_CustomProperties] || {};
+        const customProperties:Record<string, Object> = propertiesJsonObject[SEConstant.Login_CustomProperties] || {};
         attributionEventModel.customProperties = customProperties;
 
         SolarEngineManager.trackAppAttribution(attributionEventModel);
@@ -344,7 +348,7 @@ export class SEOpenHarmonyProxy {
             console.log(_SolarEngineLog, "trackCustom");
         }
         const customEventModel = new SECustomEventModel();
-        const customPropertiesJsonObject = this.parseJsonStrict(customProperties) as Record<string,object>;
+        const customPropertiesJsonObject = SEOpenHarmonyProxy.parseJsonStrict(customProperties) as Record<string,object>;
 
         customEventModel.eventName = customEventName;
 
@@ -357,8 +361,8 @@ export class SEOpenHarmonyProxy {
             console.log(_SolarEngineLog, "trackCustom");
         }
         const customEventModel = new SECustomEventModel();
-        const customPropertiesJsonObject = this.parseJsonStrict(customProperties);
-        const preAttributesJsonObject = this.parseJsonStrict(preAttributes);
+        const customPropertiesJsonObject = SEOpenHarmonyProxy.parseJsonStrict(customProperties);
+        const preAttributesJsonObject = SEOpenHarmonyProxy.parseJsonStrict(preAttributes);
 
         customEventModel.eventName = customEventName;
 
@@ -376,7 +380,7 @@ export class SEOpenHarmonyProxy {
         if (_log) {
             console.log(_SolarEngineLog, "trackAppReEngagement",properties);
         }
-        let propertiesJsonObject = this.parseJsonStrict(properties) as Record<string,object>;
+        let propertiesJsonObject = SEOpenHarmonyProxy.parseJsonStrict(properties) as Record<string,object>;
 
         let model = new SEAppReEngagementModel();
         model.customProperties=propertiesJsonObject;
@@ -388,10 +392,10 @@ export class SEOpenHarmonyProxy {
         if (_log) {
             console.log(_SolarEngineLog, "trackFirstEvent",properties);
         }
-        let propertiesJsonObject = this.parseJsonStrict(properties);
+        let propertiesJsonObject = SEOpenHarmonyProxy.parseJsonStrict(properties);
 
 
-        const type = propertiesJsonObject[SEConstant.First_EVENT_TYPE];
+        const type:string = propertiesJsonObject[SEConstant.First_EVENT_TYPE];
         switch (type) {
             case SEConstant.Register_EVENT:
                 const registerEventModel = new SERegisterEventModel();
@@ -433,7 +437,7 @@ export class SEOpenHarmonyProxy {
             console.log(_SolarEngineLog, "userInit", userProperties);
         }
 
-        const userPropertiesJsonObject = this.parseJsonStrict(userProperties) as Record<string ,object>;
+        const userPropertiesJsonObject = SEOpenHarmonyProxy.parseJsonStrict(userProperties) as Record<string ,object>;
         Object.keys(userPropertiesJsonObject).forEach(key => {
             const value = userPropertiesJsonObject[key];
             if (_log) {
@@ -449,7 +453,7 @@ export class SEOpenHarmonyProxy {
         if (_log) {
             console.log(_SolarEngineLog, "userUpdate", userProperties);
         }
-        const userPropertiesJsonObject = this.parseJsonStrict(userProperties) as Record<string ,object>;
+        const userPropertiesJsonObject = SEOpenHarmonyProxy.parseJsonStrict(userProperties) as Record<string ,object>;
         SolarEngineManager.userUpdate(userPropertiesJsonObject);
     }
     //
@@ -458,7 +462,7 @@ export class SEOpenHarmonyProxy {
         if (_log) {
             console.log(_SolarEngineLog, "userAdd", userProperties);
         }
-        const userPropertiesJsonObject = this.parseJsonStrict(userProperties) as Record<string ,number>;
+        const userPropertiesJsonObject = SEOpenHarmonyProxy.parseJsonStrict(userProperties) as Record<string ,number>;
 
         SolarEngineManager.userAdd(userPropertiesJsonObject);
     }
@@ -468,7 +472,7 @@ export class SEOpenHarmonyProxy {
         if (_log) {
             console.log(_SolarEngineLog, "userAppend", userProperties);
         }
-        const userPropertiesJsonObject = this.parseJsonStrict(userProperties) as Record<string ,number>;
+        const userPropertiesJsonObject = SEOpenHarmonyProxy.parseJsonStrict(userProperties) as Record<string ,number>;
 
         SolarEngineManager.userAppend(userPropertiesJsonObject);
     }
@@ -478,7 +482,7 @@ export class SEOpenHarmonyProxy {
         if (_log) {
             console.log(_SolarEngineLog, "userUnset", keys);
         }
-        const keyJsonObject = this.parseJsonStrict(keys) as string[];
+        const keyJsonObject = SEOpenHarmonyProxy.parseJsonStrict(keys) as string[];
 
         SolarEngineManager.userUnset( keyJsonObject);
     }
@@ -513,7 +517,7 @@ export class SEOpenHarmonyProxy {
         if (_log) {
             console.log(_SolarEngineLog, "eventFinish", eventName,attributes);
         }
-        const attributesJsonObject = this.parseJsonStrict(attributes) as Record<string,object>;
+        const attributesJsonObject = SEOpenHarmonyProxy.parseJsonStrict(attributes) as Record<string,object>;
 
         SolarEngineManager.eventFinish(eventName, attributesJsonObject);
     }
@@ -649,20 +653,21 @@ export class SEOpenHarmonyProxy {
 
     // ------------------------ 其他方法 ------------------------
     public  static parseJsonStrict(jsonString: string): object {
+        let jsonObject:Record<string, Object>={};
         try {
-            const parsed = JSON.parse(jsonString);
+            const parsed: object= JSON.parse(jsonString);
             if (typeof parsed !== 'object' || parsed === null) {
                 if (_log) {
                     console.warn(_SolarEngineLog, "解析的JSON非对象，返回空对象");
                 }
-                return {};
+                return jsonObject;
             }
             return parsed;
         } catch (error) {
             if (_log) {
                 console.error(_SolarEngineLog, "JSON解析失败:", error);
             }
-            return {};
+            return jsonObject;
         }
     }
 
@@ -678,6 +683,8 @@ export class SolarEngineConfigConstant
     public static readonly IsDebugModel       = "isDebugModel";
     public static readonly LogEnabled         = "logEnabled";
     public static readonly EnableDelayDeeplink= "delayDeeplinkEnable";
+
+    public static readonly RcConfig                  = "rcConfig";
     public static readonly RCEnable                  = "enable";
     public static readonly RCMergeType               = "mergeType";
     public static readonly RCCustomIDProperties      = "customIDProperties";

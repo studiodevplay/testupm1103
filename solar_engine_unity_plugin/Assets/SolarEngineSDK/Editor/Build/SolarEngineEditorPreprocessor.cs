@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
+using UnityEditor.Callbacks;
 
 namespace SolarEngine.Build
 {
@@ -427,4 +428,87 @@ namespace SolarEngine.Build
         }
     }
 
+    
+    
+    
+#if UNITY_OPENHARMONY
+
+   
+        public class OPENHARMONY_PostProcessBuild
+        {
+           
+            [PostProcessBuildAttribute(88)]
+            public static void OnPostProcessBuild(BuildTarget target, string targetPath)
+            {
+                string path = Path.Combine(targetPath, "entry/oh-package.json5");
+                string jsonContent = File.ReadAllText(path);
+                jsonContent = jsonContent.Replace("\"SolarEngineCore\"", "\"@solarengine/core\"");
+                Debug.Log( "jsonContent"+jsonContent);
+                //判断是否存在 SolarEngineRemoteConfig
+                if (jsonContent.Contains("\"SolarEngineRemoteConfig\""))
+                {
+                    jsonContent = jsonContent.Replace("\"SolarEngineRemoteConfig\"", "\"@solarengine/remoteconfig\"");
+
+                    PostProcessBuild_RemoteConfig(targetPath);
+
+                }
+                File.WriteAllText(path, jsonContent);
+            }
+            
+          static  string jsonToInsert = @"
+    ""arkOptions"": {
+      ""runtimeOnly"": {
+        ""packages"": [
+          ""@solarengine/remoteconfig"",
+          ""@solarengine/core""
+        ]
+      }
+    },";
+
+            public static void PostProcessBuild_RemoteConfig(string targetPath)
+            {
+                string pathBuildPro = Path.Combine(targetPath, "entry/build-profile.json5");
+                string jsonBuildProContent = File.ReadAllText(pathBuildPro);
+
+                // 查找 buildOption 的位置
+                int buildOptionIndex = jsonBuildProContent.IndexOf("\"buildOption\": {");
+                if (buildOptionIndex == -1)
+                {
+                    Debug.Log("未找到 buildOption");
+                    return;
+                }
+
+                // 找到 '{' 的位置（即 "{\n" 或 "{ " 中的 '{'）的位置
+                int openBraceIndex = jsonBuildProContent.IndexOf('{', buildOptionIndex);
+                if (openBraceIndex == -1)
+                {
+                    Debug.Log("未找到 '{'");
+                    return;
+                }
+
+                // 检查是否已经插入过
+                int nextCharIndex = openBraceIndex + 1;
+                if (nextCharIndex < jsonBuildProContent.Length)
+                {
+                    string nextContent = jsonBuildProContent.Substring(nextCharIndex, 20).TrimStart(); // 取后面一点内容判断是否有 arkOptions
+                    if (nextContent.StartsWith("\"arkOptions\""))
+                    {
+                        Debug.Log("arkOptions 已存在");
+                        return;
+                    }
+                }
+
+                // 在 '{' 后插入内容
+                string newContent = jsonBuildProContent.Insert(nextCharIndex, jsonToInsert);
+
+                // 写回文件
+                File.WriteAllText(pathBuildPro, newContent);
+                
+
+                Debug.Log("成功在 buildOption 的 { 后插入 arkOptions"+newContent);
+            }
+            }
+        
+    
+#endif
 }
