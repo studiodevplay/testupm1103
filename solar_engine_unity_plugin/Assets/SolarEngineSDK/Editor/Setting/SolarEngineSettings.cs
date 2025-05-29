@@ -40,7 +40,8 @@ namespace SolarEngine
 		private bool _Android=true;
 		[SerializeField]
 		private bool _MiniGame=true;
-		
+		[SerializeField]
+		private bool _OpenHarmony=true;
 		[SerializeField]
 		private bool _Oaid=true;
 		
@@ -153,6 +154,11 @@ namespace SolarEngine
 		{
 			get{return  Instance._MiniGame;}
 		
+		}
+		public static bool isUseOpenHarmony
+		{
+			get{return  Instance._OpenHarmony;}
+			
 		}
 
 		public static bool isUseAndroid

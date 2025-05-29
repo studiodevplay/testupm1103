@@ -1,4 +1,4 @@
-#if UNITY_OPENHARMONY
+#if UNITY_OPENHARMONY&&!UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -51,7 +51,6 @@ namespace SolarEngine
         private static void Init(string appKey, object userId, SEConfig config)
         {
             initCallBack(config);
-            setInitSDKListener();
             openHarmonyJSClass.CallStatic("initialize",appKey,initSeDict(config));
 
         }
@@ -60,7 +59,6 @@ namespace SolarEngine
         {
             
             initCallBack(config);
-            setInitSDKListener();
            openHarmonyJSClass.CallStatic("initialize",appKey,initSeDict(config),initRcDict(rcConfig));
         }
 

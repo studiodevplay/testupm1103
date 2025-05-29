@@ -9,7 +9,6 @@ using UnityEditor.Callbacks;
 
 namespace SolarEngine.Build
 {
-
 #if UNITY_2018_1_OR_NEWER
     public class SolarEngineEditorPreprocessor : IPreprocessBuildWithReport
 #else
@@ -28,11 +27,10 @@ namespace SolarEngine.Build
         {
             if (target == BuildTarget.Android || target == BuildTarget.iOS)
             {
-
 #if UNITY_ANDROID&&!SOLARENGINE_BYTEDANCE&&!SOLARENGINE_BYTEDANCE_CLOUD&&!SOLARENGINE_BYTEDANCE_STARK
                 RunPostProcessTasksAndroid();
                 CheckConfusion();
-#endif 
+#endif
 #if (UNITY_ANDROID||UNITY_IOS)&&!SOLARENGINE_BYTEDANCE&&!SOLARENGINE_BYTEDANCE_CLOUD&&!SOLARENGINE_BYTEDANCE_STARK
                 if (ApplySetting.checkApplyWithAndroidPackage())
                 {
@@ -49,23 +47,15 @@ namespace SolarEngine.Build
 
                 }
 #endif
-
-
-
-
             }
 
 
-            if (target==BuildTarget.StandaloneWindows|| target==BuildTarget.StandaloneWindows64)
+            if (target == BuildTarget.StandaloneWindows || target == BuildTarget.StandaloneWindows64)
             {
-
                 ApplySetting.setMainLand();
                 ApplySetting.copyMainLand();
-
             }
         }
-
-
 
 
         private const string SolorEngine = "[SolorEngine]";
@@ -82,13 +72,11 @@ namespace SolarEngine.Build
                     Path.Combine(Application.dataPath, "Plugins/SolarEngine/Android/proguard-user.txt");
 
 
-
                 if (!File.Exists(appproguardPath))
                 {
                     if (!Directory.Exists(androidPluginsPath))
                     {
                         Directory.CreateDirectory(androidPluginsPath);
-
                     }
 
 
@@ -109,24 +97,18 @@ namespace SolarEngine.Build
 
                         Debug.Log(string.Format(SolorEngine) +
                                   $"Successfully added rule to keep  in proguard-user.txt  {seContent}");
-
                     }
                     else
                     {
                         Debug.Log(string.Format(SolorEngine) + $"already exists in proguard-user.txt   {seContent}  ");
                     }
-
-
                 }
             }
-
-
         }
 
 
         private static bool AddPermissions(XmlDocument manifest)
         {
-
             var manifestHasChanged = false;
 
             // If enabled by the user && android.permission.INTERNET permission is missing, add it.
@@ -172,10 +154,10 @@ namespace SolarEngine.Build
         {
             var xpath = string.Format("/manifest/uses-permission[@android:name='{0}']", permissionValue);
             return manifest.DocumentElement.SelectSingleNode(xpath, GetNamespaceManager(manifest)) != null;
-        } 
-        
-        
-     //   [MenuItem("SolarEngineSDK/RunPostProcessTasksAndroid ", false, 0)]
+        }
+
+
+        //   [MenuItem("SolarEngineSDK/RunPostProcessTasksAndroid ", false, 0)]
 
         public static void RunPostProcessTasksAndroid()
         {
@@ -195,7 +177,6 @@ namespace SolarEngine.Build
                 isSEManifestUsed = true;
 
                 File.Copy(seManifestPath, appManifestPath);
-
             }
 
             var manifestFile = new XmlDocument();
@@ -204,7 +185,6 @@ namespace SolarEngine.Build
             if (!isSEManifestUsed)
             {
                 manifestHasChanged |= AddPermissions(manifestFile);
-
             }
 
             manifestHasChanged |= AddURISchemes(manifestFile);
@@ -214,7 +194,6 @@ namespace SolarEngine.Build
 
                 Debug.Log(string.Format(SolorEngine) + "Successfully added URI schemes to AndroidManifest.xml");
             }
-
         }
 
         private static bool AddURISchemes(XmlDocument manifest)
@@ -274,7 +253,6 @@ namespace SolarEngine.Build
 
             return usedIntentFiltersChanged;
         }
-
 
 
         private static XmlElement GetIntentFilter(XmlDocument manifest)
@@ -391,7 +369,6 @@ namespace SolarEngine.Build
                 manifest.CreateAttribute("android", key, "http://schemas.android.com/apk/res/android");
             androidSchemeAttribute.InnerText = value;
             node.SetAttributeNode(androidSchemeAttribute);
-
         }
 
         private static bool IsIntentFilterAlreadyExist(XmlDocument manifest, string link)
@@ -409,7 +386,6 @@ namespace SolarEngine.Build
     }
 
 
-
     public class SolarEngineEditorPostBuildProcessor : IPostprocessBuildWithReport
     {
         public int callbackOrder
@@ -424,38 +400,35 @@ namespace SolarEngine.Build
             {
                 ApplySetting.deleteMainLand();
             }
-
         }
     }
 
-    
-    
-    
+
 #if UNITY_OPENHARMONY
 
-   
-        public class OPENHARMONY_PostProcessBuild
+
+    public class OPENHARMONY_PostProcessBuild
+    {
+        [PostProcessBuildAttribute(88)]
+        public static void OnPostProcessBuild(BuildTarget target, string targetPath)
         {
-           
-            [PostProcessBuildAttribute(88)]
-            public static void OnPostProcessBuild(BuildTarget target, string targetPath)
+            string path = Path.Combine(targetPath, "entry/oh-package.json5");
+            string jsonContent = File.ReadAllText(path);
+            jsonContent = jsonContent.Replace("\"SolarEngineCore1.1.0\"", "\"@solarengine/core\"");
+            Debug.Log("jsonContent" + jsonContent);
+            //判断是否存在 SolarEngineRemoteConfig
+            if (jsonContent.Contains("\"SolarEngineRemoteConfig1.1.0\""))
             {
-                string path = Path.Combine(targetPath, "entry/oh-package.json5");
-                string jsonContent = File.ReadAllText(path);
-                jsonContent = jsonContent.Replace("\"SolarEngineCore\"", "\"@solarengine/core\"");
-                Debug.Log( "jsonContent"+jsonContent);
-                //判断是否存在 SolarEngineRemoteConfig
-                if (jsonContent.Contains("\"SolarEngineRemoteConfig\""))
-                {
-                    jsonContent = jsonContent.Replace("\"SolarEngineRemoteConfig\"", "\"@solarengine/remoteconfig\"");
+                PostProcessBuild_RemoteConfig(targetPath);
 
-                    PostProcessBuild_RemoteConfig(targetPath);
+                jsonContent = jsonContent.Replace("\"SolarEngineRemoteConfig1.1.0\"", "\"@solarengine/remoteconfig\"");
 
-                }
-                File.WriteAllText(path, jsonContent);
             }
-            
-          static  string jsonToInsert = @"
+
+            File.WriteAllText(path, jsonContent);
+        }
+
+        static string jsonToInsert = @"
     ""arkOptions"": {
       ""runtimeOnly"": {
         ""packages"": [
@@ -465,50 +438,51 @@ namespace SolarEngine.Build
       }
     },";
 
-            public static void PostProcessBuild_RemoteConfig(string targetPath)
+        public static void PostProcessBuild_RemoteConfig(string targetPath)
+        {
+            string pathBuildPro = Path.Combine(targetPath, "entry/build-profile.json5");
+            string jsonBuildProContent = File.ReadAllText(pathBuildPro);
+
+            // 查找 buildOption 的位置
+            int buildOptionIndex = jsonBuildProContent.IndexOf("\"buildOption\": {");
+            if (buildOptionIndex == -1)
             {
-                string pathBuildPro = Path.Combine(targetPath, "entry/build-profile.json5");
-                string jsonBuildProContent = File.ReadAllText(pathBuildPro);
+                Debug.Log("未找到 buildOption");
+                return;
+            }
 
-                // 查找 buildOption 的位置
-                int buildOptionIndex = jsonBuildProContent.IndexOf("\"buildOption\": {");
-                if (buildOptionIndex == -1)
+            // 找到 '{' 的位置（即 "{\n" 或 "{ " 中的 '{'）的位置
+            int openBraceIndex = jsonBuildProContent.IndexOf('{', buildOptionIndex);
+            if (openBraceIndex == -1)
+            {
+                Debug.Log("未找到 '{'");
+                return;
+            }
+
+            // 检查是否已经插入过
+            int nextCharIndex = openBraceIndex + 1;
+            if (nextCharIndex < jsonBuildProContent.Length)
+            {
+                string nextContent =
+                    jsonBuildProContent.Substring(nextCharIndex, 20).TrimStart(); // 取后面一点内容判断是否有 arkOptions
+                if (nextContent.StartsWith("\"arkOptions\""))
                 {
-                    Debug.Log("未找到 buildOption");
+                    Debug.Log("arkOptions 已存在");
                     return;
                 }
-
-                // 找到 '{' 的位置（即 "{\n" 或 "{ " 中的 '{'）的位置
-                int openBraceIndex = jsonBuildProContent.IndexOf('{', buildOptionIndex);
-                if (openBraceIndex == -1)
-                {
-                    Debug.Log("未找到 '{'");
-                    return;
-                }
-
-                // 检查是否已经插入过
-                int nextCharIndex = openBraceIndex + 1;
-                if (nextCharIndex < jsonBuildProContent.Length)
-                {
-                    string nextContent = jsonBuildProContent.Substring(nextCharIndex, 20).TrimStart(); // 取后面一点内容判断是否有 arkOptions
-                    if (nextContent.StartsWith("\"arkOptions\""))
-                    {
-                        Debug.Log("arkOptions 已存在");
-                        return;
-                    }
-                }
-
-                // 在 '{' 后插入内容
-                string newContent = jsonBuildProContent.Insert(nextCharIndex, jsonToInsert);
-
-                // 写回文件
-                File.WriteAllText(pathBuildPro, newContent);
-                
-
-                Debug.Log("成功在 buildOption 的 { 后插入 arkOptions"+newContent);
             }
-            }
-        
-    
+
+            // 在 '{' 后插入内容
+            string newContent = jsonBuildProContent.Insert(nextCharIndex, jsonToInsert);
+
+            // 写回文件
+            File.WriteAllText(pathBuildPro, newContent);
+
+
+            Debug.Log("成功在 buildOption 的 { 后插入 arkOptions" + newContent);
+        }
+    }
+
+
 #endif
 }

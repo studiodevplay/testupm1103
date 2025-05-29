@@ -177,6 +177,7 @@ export class SEOpenHarmonyProxy {
                 break;
             case SEConstant.PresetEventTypeAppAll:
                 SolarEngineManager.setPresetEventProperties(SEPresetEventType.All, propertiesJsonObject);
+                break;
         }
 
     }

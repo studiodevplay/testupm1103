@@ -203,6 +203,37 @@ namespace SolarEngine
             SetVisitorID(visitorId);
         }
 
+
+      
+       
+
+         
+#if UNITY_OPENHARMONY&&!UNITY_EDITOR
+        public static void getVisitorId(Action<string> callback)
+        {
+             GetVisitorID(callback);
+        }
+    
+        public static void getDistinctId(Action<string>distinct)
+        {
+            GetDistinctId(distinct);
+        }   
+        
+        /// <summary>
+        /// 获取设备、用户相关信息'
+        /// <returns>设备、用户相关信息</returns>
+        /// </summary>
+        public static void getPresetProperties(Action<Dictionary<string ,object>>properties)
+        {
+             GetPresetProperties(properties);
+        }
+         
+        public static void trackAppReEngagement(Dictionary<string, object> customAttributes)
+        {
+            TrackAppReEngagement(customAttributes);
+        }
+
+ #else
         /// <summary>
         /// 获取访客 ID
         /// </summary>
@@ -211,7 +242,36 @@ namespace SolarEngine
         {
             return GetVisitorID();
         }
+        
+        
+        /// <summary>
+        /// 获取distinct_id
+        /// </summary>
+        /// <returns>distinct_id</returns>
 
+        public static string getDistinctId()
+        {
+            return GetDistinctId();
+        }
+        /// <summary>
+        /// 仅minigame 平台使用，已兼容iOS/Android
+        /// </summary>
+        /// <param name="distinct"></param>
+        public static void getDistinctId(Action<Distinct>distinct)
+        {
+            GetDistinctId(distinct);
+        }   
+        
+        /// <summary>
+        /// 获取设备、用户相关信息'
+        /// <returns>设备、用户相关信息</returns>
+        /// </summary>
+        public static Dictionary<string, object> getPresetProperties()
+        {
+            return GetPresetProperties();
+        }
+#endif
+        
         /// <summary>
         /// 设置账户 ID
         /// </summary>
@@ -286,24 +346,7 @@ namespace SolarEngine
         }
         
 
-        /// <summary>
-        /// 获取distinct_id
-        /// </summary>
-        /// <returns>distinct_id</returns>
-      // [Obsolete("This method is obsolete. Please use getDistinctId(Action<Distinct>distinct) instead.")]
-
-        public static string getDistinctId()
-        {
-            return GetDistinctId();
-        }
-        /// <summary>
-        /// 仅minigame 平台使用，已兼容iOS/Android
-        /// </summary>
-        /// <param name="distinct"></param>
-        public static void getDistinctId(Action<Distinct>distinct)
-        {
-            GetDistinctId(distinct);
-        }   
+      
         /// <summary>
         /// 设置公共事件属性
         /// </summary>
@@ -365,6 +408,7 @@ namespace SolarEngine
         {
             ReportIAPEvent(attributes);
         }
+        
 
         
         /// <summary>
@@ -450,7 +494,8 @@ namespace SolarEngine
         {
             AppAttrEvent(attributes);
         }
-
+        
+       
 
         #region 腾讯回传
         public static void trackReActive(ReActiveAttributes attributes)
@@ -655,14 +700,7 @@ namespace SolarEngine
             UserDelete(deleteType);
         }
 
-        /// <summary>
-        /// 获取设备、用户相关信息'
-        /// <returns>设备、用户相关信息</returns>
-        /// </summary>
-        public static Dictionary<string, object> getPresetProperties()
-        {
-            return GetPresetProperties();
-        }
+       
 
         /// <summary>
         /// 立即上报事件，不再等上报策略

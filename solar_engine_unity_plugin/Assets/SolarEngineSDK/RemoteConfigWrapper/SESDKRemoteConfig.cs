@@ -20,6 +20,9 @@ namespace SolarEngine
 
         private FetchAllRemoteConfigCallback fetchAllRemoteConfigCallback_private = null;
 
+
+      
+
         public delegate void FetchAllRemoteConfigCallback(Dictionary<string, object> result);
 
         private static List<Action> waitingTaskList = new List<Action>();
@@ -117,6 +120,20 @@ namespace SolarEngine
             SESDKSetRemoteConfigUserProperties(properties);
         }
 
+
+     
+
+#if UNITY_OPENHARMONY &&!UNITY_EDITOR
+        public void FastFetchRemoteConfig(string key,Action<string>callback)
+        {
+             SESDKFastFetchRemoteConfig(key,callback);
+        }
+
+        public void FastAllFetchRemoteConfig( Action<Dictionary<string, object>> callback)
+        {
+             SESDKFastFetchAllRemoteConfig(callback);
+        }
+#else
         /// <summary>
         /// 同步获取参数配置
         /// 优先从缓存配置查询，查询不到则从默认配置查询，都查询不到则返回nil
@@ -136,7 +153,7 @@ namespace SolarEngine
         {
             return SESDKFastFetchAllRemoteConfig();
         }
-
+#endif
         /// <summary>
         /// 异步获取参数配置，回调方法：OnRemoteConfigFetchCompletion
         /// 请求服务端配置后与本地缓存配置合并，然后从缓存配置查询，查询不到则从默认配置中查询，都查询不到则返回nil 

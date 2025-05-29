@@ -147,6 +147,7 @@ namespace SolarEngine
             bool android = false;
             bool miniGame = false;
             bool oaid=false;
+            bool openHarmony=false;
             if (!SolarEngineSettings.isUseiOS)
                 ios=  PluginsEdtior.disableiOS();
             else
@@ -170,9 +171,16 @@ namespace SolarEngine
             else
             {
                 oaid = PluginsEdtior.showOaid();
+            }if( !SolarEngineSettings.isUseOpenHarmony)
+                openHarmony = PluginsEdtior.disableOpenHarmony();
+            else
+            {
+                openHarmony = PluginsEdtior.showOpenHarmony();
             }
+                
             
-            return ios && android && miniGame && oaid;
+            
+            return ios && android && miniGame && oaid&&openHarmony;
         }
         
         
