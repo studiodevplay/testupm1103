@@ -391,7 +391,7 @@ namespace SolarEngine
 
            attributesDict.Add(SolarEngine.Analytics.SEConstant_IAP_PCount, attributes.product_num);
 
-           attributesDict.Add(SolarEngine.Analytics.SEConstant_IAP_Paystatus, attributes.paystatus);
+           attributesDict.Add(SolarEngine.Analytics.SEConstant_IAP_Paystatus, (int)attributes.paystatus);
 
            attributesDict.Add(SolarEngine.Analytics.SEConstant_IAP_FailReason,
                attributes.fail_reason == null ? "" : attributes.fail_reason);
