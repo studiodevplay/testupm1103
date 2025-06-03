@@ -428,21 +428,25 @@ namespace SolarEngine.Build
             // File.WriteAllText(path, jsonContent);
 
             insertDependency(coreToInsert, targetPath);
-            if(SolarEngineSettings.isUseOpenHarmony)
-            insertDependency(remoteConfigToInsert, targetPath);
+            if (SolarEngineSettings.isUseOpenHarmony)
+            {
+                insertDependency(remoteConfigToInsert, targetPath);
+
+                PostProcessBuild_RemoteConfig(targetPath);
+            }
         }
 
 
         private static string PackageName = "@solarengine/core";
         private static string PackageVersion = "1.1.0"; // 仅版本号，不带 
         private static string coreToInsert = $"\"{PackageName}\":\"^{PackageVersion}\",\n";
-        
-   
+
+
         private static string RemoteConfigPackageName = "@solarengine/remoteconfig";
         private static string RemoteConfigVersion = "1.1.0"; // 仅版本号，不带 ^
-        
+
         private static string remoteConfigToInsert = $"\"{RemoteConfigPackageName}\":\"^{RemoteConfigVersion}\",\n";
-        
+
         public static void insertDependency(string toInsert, string targetPath)
         {
             string fileName = "oh-package.json5";
@@ -490,8 +494,8 @@ namespace SolarEngine.Build
         private static bool IsDependencyExists(string content, string packageName)
         {
             return content.Contains($"\"{packageName}\"");
-        }        
-        
+        }
+
         static string jsonToInsert = @"
     ""arkOptions"": {
       ""runtimeOnly"": {
