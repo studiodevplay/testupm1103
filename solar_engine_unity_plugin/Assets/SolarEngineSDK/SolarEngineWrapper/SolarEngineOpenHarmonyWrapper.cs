@@ -1,4 +1,5 @@
 #if UNITY_OPENHARMONY&&!UNITY_EDITOR
+
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -12,24 +13,21 @@ namespace SolarEngine
 {
     public partial class Analytics : MonoBehaviour
     {
-        private static string SolorEnginopenharmony =SolorEngine+"openharmony not currently supported : ";
+        private static string SolorEnginopenharmony = SolorEngine + "openharmony not currently supported : ";
 
         private static readonly OpenHarmonyJSClass openHarmonyJSClass = new OpenHarmonyJSClass("SEOpenHarmonyProxy");
-     
-        
+
 
         private static Action<string> getVisitor_private;
 
         private static Action<string> getDistinct_private;
 
-        private static Action<Dictionary<string,object>> getProperties_private;
-     
+        private static Action<Dictionary<string, object>> getProperties_private;
+
 
         private static void PreInitSeSdk(string appKey)
         {
-            
             openHarmonyJSClass.CallStatic("preInit", appKey);
-            
         }
 
         private static void setInitSDKListener()
@@ -37,59 +35,48 @@ namespace SolarEngine
             OpenHarmonyJSCallback initsdkCalllback = new OpenHarmonyJSCallback(initSDKCallback);
             openHarmonyJSClass.CallStatic("setInitSDKListener", initsdkCalllback);
         }
+
         private static void setAttributionListener()
         {
-          
-            OpenHarmonyJSCallback  attributionCalllback = new OpenHarmonyJSCallback(attributionCallback);
+            OpenHarmonyJSCallback attributionCalllback = new OpenHarmonyJSCallback(attributionCallback);
             openHarmonyJSClass.CallStatic("setAttributionListener", attributionCalllback);
-        
         }
-      
-      
 
 
         private static void Init(string appKey, object userId, SEConfig config)
         {
             initCallBack(config);
-            openHarmonyJSClass.CallStatic("initialize",appKey,initSeDict(config));
-
+            openHarmonyJSClass.CallStatic("initialize", appKey, initSeDict(config));
         }
 
         private static void Init(string appKey, string userId, SEConfig config, RCConfig rcConfig)
         {
-            
             initCallBack(config);
-           openHarmonyJSClass.CallStatic("initialize",appKey,initSeDict(config),initRcDict(rcConfig));
+            openHarmonyJSClass.CallStatic("initialize", appKey, initSeDict(config), initRcDict(rcConfig));
         }
 
         private static void SetVisitorID(string visitorId)
         {
-             openHarmonyJSClass.CallStatic("setVisitorID", visitorId);
+            openHarmonyJSClass.CallStatic("setVisitorID", visitorId);
         }
 
-      
-        private static  void GetVisitorID(Action<string> callback)
+
+        private static void GetVisitorID(Action<string> callback)
         {
             getVisitor_private = callback;
             OpenHarmonyJSCallback getVisitorCalllback = new OpenHarmonyJSCallback(getVisitorIDCallback);
-            openHarmonyJSClass.CallStatic("getVisitorID",getVisitorCalllback);
-
+            openHarmonyJSClass.CallStatic("getVisitorID", getVisitorCalllback);
         }
-        
-        private static void GetPresetProperties(Action<Dictionary<string ,object>> getProperties)
-        {
 
+        private static void GetPresetProperties(Action<Dictionary<string, object>> getProperties)
+        {
             getProperties_private = getProperties;
             OpenHarmonyJSCallback getPropertiesCallback = new OpenHarmonyJSCallback(getPresetPropertiesCallBack);
-            openHarmonyJSClass.CallStatic("getPresetProperties",getPropertiesCallback);
-            
-            
-
+            openHarmonyJSClass.CallStatic("getPresetProperties", getPropertiesCallback);
         }
 
         private static void Login(string accountId)
         {
-         
             openHarmonyJSClass.CallStatic("login", accountId);
         }
 
@@ -97,7 +84,7 @@ namespace SolarEngine
         {
             return openHarmonyJSClass.CallStatic<string>("getAccountID");
         }
-        
+
 
         private static void Logout()
         {
@@ -106,12 +93,12 @@ namespace SolarEngine
 
         private static void SetGaid(string gaid)
         {
-          ///  openHarmonyJSClass.CallStatic("setGaid", gaid);
+            Debug.Log($"{SolorEnginopenharmony}SetGaid");
         }
-        private  static void SetOaid(string oaid)
+
+        private static void SetOaid(string oaid)
         {
             openHarmonyJSClass.CallStatic("setOaId", oaid);
-            
         }
 
         private static void SetChannel(string channel)
@@ -121,17 +108,16 @@ namespace SolarEngine
 
         private static void SetGDPRArea(bool isGDPRArea)
         {
-           // openHarmonyJSClass.CallStatic("setGDPRArea", isGDPRArea);
+            Debug.Log($"{SolorEnginopenharmony}SetGDPRArea");
+             
         }
 
-   
 
-        private static void GetDistinctId(Action<string>dis)
+        private static void GetDistinctId(Action<string> dis)
         {
             getDistinct_private = dis;
             OpenHarmonyJSCallback getDisCalllback = new OpenHarmonyJSCallback(getDistinctIDCallback);
-            openHarmonyJSClass.CallStatic("getDistinctId",getDisCalllback);
-            
+            openHarmonyJSClass.CallStatic("getDistinctId", getDisCalllback);
         }
 
         private static void SetSuperProperties(Dictionary<string, object> userProperties)
@@ -163,14 +149,12 @@ namespace SolarEngine
             openHarmonyJSClass.CallStatic("eventFinish", timerEventName, attributesJSONString);
         }
 
-       
 
         private static void UserUpdate(Dictionary<string, object> userProperties)
         {
             string userPropertiesJSONString = JsonConvert.SerializeObject(userProperties);
 
             openHarmonyJSClass.CallStatic("userUpdate", userPropertiesJSONString);
-            
         }
 
         private static void UserInit(Dictionary<string, object> userProperties)
@@ -210,8 +194,7 @@ namespace SolarEngine
 
         private static string GetAttribution()
         {
-        return    openHarmonyJSClass.CallStatic<string>("getAttribution");
-        
+            return openHarmonyJSClass.CallStatic<string>("getAttribution");
         }
 
         private static void ReportIAPEvent(ProductsAttributes attributes)
@@ -255,23 +238,25 @@ namespace SolarEngine
             string attributesJSONString = JsonConvert.SerializeObject(getAttrDic(attributes));
             openHarmonyJSClass.CallStatic("trackAppAttrEvent", attributesJSONString);
         }
-        private static void TrackAppReEngagement(Dictionary<string,object> attributes)
+
+        private static void TrackAppReEngagement(Dictionary<string, object> attributes)
         {
             string attributesJSONString = JsonConvert.SerializeObject(attributes);
             openHarmonyJSClass.CallStatic("trackAppReEngagement", attributesJSONString);
         }
-    
+
         private static void TrackFirstEvent(SEBaseAttributes attributes)
         {
             string attributesJSONString = JsonConvert.SerializeObject(getFirstDic(attributes));
 
             openHarmonyJSClass.CallStatic("trackFirstEvent", attributesJSONString);
         }
+
         private static void SetPresetEvent(PresetEventType eventType, Dictionary<string, object> attributes)
         {
             string eventDataJSONString = "";
-            if(attributes!=null)
-                eventDataJSONString= JsonConvert.SerializeObject(attributes);
+            if (attributes != null)
+                eventDataJSONString = JsonConvert.SerializeObject(attributes);
             openHarmonyJSClass.CallStatic("setPresetEvent", getPresetEventName(eventType), eventDataJSONString);
         }
 
@@ -306,38 +291,38 @@ namespace SolarEngine
         {
             Analytics.Instance.deeplinkCallback_private = callback;
 
-            OpenHarmonyJSCallback  deeplinkCalllback = new OpenHarmonyJSCallback(onDeepLinkCallback);
-            openHarmonyJSClass.CallStatic("setDeepLinkListener", deeplinkCalllback);        }
+            OpenHarmonyJSCallback deeplinkCalllback = new OpenHarmonyJSCallback(onDeepLinkCallback);
+            openHarmonyJSClass.CallStatic("setDeepLinkListener", deeplinkCalllback);
+        }
 
 
         private static void DelayDeeplinkCompletionHandler(SESDKDelayDeeplinkCallback callback)
         {
             Analytics.Instance.delayDeeplinkCallback_private = callback;
 
-            OpenHarmonyJSCallback  delaydeeplinkCalllback = new OpenHarmonyJSCallback(onDelayDeepLinkCallback);
-            openHarmonyJSClass.CallStatic("setDelayDeepLinkListener", delaydeeplinkCalllback);            
+            OpenHarmonyJSCallback delaydeeplinkCalllback = new OpenHarmonyJSCallback(onDelayDeepLinkCallback);
+            openHarmonyJSClass.CallStatic("setDelayDeepLinkListener", delaydeeplinkCalllback);
         }
 
-        private static  void SetReferrerTitle(string title)
+        private static void SetReferrerTitle(string title)
         {
-              Debug.Log($"{SolorEnginopenharmony} SetReferrerTitle ");
+            Debug.Log($"{SolorEnginopenharmony} SetReferrerTitle ");
         }
 
         private static void SetXcxPageTitle(string title)
         {
-             Debug.Log($"{SolorEnginopenharmony}: SetXcxPageTitle ");
+            Debug.Log($"{SolorEnginopenharmony}: SetXcxPageTitle ");
         }
-        
-        
-        
-            /// <summary>
+
+
+        /// <summary>
         /// 仅支持iOS
         /// SolarEngine 封装系统requestTrackingAuthorizationWithCompletionHandler接口
         /// callback 回调用户授权状态: 0: Not Determined；1: Restricted；2: Denied；3: Authorized ；999: system error
         /// </summary>
-        private static void RequestTrackingAuthorizationWithCompletionHandler(SESDKATTCompletedCallback callback) {
-           Debug.Log($"{SolorEnginopenharmony}: RequestTrackingAuthorizationWithCompletionHandler");
-
+        private static void RequestTrackingAuthorizationWithCompletionHandler(SESDKATTCompletedCallback callback)
+        {
+            Debug.Log($"{SolorEnginopenharmony}: RequestTrackingAuthorizationWithCompletionHandler");
         }
 
         /// <summary>
@@ -346,166 +331,156 @@ namespace SolarEngine
         /// </summary>
         private static void UpdatePostbackConversionValue(int conversionValue, SKANUpdateCompletionHandler callback)
         {
-
-              Debug.Log($"{SolorEnginopenharmony} UpdatePostbackConversionValue");
-
+            Debug.Log($"{SolorEnginopenharmony} UpdatePostbackConversionValue");
         }
+
         /// <summary>
         /// 仅支持iOS
         /// SolarEngine 封装系统updateConversionValueCoarseValue
         /// </summary>
-        private static void UpdateConversionValueCoarseValue(int fineValue, String coarseValue, SKANUpdateCompletionHandler callback)
+        private static void UpdateConversionValueCoarseValue(int fineValue, String coarseValue,
+            SKANUpdateCompletionHandler callback)
         {
-
-              Debug.Log($"{SolorEnginopenharmony}UpdateConversionValueCoarseValue");
-
-
+            Debug.Log($"{SolorEnginopenharmony}UpdateConversionValueCoarseValue");
         }
+
         /// 仅支持iOS
         /// SolarEngine 封装系统updateConversionValueCoarseValueLockWindow
         /// </summary>
-        private static void UpdateConversionValueCoarseValueLockWindow(int fineValue, String coarseValue, bool lockWindow, SKANUpdateCompletionHandler callback)
+        private static void UpdateConversionValueCoarseValueLockWindow(int fineValue, String coarseValue,
+            bool lockWindow, SKANUpdateCompletionHandler callback)
         {
-
-              Debug.Log($"{SolorEnginopenharmony} UpdateConversionValueCoarseValueLockWindow");
-
+            Debug.Log($"{SolorEnginopenharmony} UpdateConversionValueCoarseValueLockWindow");
         }
 
 
-   #region 腾讯回传
+        #region 腾讯回传
+
         private static void TrackReActive(ReActiveAttributes attributes)
         {
-    
-              Debug.Log($"{SolorEnginopenharmony} TrackReActive");
+            Debug.Log($"{SolorEnginopenharmony} TrackReActive");
         }
-        private static void TrackAddToWishlist(AddToWishlistAttributes attributes)
-        {  
- Debug.Log($"{SolorEnginopenharmony} TrackAddToWishlist");
 
+        private static void TrackAddToWishlist(AddToWishlistAttributes attributes)
+        {
+            Debug.Log($"{SolorEnginopenharmony} TrackAddToWishlist");
         }
+
         private static void TrackShare(ShareAttributes attributes)
         {
- Debug.Log($"{SolorEnginopenharmony}TrackShare");    
+            Debug.Log($"{SolorEnginopenharmony}TrackShare");
         }
+
         private static void TrackCreateRole(CreateRoleAttributes attributes)
         {
- Debug.Log($"{SolorEnginopenharmony}TrackCreateRole");        }
+            Debug.Log($"{SolorEnginopenharmony}TrackCreateRole");
+        }
 
         private static void TrackTutorialFinish(TutorialFinishAttributes attributes)
         {
- Debug.Log($"{SolorEnginopenharmony} TrackTutorialFinish");        }
+            Debug.Log($"{SolorEnginopenharmony} TrackTutorialFinish");
+        }
 
-        private static void TrackUpdateLevel( UpdateLevelAttributes attributes){
- Debug.Log($"{SolorEnginopenharmony}TrackUpdateLevel");        }
-
-        private  static void TrackViewContentMall(ViewContentMallAttributes attributes)
+        private static void TrackUpdateLevel(UpdateLevelAttributes attributes)
         {
- Debug.Log($"{SolorEnginopenharmony}TrackViewContentMall");        }
+            Debug.Log($"{SolorEnginopenharmony}TrackUpdateLevel");
+        }
+
+        private static void TrackViewContentMall(ViewContentMallAttributes attributes)
+        {
+            Debug.Log($"{SolorEnginopenharmony}TrackViewContentMall");
+        }
 
         private static void TrackViewContentActivity(ViewContentActivitAttributes attributes)
         {
- Debug.Log($"{SolorEnginopenharmony} TrackViewContentActivity");        }
-        
+            Debug.Log($"{SolorEnginopenharmony} TrackViewContentActivity");
+        }
 
         #endregion
 
 
         private static object attributionCallback(params OpenHarmonyJSObject[] args)
         {
-          
             if (args.Length > 0)
             {
-              
                 int code = args[0].As<int>();
                 string json = args[1].As<string>();
                 Debug.Log("attributionCallback  json: " + json);
                 Debug.Log("attributionCallback  Data: " + code);
-                OnAttributionHandler(code,json);
+                OnAttributionHandler(code, json);
             }
 
             return true;
         }
-        
+
         private static object onDeepLinkCallback(params OpenHarmonyJSObject[] args)
         {
-          
             if (args.Length > 0)
             {
-            
                 int code = args[0].As<int>();
                 string json = args[1].As<string>();
                 Debug.Log("onDeepLinkCallback  json: " + json);
                 Debug.Log("onDeepLinkCallback  Data: " + code);
-                OnDeeplinkCompletionHandler(code,json);
+                OnDeeplinkCompletionHandler(code, json);
             }
 
             return true;
         }
-        
+
         private static object onDelayDeepLinkCallback(params OpenHarmonyJSObject[] args)
         {
-          
             if (args.Length > 0)
             {
-              
                 int code = args[0].As<int>();
                 string json = args[1].As<string>();
 
                 Debug.Log("onDelayDeepLinkCallback  Data: " + code);
                 Debug.Log("onDelayDeepLinkCallback  json: " + json);
 
-                OnDelayDeeplinkCompletionHandler(code,json);
+                OnDelayDeeplinkCompletionHandler(code, json);
             }
 
             return true;
         }
-        
+
         private static object getPresetPropertiesCallBack(params OpenHarmonyJSObject[] args)
         {
-          
             if (args.Length > 0)
             {
-              
-                string  value = args[0].As<string>();
-            
+                string value = args[0].As<string>();
+
                 Debug.Log("getPresetPropertiesCallBack  json: " + value);
                 Dictionary<string, object> data = new Dictionary<string, object>();
                 if (!string.IsNullOrEmpty(value))
                 {
-                  data = JsonConvert.DeserializeObject<Dictionary<string, object>>(value);
-
+                    data = JsonConvert.DeserializeObject<Dictionary<string, object>>(value);
                 }
-               getProperties_private?.Invoke(data);
+
+                getProperties_private?.Invoke(data);
             }
 
             return true;
         }
 
-        
+
         private static object initSDKCallback(params OpenHarmonyJSObject[] args)
         {
-          
             if (args.Length > 0)
             {
-              
                 int code = args[0].As<int>();
                 Debug.Log("initSDKCallback  code: " + code);
-              
+
                 Analytics.Instance.initCompletedCallback_private?.Invoke(code);
             }
 
             return true;
         }
 
-        
-        
+
         private static object getVisitorIDCallback(params OpenHarmonyJSObject[] args)
         {
-          
             if (args.Length > 0)
             {
-              
-              
                 string VisitorID = args[0].As<string>();
 
                 getVisitor_private?.Invoke(VisitorID);
@@ -513,14 +488,11 @@ namespace SolarEngine
 
             return true;
         }
-        
+
         private static object getDistinctIDCallback(params OpenHarmonyJSObject[] args)
         {
-          
             if (args.Length > 0)
             {
-              
-              
                 string DistinctID = args[0].As<string>();
 
                 getDistinct_private?.Invoke(DistinctID);
@@ -528,9 +500,6 @@ namespace SolarEngine
 
             return true;
         }
-
-        
-        
     }
 }
 #endif
