@@ -36,7 +36,10 @@ namespace SolarEngine
 // 序列化属性，用于表示 Android 平台远程配置相关的设置
         private SerializedProperty androidRemoteConfig;
 // 序列化属性，用于表示小游戏平台远程配置相关的设置
-        private SerializedProperty miniGameRemoteConfig;
+        private SerializedProperty miniGameRemoteConfig; 
+// 序列化属性，用于表示鸿蒙平台远程配置相关的设置
+
+        private SerializedProperty openHarmonyRemoteConfig;
 
 // 序列化属性，用于表示 iOS 平台 URL 标识符相关的设置
         SerializedProperty iOSUrlIdentifier;
@@ -110,6 +113,7 @@ namespace SolarEngine
             iOSRemoteConfig = serializedObject.FindProperty("_iOS");
             androidRemoteConfig = serializedObject.FindProperty("_Android");
             miniGameRemoteConfig = serializedObject.FindProperty("_MiniGame");
+            openHarmonyRemoteConfig = serializedObject.FindProperty("_OpenHarmony");
 
             // 记录初始时中国存储区域选择的布尔值
             oldChinaValue = chinaProperty.boolValue;
@@ -221,6 +225,7 @@ namespace SolarEngine
                 EditorGUILayout.PropertyField(iOSRemoteConfig);
                 EditorGUILayout.PropertyField(androidRemoteConfig);
                 EditorGUILayout.PropertyField(miniGameRemoteConfig);
+                EditorGUILayout.PropertyField(openHarmonyRemoteConfig);
                 EditorGUI.indentLevel -= 1;
                 
             }
@@ -410,6 +415,7 @@ namespace SolarEngine
           return  iOSRemoteConfigValue()&&
            androidRemoteConfigValue()&&
            miniGameRemoteConfigValue()&&
+           openHarmonyRemoteConfigValue()&&
              
            OaidValue()&&
 
@@ -480,6 +486,20 @@ namespace SolarEngine
                 return   PluginsEdtior.disableMiniGame();
             }
             
+        }
+
+        bool openHarmonyRemoteConfigValue()
+        {
+            Debug.Log("openHarmonyRemoteConfigValue"+openHarmonyRemoteConfig.boolValue);
+            if (openHarmonyRemoteConfig.boolValue)
+            {
+                return  PluginsEdtior.showOpenHarmony();
+            }
+            else
+            {
+                return  PluginsEdtior.disableOpenHarmony();
+            }
+          
         }
         
     

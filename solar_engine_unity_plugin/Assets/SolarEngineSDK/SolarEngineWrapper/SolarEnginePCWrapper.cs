@@ -322,7 +322,9 @@ namespace SolarEngine
 
         private static void TrackViewContentActivity(ViewContentActivitAttributes attributes)
         {
- Debug.Log($"{SolorEngine}Unity Editor: TrackViewContentActivity");        }
+ Debug.Log($"{SolorEngine}Unity Editor: TrackViewContentActivity");
+ 
+        }
         
 
         #endregion

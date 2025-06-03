@@ -1,0 +1,9 @@
+﻿import { SERCOpenHarmonyProxy } from "./SERCOpenHarmonyProxy";
+
+export function RegisterRCNativeBridge() {
+
+  let register :Record<string,object>= {} ;
+   register["SERCOpenHarmonyProxy"] =  SERCOpenHarmonyProxy;
+
+  return register;
+}
