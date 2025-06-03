@@ -5,7 +5,7 @@ import {
     RemoteConfigManager,
     safeBoxingConfigItem, stringItem
 } from '@solarengine/remoteconfig';
-import {SEOpenHarmonyProxy, _log, _SolarEngineLog} from './SEOpenHarmonyProxy';
+import {SEOpenHarmonyProxy, _log, _SolarEngineLog} from '../SEOpenHarmonyProxy';
 
 
 export class SERCOpenHarmonyProxy {
