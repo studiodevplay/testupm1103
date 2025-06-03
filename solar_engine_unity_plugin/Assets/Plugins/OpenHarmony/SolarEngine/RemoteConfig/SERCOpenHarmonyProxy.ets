@@ -17,9 +17,7 @@ export class SERCOpenHarmonyProxy {
             console.log(_SolarEngineLog, "setRemoteDefaultConfig", defaultConfig);
         }
         try {
-
             const remoteDefaultConfigJsonObject = SEOpenHarmonyProxy.parseJsonStrict(defaultConfig);
-
             let _defaultConfig: Array<ConfigItem> = new Array();
             Object.keys(remoteDefaultConfigJsonObject).forEach(key => {
                 const value: Record<string, Object> = remoteDefaultConfigJsonObject[key];

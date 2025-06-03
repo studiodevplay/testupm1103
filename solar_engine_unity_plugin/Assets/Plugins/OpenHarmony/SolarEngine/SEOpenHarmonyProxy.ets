@@ -27,6 +27,7 @@ export class SEOpenHarmonyProxy {
             return SolarEngineManager.getAttribution();
         } catch (error) {
             console.error(`${_SolarEngineLog} getAttribution failed:`, error);
+            return "";
         }
 
     }
@@ -136,6 +137,7 @@ export class SEOpenHarmonyProxy {
             return SolarEngineManager.getAccountID();
         } catch (error) {
             console.error(`${_SolarEngineLog} getAccountID failed:`, error);
+            return "";
         }
     }
 
