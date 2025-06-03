@@ -13,54 +13,65 @@ export class SERCOpenHarmonyProxy {
 
     static setRemoteDefaultConfig(defaultConfig: string): void {
 
+        if (_log) {
+            console.log(_SolarEngineLog, "setRemoteDefaultConfig", defaultConfig);
+        }
+        try {
 
-        const remoteDefaultConfigJsonObject = SEOpenHarmonyProxy.parseJsonStrict(defaultConfig);
+            const remoteDefaultConfigJsonObject = SEOpenHarmonyProxy.parseJsonStrict(defaultConfig);
 
-        let _defaultConfig: Array<ConfigItem> = new Array();
-        Object.keys(remoteDefaultConfigJsonObject).forEach(key => {
-            const value:Record<string, Object >= remoteDefaultConfigJsonObject[key];
+            let _defaultConfig: Array<ConfigItem> = new Array();
+            Object.keys(remoteDefaultConfigJsonObject).forEach(key => {
+                const value: Record<string, Object> = remoteDefaultConfigJsonObject[key];
 
-            let nameItem:string = value[SERCConstant.NAME].toString();
-            let valueItem:object = value[SERCConstant.VALUE];
+                let nameItem: string = value[SERCConstant.NAME].toString();
+                let valueItem: object = value[SERCConstant.VALUE];
 
-            let type = value[SERCConstant.TYPE];
-            if (_log) {
-                console.log(`${_SolarEngineLog} setRemoteDefaultConfig: Item  ${valueItem}: ${nameItem} :${type}`);
-            }
+                let type = value[SERCConstant.TYPE];
+                if (_log) {
+                    console.log(`${_SolarEngineLog} setRemoteDefaultConfig: Item  ${valueItem}: ${nameItem} :${type}`);
+                }
 
-            switch (type) {
-                case 1 :
-                    let item1 = stringItem(nameItem, valueItem.toString());
-                    safeBoxingConfigItem(_defaultConfig, item1);
+                switch (type) {
+                    case 1 :
+                        let item1 = stringItem(nameItem, valueItem.toString());
+                        safeBoxingConfigItem(_defaultConfig, item1);
 
-                    break;
-                case 2 :
-                    let item2 = numberItem(nameItem, Number(valueItem) );
-                    safeBoxingConfigItem(_defaultConfig, item2);
-                    break;
-                case 3 :
-                    let item3 = booleanItem(nameItem,Boolean(valueItem));
-                    safeBoxingConfigItem(_defaultConfig, item3);
-                    break;
-                case 4 :
-                    let item4 = jsonItem(nameItem, valueItem as Record<string, Object>);
-                    safeBoxingConfigItem(_defaultConfig, item4);
-                    break;
-            }
-
-
-        });
+                        break;
+                    case 2 :
+                        let item2 = numberItem(nameItem, Number(valueItem));
+                        safeBoxingConfigItem(_defaultConfig, item2);
+                        break;
+                    case 3 :
+                        let item3 = booleanItem(nameItem, Boolean(valueItem));
+                        safeBoxingConfigItem(_defaultConfig, item3);
+                        break;
+                    case 4 :
+                        let item4 = jsonItem(nameItem, valueItem as Record<string, Object>);
+                        safeBoxingConfigItem(_defaultConfig, item4);
+                        break;
+                }
 
 
-        RemoteConfigManager.sharedInstance().setDefaultConfigs(_defaultConfig);
+            });
+
+
+            RemoteConfigManager.sharedInstance().setDefaultConfigs(_defaultConfig);
+        } catch (e) {
+            console.log(_SolarEngineLog, "setRemoteDefaultConfig: error", e);
+        }
     }
 
     static setRemoteConfigEventProperties(properties: string): void {
         if (_log) {
             console.log(_SolarEngineLog, "setRemoteConfigEventProperties", properties);
         }
-        const eventProperties = SEOpenHarmonyProxy.parseJsonStrict(properties) as Record<string, string | number | boolean> || {};
-        RemoteConfigManager.sharedInstance().setRemoteConfigEventProperties(eventProperties);
+        try {
+            const eventProperties = SEOpenHarmonyProxy.parseJsonStrict(properties) as Record<string, string | number | boolean> || {};
+            RemoteConfigManager.sharedInstance().setRemoteConfigEventProperties(eventProperties);
+        } catch (e) {
+            console.log(_SolarEngineLog, "setRemoteConfigEventProperties: error", e);
+        }
 
     }
 
@@ -68,9 +79,14 @@ export class SERCOpenHarmonyProxy {
         if (_log) {
             console.log(_SolarEngineLog, "setRemoteConfigUserProperties", properties);
         }
-        const userProperties = SEOpenHarmonyProxy.parseJsonStrict(properties) as Record<string, string | number | boolean> || {};
+        try {
+            const userProperties = SEOpenHarmonyProxy.parseJsonStrict(properties) as Record<string, string | number | boolean> || {};
 
-        RemoteConfigManager.sharedInstance().setRemoteConfigUserProperties(userProperties);
+            RemoteConfigManager.sharedInstance().setRemoteConfigUserProperties(userProperties);
+
+        } catch (e) {
+            console.log(_SolarEngineLog, "setRemoteConfigUserProperties: error", e);
+        }
 
     }
 
@@ -79,30 +95,35 @@ export class SERCOpenHarmonyProxy {
         if (_log) {
             console.log(_SolarEngineLog, "fastFetchRemoteConfig", key);
         }
-        RemoteConfigManager.sharedInstance().fastFetchRemoteConfig(key, (configItem: ConfigItem | null) => {
-            if (configItem == null) {
-                if (_log)
-                    console.log(_SolarEngineLog, "fastFetchRemoteConfig", key , ": null");
-                callback?.("");
-            } else {
-                const type=typeof configItem?.value;
-                const value=configItem?.value;
+        try {
 
-                if (_log)
-                    console.log(_SolarEngineLog, "fastFetchRemoteConfig", key ," type:", type + " value: " + value);
-                if(configItem?.value !== null){
-                   if(typeof configItem?.value === "object")
-                       callback?.(JSON.stringify(value));
-                   else
-                       callback?.(configItem?.value?.toString());
 
-                }else
+            RemoteConfigManager.sharedInstance().fastFetchRemoteConfig(key, (configItem: ConfigItem | null) => {
+                if (configItem == null) {
+                    if (_log)
+                        console.log(_SolarEngineLog, "fastFetchRemoteConfig", key, ": null");
                     callback?.("");
+                } else {
+                    const type = typeof configItem?.value;
+                    const value = configItem?.value;
+
+                    if (_log)
+                        console.log(_SolarEngineLog, "fastFetchRemoteConfig", key, " type:", type + " value: " + value);
+                    if (configItem?.value !== null) {
+                        if (typeof configItem?.value === "object")
+                            callback?.(JSON.stringify(value));
+                        else
+                            callback?.(configItem?.value?.toString());
+
+                    } else
+                        callback?.("");
 
 
-
-            }
-        })
+                }
+            })
+        } catch (e) {
+            console.log(_SolarEngineLog, "fastFetchRemoteConfig: error", e);
+        }
     }
 
 
@@ -110,63 +131,70 @@ export class SERCOpenHarmonyProxy {
         if (_log) {
             console.log(_SolarEngineLog, "asyncFetchRemoteConfig", key);
         }
-        RemoteConfigManager.sharedInstance().asyncFetchRemoteConfig(key, (configItem: ConfigItem | null) => {
-            if (configItem == null) {
-                if (_log)
-                    console.log(_SolarEngineLog, "asyncFetchRemoteConfig", key , ": null");
-                callback?.("");
-            } else {
-                const type=typeof configItem?.value;
-                const value=configItem?.value;
-
-                if (_log)
-                    console.log(_SolarEngineLog, "asyncFetchRemoteConfig", key ," type:", type + " value: " + value);
-                if(configItem?.value !== null){
-                    if(typeof configItem?.value === "object")
-                        callback?.(JSON.stringify(value));
-                    else
-                        callback?.(configItem?.value?.toString());
-
-                }else
+        try {
+            RemoteConfigManager.sharedInstance().asyncFetchRemoteConfig(key, (configItem: ConfigItem | null) => {
+                if (configItem == null) {
+                    if (_log)
+                        console.log(_SolarEngineLog, "asyncFetchRemoteConfig", key, ": null");
                     callback?.("");
+                } else {
+                    const type = typeof configItem?.value;
+                    const value = configItem?.value;
+
+                    if (_log)
+                        console.log(_SolarEngineLog, "asyncFetchRemoteConfig", key, " type:", type + " value: " + value);
+                    if (configItem?.value !== null) {
+                        if (typeof configItem?.value === "object")
+                            callback?.(JSON.stringify(value));
+                        else
+                            callback?.(configItem?.value?.toString());
+
+                    } else
+                        callback?.("");
 
 
-
-            }
-        })
+                }
+            })
+        } catch (e) {
+            console.log(_SolarEngineLog, "asyncFetchRemoteConfig: error", e);
+        }
     }
 
     static fastAllFetchRemoteConfig(callback: (value: string) => void): void {
         if (_log) {
             console.log(_SolarEngineLog, "fastAllFetchRemoteConfig");
         }
-        RemoteConfigManager.sharedInstance().fastAllFetchRemoteConfig((configItemsMap: Map<string, ConfigItem>) => {
+        try {
+            RemoteConfigManager.sharedInstance().fastAllFetchRemoteConfig((configItemsMap: Map<string, ConfigItem>) => {
 
-            const configArray = Array.from(configItemsMap.values());
+                const configArray = Array.from(configItemsMap.values());
 
-            const config: Record<string, string | boolean | number | Object | null> = {};
-            const jsonString = JSON.stringify(configArray, null, 2);
-            if (_log) {
-                console.log(_SolarEngineLog, 'fastAllFetchRemoteConfig:', jsonString);
-            }
-            for (const item of configArray) {
-
-                let nameItem=item.key;
-                let valueItem=item.value;
-                if(_log)
-                    console.log(_SolarEngineLog,`Key: ${item.key}, Value: ${item.value}， ${ item.type}`);
-
-                if (nameItem !== undefined && nameItem !== null) {
-                    config[nameItem.toString()] = valueItem;
-                } else {
-                    console.error(_SolarEngineLog,"Invalid or missing key:", item);
+                const config: Record<string, string | boolean | number | Object | null> = {};
+                const jsonString = JSON.stringify(configArray, null, 2);
+                if (_log) {
+                    console.log(_SolarEngineLog, 'fastAllFetchRemoteConfig:', jsonString);
                 }
+                for (const item of configArray) {
 
-            }
-            if(_log)
-                console.log(_SolarEngineLog,JSON.stringify(config));
-            callback?.(JSON.stringify(config));
-        });
+                    let nameItem = item.key;
+                    let valueItem = item.value;
+                    if (_log)
+                        console.log(_SolarEngineLog, `Key: ${item.key}, Value: ${item.value}， ${item.type}`);
+
+                    if (nameItem !== undefined && nameItem !== null) {
+                        config[nameItem.toString()] = valueItem;
+                    } else {
+                        console.error(_SolarEngineLog, "Invalid or missing key:", item);
+                    }
+
+                }
+                if (_log)
+                    console.log(_SolarEngineLog, JSON.stringify(config));
+                callback?.(JSON.stringify(config));
+            });
+        } catch (e) {
+            console.log(_SolarEngineLog, "fastAllFetchRemoteConfig: error", e);
+        }
     }
 
     static asyncAllFetchRemoteConfig(callback: (value: string) => void): void {
@@ -184,19 +212,19 @@ export class SERCOpenHarmonyProxy {
             }
             for (const item of configArray) {
 
-                let nameItem=item.key;
-                let valueItem:string | boolean | number | Object | null=item.value;
-                if(_log)
-                    console.log(_SolarEngineLog,`Key: ${item.key}, Value: ${item.value}， ${ item.type}`);
+                let nameItem = item.key;
+                let valueItem: string | boolean | number | Object | null = item.value;
+                if (_log)
+                    console.log(_SolarEngineLog, `Key: ${item.key}, Value: ${item.value}， ${item.type}`);
                 if (nameItem !== undefined && nameItem !== null) {
-                    config[nameItem.toString()] =valueItem;
+                    config[nameItem.toString()] = valueItem;
                 } else {
-                    console.error(_SolarEngineLog,"Invalid or missing key:", item);
+                    console.error(_SolarEngineLog, "Invalid or missing key:", item);
                 }
 
             }
-            if(_log)
-                console.log(_SolarEngineLog,JSON.stringify(config));
+            if (_log)
+                console.log(_SolarEngineLog, JSON.stringify(config));
             callback?.(JSON.stringify(config));
         });
     }
