@@ -123,7 +123,7 @@ namespace SolarEngine
 
      
 
-#if UNITY_OPENHARMONY &&!UNITY_EDITOR
+#if UNITY_OPENHARMONY &&!UNITY_EDITOR&&!SE_DIS_RC
         public void FastFetchRemoteConfig(string key,Action<string>callback)
         {
              SESDKFastFetchRemoteConfig(key,callback);

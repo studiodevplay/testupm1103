@@ -128,7 +128,7 @@ namespace SolarEngine
         /// <param name="appKey">应用 appKey，请联系商务人员获取。</param>
         /// <param name="userID">用户 ID ，请联系商务人员获取。</param>
         /// <param name="SEConfig">见SEConfig 说明</param>
-        public static void initSeSdk(string appKey, string userID, SEConfig config)
+        public static void initSeSdk(string appKey, string userID, SEConfig config=new SEConfig() )
         {
             islog=config.logEnabled;
             Init(appKey, userID, config);
@@ -139,7 +139,7 @@ namespace SolarEngine
         /// </summary>
         /// <param name="appKey">应用 appKey，请联系商务人员获取。</param>
         /// <param name="SEConfig">见SEConfig 说明</param>
-        public static void initSeSdk(string appKey, SEConfig config)
+        public static void initSeSdk(string appKey, SEConfig config=new SEConfig())
         {
             islog=config.logEnabled;
             Init(appKey, null, config);
@@ -151,7 +151,7 @@ namespace SolarEngine
         /// <param name="appKey">应用 appKey，请联系商务人员获取。</param>
         /// <param name="userID">用户 ID ，请联系商务人员获取。</param>
         /// <param name="SEConfig">见SEConfig 说明</param>
-        public static void initSeSdk(string appKey, string userID, SEConfig config, RCConfig rcConfig)
+        public static void initSeSdk(string appKey, string userID, SEConfig config=new SEConfig(), RCConfig rcConfig=new RCConfig())
         {
             Init(appKey, userID, config, rcConfig);
         }
