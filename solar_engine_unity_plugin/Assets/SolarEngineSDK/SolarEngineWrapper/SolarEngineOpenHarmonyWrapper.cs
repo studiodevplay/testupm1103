@@ -415,8 +415,12 @@ namespace SolarEngine
             {
                 int code = args[0].As<int>();
                 string json = args[1].As<string>();
-                Debug.Log("attributionCallback  json: " + json);
-                Debug.Log("attributionCallback  Data: " + code);
+                if (islog)
+                {
+                    Debug.Log("attributionCallback  json: " + json);
+                    Debug.Log("attributionCallback  Data: " + code);
+                }
+              
                 OnAttributionHandler(code, json);
             }
 
@@ -429,8 +433,12 @@ namespace SolarEngine
             {
                 int code = args[0].As<int>();
                 string json = args[1].As<string>();
-                Debug.Log("onDeepLinkCallback  json: " + json);
-                Debug.Log("onDeepLinkCallback  Data: " + code);
+                if (islog)
+                {
+                    Debug.Log("onDeepLinkCallback  json: " + json);
+                    Debug.Log("onDeepLinkCallback  Data: " + code);
+                }
+
                 OnDeeplinkCompletionHandler(code, json);
             }
 
@@ -443,9 +451,11 @@ namespace SolarEngine
             {
                 int code = args[0].As<int>();
                 string json = args[1].As<string>();
-
-                Debug.Log("onDelayDeepLinkCallback  Data: " + code);
-                Debug.Log("onDelayDeepLinkCallback  json: " + json);
+                if (islog)
+                {
+                    Debug.Log("onDelayDeepLinkCallback  Data: " + code);
+                    Debug.Log("onDelayDeepLinkCallback  json: " + json);
+                }
 
                 OnDelayDeeplinkCompletionHandler(code, json);
             }
@@ -459,9 +469,11 @@ namespace SolarEngine
             if (args.Length > 0)
             {
                 int code = args[0].As<int>();
-             
 
-                Debug.Log("onRequestPermissionsCallback  code: " + code);
+                if (islog)
+                {
+                    Debug.Log("onRequestPermissionsCallback  code: " + code);
+                }
 
                 getRequestPermission_private?.Invoke(code);
             }
@@ -474,8 +486,11 @@ namespace SolarEngine
             if (args.Length > 0)
             {
                 string value = args[0].As<string>();
+                if (islog)
+                {
+                    Debug.Log("getPresetPropertiesCallBack  json: " + value);
+                }
 
-                Debug.Log("getPresetPropertiesCallBack  json: " + value);
                 Dictionary<string, object> data = new Dictionary<string, object>();
                 if (!string.IsNullOrEmpty(value))
                 {
@@ -494,7 +509,10 @@ namespace SolarEngine
             if (args.Length > 0)
             {
                 int code = args[0].As<int>();
-                Debug.Log("initSDKCallback  code: " + code);
+                if (islog)
+                {
+                    Debug.Log("initSDKCallback  code: " + code);
+                }
 
                 Analytics.Instance.initCompletedCallback_private?.Invoke(code);
             }
@@ -508,7 +526,11 @@ namespace SolarEngine
             if (args.Length > 0)
             {
                 string VisitorID = args[0].As<string>();
-
+                if (islog)
+                {
+                    Debug.Log("getVisitorIDCallback  VisitorID: " + VisitorID);
+                }
+            
                 getVisitor_private?.Invoke(VisitorID);
             }
 
@@ -520,8 +542,13 @@ namespace SolarEngine
             if (args.Length > 0)
             {
                 string DistinctID = args[0].As<string>();
+                if (islog)
+                {
+                    Debug.Log("getDistinctIDCallback  DistinctID: " + DistinctID);
+                }
+            
 
-                getDistinct_private?.Invoke(DistinctID);
+            getDistinct_private?.Invoke(DistinctID);
             }
 
             return true;

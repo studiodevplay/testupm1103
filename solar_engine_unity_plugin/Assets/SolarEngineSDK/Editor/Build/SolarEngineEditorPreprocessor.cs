@@ -438,19 +438,26 @@ namespace SolarEngine.Build
 
 
         private static string PackageName = "@solarengine/core";
-        private static string PackageVersion = "1.1.0"; // 仅版本号，不带 
-        private static string coreToInsert = $"\"{PackageName}\":\"^{PackageVersion}\",\n";
+        private static string _harVersion = "1.1.0"; // 仅版本号，不带 
+        
+        
+        private static string HarVersion = string.IsNullOrEmpty(SolarEngineSettings.OpenHarmonyVersion)
+            ? _harVersion
+            : SolarEngineSettings.OpenHarmonyVersion;
+        
+        private static string coreToInsert = $"\"{PackageName}\":\"^{HarVersion}\",\n";
 
 
         private static string RemoteConfigPackageName = "@solarengine/remoteconfig";
-        private static string RemoteConfigVersion = "1.1.0"; // 仅版本号，不带 ^
+        //private static string RemoteConfigVersion = "1.1.0"; // 仅版本号，不带 ^
 
-        private static string remoteConfigToInsert = $"\"{RemoteConfigPackageName}\":\"^{RemoteConfigVersion}\",\n";
+        private static string remoteConfigToInsert = $"\"{RemoteConfigPackageName}\":\"^{HarVersion}\",\n";
 
         public static void insertDependency(string toInsert, string targetPath)
         {
             string fileName = "oh-package.json5";
             string path = Path.Combine(targetPath, fileName);
+            Debug.Log($"SolarEngineSettings.OpenHarmonyVersion:{SolarEngineSettings.OpenHarmonyVersion}");
 
             if (!File.Exists(path))
             {

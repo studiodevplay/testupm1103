@@ -50,6 +50,9 @@ namespace SolarEngine
 // 序列化属性，用于表示 iOS 平台版本相关的设置
         SerializedProperty iOSVersion;
         
+        
+        SerializedProperty OpenHarmonyVersion;
+        
         private SerializedProperty useiOSSDK;
         private SerializedProperty removeAndroidSDK;
 
@@ -83,6 +86,7 @@ namespace SolarEngine
             // 通过序列化对象查找并获取对应的属性，以下依次是获取iOS版本、Android版本相关的序列化属性
             iOSVersion = serializedObject.FindProperty("_iOSVersion");
             AndroidVersion = serializedObject.FindProperty("_AndroidVersion");
+            OpenHarmonyVersion = serializedObject.FindProperty("_OpenHarmonyVersion");
 
             // 获取iOS平台URL相关的几个序列化属性，如标识符、方案、通用链接域名等
             iOSUrlIdentifier = serializedObject.FindProperty("_iOSUrlIdentifier");
@@ -225,7 +229,9 @@ namespace SolarEngine
                 EditorGUILayout.PropertyField(iOSRemoteConfig);
                 EditorGUILayout.PropertyField(androidRemoteConfig);
                 EditorGUILayout.PropertyField(miniGameRemoteConfig);
+                #if TUANJIE_2022_3_OR_NEWER
                 EditorGUILayout.PropertyField(openHarmonyRemoteConfig);
+                #endif
                 EditorGUI.indentLevel -= 1;
                 
             }
@@ -321,11 +327,18 @@ namespace SolarEngine
                 EditorGUI.indentLevel++;
                 EditorGUILayout.PropertyField(iOSVersion, new GUIContent("iOS Version"));
                 EditorGUILayout.PropertyField(AndroidVersion);
+                EditorGUILayout.PropertyField(OpenHarmonyVersion);
                 EditorGUI.indentLevel--;
+                Debug.Log("OpenHarmonyVersion: " + OpenHarmonyVersion.stringValue);
+                Debug.Log("SolarEngineSettings.OpenHarmonyVersion " + SolarEngineSettings.OpenHarmonyVersion);
+
                 if (!iOSVersion.stringValue.Equals(SolarEngineSettings.iOSVersion))
                     SolarEngineSettings.iOSVersion = iOSVersion.stringValue;
                 if (!AndroidVersion.stringValue.Equals(SolarEngineSettings.AndroidVersion))
                     SolarEngineSettings.AndroidVersion = AndroidVersion.stringValue;
+                if (!OpenHarmonyVersion.stringValue.Equals(SolarEngineSettings.OpenHarmonyVersion))
+                    SolarEngineSettings.OpenHarmonyVersion = OpenHarmonyVersion.stringValue;
+             
             }
             // else
             //     {

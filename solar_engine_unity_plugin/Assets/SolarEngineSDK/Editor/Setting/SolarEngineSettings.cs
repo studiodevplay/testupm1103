@@ -66,6 +66,8 @@ namespace SolarEngine
 		[SerializeField]
 		private string _AndroidVersion;
 		[SerializeField]
+		private string _OpenHarmonyVersion;
+		[SerializeField]
 		private string _iOSUrlIdentifier;
 		[SerializeField]
 		private string[] _iOSUrlSchemes = new string[0];
@@ -200,6 +202,12 @@ namespace SolarEngine
 		{
 			get{return  Instance._AndroidVersion;}
 			set{Instance._AndroidVersion = value;}
+		}
+
+		public static string OpenHarmonyVersion
+		{
+			get{ return Instance._OpenHarmonyVersion;}
+			set{ Instance._OpenHarmonyVersion = value;}
 		}
 		#if UNITY_EDITOR
 		[MenuItem("SolarEngineSDK/SDK Edit Settings", false, 0)]
