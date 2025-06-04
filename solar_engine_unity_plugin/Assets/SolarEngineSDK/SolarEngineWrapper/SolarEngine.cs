@@ -253,15 +253,7 @@ namespace SolarEngine
         {
             return GetDistinctId();
         }
-        /// <summary>
-        /// 仅minigame 平台使用，已兼容iOS/Android
-        /// </summary>
-        /// <param name="distinct"></param>
-        public static void getDistinctId(Action<Distinct>distinct)
-        {
-            GetDistinctId(distinct);
-        }   
-        
+   
         /// <summary>
         /// 获取设备、用户相关信息'
         /// <returns>设备、用户相关信息</returns>

@@ -262,7 +262,7 @@ public class SolarEngineDemo : MonoBehaviour
     {
 
       Dictionary<string,object>  attributes = getCustomProperties();
-#if UNITY_OPENHARMONY&&!UNITY_EDITOR&&!SE_DIS_RC
+#if UNITY_OPENHARMONY&&!UNITY_EDITOR
 
         SolarEngine.Analytics.trackAppReEngagement(attributes);
 #endif
@@ -650,6 +650,8 @@ private void GetVisitorIdHandler()
 #if UNITY_OPENHARMONY&&!UNITY_EDITOR&&!SE_DIS_RC
 
 Analytics.getVisitorId(getVisitorId);
+ #else
+    Debug.Log(SolarEngineDemoLOG+"getVisitorId : " +  Analytics.getVisitorId());
 #endif
 }
 
@@ -660,9 +662,13 @@ void getVisitorId(string visitorId)
 }
 private void GetDistinctIdHandler()
 {
-#if UNITY_OPENHARMONY&&!UNITY_EDITOR&&!SE_DIS_RC
+#if UNITY_OPENHARMONY&&!UNITY_EDITOR
 
     Analytics.getDistinctId(_distinct);
+    #else
+  
+    Debug.Log(SolarEngineDemoLOG+"getDistinctId : " +   Analytics.getDistinctId());
+
 #endif
     
     
@@ -746,6 +752,12 @@ private void GetPresetPropertiesHandler()
 #if UNITY_OPENHARMONY&&!UNITY_EDITOR
 
    Analytics.getPresetProperties(GetPresetPropertie);
+    #else
+    Dictionary<string, object> dic = Analytics.getPresetProperties();
+    if (dic != null)
+    {
+        Debug.Log(SolarEngineDemoLOG+JsonConvert.SerializeObject(dic));
+    }
 
 #endif
  
@@ -842,6 +854,11 @@ private void FastFetchSingleHandler()
         
             remoteConfig.FastFetchRemoteConfig("testbool", onFetchRemoteConfigCallbacks1);
             remoteConfig.FastFetchRemoteConfig("teststring", onFetchRemoteConfigCallbacks1);
+        #else
+        Debug.Log(SolarEngineDemoLOG+"testint : " + remoteConfig.FastFetchRemoteConfig("testint"));
+        Debug.Log(SolarEngineDemoLOG+"testjson : " + remoteConfig.FastFetchRemoteConfig("testjson"));
+        Debug.Log(SolarEngineDemoLOG+"testbool : " + remoteConfig.FastFetchRemoteConfig("testbool"));
+        Debug.Log(SolarEngineDemoLOG+"teststring : " + remoteConfig.FastFetchRemoteConfig("teststring"));
 
       #endif  
     }
@@ -864,6 +881,13 @@ private void FastFetchAllHandler()
 #if UNITY_OPENHARMONY&&!UNITY_EDITOR&&!SE_DIS_RC
 
         remoteConfig.FastAllFetchRemoteConfig(onFetchRemoteConfigCallback);
+        #else
+        Dictionary<string, object> str = remoteConfig.FastFetchRemoteConfig();
+        foreach (var VARIABLE in str)
+        {
+            Debug.Log(SolarEngineDemoLOG+VARIABLE.Key + " " + VARIABLE.Value);
+        }
+        
 #endif
     }
     catch (Exception e)
