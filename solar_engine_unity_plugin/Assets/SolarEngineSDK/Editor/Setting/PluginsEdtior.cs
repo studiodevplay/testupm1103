@@ -124,10 +124,19 @@ public class PluginsEdtior : MonoBehaviour
    }
    public static bool showOpenHarmony()
    {
+#if TUANJIE_2022_3_OR_NEWER
+
+       DefineSymbolsEditor.delete_DISABLE_REMOTECONFIG(BuildTargetGroup.OpenHarmony,false);
+#endif
        return  ShowPath(RemoteConfigsPathOpenHar)&&ShowFile(RemoteConfigsPathOpenHarCS) ;
+
    }
    public static bool disableOpenHarmony()
    {
+#if TUANJIE_2022_3_OR_NEWER
+
+       DefineSymbolsEditor.add_DISABLE_REMOTECONFIG(BuildTargetGroup.OpenHarmony,false);
+#endif
        return HidePath(RemoteConfigsPathOpenHar)&&HideFile(RemoteConfigsPathOpenHarCS);
     
    }

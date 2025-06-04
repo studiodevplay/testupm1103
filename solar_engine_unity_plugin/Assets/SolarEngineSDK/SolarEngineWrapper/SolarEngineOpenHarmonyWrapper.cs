@@ -1,4 +1,4 @@
-#if UNITY_OPENHARMONY&&!UNITY_EDITOR
+//#if UNITY_OPENHARMONY&&!UNITY_EDITOR
 
 using System;
 using System.Collections.Generic;
@@ -21,6 +21,7 @@ namespace SolarEngine
         private static Action<string> getVisitor_private;
 
         private static Action<string> getDistinct_private;
+        private static Action<int> getRequestPermission_private;
 
         private static Action<Dictionary<string, object>> getProperties_private;
 
@@ -296,12 +297,19 @@ namespace SolarEngine
         }
 
 
-        private static void DelayDeeplinkCompletionHandler(SESDKDelayDeeplinkCallback callback)
+        private static void RequestPermissionsFromUser(Action<int>  callback)
         {
-            Analytics.Instance.delayDeeplinkCallback_private = callback;
+            getRequestPermission_private = callback;
 
-            OpenHarmonyJSCallback delaydeeplinkCalllback = new OpenHarmonyJSCallback(onDelayDeepLinkCallback);
-            openHarmonyJSClass.CallStatic("setDelayDeepLinkListener", delaydeeplinkCalllback);
+            OpenHarmonyJSCallback requestPermissionCalllback = new OpenHarmonyJSCallback(onRequestPermissionsCallback);
+            openHarmonyJSClass.CallStatic("RequestPermissionsFromUser", requestPermissionCalllback);
+        }
+        private static void onDeepLinkCallback(string url)
+        {
+            if (Analytics.Instance.deeplinkCallback_private != null)
+            {
+                Analytics.Instance.deeplinkCallback_private(url);
+            }
         }
 
         private static void SetReferrerTitle(string title)
@@ -396,6 +404,8 @@ namespace SolarEngine
             Debug.Log($"{SolorEnginopenharmony} TrackViewContentActivity");
         }
 
+        
+        
         #endregion
 
 
@@ -438,6 +448,22 @@ namespace SolarEngine
                 Debug.Log("onDelayDeepLinkCallback  json: " + json);
 
                 OnDelayDeeplinkCompletionHandler(code, json);
+            }
+
+            return true;
+        }
+        
+        
+        private static object onRequestPermissionsCallback(params OpenHarmonyJSObject[] args)
+        {
+            if (args.Length > 0)
+            {
+                int code = args[0].As<int>();
+             
+
+                Debug.Log("onRequestPermissionsCallback  code: " + code);
+
+                getRequestPermission_private?.Invoke(code);
             }
 
             return true;
