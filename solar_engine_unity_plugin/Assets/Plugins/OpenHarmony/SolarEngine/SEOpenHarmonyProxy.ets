@@ -11,6 +11,8 @@ import {
 } from '@solarengine/core';
 
 import {RemoteConfig} from '@solarengine/core';
+import { abilityAccessCtrl } from '@kit.AbilityKit';
+import { BusinessError } from '@kit.BasicServicesKit';
 
 
 export const _log: boolean = true;
@@ -846,7 +848,16 @@ export class SEOpenHarmonyProxy {
         }
       
     }
-
+    static requestPermissionsFromUser(callback: (code: number) => void){
+        const atManager: abilityAccessCtrl.AtManager = abilityAccessCtrl.createAtManager();
+        atManager.requestPermissionsFromUser(globalThis.context, ["ohos.permission.APP_TRACKING_CONSENT"]).then((data) => {
+            if (data.authResults[0] == 0) {
+                callback?.(0);
+            } else {
+                callback?.(1);            }
+        }).catch((err: BusinessError) => {
+            callback?.(999);        })
+    }
 
     // ------------------------ 其他方法 ------------------------
     public static parseJsonStrict(jsonString: string): object {

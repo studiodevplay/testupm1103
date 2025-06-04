@@ -489,6 +489,7 @@ public class SolarEngineDemo : MonoBehaviour
     GUILayout.BeginHorizontal();
     // 左列按钮
     GUILayout.BeginVertical();
+    CreateButton("RequestPermissionsFromUser", RequestPermissionsFromUserHandler);
     CreateButton("InitSDK", InitSDK);
     
     CreateButton("SetSuperProperties", SetSuperPropertiesHandler);
@@ -643,6 +644,18 @@ private void GetAccountIdHandler()
 private void SetVisitorIdHandler()
 {
     Analytics.setVisitorId("99999999999");
+}
+private void RequestPermissionsFromUserHandler()
+{
+#if UNITY_OPENHARMONY&&!UNITY_EDITOR&&!SE_DIS_RC
+
+    SolarEngine.Analytics.requestPermissionsFromUser(callback);
+#endif
+
+}
+private void callback(int code)
+{
+    Debug.Log(SolarEngineDemoLOG+ " requestPermissionsFromUser : " + code);
 }
 
 private void GetVisitorIdHandler()
