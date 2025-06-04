@@ -1,4 +1,4 @@
-//#if UNITY_OPENHARMONY&&!UNITY_EDITOR
+#if UNITY_OPENHARMONY&&!UNITY_EDITOR
 
 using System;
 using System.Collections.Generic;
@@ -296,21 +296,21 @@ namespace SolarEngine
             openHarmonyJSClass.CallStatic("setDeepLinkListener", deeplinkCalllback);
         }
 
+        private static void DelayDeeplinkCompletionHandler(SESDKDelayDeeplinkCallback callback)
+        {
+            Analytics.Instance.delayDeeplinkCallback_private = callback;
+            OpenHarmonyJSCallback delaydeeplinkCalllback = new OpenHarmonyJSCallback(onDelayDeepLinkCallback);
+            openHarmonyJSClass.CallStatic("setDelayDeepLinkListener", delaydeeplinkCalllback);
 
+        }
         private static void RequestPermissionsFromUser(Action<int>  callback)
         {
             getRequestPermission_private = callback;
 
             OpenHarmonyJSCallback requestPermissionCalllback = new OpenHarmonyJSCallback(onRequestPermissionsCallback);
-            openHarmonyJSClass.CallStatic("RequestPermissionsFromUser", requestPermissionCalllback);
+            openHarmonyJSClass.CallStatic("requestPermissionsFromUser", requestPermissionCalllback);
         }
-        private static void onDeepLinkCallback(string url)
-        {
-            if (Analytics.Instance.deeplinkCallback_private != null)
-            {
-                Analytics.Instance.deeplinkCallback_private(url);
-            }
-        }
+      
 
         private static void SetReferrerTitle(string title)
         {
