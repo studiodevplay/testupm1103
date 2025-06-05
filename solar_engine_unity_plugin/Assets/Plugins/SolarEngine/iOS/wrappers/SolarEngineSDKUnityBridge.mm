@@ -573,6 +573,23 @@ void __iOSSolarEngineSDKTrackCustomEventWithPreAttributes(const char *eventName,
     [[SolarEngineSDK sharedInstance] track:_eventName withCustomProperties:customProperties withPresetProperties:preProperties];
 }
 
+void __iOSSolarEngineSDKTrackAppReEngagement(const char *attributes)
+{       
+    NSLog(@"__iOSSolarEngineSDKTrackAppReEngagement called");
+    NSDictionary *customProperties = nil;
+    if (attributes != NULL) {
+        NSString *jsonString = [NSString stringWithUTF8String:attributes];
+        NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+        NSError *error = nil;
+        customProperties = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data", jsonString];
+            NSLog(@"trackAppReEngagement, error :%@",msg);
+            customProperties = nil;
+        }        
+    }
+    [[SolarEngineSDK sharedInstance] trackAppReEngagement:customProperties];
+}
 
 void __iOSSolarEngineSDKTrackFirstEventWithAttributes(const char *firstEventAttribute) {
     
