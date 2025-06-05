@@ -1,4 +1,4 @@
-import {SolarEngineConfig, SEPresetEventType, SolarEngineManager} from '@solarengine/core';
+import {SolarEngineConfig, SEPresetEventType, SolarEngineManager, SeSdkSource} from '@solarengine/core';
 import {
     SEAdImpEventModel, SEAdClickEventModel, SEPurchaseEventModel,
     SERegisterEventModel, SEOrderEventModel, SELoginEventModel, SEAttributionEventModel,
@@ -57,25 +57,27 @@ export class SEOpenHarmonyProxy {
             solarEngineConfig.isDebugMode = configObj[SolarEngineConfigConstant.IsDebugModel];
             solarEngineConfig.logEnabled = configObj[SolarEngineConfigConstant.LogEnabled];
             solarEngineConfig.enableDelayDeeplink = configObj[SolarEngineConfigConstant.EnableDelayDeeplink];
+            const  sdkSource=new  SeSdkSource();
+            sdkSource.subLibVersion=configObj[SolarEngineConfigConstant.SubLibVersion];
+            sdkSource.sdkType=configObj[SolarEngineConfigConstant.SdkType];
 
             // 处理远程配置
             if (rcConfig) {
                 const rc = new RemoteConfig();
                 const rcConfigObj = SEOpenHarmonyProxy.parseJsonStrict(rcConfig);
-                console.log(`${_SolarEngineLog}  \n rcConfig12222: ${JSON.stringify(rcConfigObj)}`);
 
                 rc.enable = rcConfigObj[SolarEngineConfigConstant.RCEnable];
                 rc.mergeType = rcConfigObj[SolarEngineConfigConstant.RCMergeType];
                 rc.customIDProperties = rcConfigObj[SolarEngineConfigConstant.RCCustomIDProperties] as Record<string, Object> || {};
-                console.log(`${_SolarEngineLog}  \n rcConfig111111: ${JSON.stringify(rcConfigObj[SolarEngineConfigConstant.RCCustomIDProperties])}`);
 
                 rc.customIDEventProperties = rcConfigObj[SolarEngineConfigConstant.RCCustomIDEventProperties] as Record<string, Object> || {};
                 rc.customIDUserProperties = rcConfigObj[SolarEngineConfigConstant.RCCustomIDUserProperties] as Record<string, Object> || {};
 
                 solarEngineConfig.remoteConfig = rc;
-                console.log(`${_SolarEngineLog}  \n rcConfig: ${JSON.stringify(solarEngineConfig.remoteConfig)}`);
 
             }
+            SolarEngineManager.setSeSdkSource(sdkSource)
+
             SolarEngineManager.initialize(globalThis.context, appkey, solarEngineConfig);
 
         } catch (error) {
@@ -887,6 +889,9 @@ export class SolarEngineConfigConstant {
     public static readonly IsDebugModel = "isDebugModel";
     public static readonly LogEnabled = "logEnabled";
     public static readonly EnableDelayDeeplink = "delayDeeplinkEnable";
+
+    public static readonly SubLibVersion="sub_lib_version";
+    public static readonly  SdkType="sdk_type";
 
     public static readonly RcConfig = "rcConfig";
     public static readonly RCEnable = "enable";
