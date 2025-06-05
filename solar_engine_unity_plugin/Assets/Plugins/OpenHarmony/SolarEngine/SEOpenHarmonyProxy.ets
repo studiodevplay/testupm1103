@@ -854,11 +854,21 @@ export class SEOpenHarmonyProxy {
         const atManager: abilityAccessCtrl.AtManager = abilityAccessCtrl.createAtManager();
         atManager.requestPermissionsFromUser(globalThis.context, ["ohos.permission.APP_TRACKING_CONSENT"]).then((data) => {
             if (data.authResults[0] == 0) {
+                if (_log) {
+                    console.log(_SolarEngineLog,  '%{public}s', 'request permission success');
+                }
                 callback?.(0);
             } else {
+                if (_log) {
+                    console.log(_SolarEngineLog, '%{public}s', 'user rejected');
+                }
                 callback?.(1);            }
         }).catch((err: BusinessError) => {
-            callback?.(999);        })
+            callback?.(999);
+            if (_log) {
+                console.log(_SolarEngineLog, '%{public}s', `request permission failed, error: ${err.code} ${err.message}`);
+            }
+        })
     }
 
     // ------------------------ 其他方法 ------------------------

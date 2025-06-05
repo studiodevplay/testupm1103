@@ -40,6 +40,8 @@ internal class ExportPackage {
 		private const string solarEngineNet = "Assets/SolarEngineNet/";
 
 		private const string pluginsPath = "Assets/Plugins/SolarEngine";
+		private const string OpenHarmonyPath  =  "Assets/Plugins/OpenHarmony/SolarEngine";
+		
 		//private const string editorPath = "Assets/Editor/";
 	
 	
@@ -89,17 +91,23 @@ internal class ExportPackage {
 				string[] solarengineFiles = (string[])Directory.GetFiles(solarenginePath, "*.*", SearchOption.AllDirectories);
 			
 				string[] pluginsFiles = (string[])Directory.GetFiles(pluginsPath, "*.*", SearchOption.AllDirectories);
+				string[] OpenHarmonyFiles = (string[])Directory.GetFiles(OpenHarmonyPath, "*.*", SearchOption.AllDirectories);
 				string[] externalDependencyFiles = (string[])Directory.GetFiles(externalDependencyManager, "*.*", SearchOption.AllDirectories);
 			
 				string[] solarEngineNetFiles = (string[])Directory.GetFiles(solarEngineNet, "*.*", SearchOption.AllDirectories);
-			
-			
-			string[] files = new string[solarengineFiles.Length + pluginsFiles.Length+externalDependencyFiles.Length+solarEngineNetFiles.Length];
+
+
+				string[] files = new string[solarengineFiles.Length + pluginsFiles.Length +
+				                            externalDependencyFiles.Length + solarEngineNetFiles.Length +
+				                            OpenHarmonyFiles.Length];
 			
 				solarengineFiles.CopyTo(files, 0);
 				pluginsFiles.CopyTo(files, solarengineFiles.Length);
+				
 				externalDependencyFiles.CopyTo(files, solarengineFiles.Length + pluginsFiles.Length);
 				solarEngineNetFiles.CopyTo(files, solarengineFiles.Length + pluginsFiles.Length + externalDependencyFiles.Length);
+				
+				OpenHarmonyFiles.CopyTo(files, solarengineFiles.Length + pluginsFiles.Length + externalDependencyFiles.Length + solarEngineNetFiles.Length);
 				
 			
 				AssetDatabase.ExportPackage(
