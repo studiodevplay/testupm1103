@@ -434,6 +434,10 @@ namespace SolarEngine
                 Debug.Log($"{SolorEnginWin}: TrackViewContentActivity");
             }
 
+      private static void TrackAppReEngagement(Dictionary<string, object> customAttributes)
+        {
+                Debug.Log($"{SolorEnginWin}: TrackAppReEngagement");
+        }
 
             #endregion
 

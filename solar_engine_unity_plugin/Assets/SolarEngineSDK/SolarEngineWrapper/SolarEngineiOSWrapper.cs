@@ -204,6 +204,12 @@ namespace SolarEngine
 
             __iOSSolarEngineSDKTrackFirstEventWithAttributes(attributesJSONString);
         }
+        
+        private static void TrackAppReEngagement(Dictionary<string, object> attributes)
+        {
+            string attributesJSONString = JsonConvert.SerializeObject(attributes);
+            __iOSSolarEngineSDKTrackAppReEngagement(attributesJSONString);
+        }
 
         private static void ReportIAPEvent(ProductsAttributes attributes)
         {
@@ -486,6 +492,9 @@ namespace SolarEngine
         private static extern void __iOSSolarEngineSDKLogout();
 
         [DllImport("__Internal")]
+        private static extern void __iOSSolarEngineSDKTrackAppReEngagement(string properties);
+
+        [DllImport("__Internal")]
         private static extern void __iOSSolarEngineSDKReportEventImmediately();
 
         [DllImport("__Internal")]
@@ -557,7 +566,7 @@ namespace SolarEngine
 
         [DllImport("__Internal")]
         private static extern void __iOSSolarEngineSDKDelayDeeplinkParseCallback(SEiOSStringCallback callback);
-
+      
         #endregion
 
         

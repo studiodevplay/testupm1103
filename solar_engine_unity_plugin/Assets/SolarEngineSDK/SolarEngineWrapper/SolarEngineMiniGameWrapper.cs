@@ -382,6 +382,10 @@ namespace SolarEngine
         {
             Debug.Log($"{SolorEngine}Only Android can use , minigame not support");
         }
+        private static void TrackAppReEngagement(Dictionary<string, object> attributes)
+         {
+             Debug.Log($"{SolorEngine}miniGame not support  TrackAppReEngagement");
+         }
 
         #region  not support function
 

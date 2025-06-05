@@ -327,11 +327,11 @@ namespace SolarEngine
                 EditorGUI.indentLevel++;
                 EditorGUILayout.PropertyField(iOSVersion, new GUIContent("iOS Version"));
                 EditorGUILayout.PropertyField(AndroidVersion);
+#if UNITY_OPENHARMONY
                 EditorGUILayout.PropertyField(OpenHarmonyVersion);
+#endif
                 EditorGUI.indentLevel--;
-                Debug.Log("OpenHarmonyVersion: " + OpenHarmonyVersion.stringValue);
-                Debug.Log("SolarEngineSettings.OpenHarmonyVersion " + SolarEngineSettings.OpenHarmonyVersion);
-
+            
                 if (!iOSVersion.stringValue.Equals(SolarEngineSettings.iOSVersion))
                     SolarEngineSettings.iOSVersion = iOSVersion.stringValue;
                 if (!AndroidVersion.stringValue.Equals(SolarEngineSettings.AndroidVersion))

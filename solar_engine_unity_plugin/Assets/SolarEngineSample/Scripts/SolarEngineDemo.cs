@@ -262,10 +262,9 @@ public class SolarEngineDemo : MonoBehaviour
     {
 
       Dictionary<string,object>  attributes = getCustomProperties();
-#if UNITY_OPENHARMONY&&!UNITY_EDITOR
 
         SolarEngine.Analytics.trackAppReEngagement(attributes);
-#endif
+
 
     }
 
@@ -526,7 +525,7 @@ public class SolarEngineDemo : MonoBehaviour
     CreateButton("Track Ad Impression", TrackAdImpressionHandler);
     CreateButton("Track Login", TrackLoginHandler);
     CreateButton("Track Order", TrackOrderHandler);
-    CreateButton("Track AppRe", trackAppReEngagement);
+    CreateButton("Track AppReEngagement", trackAppReEngagement);
     
     #if SOLARENGINE_WECHAT
     CreateButton("trackReActive", trackReActive);

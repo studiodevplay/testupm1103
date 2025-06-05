@@ -181,6 +181,13 @@ namespace SolarEngine
 
             SolarEngineAndroidSDK.CallStatic("userAppend", userPropertiesJSONString);
         }
+        private static void TrackAppReEngagement(Dictionary<string, object> customAttributes)
+        {
+            string attributesJSONString = JsonConvert.SerializeObject(customAttributes);
+            SolarEngineAndroidSDK.CallStatic("trackAppReEngagement", attributesJSONString);
+            
+                
+        }
 
         private static void UserUnset(string[] keys)
         {

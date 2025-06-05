@@ -226,10 +226,7 @@ namespace SolarEngine
              GetPresetProperties(properties);
         }
          
-        public static void trackAppReEngagement(Dictionary<string, object> customAttributes)
-        {
-            TrackAppReEngagement(customAttributes);
-        }
+      
         public static void requestPermissionsFromUser(Action<int>  callback)
         {
             RequestPermissionsFromUser(callback);
@@ -413,6 +410,10 @@ namespace SolarEngine
             ReportIAPEvent(attributes);
         }
 
+        public static void trackAppReEngagement(Dictionary<string, object> customAttributes)
+        {
+            TrackAppReEngagement(customAttributes);
+        }
         /// <summary>
         /// 上报变现广告展示事件
         /// </summary>
