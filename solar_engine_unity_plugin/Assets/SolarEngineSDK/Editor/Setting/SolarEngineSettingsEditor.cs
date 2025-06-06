@@ -327,7 +327,7 @@ namespace SolarEngine
                 EditorGUI.indentLevel++;
                 EditorGUILayout.PropertyField(iOSVersion, new GUIContent("iOS Version"));
                 EditorGUILayout.PropertyField(AndroidVersion);
-#if UNITY_OPENHARMONY
+#if TUANJIE_2022_3_OR_NEWER
                 EditorGUILayout.PropertyField(OpenHarmonyVersion);
 #endif
                 EditorGUI.indentLevel--;
