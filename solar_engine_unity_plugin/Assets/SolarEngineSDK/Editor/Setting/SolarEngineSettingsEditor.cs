@@ -26,6 +26,8 @@ namespace SolarEngine
         private SerializedProperty useRemoteConfig;
 // 序列化属性，用于表示是否使用 OAID 的设置
         private SerializedProperty useOaid;
+        // 序列化属性，用于表示是否使用 ODMInfo 的设置
+        private SerializedProperty useODMInfo;   
 // 序列化属性，用于表示是否使用深度链接的设置
         private SerializedProperty useDeepLink;
 // 序列化属性，用于表示是否使用指定版本的设置
@@ -103,6 +105,7 @@ namespace SolarEngine
             // 获取是否使用远程配置、OAID、深度链接、指定版本等相关的序列化属性
             useRemoteConfig = serializedObject.FindProperty("_RemoteConfig");
             useOaid = serializedObject.FindProperty("_Oaid");
+            useODMInfo = serializedObject.FindProperty("_ODMInfo");
             useDeepLink = serializedObject.FindProperty("_DeepLink");
             useSpecifyVersion = serializedObject.FindProperty("_SpecifyVersion");
 
@@ -265,6 +268,17 @@ namespace SolarEngine
           
         }
 
+        private void UseODMInfo()
+        {
+            if (overseaProperty.boolValue)
+            {
+                EditorGUILayout.HelpBox(ConstString.odmInfoEnable, MessageType.Info);
+                EditorGUILayout.PropertyField(useODMInfo,new GUIContent(ConstString.ODMInfo));
+
+            }
+            
+        }
+
       
 
         private void UseDeepLink( GUIStyle darkerCyanTextFieldStyles )
@@ -360,6 +374,7 @@ namespace SolarEngine
             removeSDK();
             RemoteConfig();
             UseOaid();
+            UseODMInfo();
 
             UseDeepLink( darkerCyanTextFieldStyles);
             
@@ -431,7 +446,18 @@ namespace SolarEngine
             }
           
         }
-   
+
+        private bool ODMInfoValue()
+        {
+            if (useODMInfo.boolValue)
+            {
+                return  PluginsEdtior.showODMInfo();
+            }
+            else
+            {
+                return  PluginsEdtior.disableODMInfo();
+            }
+        }
 
         bool iOSRemoteConfigValue()
         {

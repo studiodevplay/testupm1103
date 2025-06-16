@@ -147,6 +147,7 @@ namespace SolarEngine
             bool android = false;
             bool miniGame = false;
             bool oaid=false;
+            bool odminfo = false;
             if (!SolarEngineSettings.isUseiOS)
                 ios=  PluginsEdtior.disableiOS();
             else
@@ -171,8 +172,14 @@ namespace SolarEngine
             {
                 oaid = PluginsEdtior.showOaid();
             }
+            if(!SolarEngineSettings.isODMInfo)
+                odminfo = PluginsEdtior.disableODMInfo();
+            else
+            {
+                odminfo = PluginsEdtior.showODMInfo();
+            }
             
-            return ios && android && miniGame && oaid;
+            return ios && android && miniGame && oaid&&  odminfo;
         }
         
         

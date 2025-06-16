@@ -34,6 +34,7 @@ public class PluginsEdtior : MonoBehaviour
    
    
    private const string oaidPath = SolarEngineNet+"SolarEnginePlugins/Oaid";
+   private const string odminfoPath = SolarEngineNet+"SolarEnginePlugins/ODMInfo";
    
    //minigamepath
     private const string MiniGameRemoteConfigsPathMiniCS = "Assets/SolarEngineSDK/RemoteConfigWrapper/SESDKRemoteConfigMiniGameWrapper.cs";
@@ -169,8 +170,18 @@ public class PluginsEdtior : MonoBehaviour
    {
      return  ShowPath(oaidPath);
    }
-
    
+   
+
+   public static bool disableODMInfo()
+   {
+       return HidePath(odminfoPath);
+   }
+   public static bool showODMInfo()
+   {
+       return  ShowPath(odminfoPath);
+   }
+
  
    public static bool HideFile(string path)
    {
