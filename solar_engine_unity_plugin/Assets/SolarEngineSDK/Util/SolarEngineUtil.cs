@@ -41,6 +41,7 @@ namespace SolarEngine
             seDict.Add("attAuthorizationWaitingInterval", config.attAuthorizationWaitingInterval);
             seDict.Add("caid", config.caid);
             seDict.Add("delayDeeplinkEnable", config.delayDeeplinkEnable);
+            seDict.Add("odmInfoEnable", config.odmInfoEnable);
             seDict.Add("isCoppaEnabled", config.isCoppaEnabled);
             seDict.Add("isKidsAppEnabled", config.isKidsAppEnabled);
             
@@ -951,6 +952,9 @@ namespace SolarEngine
 
         // iOS caid；只有iOS调用有效。（仅国内版设置有效）
         public string caid { get; set; }
+
+        // iOS odmInfo；只有iOS调用有效。（仅非中国大陆设置有效）
+        public bool odmInfoEnable { get; set; }
 
         // 设置获取归因结果回调，可选字段
         public Analytics.SEAttributionCallback attributionCallback { get; set; }

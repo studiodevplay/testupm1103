@@ -11,6 +11,9 @@
 #if  __has_include(<SolarEngineSDK/SESDKForCN.h>)
     #import <SolarEngineSDK/SESDKForCN.h>
 #endif
+#if  __has_include(<SolarEngineSDK/SESDKForUS.h>)
+    #import <SolarEngineSDK/SESDKForUS.h>
+#endif
 
 typedef void (*SEBridgeCallback)(int errorCode, const char * data);
 typedef void (*SEBridgeInitCallback)(int errorCode);
@@ -407,6 +410,12 @@ void __iOSSolarEngineSDKInit(const char * appKey, const char * SEUserId, const c
 #if  __has_include(<SolarEngineSDK/SESDKForCN.h>)
         if (seDict[@"caid"]) {
             config.caid = seDict[@"caid"];
+        }
+#endif
+    
+#if  __has_include(<SolarEngineSDK/SESDKForUS.h>)
+        if (seDict[@"odmInfoEnable"]) {
+            config.enableODMInfo = [seDict[@"odmInfoEnable"] boolValue];
         }
 #endif
 
