@@ -1,4 +1,4 @@
-﻿#if (UNITY_5 && UNITY_IOS) || UNITY_IPHONE&&!UNITY_EDITOR
+﻿#if (UNITY_5 && (UNITY_IOS||UNITY_STANDALONE_OSX)) || (UNITY_IPHONE||UNITY_STANDALONE_OSX)&&!UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
