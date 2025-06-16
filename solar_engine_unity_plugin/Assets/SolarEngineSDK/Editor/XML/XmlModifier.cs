@@ -125,13 +125,13 @@ public class XmlModifier
     /// 修改 iOS 相关节点的属性
     /// </summary>
     /// <param name="doc">要修改的 XDocument 对象</param>
-    private static bool ModifyIOSNodes(XDocument doc, string _name, StrongType type = StrongType.CN)
+    private static bool ModifyIOSNodes(XDocument doc, string _name, StrongType type = StrongType.CN,bool isChangeVersion=true)
     {
         bool nameSetSuccess = false;
         bool versionSetSuccess = false;
 
         var iosPod = doc.Descendants(IOS_POD_NODE_NAME).FirstOrDefault();
-        Debug.Log($"{SolorEngine}修改iOS节点"+iosPod);
+      //  Debug.Log($"{SolorEngine}修改iOS节点"+iosPod);
         if (iosPod!= null)
         {
             var nameAttribute = iosPod.Attribute(IOS_POD_NAME_ATTR);
@@ -153,7 +153,7 @@ public class XmlModifier
             {
                 try
                 {
-                    if (type == StrongType.Default)
+                    if (type == StrongType.Default||!isChangeVersion)
                     {
                         versionAttribute.Value = IOS_POD_Default_VERSION;
                     }
@@ -223,8 +223,7 @@ public class XmlModifier
                 }
                 else
                 {
-                    isModified = ModifyIOSNodes(docRemote, IOS_ODMInfo_SPEC);
-                    Debug.Log(isModified);
+                    isModified = ModifyIOSNodes(docRemote, IOS_ODMInfo_SPEC,strongType, false);
                 }
 
                 SaveXmlDocument(docRemote, IOS_ODMINFO_PATH);
@@ -416,7 +415,7 @@ public class XmlModifier
     {
         try
         {
-            Debug.LogError(iOSODMINFO());
+          
             if (sdkSetting(StrongType.Oversea) && AndroidRC(StrongType.Oversea) && AndroidOaid() && iOSRC()&& iOSODMINFO())
             {
                 Debug.Log($"{SolorEngine}set SDK to Oversea");
