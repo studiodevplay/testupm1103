@@ -358,7 +358,7 @@ public class XmlModifier
         }
     }
 
-    [MenuItem("SolarEngine/DefaultXml")]
+   
     public static void defaultXml()
     {
         sdkSetting(StrongType.Default);
