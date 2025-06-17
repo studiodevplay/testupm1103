@@ -24,7 +24,7 @@ namespace SolarEngineSDK.Editor
         //he specified version can be used. If not filled in, the latest version will be used by default
         public const string confirmVersion = "Specify the Android/iOS SDK version. If not provided, the latest version will be used by default.";
 
-        public const string  odmInfoEnable="xxxxxxx需更改---解释之类的文案";
+        public const string  odmInfoEnable="Enable Integrated Conversion Measurement (ICM) feature of Google Ads ";
 
 
         public const string remoteConfigMsg = "Please confirm the platform for the online parameter plugin.";

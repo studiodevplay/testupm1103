@@ -132,7 +132,7 @@ namespace SolarEngine
      
         private void ChinaOrOversea(  GUIStyle darkerCyanTextFieldStyles)
         {
-            EditorGUILayout.HelpBox(ConstString.storageAreaMessage, MessageType.Info);
+           
             
             EditorGUI.indentLevel += 1;
             EditorGUILayout.PropertyField(chinaProperty,new GUIContent(ConstString.chinaMainland));
@@ -142,6 +142,7 @@ namespace SolarEngine
             {
                 EditorGUILayout.HelpBox(ConstString.storageWarning, MessageType.Warning);
             }
+            EditorGUILayout.HelpBox(ConstString.storageAreaMessage, MessageType.Info);
            
             if (serializedObject.ApplyModifiedProperties())
             {
@@ -217,7 +218,6 @@ namespace SolarEngine
             if (_useRemoteConfig)
             {  
                
-                EditorGUILayout.HelpBox(ConstString.remoteConfigMsg, MessageType.Info);
                 
                 EditorGUI.indentLevel += 1;
                 // EditorGUILayout.PropertyField(disAllRemoteConfig);
@@ -225,6 +225,7 @@ namespace SolarEngine
                 EditorGUILayout.PropertyField(androidRemoteConfig);
                 EditorGUILayout.PropertyField(miniGameRemoteConfig);
                 EditorGUI.indentLevel -= 1;
+                EditorGUILayout.HelpBox(ConstString.remoteConfigMsg, MessageType.Info);
                 
             }
             
@@ -242,6 +243,8 @@ namespace SolarEngine
         }
         private void UseOaid()
         {
+            EditorGUILayout.PropertyField(useOaid,new GUIContent(ConstString.oaid));
+
             if (chinaProperty.boolValue)
             {
                 EditorGUILayout.HelpBox(ConstString.storageEnableOaidCN, MessageType.Info);
@@ -264,7 +267,6 @@ namespace SolarEngine
                  //   EditorGUILayout.HelpBox(ConstString.storageDisableOaid, MessageType.Info);
                 }
             }
-            EditorGUILayout.PropertyField(useOaid,new GUIContent(ConstString.oaid));
           
         }
 
@@ -272,8 +274,9 @@ namespace SolarEngine
         {
             if (overseaProperty.boolValue)
             {
-                EditorGUILayout.HelpBox(ConstString.odmInfoEnable, MessageType.Info);
+              
                 EditorGUILayout.PropertyField(useODMInfo,new GUIContent(ConstString.ODMInfo));
+                EditorGUILayout.HelpBox(ConstString.odmInfoEnable, MessageType.Info);
 
             }
             
@@ -326,7 +329,7 @@ namespace SolarEngine
             {
                 // EditorGUILayout.PropertyField(useSpecifyVersion);
 
-                EditorGUILayout.HelpBox(ConstString.confirmVersion, MessageType.Warning);
+               
                 EditorGUI.indentLevel++;
                 EditorGUILayout.PropertyField(iOSVersion, new GUIContent("iOS Version"));
                 EditorGUILayout.PropertyField(AndroidVersion);
@@ -335,6 +338,8 @@ namespace SolarEngine
                     SolarEngineSettings.iOSVersion = iOSVersion.stringValue;
                 if (!AndroidVersion.stringValue.Equals(SolarEngineSettings.AndroidVersion))
                     SolarEngineSettings.AndroidVersion = AndroidVersion.stringValue;
+                
+                EditorGUILayout.HelpBox(ConstString.confirmVersion, MessageType.Warning);
             }
             // else
             //     {
