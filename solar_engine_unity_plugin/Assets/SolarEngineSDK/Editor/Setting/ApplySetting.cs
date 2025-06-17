@@ -26,6 +26,7 @@ namespace SolarEngine
             }
 
             setMainLand();
+            SolarEngineSettingsExporter.ExportRuntimeSettings();
             string storage = SolarEngineSettings.isCN ? ConstString.chinaMainland : ConstString.nonChinaMainland;
             bool  result = true;
             if (isShowFail)

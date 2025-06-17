@@ -132,6 +132,7 @@ internal class ExportPackage {
 			PluginsEdtior.showAndroid();
 			PluginsEdtior.showMiniGame();
 			PluginsEdtior.showOaid();
+			PluginsEdtior.showODMInfo();
 			
 			XmlModifier.defaultXml();
 			
