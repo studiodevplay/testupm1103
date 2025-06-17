@@ -172,11 +172,15 @@ namespace SolarEngine
             {
                 oaid = PluginsEdtior.showOaid();
             }
-            if(!SolarEngineSettings.isODMInfo)
+            if(!SolarEngineSettings.isUseODMInfo||SolarEngineSettings.isCN)
                 odminfo = PluginsEdtior.disableODMInfo();
-            else
+            else if(SolarEngineSettings.isOversea&&SolarEngineSettings.isUseODMInfo)
             {
                 odminfo = PluginsEdtior.showODMInfo();
+            }
+            else
+            {
+                odminfo = PluginsEdtior.disableODMInfo();
             }
             
             return ios && android && miniGame && oaid&&  odminfo;

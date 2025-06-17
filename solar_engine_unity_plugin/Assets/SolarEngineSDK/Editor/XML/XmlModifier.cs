@@ -208,7 +208,7 @@ public class XmlModifier
     {
         bool isModified = false;
 
-        if (!SolarEngineSettings.isODMInfo)
+        if (!SolarEngineSettings.isUseODMInfo)
             return true;
         else
         {

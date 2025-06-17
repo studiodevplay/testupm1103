@@ -182,7 +182,7 @@ namespace SolarEngine
 			set{Instance._Oaid = value;}
 			
 		}
-		public static bool isODMInfo
+		public static bool isUseODMInfo
 		{
 			get{return  Instance._ODMInfo;}
 			set{Instance._ODMInfo = value;}
