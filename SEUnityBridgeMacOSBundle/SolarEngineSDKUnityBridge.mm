@@ -6,93 +6,31 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "SEBridgeCommon.h"
 
-
+#if  __has_include(<SolarEngineSDK/SESDKForCN.h>)
+    #import <SolarEngineSDK/SESDKForCN.h>
+#endif
 
 typedef void (*SEBridgeCallback)(int errorCode, const char * data);
 typedef void (*SEBridgeInitCallback)(int errorCode);
 
-NSString * const SEKeyFlutterEventType                                   = @"_event_type";
-
-NSString * const SEKeyFlutterEventNameIAP                                = @"_appPur";
-NSString * const SEKeyFlutterEventNameAdImpresstion                      = @"_appImp";
-NSString * const SEKeyFlutterEventNameAdClick                            = @"_appClick";
-NSString * const SEKeyFlutterEventNameAppAttr                            = @"_appAttr";
-NSString * const SEKeyFlutterEventNameRegister                           = @"_appReg";
-NSString * const SEKeyFlutterEventNameLogin                              = @"_appLogin";
-NSString * const SEKeyFlutterEventNameOrder                              = @"_appOrder";
-NSString * const SEKeyFlutterEventNameCustom                             = @"_custom_event";
-
-
-NSString * const SEKeyFlutterKeyCustomProperties                         = @"_customProperties";
-NSString * const SEKeyFlutterKeyCustomEventName                          = @"_customEventName";
-
-
-NSString * const SEIAPEventProductID                        = @"_product_id";
-NSString * const SEIAPEventProductName                      = @"_product_name";
-NSString * const SEIAPEventProductCount                     = @"_product_num";
-NSString * const SEIAPEventOrderID                          = @"_order_id";
-NSString * const SEIAPEventCurrency                         = @"_currency_type";
-NSString * const SEIAPEventPaystatus                        = @"_pay_status";
-NSString * const SEIAPEventPayType                          = @"_pay_type";
-NSString * const SEIAPEventProductPayAmount                 = @"_pay_amount";
-NSString * const SEIAPEventFailReason                       = @"_fail_reason";
-
-
-NSString * const SEIAPEventPayTypeAlipay                    = @"alipay";
-NSString * const SEIAPEventPayTypeWeixin                    = @"weixin";
-NSString * const SEIAPEventPayTypeApplePay                  = @"applepay";
-NSString * const SEIAPEventPayTypePaypal                    = @"paypal";
-
-
-NSString * const SEAdImpressionPropertyAdPlatform           = @"_ad_platform";
-NSString * const SEAdImpressionPropertyAppID                = @"_ad_appid";
-NSString * const SEAdImpressionPropertyPlacementID          = @"_ad_id";
-NSString * const SEAdImpressionPropertyAdType               = @"_ad_type";
-NSString * const SEAdImpressionPropertyEcpm                 = @"_ad_ecpm";
-NSString * const SEAdImpressionPropertyCurrency             = @"_currency_type";
-NSString * const SEAdImpressionPropertyMediationPlatform    = @"_mediation_platform";
-NSString * const SEAdImpressionPropertyRendered             = @"_is_rendered";
-
-
-NSString * const SEAppAttrPropertyIsAttr                    = @"_is_attr";
-NSString * const SEAppAttrPropertyAdNetwork                 = @"_adnetwork";
-NSString * const SEAppAttrPropertySubChannel                = @"_sub_channel";
-NSString * const SEAppAttrPropertyAdAccountID               = @"_adaccount_id";
-NSString * const SEAppAttrPropertyAdAccountName             = @"_adaccount_name";
-NSString * const SEAppAttrPropertyAdCampaignID              = @"_adcampaign_id";
-NSString * const SEAppAttrPropertyAdCampaignName            = @"_adcampaign_name";
-NSString * const SEAppAttrPropertyAdOfferID                 = @"_adoffer_id";
-NSString * const SEAppAttrPropertyAdOfferName               = @"_adoffer_name";
-NSString * const SEAppAttrPropertyAdCreativeID              = @"_adcreative_id";
-NSString * const SEAppAttrPropertyAdCreativeName            = @"_adcreative_name";
-NSString * const SEAppAttrPropertyAttributionPlatform       = @"_attribution_platform";
-
-
-NSString * const SERegisterPropertyType                     = @"_reg_type";
-NSString * const SERegisterPropertyStatus                   = @"_status";
-
-
-NSString * const SELoginPropertyType                        = @"_login_type";
-NSString * const SELoginPropertyStatus                      = @"_status";
-
-
-NSString * const SEOrderPropertyID                          = @"_order_id";
-NSString * const SEOrderPropertyPayAmount                   = @"_pay_amount";
-NSString * const SEOrderPropertyCurrencyType                = @"_currency_type";
-NSString * const SEOrderPropertyPayType                     = @"_pay_type";
-NSString * const SEOrderPropertyStatus                      = @"_status";
-
-
-
+NSString * const SEKeyUnityEventType                                   = @"_event_type";
+NSString * const SEKeyUnityEventNameIAP                                = @"_appPur";
+NSString * const SEKeyUnityEventNameAdImpresstion                      = @"_appImp";
+NSString * const SEKeyUnityEventNameAdClick                            = @"_appClick";
+NSString * const SEKeyUnityEventNameAppAttr                            = @"_appAttr";
+NSString * const SEKeyUnityEventNameRegister                           = @"_appReg";
+NSString * const SEKeyUnityEventNameLogin                              = @"_appLogin";
+NSString * const SEKeyUnityEventNameOrder                              = @"_appOrder";
+NSString * const SEKeyUnityEventNameCustom                             = @"_custom_event";
+NSString * const SEKeyUnityKeyCustomProperties                         = @"_customProperties";
+NSString * const SEKeyUnityKeyCustomEventName                          = @"_customEventName";
 
 @interface SEWrapperManager : NSObject
-
 @property (nonatomic,copy)NSString *sub_lib_version;
 @property (nonatomic,copy)NSString *sdk_type;
-
 + (SEWrapperManager *)sharedInstance;
-
 @end
 
 @implementation SEWrapperManager
@@ -118,28 +56,28 @@ NSString * const SEOrderPropertyStatus                      = @"_status";
 @end
 
 // Helper function to get SDK instance
-static id getSDKInstance() {
+static id getSolarEngineSDKInstance() {
     Class sdkClass = NSClassFromString(@"SolarEngineSDK");
     if (!sdkClass) {
-        NSLog(@"SolarEngineSDK class not found");
+        se_innerLog(@"SolarEngineSDK class not found");
         return nil;
     }
     
     SEL sharedInstanceSel = NSSelectorFromString(@"sharedInstance");
     if (![sdkClass respondsToSelector:sharedInstanceSel]) {
-        NSLog(@"sharedInstance method not found");
+        se_innerLog(@"sharedInstance method not found");
         return nil;
     }
     
     return [sdkClass performSelector:sharedInstanceSel];
 }
 
-// Helper function to safely call methods
-static id safeCallMethod(id target, SEL selector, ...) {
+// Helper function to safely call methods (renamed to avoid conflicts)
+static id se_safeCallSDKMethod(id target, SEL selector, ...) {
     if (!target || !selector) return nil;
     
     if (![target respondsToSelector:selector]) {
-        NSLog(@"Method %@ not found on target", NSStringFromSelector(selector));
+        se_innerLog(@"Method %@ not found on target", NSStringFromSelector(selector));
         return nil;
     }
     
@@ -176,8 +114,7 @@ id seTrimValue(id __nullable value){
     return value;
 }
 
-static SEIAPEventAttribute *buildIAPAttribute(const char *IAPAttribute) {
-    
+static id buildIAPAttribute(const char *IAPAttribute) {
     NSString *jsonString = [NSString stringWithUTF8String:IAPAttribute];
     NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
 
@@ -185,45 +122,34 @@ static SEIAPEventAttribute *buildIAPAttribute(const char *IAPAttribute) {
     NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     if (error) {
         NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data", jsonString];
-        NSLog(@"trackIAPWithAttributes, error :%@",msg);
+        se_innerLog(@"trackIAPWithAttributes, error :%@",msg);
         return nil;
     }
     
+    Class attributeClass = NSClassFromString(@"SEIAPEventAttribute");
+    if (!attributeClass) {
+        se_innerLog(@"SEIAPEventAttribute class not found");
+        return nil;
+    }
     
+    id attribute = [[attributeClass alloc] init];
     
-    SEIAPEventAttribute *attribute = nil;
-#if __has_include( <SolarEngineSDK/SolarEngineSDK.h>)
-    
-    NSString *productID     = [dict objectForKey:SEIAPEventProductID];
-    NSString *productName   = [dict objectForKey:SEIAPEventProductName];
-    NSString *orderId       = [dict objectForKey:SEIAPEventOrderID];
-    NSString *currencyType  = [dict objectForKey:SEIAPEventCurrency];
-    NSString *payType       = [dict objectForKey:SEIAPEventPayType];
-    NSString *failReason    = [dict objectForKey:SEIAPEventFailReason];
-    
-    NSNumber *payStatus     = [dict objectForKey:SEIAPEventPaystatus];
-    NSNumber *productCount  = [dict objectForKey:SEIAPEventProductCount];
-    NSNumber *payAmount     = [dict objectForKey:SEIAPEventProductPayAmount];
-    NSDictionary *customProperties = [dict objectForKey:@"_customProperties"];
+    // Set properties using KVC
+    [attribute setValue:seTrimValue([dict objectForKey:@"productID"]) forKey:@"productID"];
+    [attribute setValue:seTrimValue([dict objectForKey:@"productName"]) forKey:@"productName"];
+    [attribute setValue:seTrimValue([dict objectForKey:@"orderId"]) forKey:@"orderId"];
+    [attribute setValue:seTrimValue([dict objectForKey:@"currencyType"]) forKey:@"currencyType"];
+    [attribute setValue:seTrimValue([dict objectForKey:@"payType"]) forKey:@"payType"];
+    [attribute setValue:seTrimValue([dict objectForKey:@"failReason"]) forKey:@"failReason"];
+    [attribute setValue:@([seTrimValue([dict objectForKey:@"payStatus"]) integerValue]) forKey:@"payStatus"];
+    [attribute setValue:@([seTrimValue([dict objectForKey:@"productCount"]) integerValue]) forKey:@"productCount"];
+    [attribute setValue:@([seTrimValue([dict objectForKey:@"payAmount"]) doubleValue]) forKey:@"payAmount"];
+    [attribute setValue:seTrimValue([dict objectForKey:@"_customProperties"]) forKey:@"customProperties"];
 
-    attribute = [[SEIAPEventAttribute alloc] init];
-    attribute.productID = seTrimValue(productID);
-    attribute.productName = seTrimValue(productName);
-    attribute.orderId = seTrimValue(orderId);
-    attribute.currencyType = seTrimValue(currencyType);
-    attribute.payType = seTrimValue(payType);
-    attribute.payStatus = (SolarEngineIAPStatus)[seTrimValue(payStatus) integerValue];
-    attribute.failReason = seTrimValue(failReason);
-    attribute.payAmount = [seTrimValue(payAmount) doubleValue];
-    attribute.productCount = [seTrimValue(productCount) integerValue];
-    attribute.customProperties = seTrimValue(customProperties);
-#endif
-    
     return attribute;
-
 }
 
-static  id  buildAdImpressionAttribute(const char *adImpressionAttribute) {
+static id buildAdImpressionAttribute(const char *adImpressionAttribute) {
     NSString *jsonString = [NSString stringWithUTF8String:adImpressionAttribute];
     NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
     NSError *error = nil;
@@ -231,55 +157,32 @@ static  id  buildAdImpressionAttribute(const char *adImpressionAttribute) {
     
     if (error) {
         NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data", jsonString];
-        NSLog(@"trackAdImpressionWithAttributes, error :%@", msg);
+        se_innerLog(@"trackAdImpressionWithAttributes, error :%@", msg);
+        return nil;
+    }
+
+    Class attributeClass = NSClassFromString(@"SEAdImpressionEventAttribute");
+    if (!attributeClass) {
+        se_innerLog(@"SEAdImpressionEventAttribute class not found");
         return nil;
     }
     
-
-    Class impClass = NSClassFromString(@"SEAdImpressionEventAttribute");
-     if (!impClass) {
-         NSLog(@"SEAdImpressionEventAttribute class not found");
-         return nil;
-     }
-     
-    id attribute = [[impClass alloc] init];
-    NSString *adNetworkPlatform = [dict objectForKey:SEAdImpressionPropertyAdPlatform];
-    NSString *adNetworkAppID = [dict objectForKey:SEAdImpressionPropertyAppID];
-    NSString *adNetworkPlacementID = [dict objectForKey:SEAdImpressionPropertyPlacementID];
-    NSString *currency = [dict objectForKey:SEAdImpressionPropertyCurrency];
+    id attribute = [[attributeClass alloc] init];
     
-    NSNumber *adType = [dict objectForKey:SEAdImpressionPropertyAdType];
-    NSNumber *ecpm = [dict objectForKey:SEAdImpressionPropertyEcpm];
-    NSString *mediationPlatform = [dict objectForKey:SEAdImpressionPropertyMediationPlatform];
-    NSNumber *rendered = [dict objectForKey:SEAdImpressionPropertyRendered];
-    NSDictionary *customProperties = [dict objectForKey:@"_customProperties"];
-
-    [attribute setValue:@([seTrimValue(adType) integerValue]) forKey:@"adType"];
-    [attribute setValue:seTrimValue(adNetworkPlatform) forKey:@"adNetworkPlatform"];
-    [attribute setValue:seTrimValue(adNetworkAppID) forKey:@"adNetworkAppID"];
-    [attribute setValue:seTrimValue(adNetworkPlacementID) forKey:@"adNetworkPlacementID"];
-    [attribute setValue:seTrimValue(currency) forKey:@"currency"];
-    [attribute setValue:seTrimValue(mediationPlatform) forKey:@"mediationPlatform"];
-    [attribute setValue:@([seTrimValue(ecpm) doubleValue]) forKey:@"ecpm"];
-    [attribute setValue:@([seTrimValue(rendered) boolValue]) forKey:@"rendered"];
-    [attribute setValue:seTrimValue(customProperties) forKey:@"customProperties"];
-  
-//    attribute.adNetworkPlatform = seTrimValue(adNetworkPlatform);
-//    attribute.adNetworkAppID = seTrimValue(adNetworkAppID);
-//    attribute.adNetworkPlacementID = seTrimValue(adNetworkPlacementID);
-//    attribute.currency = seTrimValue(currency);
-//    attribute.mediationPlatform = seTrimValue(mediationPlatform);
-//    attribute.ecpm = [seTrimValue(ecpm) doubleValue];
-//    attribute.rendered = [seTrimValue(rendered) boolValue];
-//    attribute.customProperties = seTrimValue(customProperties);
-
+    [attribute setValue:@([seTrimValue([dict objectForKey:@"adType"]) integerValue]) forKey:@"adType"];
+    [attribute setValue:seTrimValue([dict objectForKey:@"adNetworkPlatform"]) forKey:@"adNetworkPlatform"];
+    [attribute setValue:seTrimValue([dict objectForKey:@"adNetworkAppID"]) forKey:@"adNetworkAppID"];
+    [attribute setValue:seTrimValue([dict objectForKey:@"adNetworkPlacementID"]) forKey:@"adNetworkPlacementID"];
+    [attribute setValue:seTrimValue([dict objectForKey:@"currency"]) forKey:@"currency"];
+    [attribute setValue:seTrimValue([dict objectForKey:@"mediationPlatform"]) forKey:@"mediationPlatform"];
+    [attribute setValue:@([seTrimValue([dict objectForKey:@"ecpm"]) doubleValue]) forKey:@"ecpm"];
+    [attribute setValue:@([seTrimValue([dict objectForKey:@"rendered"]) boolValue]) forKey:@"rendered"];
+    [attribute setValue:seTrimValue([dict objectForKey:@"_customProperties"]) forKey:@"customProperties"];
+    
     return attribute;
-
 }
 
-
-static SEAdClickEventAttribute *buildAdClickAttribute(const char *adClickAttribute) {
-    
+static id buildAdClickAttribute(const char *adClickAttribute) {
     NSString *jsonString = [NSString stringWithUTF8String:adClickAttribute];
     NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
     NSError *error = nil;
@@ -287,30 +190,28 @@ static SEAdClickEventAttribute *buildAdClickAttribute(const char *adClickAttribu
     
     if (error) {
         NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data", jsonString];
-        NSLog(@"trackAdClickWithAttributes, error :%@", msg);
+        se_innerLog(@"trackAdClickWithAttributes, error :%@", msg);
         return nil;
     }
-    SEAdClickEventAttribute *attribute =nil;
 
-    NSString *adNetworkPlatform = [dict objectForKey:SEAdImpressionPropertyAdPlatform];
-    NSNumber *adType = [dict objectForKey:SEAdImpressionPropertyAdType];
-    NSString *adNetworkPlacementID = [dict objectForKey:SEAdImpressionPropertyPlacementID];
-    NSString *mediationPlatform = [dict objectForKey:SEAdImpressionPropertyMediationPlatform];
-    NSDictionary *customProperties = [dict objectForKey:@"_customProperties"];
+    Class attributeClass = NSClassFromString(@"SEAdClickEventAttribute");
+    if (!attributeClass) {
+        se_innerLog(@"SEAdClickEventAttribute class not found");
+        return nil;
+    }
     
-     [[SEAdClickEventAttribute alloc] init];
-    attribute.adType = [seTrimValue(adType) integerValue];
-    attribute.adNetworkPlatform = seTrimValue(adNetworkPlatform);
-    attribute.adNetworkPlacementID = seTrimValue(adNetworkPlacementID);
-    attribute.mediationPlatform = seTrimValue(mediationPlatform);
-    attribute.customProperties = seTrimValue(customProperties);
-#endif
+    id attribute = [[attributeClass alloc] init];
+    
+    [attribute setValue:@([seTrimValue([dict objectForKey:@"adType"]) integerValue]) forKey:@"adType"];
+    [attribute setValue:seTrimValue([dict objectForKey:@"adNetworkPlatform"]) forKey:@"adNetworkPlatform"];
+    [attribute setValue:seTrimValue([dict objectForKey:@"adNetworkPlacementID"]) forKey:@"adNetworkPlacementID"];
+    [attribute setValue:seTrimValue([dict objectForKey:@"mediationPlatform"]) forKey:@"mediationPlatform"];
+    [attribute setValue:seTrimValue([dict objectForKey:@"_customProperties"]) forKey:@"customProperties"];
     
     return attribute;
 }
 
-static SERegisterEventAttribute *buildRegisterAttribute(const char *registerAttribute) {
-    
+static id buildRegisterAttribute(const char *registerAttribute) {
     NSString *jsonString = [NSString stringWithUTF8String:registerAttribute];
     NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
     NSError *error = nil;
@@ -318,25 +219,25 @@ static SERegisterEventAttribute *buildRegisterAttribute(const char *registerAttr
     
     if (error) {
         NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data", jsonString];
-        NSLog(@"trackRegisterWithAttributes, error :%@", msg);
+        se_innerLog(@"trackRegisterWithAttributes, error :%@", msg);
         return nil;
     }
-    SERegisterEventAttribute *attribute =nil;
-#if __has_include( <SolarEngineSDK/SolarEngineSDK.h>)
 
-    NSString *type = [dict objectForKey:SERegisterPropertyType];
-    NSString *status = [dict objectForKey:SERegisterPropertyStatus];
-    NSDictionary *customProperties = [dict objectForKey:@"_customProperties"];
-    attribute= [[SERegisterEventAttribute alloc] init];
-    attribute.registerType = seTrimValue(type);
-    attribute.registerStatus = seTrimValue(status);
-    attribute.customProperties = seTrimValue(customProperties);
-#endif
-    return attribute;
-
-}
-static SELoginEventAttribute *buildLoginAttribute(const char *loginAttribute) {
+    Class attributeClass = NSClassFromString(@"SERegisterEventAttribute");
+    if (!attributeClass) {
+        se_innerLog(@"SERegisterEventAttribute class not found");
+        return nil;
+    }
     
+    id attribute = [[attributeClass alloc] init];
+    [attribute setValue:seTrimValue([dict objectForKey:@"type"]) forKey:@"registerType"];
+    [attribute setValue:seTrimValue([dict objectForKey:@"status"]) forKey:@"registerStatus"];
+    [attribute setValue:seTrimValue([dict objectForKey:@"_customProperties"]) forKey:@"customProperties"];
+    
+    return attribute;
+}
+
+static id buildLoginAttribute(const char *loginAttribute) {
     NSString *jsonString = [NSString stringWithUTF8String:loginAttribute];
     NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
     NSError *error = nil;
@@ -344,25 +245,25 @@ static SELoginEventAttribute *buildLoginAttribute(const char *loginAttribute) {
     
     if (error) {
         NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data", jsonString];
-        NSLog(@"trackLoginWithAttributes, error :%@", msg);
+        se_innerLog(@"trackLoginWithAttributes, error :%@", msg);
         return nil;
     }
-    SELoginEventAttribute *attribute =nil;
-#if __has_include( <SolarEngineSDK/SolarEngineSDK.h>)
 
-    NSString *type = [dict objectForKey:SELoginPropertyType];
-    NSString *status = [dict objectForKey:SELoginPropertyStatus];
-    NSDictionary *customProperties = [dict objectForKey:@"_customProperties"];
+    Class attributeClass = NSClassFromString(@"SELoginEventAttribute");
+    if (!attributeClass) {
+        se_innerLog(@"SELoginEventAttribute class not found");
+        return nil;
+    }
     
-    attribute= [[SELoginEventAttribute alloc] init];
-    attribute.loginType = seTrimValue(type);
-    attribute.loginStatus = seTrimValue(status);
-    attribute.customProperties = seTrimValue(customProperties);
-#endif
+    id attribute = [[attributeClass alloc] init];
+    [attribute setValue:seTrimValue([dict objectForKey:@"type"]) forKey:@"loginType"];
+    [attribute setValue:seTrimValue([dict objectForKey:@"status"]) forKey:@"loginStatus"];
+    [attribute setValue:seTrimValue([dict objectForKey:@"_customProperties"]) forKey:@"customProperties"];
+
     return attribute;
 }
-static SEOrderEventAttribute *buildOrderAttribute(const char *orderAttribute) {
-    
+
+static id buildOrderAttribute(const char *orderAttribute) {
     NSString *jsonString = [NSString stringWithUTF8String:orderAttribute];
     NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
     NSError *error = nil;
@@ -370,30 +271,28 @@ static SEOrderEventAttribute *buildOrderAttribute(const char *orderAttribute) {
     
     if (error) {
         NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data", jsonString];
-        NSLog(@"trackOrderWithAttributes, error :%@", msg);
+        se_innerLog(@"trackOrderWithAttributes, error :%@", msg);
         return nil;
     }
-    SEOrderEventAttribute *attribute =nil;
-#if __has_include( <SolarEngineSDK/SolarEngineSDK.h>)
-    NSString *orderID = [dict objectForKey:SEOrderPropertyID];
-    NSNumber *payAmount = [dict objectForKey:SEOrderPropertyPayAmount];
-    NSString *currencyType = [dict objectForKey:SEOrderPropertyCurrencyType];
-    NSString *payType = [dict objectForKey:SEOrderPropertyPayType];
-    NSString *status = [dict objectForKey:SEOrderPropertyStatus];
-    NSDictionary *customProperties = [dict objectForKey:@"_customProperties"];
+
+    Class attributeClass = NSClassFromString(@"SEOrderEventAttribute");
+    if (!attributeClass) {
+        se_innerLog(@"SEOrderEventAttribute class not found");
+        return nil;
+    }
     
-    attribute = [[SEOrderEventAttribute alloc] init];
-    attribute.orderID = seTrimValue(orderID);
-    attribute.payAmount = [seTrimValue(payAmount) doubleValue];
-    attribute.currencyType = seTrimValue(currencyType);
-    attribute.payType = seTrimValue(payType);
-    attribute.status = seTrimValue(status);
-    attribute.customProperties = seTrimValue(customProperties);
-#endif
+    id attribute = [[attributeClass alloc] init];
+    [attribute setValue:seTrimValue([dict objectForKey:@"orderID"]) forKey:@"orderID"];
+    [attribute setValue:@([seTrimValue([dict objectForKey:@"payAmount"]) doubleValue]) forKey:@"payAmount"];
+    [attribute setValue:seTrimValue([dict objectForKey:@"currencyType"]) forKey:@"currencyType"];
+    [attribute setValue:seTrimValue([dict objectForKey:@"payType"]) forKey:@"payType"];
+    [attribute setValue:seTrimValue([dict objectForKey:@"status"]) forKey:@"status"];
+    [attribute setValue:seTrimValue([dict objectForKey:@"_customProperties"]) forKey:@"customProperties"];
+
     return attribute;
 }
-static SEAppAttrEventAttribute *buildAppAttrAttribute(const char *AppAttrAttribute) {
-    
+
+static id buildAppAttrAttribute(const char *AppAttrAttribute) {
     NSString *jsonString = [NSString stringWithUTF8String:AppAttrAttribute];
     NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
     NSError *error = nil;
@@ -401,46 +300,34 @@ static SEAppAttrEventAttribute *buildAppAttrAttribute(const char *AppAttrAttribu
     
     if (error) {
         NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data", jsonString];
-        NSLog(@"trackOrderWithAttributes, error :%@", msg);
+        se_innerLog(@"trackOrderWithAttributes, error :%@", msg);
         return nil;
     }
-    SEAppAttrEventAttribute *appAttr=nil;
-#if __has_include( <SolarEngineSDK/SolarEngineSDK.h>)
 
-    NSString *adNetwork         = [dict objectForKey:SEAppAttrPropertyAdNetwork];
-    NSString *subChannel        = [dict objectForKey:SEAppAttrPropertySubChannel];
-    NSString *adAccountID       = [dict objectForKey:SEAppAttrPropertyAdAccountID];
-    NSString *adAccountName     = [dict objectForKey:SEAppAttrPropertyAdAccountName];
-    NSString *adCampaignID      = [dict objectForKey:SEAppAttrPropertyAdCampaignID];
-    NSString *adCampaignName    = [dict objectForKey:SEAppAttrPropertyAdCampaignName];
-    NSString *adOfferID         = [dict objectForKey:SEAppAttrPropertyAdOfferID];
-    NSString *adOfferName       = [dict objectForKey:SEAppAttrPropertyAdOfferName];
-    NSString *adCreativeID      = [dict objectForKey:SEAppAttrPropertyAdCreativeID];
-    NSString *adCreativeName    = [dict objectForKey:SEAppAttrPropertyAdCreativeName];
-    NSString *attributionPlatform = [dict objectForKey:SEAppAttrPropertyAttributionPlatform];
-
-    NSDictionary *customProperties  = [dict objectForKey:@"_customProperties"];
-
-    appAttr = [[SEAppAttrEventAttribute alloc] init];
-    appAttr.adNetwork = seTrimValue(adNetwork);
-    appAttr.subChannel = seTrimValue(subChannel);
-    appAttr.adAccountID = seTrimValue(adAccountID);
-    appAttr.adAccountName = seTrimValue(adAccountName);
-    appAttr.adCampaignID = seTrimValue(adCampaignID);
-    appAttr.adCampaignName = seTrimValue(adCampaignName);
-    appAttr.adOfferID = seTrimValue(adOfferID);
-    appAttr.adOfferName = seTrimValue(adOfferName);
-    appAttr.adCreativeID = seTrimValue(adCreativeID);
-    appAttr.adCreativeName = seTrimValue(adCreativeName);
-    appAttr.attributionPlatform = seTrimValue(attributionPlatform);
-
-    appAttr.customProperties = seTrimValue(customProperties);
-#endif
+    Class attributeClass = NSClassFromString(@"SEAppAttrEventAttribute");
+    if (!attributeClass) {
+        se_innerLog(@"SEAppAttrEventAttribute class not found");
+        return nil;
+    }
+    
+    id appAttr = [[attributeClass alloc] init];
+    [appAttr setValue:seTrimValue([dict objectForKey:@"adNetwork"]) forKey:@"adNetwork"];
+    [appAttr setValue:seTrimValue([dict objectForKey:@"subChannel"]) forKey:@"subChannel"];
+    [appAttr setValue:seTrimValue([dict objectForKey:@"adAccountID"]) forKey:@"adAccountID"];
+    [appAttr setValue:seTrimValue([dict objectForKey:@"adAccountName"]) forKey:@"adAccountName"];
+    [appAttr setValue:seTrimValue([dict objectForKey:@"adCampaignID"]) forKey:@"adCampaignID"];
+    [appAttr setValue:seTrimValue([dict objectForKey:@"adCampaignName"]) forKey:@"adCampaignName"];
+    [appAttr setValue:seTrimValue([dict objectForKey:@"adOfferID"]) forKey:@"adOfferID"];
+    [appAttr setValue:seTrimValue([dict objectForKey:@"adOfferName"]) forKey:@"adOfferName"];
+    [appAttr setValue:seTrimValue([dict objectForKey:@"adCreativeID"]) forKey:@"adCreativeID"];
+    [appAttr setValue:seTrimValue([dict objectForKey:@"adCreativeName"]) forKey:@"adCreativeName"];
+    [appAttr setValue:seTrimValue([dict objectForKey:@"attributionPlatform"]) forKey:@"attributionPlatform"];
+    [appAttr setValue:seTrimValue([dict objectForKey:@"_customProperties"]) forKey:@"customProperties"];
+    
     return appAttr;
 }
 
-static SECustomEventAttribute *buildCustomEventAttribute(const char *customAttribute) {
-    
+static id buildCustomEventAttribute(const char *customAttribute) {
     NSString *jsonString = [NSString stringWithUTF8String:customAttribute];
     NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
     NSError *error = nil;
@@ -448,20 +335,21 @@ static SECustomEventAttribute *buildCustomEventAttribute(const char *customAttri
     
     if (error) {
         NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data", jsonString];
-        NSLog(@"trackCustomWithAttributes, error :%@", msg);
+        se_innerLog(@"trackCustomWithAttributes, error :%@", msg);
         return nil;
     }
-    SECustomEventAttribute *attribute=nil;
-#if __has_include( <SolarEngineSDK/SolarEngineSDK.h>)
-    NSString *eventName             = [dict objectForKey:@"_custom_event_name"];
-    NSDictionary *customProperties  = [dict objectForKey:@"_customProperties"];
-    NSDictionary *preProperties     = [dict objectForKey:@"_pre_properties"];
+
+    Class attributeClass = NSClassFromString(@"SECustomEventAttribute");
+    if (!attributeClass) {
+        se_innerLog(@"SECustomEventAttribute class not found");
+        return nil;
+    }
     
-    attribute = [[SECustomEventAttribute alloc] init];
-    attribute.eventName = seTrimValue(eventName);
-    attribute.customProperties = seTrimValue(customProperties);
-    attribute.presetProperties = seTrimValue(preProperties);
-#endif
+    id attribute = [[attributeClass alloc] init];
+    [attribute setValue:seTrimValue([dict objectForKey:@"_custom_event_name"]) forKey:@"eventName"];
+    [attribute setValue:seTrimValue([dict objectForKey:@"_customProperties"]) forKey:@"customProperties"];
+    [attribute setValue:seTrimValue([dict objectForKey:@"_pre_properties"]) forKey:@"presetProperties"];
+    
     return attribute;
 }
 
@@ -490,45 +378,41 @@ void __iOSSolarEngineSDKSetPresetEvent(const char *presetEventName, const char *
             dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
             if (error) {
                 NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data",_properties];
-                NSLog(@"setPresetEvent, error :%@",msg);
+                se_innerLog(@"setPresetEvent, error :%@",msg);
                 return;
             }
         }
     }
     
     NSString *_presetEventName = [NSString stringWithUTF8String:presetEventName];
-    id sdk = getSDKInstance();
+    id sdk = getSolarEngineSDKInstance();
     if (!sdk) return;
     
-    SEL selector = nil;
+    SEL selector = NSSelectorFromString(@"setPresetEvent:withProperties:");
     if ([_presetEventName isEqualToString:@"SEPresetEventTypeAppInstall"]) {
-        selector = NSSelectorFromString(@"setPresetEvent:withProperties:");
-        safeCallMethod(sdk, selector, @"SEPresetEventTypeAppInstall", dict);
+        se_safeCallSDKMethod(sdk, selector, @"SEPresetEventTypeAppInstall", dict);
     } else if ([_presetEventName isEqualToString:@"SEPresetEventTypeAppStart"]) {
-        selector = NSSelectorFromString(@"setPresetEvent:withProperties:");
-        safeCallMethod(sdk, selector, @"SEPresetEventTypeAppStart", dict);
+        se_safeCallSDKMethod(sdk, selector, @"SEPresetEventTypeAppStart", dict);
     } else if ([_presetEventName isEqualToString:@"SEPresetEventTypeAppEnd"]) {
-        selector = NSSelectorFromString(@"setPresetEvent:withProperties:");
-        safeCallMethod(sdk, selector, @"SEPresetEventTypeAppEnd", dict);
+        se_safeCallSDKMethod(sdk, selector, @"SEPresetEventTypeAppEnd", dict);
     } else if ([_presetEventName isEqualToString:@"SEPresetEventTypeAppAll"]) {
-        selector = NSSelectorFromString(@"setPresetEvent:withProperties:");
-        safeCallMethod(sdk, selector, @"SEPresetEventTypeAppAll", dict);
+        se_safeCallSDKMethod(sdk, selector, @"SEPresetEventTypeAppAll", dict);
     }
 }
 
 void __iOSSolarEngineSDKPreInit(const char * appKey, const char * SEUserId) {
-    NSLog(@"__iOSSolarEngineSDKPreInit called");
+    se_innerLog(@"__iOSSolarEngineSDKPreInit called");
     NSString *_appKey = [NSString stringWithUTF8String:appKey];
     
-    id sdk = getSDKInstance();
+    id sdk = getSolarEngineSDKInstance();
     if (!sdk) return;
     
     SEL selector = NSSelectorFromString(@"preInitWithAppKey:");
-    safeCallMethod(sdk, selector, _appKey);
+    se_safeCallSDKMethod(sdk, selector, _appKey);
 }
 
 void __iOSSolarEngineSDKInit(const char * appKey, const char * SEUserId, const char *seConfig, const char *rcConfig) {
-    NSLog(@"__iOSSolarEngineSDKInit called");
+    se_innerLog(@"__iOSSolarEngineSDKInit called");
     NSString *_appKey = [NSString stringWithUTF8String:appKey];
     
     NSString *_seConfig = [NSString stringWithUTF8String:seConfig];
@@ -537,14 +421,14 @@ void __iOSSolarEngineSDKInit(const char * appKey, const char * SEUserId, const c
     NSDictionary *seDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     if (error) {
         NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data",_seConfig];
-        NSLog(@"__iOSSolarEngineSDKInit, seConfig error :%@",msg);
+        se_innerLog(@"__iOSSolarEngineSDKInit, seConfig error :%@",msg);
         return;
     }
     
     // Create config object using runtime
     Class configClass = NSClassFromString(@"SEConfig");
     if (!configClass) {
-        NSLog(@"SEConfig class not found");
+        se_innerLog(@"SEConfig class not found");
         return;
     }
     
@@ -554,7 +438,15 @@ void __iOSSolarEngineSDKInit(const char * appKey, const char * SEUserId, const c
     [config setValue:@([seDict[@"isDebugModel"] boolValue]) forKey:@"isDebugModel"];
     [config setValue:@([seDict[@"logEnabled"] boolValue]) forKey:@"logEnabled"];
     
-
+#if TARGET_OS_IOS
+    [config setValue:@([seDict[@"isCoppaEnabled"] boolValue]) forKey:@"setCoppaEnabled"];
+    [config setValue:@([seDict[@"isKidsAppEnabled"] boolValue]) forKey:@"setKidsAppEnabled"];
+    [config setValue:@([seDict[@"isEnable2GReporting"] boolValue]) forKey:@"enable2GReporting"];
+    [config setValue:@([seDict[@"isGDPRArea"] boolValue]) forKey:@"isGDPRArea"];
+    [config setValue:@([seDict[@"attAuthorizationWaitingInterval"] intValue]) forKey:@"attAuthorizationWaitingInterval"];
+    
+    [config setValue:@([seDict[@"delayDeeplinkEnable"] boolValue]) forKey:@"enableDelayDeeplink"];
+#endif
     
     NSString *sub_lib_version = seDict[@"sub_lib_version"];
     if ([sub_lib_version isKindOfClass:[NSString class]]) {
@@ -573,13 +465,13 @@ void __iOSSolarEngineSDKInit(const char * appKey, const char * SEUserId, const c
         NSDictionary *rcDict = [NSJSONSerialization JSONObjectWithData:rcData options:0 error:&error];
         if (error) {
             NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data",_rcConfig];
-            NSLog(@"__iOSSolarEngineSDKInit, rcConfig error :%@",msg);
+            se_innerLog(@"__iOSSolarEngineSDKInit, rcConfig error :%@",msg);
             return;
         }
         
         Class remoteConfigClass = NSClassFromString(@"SERemoteConfig");
         if (!remoteConfigClass) {
-            NSLog(@"SERemoteConfig class not found");
+            se_innerLog(@"SERemoteConfig class not found");
             return;
         }
         
@@ -599,7 +491,7 @@ void __iOSSolarEngineSDKInit(const char * appKey, const char * SEUserId, const c
     if ([customDomainDict isKindOfClass:[NSDictionary class]]) {
         Class customDomainClass = NSClassFromString(@"SECustomDomain");
         if (!customDomainClass) {
-            NSLog(@"SECustomDomain class not found");
+            se_innerLog(@"SECustomDomain class not found");
             return;
         }
         
@@ -615,71 +507,106 @@ void __iOSSolarEngineSDKInit(const char * appKey, const char * SEUserId, const c
     }
     
     // Initialize SDK
-    id sdk = getSDKInstance();
+    id sdk = getSolarEngineSDKInstance();
     if (!sdk) return;
     
     SEL selector = NSSelectorFromString(@"startWithAppKey:config:");
-    safeCallMethod(sdk, selector, _appKey, config);
+    se_safeCallSDKMethod(sdk, selector, _appKey, config);
 }
 
 void __iOSSESDKSetInitCompletedCallback(SEBridgeInitCallback callback) {
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
     
-    id sdkInstance = getSDKInstance();
-        if (!sdkInstance) {
-            NSLog(@"Failed to get SDK instance");
-            return;
+    SEL selector = NSSelectorFromString(@"setInitCompletedCallback:");
+    se_safeCallSDKMethod(sdk, selector, ^(int code) {
+        if (callback) {
+            callback(code);
         }
-
-        SEL setCallbackSel = NSSelectorFromString(@"setInitCompletedCallback:");
-        if (![sdkInstance respondsToSelector:setCallbackSel]) {
-            NSLog(@"Method setInitCompletedCallback: not found");
-            return;
-        }
-     void (^block)(int) = ^(int code) {
-            if (callback) {
-                callback(code);
-            }
-        };
-
-        // 调用方法
-         safeCallMethod(sdkInstance, setCallbackSel, block);
-    
+    });
 }
 
 void __iOSSESDKRequestTrackingAuthorizationWithCompletionHandler(SEBridgeInitCallback callback) {
-
-    NSLog(@"%@ is not supported on MacOS", @"__iOSSESDKRequestTrackingAuthorizationWithCompletionHandler");
-
+#if TARGET_OS_IOS
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
+    
+    SEL selector = NSSelectorFromString(@"requestTrackingAuthorizationWithCompletionHandler:");
+    se_safeCallSDKMethod(sdk, selector, ^(NSUInteger status) {
+        if (callback) {
+            callback((int)status);
+        }
+    });
+#elif TARGET_OS_MAC
+    se_innerLog(@"%@ is not supported on MacOS", @"__iOSSESDKRequestTrackingAuthorizationWithCompletionHandler");
+#endif
 }
 
-
 void __iOSSESDKSetAttributionDataCallback(SEBridgeCallback callback) {
-
-
-    NSLog(@"%@ is not supported on MacOS", @"setAttributionCallback");
-
+#if TARGET_OS_IOS
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
+    
+    SEL selector = NSSelectorFromString(@"setAttributionCallback:");
+    se_safeCallSDKMethod(sdk, selector, ^(int code, NSDictionary * _Nullable attribution) {
+        NSString *attData = nil;
+        if ([attribution isKindOfClass:NSDictionary.class]) {
+            NSData *data = [NSJSONSerialization dataWithJSONObject:attribution options:0 error:nil];
+            if (data) {
+                attData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            }
+        }
+        
+        if (callback) {
+            callback(code, convertNSStringToCString(attData));
+        }
+    });
+#elif TARGET_OS_MAC
+    se_innerLog(@"%@ is not supported on MacOS", @"setAttributionCallback");
+#endif
 }
 
 char* __iOSSolarEngineSDKGetAttribution(void)
 {
-
-    NSLog(@"%@ is not supported on MacOS", @"getAttributionData");
+#if TARGET_OS_IOS
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return nil;
+    
+    SEL selector = NSSelectorFromString(@"getAttributionData");
+    NSDictionary *attribution = se_safeCallSDKMethod(sdk, selector);
+    
+    if (![attribution isKindOfClass:NSDictionary.class]) {
+        return nil;
+    }
+    NSData *data = [NSJSONSerialization dataWithJSONObject:attribution options:0 error:nil];
+    if (data == nil) {
+        return nil;
+    }
+    NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    return convertNSStringToCString(dataString);
+#elif TARGET_OS_MAC
+    se_innerLog(@"%@ is not supported on MacOS", @"getAttributionData");
     return "";
-
+#endif
 }
 
-
 void __iOSSolarEngineSDKSetGDPRArea(bool isGDPRArea) {
-
-    NSLog(@"%@ is not supported on MacOS", @"setGDPRArea");
-
+#if TARGET_OS_IOS
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
+    
+    SEL selector = NSSelectorFromString(@"setGDPRArea:");
+    se_safeCallSDKMethod(sdk, selector, @(isGDPRArea));
+#elif TARGET_OS_MAC
+    se_innerLog(@"%@ is not supported on MacOS", @"setGDPRArea");
+#endif
 }
 
 void __iOSSolarEngineSDKTrack(const char *eventName, const char *attributes)
 {
     NSString *_eventName = [NSString stringWithUTF8String:eventName];
     NSString *_attributes = [NSString stringWithUTF8String:attributes];
-    
+
     NSData *data = [_attributes dataUsingEncoding:NSUTF8StringEncoding];
     NSError *error = nil;
     NSDictionary *dict = nil;
@@ -688,22 +615,16 @@ void __iOSSolarEngineSDKTrack(const char *eventName, const char *attributes)
         dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
         if (error) {
             NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data",_attributes];
-            NSLog(@"track, error :%@",msg);
+            se_innerLog(@"track, error :%@",msg);
             return;
         }
     }
+
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
     
-    id sdkInstance = getSDKInstance();
-    if (!sdkInstance) {
-        NSLog(@"Failed to get SDK instance");
-        return;
-    }
-    
-    // 查找方法 - (void)track:(NSString *)event withProperties:(NSDictionary *)properties
-    SEL trackSelector = NSSelectorFromString(@"track:withProperties:");
-    
-    // 使用 safeCallMethod 调用
-    safeCallMethod(sdkInstance, trackSelector, _eventName, dict);
+    SEL selector = NSSelectorFromString(@"track:withProperties:");
+    se_safeCallSDKMethod(sdk, selector, _eventName, dict);
 }
 
 void __iOSSolarEngineSDKTrackCustomEventWithPreAttributes(const char *eventName, const char *customAttributes, const char *preAttributes)
@@ -719,7 +640,7 @@ void __iOSSolarEngineSDKTrackCustomEventWithPreAttributes(const char *eventName,
         customProperties = [NSJSONSerialization JSONObjectWithData:customData options:0 error:&error];
         if (error) {
             NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data",_customAttributes];
-            NSLog(@"track, error :%@",msg);
+            se_innerLog(@"track, error :%@",msg);
             return;
         }
     }
@@ -731,37 +652,47 @@ void __iOSSolarEngineSDKTrackCustomEventWithPreAttributes(const char *eventName,
         preProperties = [NSJSONSerialization JSONObjectWithData:preData options:0 error:&error];
         if (preError) {
             NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data",_preAttributes];
-            NSLog(@"track, error :%@",msg);
+            se_innerLog(@"track, error :%@",msg);
             return;
         }
     }
-
-    id sdkInstance = getSDKInstance();
-      if (!sdkInstance) {
-          NSLog(@"Failed to get SDK instance");
-          return;
-      }
-
-      SEL trackSelector = NSSelectorFromString(@"track:withCustomProperties:withPresetProperties:");
-      if (![sdkInstance respondsToSelector:trackSelector]) {
-          NSLog(@"Method not found: %@", NSStringFromSelector(trackSelector));
-          return;
-      }
-
-      // 使用 safeCallMethod 调用带多个参数的方法
-      safeCallMethod(sdkInstance, trackSelector, _eventName, customProperties, preProperties);
+    
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
+    
+    SEL selector = NSSelectorFromString(@"track:withCustomProperties:withPresetProperties:");
+    se_safeCallSDKMethod(sdk, selector, _eventName, customProperties, preProperties);
 }
 
 void __iOSSolarEngineSDKTrackAppReEngagement(const char *attributes)
 {
-
-    NSLog(@"%@ is not supported on MacOS", @"trackAppReEngagement");
-
+    se_innerLog(@"__iOSSolarEngineSDKTrackAppReEngagement called");
+#if TARGET_OS_IOS
+    NSDictionary *customProperties = nil;
+    if (attributes != NULL) {
+        NSString *jsonString = [NSString stringWithUTF8String:attributes];
+        NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+        NSError *error = nil;
+        customProperties = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data", jsonString];
+            se_innerLog(@"trackAppReEngagement, error :%@",msg);
+            customProperties = nil;
+        }
+    }
+    
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
+    
+    SEL selector = NSSelectorFromString(@"trackAppReEngagement:");
+    se_safeCallSDKMethod(sdk, selector, customProperties);
+#elif TARGET_OS_MAC
+    se_innerLog(@"%@ is not supported on MacOS", @"trackAppReEngagement");
+#endif
 }
 
 void __iOSSolarEngineSDKTrackFirstEventWithAttributes(const char *firstEventAttribute) {
-    
-    NSLog(@"__iOSSolarEngineSDKTrackFirstEventWithAttributes called");
+    se_innerLog(@"__iOSSolarEngineSDKTrackFirstEventWithAttributes called");
 
     NSString *jsonString = [NSString stringWithUTF8String:firstEventAttribute];
     NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
@@ -770,375 +701,164 @@ void __iOSSolarEngineSDKTrackFirstEventWithAttributes(const char *firstEventAttr
     NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     if (error) {
         NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data", jsonString];
-        NSLog(@"TrackFirstEventWithAttributes, error :%@",msg);
+        se_innerLog(@"TrackFirstEventWithAttributes, error :%@",msg);
         return;
     }
     
-    NSString *eventType = [dict objectForKey:SEKeyFlutterEventType];
+    NSString *eventType = [dict objectForKey:SEKeyUnityEventType];
     NSString *first_event_check_id  =  [dict objectForKey:@"_first_event_check_id"];
 
-    SEEventBaseAttribute *attribute = nil;
+    id attribute = nil;
     
-    if ([eventType isEqualToString:SEKeyFlutterEventNameIAP]) {
+    if ([eventType isEqualToString:SEKeyUnityEventNameIAP]) {
         attribute = buildIAPAttribute(firstEventAttribute);
-    } else if ([eventType isEqualToString:SEKeyFlutterEventNameAdImpresstion]) {
-      //  attribute = buildAdImpressionAttribute(firstEventAttribute);
-    } else if ([eventType isEqualToString:SEKeyFlutterEventNameAdClick]) {
+    } else if ([eventType isEqualToString:SEKeyUnityEventNameAdImpresstion]) {
+        attribute = buildAdImpressionAttribute(firstEventAttribute);
+    } else if ([eventType isEqualToString:SEKeyUnityEventNameAdClick]) {
         attribute = buildAdClickAttribute(firstEventAttribute);
-    } else if ([eventType isEqualToString:SEKeyFlutterEventNameAppAttr]) {
+    } else if ([eventType isEqualToString:SEKeyUnityEventNameAppAttr]) {
         attribute = buildAppAttrAttribute(firstEventAttribute);
-    } else if ([eventType isEqualToString:SEKeyFlutterEventNameRegister]) {
+    } else if ([eventType isEqualToString:SEKeyUnityEventNameRegister]) {
         attribute = buildRegisterAttribute(firstEventAttribute);
-    } else if ([eventType isEqualToString:SEKeyFlutterEventNameLogin]) {
+    } else if ([eventType isEqualToString:SEKeyUnityEventNameLogin]) {
         attribute = buildLoginAttribute(firstEventAttribute);
-    } else if ([eventType isEqualToString:SEKeyFlutterEventNameOrder]) {
+    } else if ([eventType isEqualToString:SEKeyUnityEventNameOrder]) {
         attribute = buildOrderAttribute(firstEventAttribute);
-    } else if ([eventType isEqualToString:SEKeyFlutterEventNameCustom]) {
+    } else if ([eventType isEqualToString:SEKeyUnityEventNameCustom]) {
         attribute = buildCustomEventAttribute(firstEventAttribute);
     }
 
     if (attribute) {
         if ([first_event_check_id isKindOfClass:NSString.class]) {
-            attribute.firstCheckId = first_event_check_id;
+            [attribute setValue:first_event_check_id forKey:@"firstCheckId"];
         }
-       // [[SolarEngineSDK sharedInstance] trackFirstEvent:attribute];
-        id sdkInstance = getSDKInstance();
-           if (!sdkInstance) {
-               NSLog(@"Failed to get SDK instance");
-               return;
-           }
-
-           // 2. 准备 selector
-           SEL trackSelector = NSSelectorFromString(@"trackFirstEvent:");
-           if (![sdkInstance respondsToSelector:trackSelector]) {
-               NSLog(@"Method %@ not found", NSStringFromSelector(trackSelector));
-               return;
-           }
-
-           // 3. 使用 safeCallMethod 安全调用带参数的方法
-           safeCallMethod(sdkInstance, trackSelector, attribute);
+        
+        id sdk = getSolarEngineSDKInstance();
+        if (!sdk) return;
+        
+        SEL selector = NSSelectorFromString(@"trackFirstEvent:");
+        se_safeCallSDKMethod(sdk, selector, attribute);
     } else {
-        NSLog(@"TrackFirstEventWithAttributes attribute is nil");
+        se_innerLog(@"TrackFirstEventWithAttributes attribute is nil");
     }
 }
 
 void __iOSSolarEngineSDKTrackIAPWithAttributes(const char *IAPAttribute)
 {
+    id attribute = buildIAPAttribute(IAPAttribute);
+    if (!attribute) return;
     
-    NSLog(@"__iOSSolarEngineSDKTrackIAPWithAttributes called");
-
-    NSString *jsonString = [NSString stringWithUTF8String:IAPAttribute];
-    NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-
-    NSError *error = nil;
-    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-    if (error) {
-        NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data", jsonString];
-        NSLog(@"trackIAPWithAttributes, error :%@",msg);
-        return;
-    }
-
-    // Create config object using runtime
-
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
     
-    SEIAPEventAttribute* attribute = buildIAPAttribute(IAPAttribute);
-    //[[SolarEngineSDK sharedInstance] trackIAPWithAttributes:attribute];
-    
-    
-    id sdkInstance = getSDKInstance();
-       if (!sdkInstance) {
-           NSLog(@"Failed to get SDK instance");
-           return;
-       }
-
-       // 2. 准备 selector
-       SEL trackSelector = NSSelectorFromString(@"trackIAPWithAttributes:");
-       if (![sdkInstance respondsToSelector:trackSelector]) {
-           NSLog(@"Method %@ not found", NSStringFromSelector(trackSelector));
-           return;
-       }
-
-       // 3. 使用 safeCallMethod 安全调用带参数的方法
-       safeCallMethod(sdkInstance, trackSelector, attribute);
+    SEL selector = NSSelectorFromString(@"trackIAPWithAttributes:");
+    se_safeCallSDKMethod(sdk, selector, attribute);
 }
 
 void __iOSSolarEngineSDKTrackAdImpressionWithAttributes(const char *adImpressionAttribute)
 {
-    NSString *jsonString = [NSString stringWithUTF8String:adImpressionAttribute];
-    NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-    NSError *error = nil;
-    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    id attribute = buildAdImpressionAttribute(adImpressionAttribute);
+    if (!attribute) return;
     
-    if (error) {
-        NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data", jsonString];
-        NSLog(@"trackAdImpressionWithAttributes, error :%@", msg);
-        return;
-    }
-
-    id  attribute = buildAdImpressionAttribute(adImpressionAttribute);
-  //  SEAdImpressionEventAttribute *attribute = buildAdImpressionAttribute(adImpressionAttribute);
-  //  [[SolarEngineSDK sharedInstance] trackAdImpressionWithAttributes:attribute];
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
     
-    
-    id sdkInstance = getSDKInstance();
-       if (!sdkInstance) {
-           NSLog(@"Failed to get SDK instance");
-           return;
-       }
-
-       // 2. 准备 selector
-       SEL trackSelector = NSSelectorFromString(@"trackAdImpressionWithAttributes:");
-       if (![sdkInstance respondsToSelector:trackSelector]) {
-           NSLog(@"Method %@ not found", NSStringFromSelector(trackSelector));
-           return;
-       }
-
-       // 3. 使用 safeCallMethod 安全调用带参数的方法
-    safeCallMethod(sdkInstance, trackSelector, attribute);
+    SEL selector = NSSelectorFromString(@"trackAdImpressionWithAttributes:");
+    se_safeCallSDKMethod(sdk, selector, attribute);
 }
 
 void __iOSSolarEngineSDKTrackAdClickWithAttributes(const char *adClickAttribute) {
-    NSString *jsonString = [NSString stringWithUTF8String:adClickAttribute];
-    NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-    NSError *error = nil;
-    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    id attribute = buildAdClickAttribute(adClickAttribute);
+    if (!attribute) return;
     
-    if (error) {
-        NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data", jsonString];
-        NSLog(@"trackAdClickWithAttributes, error :%@", msg);
-        return;
-    }
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
     
-    SEAdClickEventAttribute *attribute = buildAdClickAttribute(adClickAttribute);
-   // [[SolarEngineSDK sharedInstance] trackAdClickWithAttributes:attribute];
-  
-    
-    id sdkInstance = getSDKInstance();
-       if (!sdkInstance) {
-           NSLog(@"Failed to get SDK instance");
-           return;
-       }
-
-       // 2. 准备 selector
-       SEL trackSelector = NSSelectorFromString(@"trackAdClickWithAttributes:");
-       if (![sdkInstance respondsToSelector:trackSelector]) {
-           NSLog(@"Method %@ not found", NSStringFromSelector(trackSelector));
-           return;
-       }
-
-       // 3. 使用 safeCallMethod 安全调用带参数的方法
-       safeCallMethod(sdkInstance, trackSelector, attribute);
-
+    SEL selector = NSSelectorFromString(@"trackAdClickWithAttributes:");
+    se_safeCallSDKMethod(sdk, selector, attribute);
 }
 
 void __iOSSolarEngineSDKTrackRegisterWithAttributes(const char *registerAttribute) {
-    NSString *jsonString = [NSString stringWithUTF8String:registerAttribute];
-    NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-    NSError *error = nil;
-    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    id attribute = buildRegisterAttribute(registerAttribute);
+    if (!attribute) return;
     
-    if (error) {
-        NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data", jsonString];
-        NSLog(@"trackRegisterWithAttributes, error :%@", msg);
-        return;
-    }
-
-    SERegisterEventAttribute *attribute = buildRegisterAttribute(registerAttribute);
-   // [[SolarEngineSDK sharedInstance] trackRegisterWithAttributes:attribute];
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
     
-    
-    id sdkInstance = getSDKInstance();
-       if (!sdkInstance) {
-           NSLog(@"Failed to get SDK instance");
-           return;
-       }
-
-       // 2. 准备 selector
-       SEL trackSelector = NSSelectorFromString(@"trackRegisterWithAttributes:");
-       if (![sdkInstance respondsToSelector:trackSelector]) {
-           NSLog(@"Method %@ not found", NSStringFromSelector(trackSelector));
-           return;
-       }
-
-       // 3. 使用 safeCallMethod 安全调用带参数的方法
-       safeCallMethod(sdkInstance, trackSelector, attribute);
+    SEL selector = NSSelectorFromString(@"trackRegisterWithAttributes:");
+    se_safeCallSDKMethod(sdk, selector, attribute);
 }
 
 void __iOSSolarEngineSDKTrackLoginWithAttributes(const char *loginAttribute) {
-    NSString *jsonString = [NSString stringWithUTF8String:loginAttribute];
-    NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-    NSError *error = nil;
-    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    id attribute = buildLoginAttribute(loginAttribute);
+    if (!attribute) return;
     
-    if (error) {
-        NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data", jsonString];
-        NSLog(@"trackLoginWithAttributes, error :%@", msg);
-        return;
-    }
-
-    SELoginEventAttribute *attribute = buildLoginAttribute(loginAttribute);
-   // [[SolarEngineSDK sharedInstance] trackLoginWithAttributes:attribute];
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
     
-    id sdkInstance = getSDKInstance();
-       if (!sdkInstance) {
-           NSLog(@"Failed to get SDK instance");
-           return;
-       }
-
-       // 2. 准备 selector
-       SEL trackSelector = NSSelectorFromString(@"trackLoginWithAttributes:");
-       if (![sdkInstance respondsToSelector:trackSelector]) {
-           NSLog(@"Method %@ not found", NSStringFromSelector(trackSelector));
-           return;
-       }
-
-       // 3. 使用 safeCallMethod 安全调用带参数的方法
-       safeCallMethod(sdkInstance, trackSelector, attribute);
+    SEL selector = NSSelectorFromString(@"trackLoginWithAttributes:");
+    se_safeCallSDKMethod(sdk, selector, attribute);
 }
 
 void __iOSSolarEngineSDKTrackOrderWithAttributes(const char *orderAttribute) {
-    NSString *jsonString = [NSString stringWithUTF8String:orderAttribute];
-    NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-    NSError *error = nil;
-    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    id attribute = buildOrderAttribute(orderAttribute);
+    if (!attribute) return;
     
-    if (error) {
-        NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data", jsonString];
-        NSLog(@"trackOrderWithAttributes, error :%@", msg);
-        return;
-    }
-
-    SEOrderEventAttribute *attribute = buildOrderAttribute(orderAttribute);
- //   [[SolarEngineSDK sharedInstance] trackOrderWithAttributes:attribute];
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
     
-    id sdkInstance = getSDKInstance();
-       if (!sdkInstance) {
-           NSLog(@"Failed to get SDK instance");
-           return;
-       }
-
-       // 2. 准备 selector
-       SEL trackSelector = NSSelectorFromString(@"trackOrderWithAttributes:");
-       if (![sdkInstance respondsToSelector:trackSelector]) {
-           NSLog(@"Method %@ not found", NSStringFromSelector(trackSelector));
-           return;
-       }
-
-       // 3. 使用 safeCallMethod 安全调用带参数的方法
-       safeCallMethod(sdkInstance, trackSelector, attribute);
+    SEL selector = NSSelectorFromString(@"trackOrderWithAttributes:");
+    se_safeCallSDKMethod(sdk, selector, attribute);
 }
 
 void __iOSSolarEngineSDKTrackAppAttrWithAttributes(const char *AppAttrAttribute) {
-    NSString *jsonString = [NSString stringWithUTF8String:AppAttrAttribute];
-    NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-    NSError *error = nil;
-    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    id appAttr = buildAppAttrAttribute(AppAttrAttribute);
+    if (!appAttr) return;
     
-    if (error) {
-        NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data", jsonString];
-        NSLog(@"trackOrderWithAttributes, error :%@", msg);
-        return;
-    }
-
-    SEAppAttrEventAttribute *appAttr = buildAppAttrAttribute(AppAttrAttribute);
-  //  [[SolarEngineSDK sharedInstance] trackAppAttrWithAttributes:appAttr];
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
     
-    id sdkInstance = getSDKInstance();
-       if (!sdkInstance) {
-           NSLog(@"Failed to get SDK instance");
-           return;
-       }
-
-       // 2. 准备 selector
-       SEL trackSelector = NSSelectorFromString(@"trackAppAttrWithAttributes:");
-       if (![sdkInstance respondsToSelector:trackSelector]) {
-           NSLog(@"Method %@ not found", NSStringFromSelector(trackSelector));
-           return;
-       }
-
-       // 3. 使用 safeCallMethod 安全调用带参数的方法
-       safeCallMethod(sdkInstance, trackSelector, appAttr);
+    SEL selector = NSSelectorFromString(@"trackAppAttrWithAttributes:");
+    se_safeCallSDKMethod(sdk, selector, appAttr);
 }
-
 
 void __iOSSolarEngineSDKSetVisitorID(const char *visitorID)
 {
     NSString *_visitorID = [NSString stringWithUTF8String:visitorID];
-    id sdkInstance = getSDKInstance();
-    if (!sdkInstance) {
-        NSLog(@"Failed to get SDK instance");
-        return;
-    }
     
-    SEL setVisitorIDSelector = NSSelectorFromString(@"setVisitorID:");
-    if (![sdkInstance respondsToSelector:setVisitorIDSelector]) {
-        NSLog(@"Method setVisitorID: not found");
-        return;
-    }
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
     
-    safeCallMethod(sdkInstance, setVisitorIDSelector, _visitorID);
+    SEL selector = NSSelectorFromString(@"setVisitorID:");
+    se_safeCallSDKMethod(sdk, selector, _visitorID);
 }
 
 char* __iOSSolarEngineSDKVisitorID(void)
 {
-    id sdkInstance = getSDKInstance();
-        if (!sdkInstance) {
-            NSLog(@"Failed to get SDK instance");
-            return NULL;
-        }
-
-        SEL getVisitorIDSelector = NSSelectorFromString(@"visitorID");
-        if (![sdkInstance respondsToSelector:getVisitorIDSelector]) {
-            NSLog(@"Method visitorID not found");
-            return NULL;
-        }
-
-     
-        NSString *result = [sdkInstance performSelector:getVisitorIDSelector];
-
-        return convertNSStringToCString(result);
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return nil;
     
+    SEL selector = NSSelectorFromString(@"visitorID");
+    NSString *visitorID = se_safeCallSDKMethod(sdk, selector);
+    return convertNSStringToCString(visitorID);
 }
 
 char* __iOSSolarEngineSDKGetDistinctId(void) {
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return nil;
     
-    id sdkInstance = getSDKInstance();
-       if (!sdkInstance) {
-           NSLog(@"Failed to get SDK instance");
-           return NULL;
-       }
-
-       SEL getDistinctIdSelector = NSSelectorFromString(@"getDistinctId");
-       if (![sdkInstance respondsToSelector:getDistinctIdSelector]) {
-           NSLog(@"Method getDistinctId not found");
-           return NULL;
-       }
-
-       // 使用 performSelector 调用 getter 方法（无参数）
-       NSString *result = [sdkInstance performSelector:getDistinctIdSelector];
-
-       return convertNSStringToCString(result);
+    SEL selector = NSSelectorFromString(@"getDistinctId");
+    NSString *visitorID = se_safeCallSDKMethod(sdk, selector);
+    return convertNSStringToCString(visitorID);
 }
 
 char* __iOSSolarEngineSDKGetPresetProperties(void){
-    id sdkInstance = getSDKInstance();
-     if (!sdkInstance) {
-         NSLog(@"Failed to get SDK instance");
-         return NULL;
-     }
-
-     SEL getPresetPropertiesSelector = NSSelectorFromString(@"getPresetProperties");
-     if (![sdkInstance respondsToSelector:getPresetPropertiesSelector]) {
-         NSLog(@"Method getPresetProperties not found");
-         return NULL;
-     }
-    NSDictionary *presetProperties = [sdkInstance performSelector:getPresetPropertiesSelector];
-
-       if (!presetProperties || ![presetProperties isKindOfClass:[NSDictionary class]]) {
-           NSLog(@"Invalid preset properties returned");
-           return NULL;
-       }
-
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return NULL;
+    
+    SEL selector = NSSelectorFromString(@"getPresetProperties");
+    NSDictionary *presetProperties = se_safeCallSDKMethod(sdk, selector);
+    
     NSData *data = [NSJSONSerialization dataWithJSONObject:presetProperties options:0 error:nil];
     if (data == nil) {
         return NULL;
@@ -1150,67 +870,32 @@ char* __iOSSolarEngineSDKGetPresetProperties(void){
 
 void __iOSSolarEngineSDKLoginWithAccountID(const char *accountID)
 {
-    // 转换 C 字符串为 NSString
-       NSString *_accountID = [NSString stringWithUTF8String:accountID];
-       if (!_accountID) {
-           NSLog(@"Invalid accountID string");
-           return;
-       }
-
-       // 获取 SDK 实例
-       id sdkInstance = getSDKInstance();
-       if (!sdkInstance) {
-           NSLog(@"Failed to get SDK instance");
-           return;
-       }
-
-       // 查找方法 selector
-       SEL loginSelector = NSSelectorFromString(@"loginWithAccountID:");
-       if (![sdkInstance respondsToSelector:loginSelector]) {
-           NSLog(@"Method loginWithAccountID: not found");
-           return;
-       }
-
-       // 反射调用方法
-       safeCallMethod(sdkInstance, loginSelector, _accountID);
+    NSString *_accountID = [NSString stringWithUTF8String:accountID];
+    
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
+    
+    SEL selector = NSSelectorFromString(@"loginWithAccountID:");
+    se_safeCallSDKMethod(sdk, selector, _accountID);
 }
 
 char* __iOSSolarEngineSDKAccountID(void)
 {
-    id sdkInstance = getSDKInstance();
-        if (!sdkInstance) {
-            NSLog(@"Failed to get SDK instance");
-            return NULL;
-        }
-
-        SEL accountIDSelector = NSSelectorFromString(@"accountID");
-        if (![sdkInstance respondsToSelector:accountIDSelector]) {
-            NSLog(@"Method accountID not found");
-            return NULL;
-        }
-
-        // 调用 getter 方法获取 accountID
-        NSString *accountID = [sdkInstance performSelector:accountIDSelector];
-
-        return convertNSStringToCString(accountID);
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return nil;
+    
+    SEL selector = NSSelectorFromString(@"accountID");
+    NSString *accountID = se_safeCallSDKMethod(sdk, selector);
+    return convertNSStringToCString(accountID);
 }
 
 void __iOSSolarEngineSDKLogout(void)
 {
-    id sdkInstance = getSDKInstance();
-       if (!sdkInstance) {
-           NSLog(@"Failed to get SDK instance");
-           return;
-       }
-
-       SEL logoutSelector = NSSelectorFromString(@"logout");
-       if (![sdkInstance respondsToSelector:logoutSelector]) {
-           NSLog(@"Method logout not found");
-           return;
-       }
-
-       // 使用 safeCallMethod 调用无参数方法
-       safeCallMethod(sdkInstance, logoutSelector);
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
+    
+    SEL selector = NSSelectorFromString(@"logout");
+    se_safeCallSDKMethod(sdk, selector);
 }
 
 void __iOSSolarEngineSDKSetSuperProperties(const char *properties)
@@ -1221,330 +906,224 @@ void __iOSSolarEngineSDKSetSuperProperties(const char *properties)
     NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     if (error) {
         NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data",_properties];
-        NSLog(@"setSuperProperties, error :%@",msg);
+        se_innerLog(@"setSuperProperties, error :%@",msg);
         return;
     }
     if (![dict isKindOfClass:NSDictionary.class]) {
         NSString *msg = [NSString stringWithFormat:@"%@ is not an dict",_properties];
-        NSLog(@"setSuperProperties, error :%@",msg);
+        se_innerLog(@"setSuperProperties, error :%@",msg);
         return;
     }
-    id sdkInstance = getSDKInstance();
-      if (!sdkInstance) {
-          NSLog(@"Failed to get SDK instance");
-          return;
-      }
-
-      SEL setSuperPropertiesSelector = NSSelectorFromString(@"setSuperProperties:");
-      if (![sdkInstance respondsToSelector:setSuperPropertiesSelector]) {
-          NSLog(@"Method setSuperProperties: not found");
-          return;
-      }
-
-      // 使用 safeCallMethod 调用带参数的方法
-      safeCallMethod(sdkInstance, setSuperPropertiesSelector, dict);
+    
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
+    
+    SEL selector = NSSelectorFromString(@"setSuperProperties:");
+    se_safeCallSDKMethod(sdk, selector, dict);
 }
 
 void __iOSSolarEngineSDKUnsetSuperProperty(const char *property)
 {
     NSString *_property = [NSString stringWithUTF8String:property];
-    id sdkInstance = getSDKInstance();
-       if (!sdkInstance) {
-           NSLog(@"Failed to get SDK instance");
-           return;
-       }
-
-       SEL selector = NSSelectorFromString(@"unsetSuperProperty:");
-       if (![sdkInstance respondsToSelector:selector]) {
-           NSLog(@"Method unsetSuperProperty: not found");
-           return;
-       }
-
-       safeCallMethod(sdkInstance, selector, _property);
+    
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
+    
+    SEL selector = NSSelectorFromString(@"unsetSuperProperty:");
+    se_safeCallSDKMethod(sdk, selector, _property);
 }
 
 void __iOSSolarEngineSDKClearSuperProperties(void)
 {
-    id sdkInstance = getSDKInstance();
-        if (!sdkInstance) {
-            NSLog(@"Failed to get SDK instance");
-            return;
-        }
-
-        SEL selector = NSSelectorFromString(@"clearSuperProperties");
-        if (![sdkInstance respondsToSelector:selector]) {
-            NSLog(@"Method clearSuperProperties not found");
-            return;
-        }
-
-        safeCallMethod(sdkInstance, selector);
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
+    
+    SEL selector = NSSelectorFromString(@"clearSuperProperties");
+    se_safeCallSDKMethod(sdk, selector);
 }
 
 void __iOSSolarEngineSDKReportEventImmediately(void)
 {
-    id sdkInstance = getSDKInstance();
-       if (!sdkInstance) {
-           NSLog(@"Failed to get SDK instance");
-           return;
-       }
-
-       SEL selector = NSSelectorFromString(@"reportEventImmediately");
-       if (![sdkInstance respondsToSelector:selector]) {
-           NSLog(@"Method reportEventImmediately not found");
-           return;
-       }
-
-       // 使用 safeCallMethod 调用无参数方法
-       safeCallMethod(sdkInstance, selector);
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
+    
+    SEL selector = NSSelectorFromString(@"reportEventImmediately");
+    se_safeCallSDKMethod(sdk, selector);
 }
 
 void __iOSSolarEngineSDKUserInit(const char *properties)
 {
     NSString *_properties = [NSString stringWithUTF8String:properties];
-
     NSData *data = [_properties dataUsingEncoding:NSUTF8StringEncoding];
-
     NSError *error = nil;
     NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
 
     if (error) {
         NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data",_properties];
-        NSLog(@"userInit, error :%@",msg);
+        se_innerLog(@"userInit, error :%@",msg);
         return;
     }
     if (![dict isKindOfClass:NSDictionary.class]) {
         NSString *msg = [NSString stringWithFormat:@"%@ is not an dict",_properties];
-        NSLog(@"userInit, error :%@",msg);
+        se_innerLog(@"userInit, error :%@",msg);
         return;
     }
     
-    id sdkInstance = getSDKInstance();
-       if (!sdkInstance) {
-           NSLog(@"Failed to get SDK instance");
-           return;
-       }
-
-       SEL userInitSelector = NSSelectorFromString(@"userInit:");
-       if (![sdkInstance respondsToSelector:userInitSelector]) {
-           NSLog(@"Method userInit: not found");
-           return;
-       }
-
-       // 使用 safeCallMethod 调用带参数的方法
-       safeCallMethod(sdkInstance, userInitSelector, dict);
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
+    
+    SEL selector = NSSelectorFromString(@"userInit:");
+    se_safeCallSDKMethod(sdk, selector, dict);
 }
 
 void __iOSSolarEngineSDKUserUpdate(const char *properties)
 {
     NSString *_properties = [NSString stringWithUTF8String:properties];
     NSData *data = [_properties dataUsingEncoding:NSUTF8StringEncoding];
-
     NSError *error = nil;
     NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
 
     if (error) {
         NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data",_properties];
-        NSLog(@"userUpdate, error :%@", msg);
+        se_innerLog(@"userUpdate, error :%@", msg);
         return;
     }
     if (![dict isKindOfClass:NSDictionary.class]) {
         NSString *msg = [NSString stringWithFormat:@"%@ is not an dict",_properties];
-        NSLog(@"userUpdate, error :%@", msg);
+        se_innerLog(@"userUpdate, error :%@", msg);
         return;
     }
-    id sdkInstance = getSDKInstance();
-       if (!sdkInstance) {
-           NSLog(@"Failed to get SDK instance");
-           return;
-       }
-    SEL userUpdateSelector = NSSelectorFromString(@"userUpdate:");
-       if (![sdkInstance respondsToSelector:userUpdateSelector]) {
-           NSLog(@"Method userUpdate: not found");
-           return;
-       }
-
-       // 使用 safeCallMethod 调用带参数的方法
-       safeCallMethod(sdkInstance, userUpdateSelector, dict);
-
+    
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
+    
+    SEL selector = NSSelectorFromString(@"userUpdate:");
+    se_safeCallSDKMethod(sdk, selector, dict);
 }
 
 void __iOSSolarEngineSDKUserAdd(const char *properties)
 {
     NSString *_properties = [NSString stringWithUTF8String:properties];
-
     NSData *data = [_properties dataUsingEncoding:NSUTF8StringEncoding];
-
     NSError *error = nil;
     NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
 
     if (error) {
         NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data",_properties];
-        NSLog(@"userAdd, error :%@",msg);
+        se_innerLog(@"userAdd, error :%@",msg);
         return;
     }
     if (![dict isKindOfClass:NSDictionary.class]) {
         NSString *msg = [NSString stringWithFormat:@"%@ is not an dict",_properties];
-        NSLog(@"userAdd, error :%@",msg);
+        se_innerLog(@"userAdd, error :%@",msg);
         return;
     }
-    id sdkInstance = getSDKInstance();
-    if (!sdkInstance) {
-        NSLog(@"Failed to get SDK instance");
-        return;
-    }
-
-    SEL userAddSelector = NSSelectorFromString(@"userAdd:");
-    if (![sdkInstance respondsToSelector:userAddSelector]) {
-        NSLog(@"Method userAdd: not found");
-        return;
-    }
-
-    safeCallMethod(sdkInstance, userAddSelector, dict);
-
+    
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
+    
+    SEL selector = NSSelectorFromString(@"userAdd:");
+    se_safeCallSDKMethod(sdk, selector, dict);
 }
 
 void __iOSSolarEngineSDKUserUnset(const char *keys)
 {
     NSString *_keys = [NSString stringWithUTF8String:keys];
-
     NSData *data = [_keys dataUsingEncoding:NSUTF8StringEncoding];
-
     NSError *error = nil;
     NSArray *array = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
 
     if (error) {
         NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data",_keys];
-        NSLog(@"userUnset, error :%@", msg);
+        se_innerLog(@"userUnset, error :%@", msg);
         return;
     }
     
     if (![array isKindOfClass:NSArray.class]) {
         NSString *msg = [NSString stringWithFormat:@"%@ is not an array",_keys];
-        NSLog(@"userUnset, error :%@", msg);
+        se_innerLog(@"userUnset, error :%@", msg);
         return;
     }
     
-    id sdkInstance = getSDKInstance();
-    if (!sdkInstance) {
-        NSLog(@"Failed to get SDK instance");
-        return;
-    }
-
-    SEL userUnsetSelector = NSSelectorFromString(@"userUnset:");
-    if (![sdkInstance respondsToSelector:userUnsetSelector]) {
-        NSLog(@"Method userUnset: not found");
-        return;
-    }
-
-    safeCallMethod(sdkInstance, userUnsetSelector, array);
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
+    
+    SEL selector = NSSelectorFromString(@"userUnset:");
+    se_safeCallSDKMethod(sdk, selector, array);
 }
 
 void __iOSSolarEngineSDKUserAppend(const char *properties)
 {
     NSString *_properties = [NSString stringWithUTF8String:properties];
     NSData *data = [_properties dataUsingEncoding:NSUTF8StringEncoding];
-
     NSError *error = nil;
     NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
 
     if (error) {
         NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data",_properties];
-        NSLog(@"userAppend, error :%@", msg);
+        se_innerLog(@"userAppend, error :%@", msg);
         return;
     }
     if (![dict isKindOfClass:NSDictionary.class]) {
         NSString *msg = [NSString stringWithFormat:@"%@ is not an dict",_properties];
-        NSLog(@"userAppend, error :%@", msg);
+        se_innerLog(@"userAppend, error :%@", msg);
         return;
     }
-    id sdkInstance = getSDKInstance();
-    if (!sdkInstance) {
-        NSLog(@"Failed to get SDK instance");
-        return;
-    }
-
-    SEL userAppendSelector = NSSelectorFromString(@"userAppend:");
-    if (![sdkInstance respondsToSelector:userAppendSelector]) {
-        NSLog(@"Method userAppend: not found");
-        return;
-    }
-
-    safeCallMethod(sdkInstance, userAppendSelector, dict);
+    
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
+    
+    SEL selector = NSSelectorFromString(@"userAppend:");
+    se_safeCallSDKMethod(sdk, selector, dict);
 }
 
 void __iOSSolarEngineSDKUserDelete(int deleteType)
 {
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
     
-    id sdkInstance = getSDKInstance();
-    if (!sdkInstance) {
-        NSLog(@"Failed to get SDK instance");
-        return;
-    }
-
-    SEL userDeleteSelector = NSSelectorFromString(@"userDelete:");
-    if (![sdkInstance respondsToSelector:userDeleteSelector]) {
-        NSLog(@"Method userDelete: not found");
-        return;
-    }
-
-    // 将 int 转换为 NSNumber 以适配 Objective-C 方法调用
-   // NSNumber *deleteTypeNumber = @(deleteType);
-    safeCallMethod(sdkInstance, userDeleteSelector, deleteType);
+    SEL selector = NSSelectorFromString(@"userDelete:");
+    se_safeCallSDKMethod(sdk, selector, @(deleteType));
 }
 
 void __iOSSolarEngineSDKEventStart(const char *eventName)
 {
     NSString *_eventName = [NSString stringWithUTF8String:eventName];
-    id sdkInstance = getSDKInstance();
-        if (!sdkInstance) {
-            NSLog(@"Failed to get SDK instance");
-            return;
-        }
-
-        SEL eventStartSelector = NSSelectorFromString(@"eventStart:");
-        if (![sdkInstance respondsToSelector:eventStartSelector]) {
-            NSLog(@"Method eventStart: not found");
-            return;
-        }
-
-        safeCallMethod(sdkInstance, eventStartSelector, _eventName);
+    
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
+    
+    SEL selector = NSSelectorFromString(@"eventStart:");
+    se_safeCallSDKMethod(sdk, selector, _eventName);
 }
 
 void __iOSSolarEngineSDKEventFinish(const char *eventJSONStr)
 {
     NSString *_eventJSONStr = [NSString stringWithUTF8String:eventJSONStr];
     NSData *data = [_eventJSONStr dataUsingEncoding:NSUTF8StringEncoding];
-
     NSError *error = nil;
     NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
 
     if (error) {
         NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data",_eventJSONStr];
-        NSLog(@"eventFinish, error :%@",msg);
+        se_innerLog(@"eventFinish, error :%@",msg);
         return;
     }
     
     if (![dict isKindOfClass:NSDictionary.class]) {
         NSString *msg = [NSString stringWithFormat:@"%@ is not an dict",_eventJSONStr];
-        NSLog(@"eventFinish, error :%@", msg);
+        se_innerLog(@"eventFinish, error :%@", msg);
         return;
     }
     
     NSString *_eventName = [dict objectForKey:@"eventName"];
     NSDictionary *_attributes = [dict objectForKey:@"attributes"];
-    id sdkInstance = getSDKInstance();
-    if (!sdkInstance) {
-        NSLog(@"Failed to get SDK instance");
-        return;
-    }
-
+    
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
+    
     SEL selector = NSSelectorFromString(@"eventFinish:properties:");
-    if (![sdkInstance respondsToSelector:selector]) {
-        NSLog(@"Method eventFinish:properties: not found");
-        return;
-    }
-
-    safeCallMethod(sdkInstance, selector, _eventName, _attributes);
+    se_safeCallSDKMethod(sdk, selector, _eventName, _attributes);
 }
 
 void __iOSSolarEngineSDKEventFinishNew(const char *eventName, const char *properties)
@@ -1562,73 +1141,161 @@ void __iOSSolarEngineSDKEventFinishNew(const char *eventName, const char *proper
             if (error) {
                 dict = nil;
                 NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data",_eventJSONStr];
-                NSLog(@"eventFinish, error :%@",msg);
+                se_innerLog(@"eventFinish, error :%@",msg);
             }
             
             if (![dict isKindOfClass:NSDictionary.class]) {
                 dict = nil;
                 NSString *msg = [NSString stringWithFormat:@"%@ is not an dict",_eventJSONStr];
-                NSLog(@"eventFinish, error :%@", msg);
+                se_innerLog(@"eventFinish, error :%@", msg);
             }
             _properties = dict;
         }
     }
-    id sdkInstance = getSDKInstance();
-    if (!sdkInstance) {
-        NSLog(@"Failed to get SDK instance");
-        return;
-    }
-
+    
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
+    
     SEL selector = NSSelectorFromString(@"eventFinish:properties:");
-    if (![sdkInstance respondsToSelector:selector]) {
-        NSLog(@"Method eventFinish:properties: not found");
-        return;
-    }
-
-    safeCallMethod(sdkInstance, selector, _eventName, _properties);
+    se_safeCallSDKMethod(sdk, selector, _eventName, _properties);
 }
 
-
 void __iOSSESDKupdatePostbackConversionValue(int conversionValue, SEBridgeCallback callback) {
-
-    NSLog(@"%@ is not supported on MacOS", @"updatePostbackConversionValue");
-
+#if TARGET_OS_IOS
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
+    
+    SEL selector = NSSelectorFromString(@"updatePostbackConversionValue:completionHandler:");
+    se_safeCallSDKMethod(sdk, selector, @(conversionValue), ^(NSError * _Nonnull error) {
+        if (callback) {
+            callback((int)error.code, convertNSStringToCString(error.description));
+        }
+    });
+#elif TARGET_OS_MAC
+    se_innerLog(@"%@ is not supported on MacOS", @"updatePostbackConversionValue");
+#endif
 }
 
 void __iOSSESDKupdateConversionValueCoarseValue(int fineValue, const char *  coarseValue, SEBridgeCallback callback) {
+#if TARGET_OS_IOS
+    NSString *_coarseValue = nil;
+    if (coarseValue != NULL) {
+        _coarseValue = [NSString stringWithUTF8String:coarseValue];
+    }
 
-    NSLog(@"%@ is not supported on MacOS", @"updatePostbackConversionValue");
-
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
+    
+    SEL selector = NSSelectorFromString(@"updatePostbackConversionValue:coarseValue:completionHandler:");
+    se_safeCallSDKMethod(sdk, selector, @(fineValue), _coarseValue, ^(NSError * _Nonnull error) {
+        if (callback) {
+            callback((int)error.code, convertNSStringToCString(error.description));
+        }
+    });
+#elif TARGET_OS_MAC
+    se_innerLog(@"%@ is not supported on MacOS", @"updatePostbackConversionValue");
+#endif
 }
 
 void __iOSSESDKupdateConversionValueCoarseValueLockWindow(int fineValue, const char *  coarseValue, bool lockWindow, SEBridgeCallback callback) {
-
-    NSLog(@"%@ is not supported on MacOS", @"updatePostbackConversionValue");
-
+#if TARGET_OS_IOS
+    NSString *_coarseValue = nil;
+    if (coarseValue != NULL) {
+        _coarseValue = [NSString stringWithUTF8String:coarseValue];
+    }
+    
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
+    
+    SEL selector = NSSelectorFromString(@"updatePostbackConversionValue:coarseValue:lockWindow:completionHandler:");
+    se_safeCallSDKMethod(sdk, selector, @(fineValue), _coarseValue, @(lockWindow), ^(NSError * _Nonnull error) {
+        if (callback) {
+            callback((int)error.code, convertNSStringToCString(error.description));
+        }
+    });
+#elif TARGET_OS_MAC
+    se_innerLog(@"%@ is not supported on MacOS", @"updatePostbackConversionValue");
+#endif
 }
-
 
 void __iOSSolarEngineSDKDeeplinkParseCallback(SEBridgeCallback callback) {
-
-
-
-    NSLog(@"%@ is not supported on MacOS", @"setDeepLinkCallback");
-
+#if TARGET_OS_IOS
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
     
+    SEL selector = NSSelectorFromString(@"setDeepLinkCallback:");
+    se_safeCallSDKMethod(sdk, selector, ^(int code, id deeplinkInfo) {
+        NSString *dData = nil;
+        if (code == 0){
+            NSMutableDictionary *deeplinkData = [NSMutableDictionary dictionary];
+            
+            if ([deeplinkInfo valueForKey:@"from"]) {
+                [deeplinkData setObject:[deeplinkInfo valueForKey:@"from"] forKey:@"from"];
+            }
+            if ([deeplinkInfo valueForKey:@"sedpLink"]) {
+                [deeplinkData setObject:[deeplinkInfo valueForKey:@"sedpLink"] forKey:@"sedpLink"];
+            }
+            if ([deeplinkInfo valueForKey:@"turlId"]) {
+                [deeplinkData setObject:[deeplinkInfo valueForKey:@"turlId"] forKey:@"turlId"];
+            }
+            if ([deeplinkInfo valueForKey:@"customParams"]) {
+                [deeplinkData setObject:[deeplinkInfo valueForKey:@"customParams"] forKey:@"customParams"];
+            }
+            
+            NSData *data = [NSJSONSerialization dataWithJSONObject:deeplinkData options:0 error:nil];
+            if (data) {
+                dData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            }
+        }
+        
+        if (callback) {
+            callback(code, convertNSStringToCString(dData));
+        }
+    });
+#elif TARGET_OS_MAC
+    se_innerLog(@"%@ is not supported on MacOS", @"setDeepLinkCallback");
+#endif
 }
-
 
 void __iOSSolarEngineSDKDelayDeeplinkParseCallback(SEBridgeCallback callback) {
-
+#if TARGET_OS_IOS
+    id sdk = getSolarEngineSDKInstance();
+    if (!sdk) return;
     
-    NSLog(@"%@ is not supported on MacOS", @"setDelayDeeplinkDeepLinkCallbackWithSuccess");
-
-
+    SEL selector = NSSelectorFromString(@"setDelayDeeplinkDeepLinkCallbackWithSuccess:fail:");
+    se_safeCallSDKMethod(sdk, selector, ^(id deeplinkInfo) {
+        NSString *dData = nil;
+        NSMutableDictionary *deeplinkData = [NSMutableDictionary dictionary];
+        
+        if ([deeplinkInfo valueForKey:@"sedpUrlscheme"]) {
+            [deeplinkData setObject:[deeplinkInfo valueForKey:@"sedpUrlscheme"] forKey:@"sedpUrlscheme"];
+        }
+        if ([deeplinkInfo valueForKey:@"sedpLink"]) {
+            [deeplinkData setObject:[deeplinkInfo valueForKey:@"sedpLink"] forKey:@"sedpLink"];
+        }
+        if ([deeplinkInfo valueForKey:@"turlId"]) {
+            [deeplinkData setObject:[deeplinkInfo valueForKey:@"turlId"] forKey:@"turlId"];
+        }
+        
+        NSData *data = [NSJSONSerialization dataWithJSONObject:deeplinkData options:0 error:nil];
+        if (data) {
+            dData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        }
+        
+        if (callback) {
+            callback(0, convertNSStringToCString(dData));
+        }
+        
+    }, ^(NSError * _Nullable error) {
+        if (callback) {
+            callback((int)error.code, convertNSStringToCString(nil));
+        }
+    });
+#elif TARGET_OS_MAC
+    se_innerLog(@"%@ is not supported on MacOS", @"setDelayDeeplinkDeepLinkCallbackWithSuccess");
+#endif
 }
 
 
+
 }
-
-
-
-
