@@ -8,9 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "SEBridgeCommon.h"
 
-#if  __has_include(<SolarEngineSDK/SESDKForCN.h>)
-    #import <SolarEngineSDK/SESDKForCN.h>
-#endif
+
 
 typedef void (*SEBridgeCallback)(int errorCode, const char * data);
 typedef void (*SEBridgeInitCallback)(int errorCode);
@@ -26,6 +24,16 @@ NSString * const SEKeyUnityEventNameOrder                              = @"_appO
 NSString * const SEKeyUnityEventNameCustom                             = @"_custom_event";
 NSString * const SEKeyUnityKeyCustomProperties                         = @"_customProperties";
 NSString * const SEKeyUnityKeyCustomEventName                          = @"_customEventName";
+
+
+
+
+typedef NS_ENUM(NSUInteger, SEBridgePresetEventType) {
+    AppInstall,
+    AppStart,
+    AppEnd,
+    AppAll
+};
 
 @interface SEWrapperManager : NSObject
 @property (nonatomic,copy)NSString *sub_lib_version;
@@ -101,6 +109,8 @@ static id se_safeCallSDKMethod(id target, SEL selector, ...) {
     if (signature.methodReturnLength) {
         id returnValue;
         [invocation getReturnValue:&returnValue];
+        
+       
         return returnValue;
     }
     
@@ -390,13 +400,13 @@ void __iOSSolarEngineSDKSetPresetEvent(const char *presetEventName, const char *
     
     SEL selector = NSSelectorFromString(@"setPresetEvent:withProperties:");
     if ([_presetEventName isEqualToString:@"SEPresetEventTypeAppInstall"]) {
-        se_safeCallSDKMethod(sdk, selector, @"SEPresetEventTypeAppInstall", dict);
+        se_safeCallSDKMethod(sdk, selector,( int)AppInstall, dict);
     } else if ([_presetEventName isEqualToString:@"SEPresetEventTypeAppStart"]) {
-        se_safeCallSDKMethod(sdk, selector, @"SEPresetEventTypeAppStart", dict);
+        se_safeCallSDKMethod(sdk, selector,( int)AppStart, dict);
     } else if ([_presetEventName isEqualToString:@"SEPresetEventTypeAppEnd"]) {
-        se_safeCallSDKMethod(sdk, selector, @"SEPresetEventTypeAppEnd", dict);
+        se_safeCallSDKMethod(sdk, selector, ( int)AppEnd, dict);
     } else if ([_presetEventName isEqualToString:@"SEPresetEventTypeAppAll"]) {
-        se_safeCallSDKMethod(sdk, selector, @"SEPresetEventTypeAppAll", dict);
+        se_safeCallSDKMethod(sdk, selector,  (int)AppAll, dict);
     }
 }
 
@@ -1081,9 +1091,9 @@ void __iOSSolarEngineSDKUserDelete(int deleteType)
 {
     id sdk = getSolarEngineSDKInstance();
     if (!sdk) return;
-    
+
     SEL selector = NSSelectorFromString(@"userDelete:");
-    se_safeCallSDKMethod(sdk, selector, @(deleteType));
+    se_safeCallSDKMethod(sdk, selector, deleteType);
 }
 
 void __iOSSolarEngineSDKEventStart(const char *eventName)
