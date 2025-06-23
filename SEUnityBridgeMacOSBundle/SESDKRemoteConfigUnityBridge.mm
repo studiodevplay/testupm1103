@@ -57,9 +57,16 @@ static id safeCallRemoteConfigMethod(id target, SEL selector, ...) {
     [invocation invoke];
     
     if (signature.methodReturnLength) {
-        id returnValue;
-        [invocation getReturnValue:&returnValue];
-        return returnValue;
+//        id returnValue;
+//        se_innerLog(@"111111111111111111");
+//        [invocation getReturnValue:&returnValue];
+//        se_innerLog(@"222222222222222222");
+//        return returnValue;
+        void *returnValue;
+                       [invocation getReturnValue:&returnValue];
+       return (__bridge id)returnValue;
+
+        
     }
     
     return nil;

@@ -107,11 +107,15 @@ static id se_safeCallSDKMethod(id target, SEL selector, ...) {
     [invocation invoke];
     
     if (signature.methodReturnLength) {
-        id returnValue;
-        [invocation getReturnValue:&returnValue];
+//        id returnValue;
+//        [invocation getReturnValue:&returnValue];
+//        
+//       
+//        return returnValue;
         
-       
-        return returnValue;
+        void *returnValue;
+        [invocation getReturnValue:&returnValue];
+       return (__bridge id)returnValue;
     }
     
     return nil;
