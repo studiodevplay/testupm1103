@@ -44,6 +44,9 @@ namespace SolarEngine
 		private bool _OpenHarmony=true;
 		[SerializeField]
 		private bool _Oaid=true;
+		[SerializeField]
+		private bool _ODMInfo=false;
+		
 		
 		
 		// [SerializeField]
@@ -186,6 +189,11 @@ namespace SolarEngine
 			get{return  Instance._Oaid;}
 			set{Instance._Oaid = value;}
 			
+		}
+		public static bool isUseODMInfo
+		{
+			get{return  Instance._ODMInfo;}
+			set{Instance._ODMInfo = value;}
 		}
 		public static bool isSpecifyVersio
 		{

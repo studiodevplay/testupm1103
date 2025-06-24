@@ -28,6 +28,8 @@ public class XmlModifier
     private const string ANDROID_REMOTECONFIG_PATH = REMOTECONFIG_PATH + "Android/" + DEPENDDANCIDES;
     private const string IOS_REMOTECONFIG_PATH = REMOTECONFIG_PATH + "iOS/" + DEPENDDANCIDES;
     private const string ANDROID_OAID_PATH = SolarEngineNet + "SolarEnginePlugins/Oaid/" + DEPENDDANCIDES;
+    private const string IOS_ODMINFO_PATH= "Assets/SolarEngineNet/SolarEnginePlugins/ODMInfo/" + DEPENDDANCIDES;
+    
 
     private const string IOS_POD_NODE_NAME = "iosPod";
     private const string IOS_POD_NAME_ATTR = "name";
@@ -60,6 +62,7 @@ public class XmlModifier
     private static string ANDROID_REMOTECONFIGE_CN_SPEC = "com.reyun.solar.engine.china:solar-remote-config:";
 
     private const string IOS_REMOTECONFIGE_SPEC = "SESDKRemoteConfig";
+    private const string IOS_ODMInfo_SPEC = "SESDKODMInfo";
     private const string ANDROID_OAID_SPEC = "com.reyun.solar.engine:se-plugin-oaid:";
     //  "
     private const string ANDROID_HMS_SPEC = "com.huawei.hms:ads-identifier:3.4.62.300";
@@ -122,12 +125,13 @@ public class XmlModifier
     /// 修改 iOS 相关节点的属性
     /// </summary>
     /// <param name="doc">要修改的 XDocument 对象</param>
-    private static bool ModifyIOSNodes(XDocument doc, string _name, StrongType type = StrongType.CN)
+    private static bool ModifyIOSNodes(XDocument doc, string _name, StrongType type = StrongType.CN,bool isChangeVersion=true)
     {
         bool nameSetSuccess = false;
         bool versionSetSuccess = false;
 
         var iosPod = doc.Descendants(IOS_POD_NODE_NAME).FirstOrDefault();
+      //  Debug.Log($"{SolorEngine}修改iOS节点"+iosPod);
         if (iosPod!= null)
         {
             var nameAttribute = iosPod.Attribute(IOS_POD_NAME_ATTR);
@@ -149,7 +153,7 @@ public class XmlModifier
             {
                 try
                 {
-                    if (type == StrongType.Default)
+                    if (type == StrongType.Default||!isChangeVersion)
                     {
                         versionAttribute.Value = IOS_POD_Default_VERSION;
                     }
@@ -194,6 +198,35 @@ public class XmlModifier
                 }
 
                 SaveXmlDocument(docRemote, IOS_REMOTECONFIG_PATH);
+            }
+        }
+
+        return isModified;
+    }
+    
+    private static bool iOSODMINFO(StrongType strongType = StrongType.Oversea)
+    {
+        bool isModified = false;
+
+        if (!SolarEngineSettings.isUseODMInfo)
+            return true;
+        else
+        {
+           
+            XDocument docRemote = LoadXmlDocument(IOS_ODMINFO_PATH);
+
+            if (docRemote!= null)
+            {
+                if (strongType == StrongType.Default)
+                {
+                    isModified = ModifyIOSNodes(docRemote, IOS_POD_Default);
+                }
+                else
+                {
+                    isModified = ModifyIOSNodes(docRemote, IOS_ODMInfo_SPEC,strongType, false);
+                }
+
+                SaveXmlDocument(docRemote, IOS_ODMINFO_PATH);
             }
         }
 
@@ -324,12 +357,14 @@ public class XmlModifier
         }
     }
 
+   
     public static void defaultXml()
     {
         sdkSetting(StrongType.Default);
         AndroidRC(StrongType.Default);
         AndroidOaid(StrongType.Default);
         iOSRC(StrongType.Default);
+        iOSODMINFO(StrongType.Default);
     }
 
    
@@ -380,7 +415,8 @@ public class XmlModifier
     {
         try
         {
-            if (sdkSetting(StrongType.Oversea) && AndroidRC(StrongType.Oversea) && AndroidOaid() && iOSRC())
+          
+            if (sdkSetting(StrongType.Oversea) && AndroidRC(StrongType.Oversea) && AndroidOaid() && iOSRC()&& iOSODMINFO())
             {
                 Debug.Log($"{SolorEngine}set SDK to Oversea");
                 return true;
