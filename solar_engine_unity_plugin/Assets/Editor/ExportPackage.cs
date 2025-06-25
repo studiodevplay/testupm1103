@@ -28,6 +28,7 @@ using System.Collections;
 using System.Diagnostics;
 using System.IO;
 using Packages.Rider.Editor;
+using SolarEngine.Build;
 using Debug = UnityEngine.Debug;
 
 
@@ -75,6 +76,11 @@ internal class ExportPackage {
 
 				return Path.Combine(outputDirectory.FullName, PackageName);
 			}
+		}
+		[MenuItem("SolarEngineInside/DefaultXml")]
+		public static void DefaultXml()
+		{
+		XmlModifier.defaultXml();
 		}
 
 		[MenuItem("SolarEngineInside/ExportPackage")]
@@ -134,6 +140,7 @@ internal class ExportPackage {
 			PluginsEdtior.showAndroid();
 			PluginsEdtior.showMiniGame();
 			PluginsEdtior.showOaid();
+			PluginsEdtior.showODMInfo();
 			
 			XmlModifier.defaultXml();
 			

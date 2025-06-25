@@ -7,12 +7,13 @@ import {
 
 import {
     AttributionListener, InitSDKListener, DeepLinkListener,
-    DeeplinkInfo, DelayDeepLinkListener
+    DeeplinkInfo, DeferredDeepLinkListener
 } from '@solarengine/core';
 
 import {RemoteConfig} from '@solarengine/core';
 import { abilityAccessCtrl } from '@kit.AbilityKit';
 import { BusinessError } from '@kit.BasicServicesKit';
+import { JSON } from '@kit.ArkTS';
 
 
 export const _log: boolean = true;
@@ -26,7 +27,7 @@ export class SEOpenHarmonyProxy {
             console.log(_SolarEngineLog, "getAttribution")
         }
         try {
-            return SolarEngineManager.getAttribution();
+            return JSON.stringify(SolarEngineManager.getAttribution()) ;
         } catch (error) {
             console.error(`${_SolarEngineLog} getAttribution failed:`, error);
             return "";
@@ -56,7 +57,7 @@ export class SEOpenHarmonyProxy {
             solarEngineConfig.enable2GReporting = configObj[SolarEngineConfigConstant.Enable2GReporting];
             solarEngineConfig.isDebugMode = configObj[SolarEngineConfigConstant.IsDebugModel];
             solarEngineConfig.logEnabled = configObj[SolarEngineConfigConstant.LogEnabled];
-            solarEngineConfig.enableDelayDeeplink = configObj[SolarEngineConfigConstant.EnableDelayDeeplink];
+            solarEngineConfig.enableDeferredDeeplink = configObj[SolarEngineConfigConstant.EnableDelayDeeplink];
             const  sdkSource=new  SeSdkSource();
             sdkSource.subLibVersion=configObj[SolarEngineConfigConstant.SubLibVersion];
             sdkSource.sdkType=configObj[SolarEngineConfigConstant.SdkType];
@@ -828,7 +829,7 @@ export class SEOpenHarmonyProxy {
             console.log(_SolarEngineLog, "setDelayDeepLinkListener");
         }
          try {
-             const delayDeepLinkListener: DelayDeepLinkListener = {
+             const delayDeepLinkListener: DeferredDeepLinkListener = {
                  onReceivedSuccess(attribution: Record<string, Object>) {
                      const jsonString = JSON.stringify(attribution);
                      if (_log) {
@@ -843,7 +844,7 @@ export class SEOpenHarmonyProxy {
                      callback?.(onReceivedFailed, "");
                  }
              };
-             SolarEngineManager.setDelayDeepLinkListener(delayDeepLinkListener)
+             SolarEngineManager.setDeferredDeepLinkListener(delayDeepLinkListener)
 
          } catch (error) {
             console.error(`${_SolarEngineLog} setDelayDeepLinkListener failed:`, error);
@@ -875,7 +876,7 @@ export class SEOpenHarmonyProxy {
     public static parseJsonStrict(jsonString: string): object {
         let jsonObject: Record<string, Object> = {};
         try {
-            const parsed: object = JSON.parse(jsonString);
+            const parsed = JSON.parse(jsonString);
             if (typeof parsed !== 'object' || parsed === null) {
                 if (_log) {
                     console.warn(_SolarEngineLog, "解析的JSON非对象，返回空对象");

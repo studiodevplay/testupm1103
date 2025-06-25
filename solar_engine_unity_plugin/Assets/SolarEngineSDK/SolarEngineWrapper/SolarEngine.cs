@@ -11,6 +11,9 @@ namespace SolarEngine
     public partial class Analytics : MonoBehaviour
     {
         private SEAttributionCallback attributionCallback_private = null;
+       
+       
+       
 
         public delegate void SEAttributionCallback(int code, Dictionary<string, object> attribution);
 
@@ -23,9 +26,9 @@ namespace SolarEngine
         public delegate void SESDKDeeplinkCallback(int code, Dictionary<string, object> data);
 
         // 延迟deeplink
-        private SESDKDelayDeeplinkCallback delayDeeplinkCallback_private = null;
+        private SESDKDeferredDeeplinkCallback delayDeeplinkCallback_private = null;
 
-        public delegate void SESDKDelayDeeplinkCallback(int code, Dictionary<string, object> data);
+        public delegate void SESDKDeferredDeeplinkCallback(int code, Dictionary<string, object> data);
 
         private SESDKATTCompletedCallback attCompletedCallback_private = null;
 
@@ -711,10 +714,19 @@ namespace SolarEngine
         /// 设置深度deeplink回调
         /// <param name="callback">delayDeeplink回调</param>
         /// </summary>
-        public static void delayDeeplinkCompletionHandler(SESDKDelayDeeplinkCallback callback)
+        [Obsolete("This method is obsolete. Please use deferredDeeplinkCompletionHandler.")]
+
+        public static void delayDeeplinkCompletionHandler(SESDKDeferredDeeplinkCallback callback)
         {
             DelayDeeplinkCompletionHandler(callback);
         }
+        
+        
+        public static void deferredDeeplinkCompletionHandler(SESDKDeferredDeeplinkCallback callback)
+        {
+            DelayDeeplinkCompletionHandler(callback);
+        }
+
 
         // <summary>
         /// 设置urlScheme

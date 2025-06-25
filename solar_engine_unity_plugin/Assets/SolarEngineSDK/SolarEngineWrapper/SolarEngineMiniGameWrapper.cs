@@ -394,7 +394,7 @@ namespace SolarEngine
               Debug.Log($"{SolorEngine}MiniGame not support");
         }
 
-        private static void DelayDeeplinkCompletionHandler(SESDKDelayDeeplinkCallback callback)
+        private static void DelayDeeplinkCompletionHandler(SESDKDeferredDeeplinkCallback callback)
         {
               Debug.Log($"{SolorEngine}MiniGame not support");
         }

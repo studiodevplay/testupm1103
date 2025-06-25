@@ -114,3 +114,7 @@ solar_engine_unity_plugin/Assets/WX-WASM-SDK-V2
 solar_engine_unity_plugin_tuanjie
 tet
 solar_engine_unity_plugin/TextToolDatas
+*.meta
+solar_engine_unity_plugin/Assets/Resources/SERuntimeSettings.asset
+solar_engine_unity_plugin/Assets/Resources/SolarEngineSettings.asset
+solar_engine_unity_plugin/Assets/SolarEngine/MainLand/se_mainland.txt

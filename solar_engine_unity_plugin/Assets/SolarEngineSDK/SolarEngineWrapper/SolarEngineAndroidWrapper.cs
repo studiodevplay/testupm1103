@@ -320,7 +320,7 @@ namespace SolarEngine
         }
 
 
-        private static void DelayDeeplinkCompletionHandler(SESDKDelayDeeplinkCallback callback)
+        private static void DelayDeeplinkCompletionHandler(SESDKDeferredDeeplinkCallback callback)
         {
             Analytics.Instance.delayDeeplinkCallback_private = callback;
 

@@ -26,6 +26,8 @@ namespace SolarEngine
         private SerializedProperty useRemoteConfig;
 // 序列化属性，用于表示是否使用 OAID 的设置
         private SerializedProperty useOaid;
+        // 序列化属性，用于表示是否使用 ODMInfo 的设置
+        private SerializedProperty useODMInfo;   
 // 序列化属性，用于表示是否使用深度链接的设置
         private SerializedProperty useDeepLink;
 // 序列化属性，用于表示是否使用指定版本的设置
@@ -110,6 +112,7 @@ namespace SolarEngine
             // 获取是否使用远程配置、OAID、深度链接、指定版本等相关的序列化属性
             useRemoteConfig = serializedObject.FindProperty("_RemoteConfig");
             useOaid = serializedObject.FindProperty("_Oaid");
+            useODMInfo = serializedObject.FindProperty("_ODMInfo");
             useDeepLink = serializedObject.FindProperty("_DeepLink");
             useSpecifyVersion = serializedObject.FindProperty("_SpecifyVersion");
 
@@ -137,7 +140,7 @@ namespace SolarEngine
      
         private void ChinaOrOversea(  GUIStyle darkerCyanTextFieldStyles)
         {
-            EditorGUILayout.HelpBox(ConstString.storageAreaMessage, MessageType.Info);
+           
             
             EditorGUI.indentLevel += 1;
             EditorGUILayout.PropertyField(chinaProperty,new GUIContent(ConstString.chinaMainland));
@@ -147,6 +150,7 @@ namespace SolarEngine
             {
                 EditorGUILayout.HelpBox(ConstString.storageWarning, MessageType.Warning);
             }
+            EditorGUILayout.HelpBox(ConstString.storageAreaMessage, MessageType.Info);
            
             if (serializedObject.ApplyModifiedProperties())
             {
@@ -222,7 +226,6 @@ namespace SolarEngine
             if (_useRemoteConfig)
             {  
                
-                EditorGUILayout.HelpBox(ConstString.remoteConfigMsg, MessageType.Info);
                 
                 EditorGUI.indentLevel += 1;
                 // EditorGUILayout.PropertyField(disAllRemoteConfig);
@@ -233,6 +236,7 @@ namespace SolarEngine
                 EditorGUILayout.PropertyField(openHarmonyRemoteConfig);
                 #endif
                 EditorGUI.indentLevel -= 1;
+                EditorGUILayout.HelpBox(ConstString.remoteConfigMsg, MessageType.Info);
                 
             }
             
@@ -250,6 +254,8 @@ namespace SolarEngine
         }
         private void UseOaid()
         {
+            EditorGUILayout.PropertyField(useOaid,new GUIContent(ConstString.oaid));
+
             if (chinaProperty.boolValue)
             {
                 EditorGUILayout.HelpBox(ConstString.storageEnableOaidCN, MessageType.Info);
@@ -272,8 +278,19 @@ namespace SolarEngine
                  //   EditorGUILayout.HelpBox(ConstString.storageDisableOaid, MessageType.Info);
                 }
             }
-            EditorGUILayout.PropertyField(useOaid,new GUIContent(ConstString.oaid));
           
+        }
+
+        private void UseODMInfo()
+        {
+            if (overseaProperty.boolValue)
+            {
+              
+                EditorGUILayout.PropertyField(useODMInfo,new GUIContent(ConstString.ODMInfo));
+                EditorGUILayout.HelpBox(ConstString.odmInfoEnable, MessageType.Info);
+
+            }
+            
         }
 
       
@@ -323,7 +340,7 @@ namespace SolarEngine
             {
                 // EditorGUILayout.PropertyField(useSpecifyVersion);
 
-                EditorGUILayout.HelpBox(ConstString.confirmVersion, MessageType.Warning);
+               
                 EditorGUI.indentLevel++;
                 EditorGUILayout.PropertyField(iOSVersion, new GUIContent("iOS Version"));
                 EditorGUILayout.PropertyField(AndroidVersion);
@@ -331,14 +348,19 @@ namespace SolarEngine
                 EditorGUILayout.PropertyField(OpenHarmonyVersion);
 #endif
                 EditorGUI.indentLevel--;
-            
+
                 if (!iOSVersion.stringValue.Equals(SolarEngineSettings.iOSVersion))
                     SolarEngineSettings.iOSVersion = iOSVersion.stringValue;
                 if (!AndroidVersion.stringValue.Equals(SolarEngineSettings.AndroidVersion))
                     SolarEngineSettings.AndroidVersion = AndroidVersion.stringValue;
+
                 if (!OpenHarmonyVersion.stringValue.Equals(SolarEngineSettings.OpenHarmonyVersion))
                     SolarEngineSettings.OpenHarmonyVersion = OpenHarmonyVersion.stringValue;
              
+
+                
+                EditorGUILayout.HelpBox(ConstString.confirmVersion, MessageType.Warning);
+
             }
             // else
             //     {
@@ -378,6 +400,7 @@ namespace SolarEngine
             removeSDK();
             RemoteConfig();
             UseOaid();
+            UseODMInfo();
 
             UseDeepLink( darkerCyanTextFieldStyles);
             
@@ -450,7 +473,18 @@ namespace SolarEngine
             }
           
         }
-   
+
+        private bool ODMInfoValue()
+        {
+            if (useODMInfo.boolValue)
+            {
+                return  PluginsEdtior.showODMInfo();
+            }
+            else
+            {
+                return  PluginsEdtior.disableODMInfo();
+            }
+        }
 
         bool iOSRemoteConfigValue()
         {

@@ -26,6 +26,7 @@ namespace SolarEngine
             }
 
             setMainLand();
+            SolarEngineSettingsExporter.ExportRuntimeSettings();
             string storage = SolarEngineSettings.isCN ? ConstString.chinaMainland : ConstString.nonChinaMainland;
             bool  result = true;
             if (isShowFail)
@@ -147,7 +148,11 @@ namespace SolarEngine
             bool android = false;
             bool miniGame = false;
             bool oaid=false;
+
             bool openHarmony=false;
+
+            bool odminfo = false;
+
             if (!SolarEngineSettings.isUseiOS)
                 ios=  PluginsEdtior.disableiOS();
             else
@@ -177,10 +182,22 @@ namespace SolarEngine
             {
                 openHarmony = PluginsEdtior.showOpenHarmony();
             }
-                
+
             
+
+            if(!SolarEngineSettings.isUseODMInfo||SolarEngineSettings.isCN)
+                odminfo = PluginsEdtior.disableODMInfo();
+            else if(SolarEngineSettings.isOversea&&SolarEngineSettings.isUseODMInfo)
+            {
+                odminfo = PluginsEdtior.showODMInfo();
+            }
+            else
+            {
+                odminfo = PluginsEdtior.disableODMInfo();
+            }
             
-            return ios && android && miniGame && oaid&&openHarmony;
+            return ios && android && miniGame && oaid&&  odminfo&&openHarmony;
+
         }
         
         
