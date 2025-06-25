@@ -46,7 +46,9 @@ namespace SolarEngine
           
             seDict.Add("attAuthorizationWaitingInterval", config.attAuthorizationWaitingInterval);
             seDict.Add("caid", config.caid);
-            seDict.Add("delayDeeplinkEnable", config.delayDeeplinkEnable);
+            
+            seDict.Add("delayDeeplinkEnable", config.deferredDeeplinkenable);
+            #if UNITY_IOS || UNITY_IPHONE
             if (SolarRuntimeSettings.Instance!= null)
             {
                 seDict.Add("odmInfoEnable", SolarRuntimeSettings.Instance.isUseODMInfo);
@@ -55,7 +57,7 @@ namespace SolarEngine
             {
                 seDict.Add("odmInfoEnable", false);
             }
-          
+          #endif
             seDict.Add("isCoppaEnabled", config.isCoppaEnabled);
             seDict.Add("isKidsAppEnabled", config.isKidsAppEnabled);
             
@@ -739,7 +741,17 @@ namespace SolarEngine
         public bool isEnable2GReporting { get; set; }
 
         // 是否开启延迟deeplink。默认为false，可选字段
-        public bool delayDeeplinkEnable { get; set; }
+        [Obsolete("delayDeeplinkEnable is obsolete. Please enableDeferredDeeplink.")]
+
+        public bool delayDeeplinkEnable {
+            get => _deferredDeeplinkEnabled;
+            set => _deferredDeeplinkEnabled = value;
+        }
+
+        public bool deferredDeeplinkenable  {
+            get => _deferredDeeplinkEnabled;
+            set => _deferredDeeplinkEnabled = value;
+        }
 
         // iOS ATT 授权等待时间，默认不等待，可选字段；只有iOS调用有效。
         public int attAuthorizationWaitingInterval { get; set; }
@@ -755,7 +767,8 @@ namespace SolarEngine
 
         // 设置初始化完成回调, 可选
         public Analytics.SESDKInitCompletedCallback initCompletedCallback { get; set; }
-        
+        private bool _deferredDeeplinkEnabled;
+
       
     }
     

@@ -231,7 +231,7 @@ namespace SolarEngine
         }
 
 
-        private static void DelayDeeplinkCompletionHandler(SESDKDelayDeeplinkCallback callback)
+        private static void DelayDeeplinkCompletionHandler(SESDKDeferredDeeplinkCallback callback)
         {
               Debug.Log($"{SolorEngine}Unity Editor: DelayDeeplinkCompletionHandler not found");
         }

@@ -296,7 +296,7 @@ namespace SolarEngine
             openHarmonyJSClass.CallStatic("setDeepLinkListener", deeplinkCalllback);
         }
 
-        private static void DelayDeeplinkCompletionHandler(SESDKDelayDeeplinkCallback callback)
+        private static void DelayDeeplinkCompletionHandler(SESDKDeferredDeeplinkCallback callback)
         {
             Analytics.Instance.delayDeeplinkCallback_private = callback;
             OpenHarmonyJSCallback delaydeeplinkCalllback = new OpenHarmonyJSCallback(onDelayDeepLinkCallback);

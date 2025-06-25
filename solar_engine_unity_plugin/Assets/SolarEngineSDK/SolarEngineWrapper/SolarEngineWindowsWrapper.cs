@@ -323,7 +323,7 @@ namespace SolarEngine
             }
 
 
-            private static void DelayDeeplinkCompletionHandler(SESDKDelayDeeplinkCallback callback)
+            private static void DelayDeeplinkCompletionHandler(SESDKDeferredDeeplinkCallback callback)
             {
                 Debug.Log($"{SolorEnginWin}: DelayDeeplinkCompletionHandler not found");
             }
