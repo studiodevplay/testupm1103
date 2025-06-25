@@ -37,7 +37,7 @@ namespace SolarEngine
              seDict.Add("sdk_type", "unity");
           
 #endif
-          
+            seDict.Add("fbAppID", config.fbAppID);
             seDict.Add("attAuthorizationWaitingInterval", config.attAuthorizationWaitingInterval);
             seDict.Add("caid", config.caid);
             seDict.Add("delayDeeplinkEnable", config.delayDeeplinkEnable);
@@ -948,6 +948,10 @@ namespace SolarEngine
 
         // iOS ATT 授权等待时间，默认不等待，可选字段；只有iOS调用有效。
         public int attAuthorizationWaitingInterval { get; set; }
+        
+        
+        // 如果海外开发者需要用到meta归因，此处设置meta appid，只有Android调用有效，iOS没有此字段，无需设置此字段
+        public string fbAppID { get; set; }
 
         // iOS caid；只有iOS调用有效。（仅国内版设置有效）
         public string caid { get; set; }
