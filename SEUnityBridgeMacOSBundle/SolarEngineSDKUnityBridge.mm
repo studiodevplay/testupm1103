@@ -48,6 +48,7 @@ typedef NS_ENUM(NSUInteger, SEBridgePresetEventType) {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         instance = [[self alloc] init];
+        
     });
     return instance;
 }
@@ -65,6 +66,8 @@ typedef NS_ENUM(NSUInteger, SEBridgePresetEventType) {
 
 // Helper function to get SDK instance
 static id getSolarEngineSDKInstance() {
+    
+
     Class sdkClass = NSClassFromString(@"SolarEngineSDK");
     if (!sdkClass) {
         se_innerLog(@"SolarEngineSDK class not found");
@@ -96,10 +99,63 @@ static id se_safeCallSDKMethod(id target, SEL selector, ...) {
     
     va_list args;
     va_start(args, selector);
-    
+   
     for (int i = 2; i < signature.numberOfArguments; i++) {
-        id arg = va_arg(args, id);
-        [invocation setArgument:&arg atIndex:i];
+        const char *type = [signature getArgumentTypeAtIndex:i];
+       // se_innerLog(@"Arg[%lu] Type: %s", (unsigned long)i, type);
+        
+        // Handle different argument types
+        if (strcmp(type, @encode(id)) == 0) {
+            id arg = va_arg(args, id);
+            [invocation setArgument:&arg atIndex:i];
+        } else if (strcmp(type, @encode(int)) == 0) {
+            int arg = va_arg(args, int);
+            [invocation setArgument:&arg atIndex:i];
+        } else if (strcmp(type, @encode(long)) == 0) {
+            long arg = va_arg(args, long);
+            [invocation setArgument:&arg atIndex:i];
+        } else if (strcmp(type, @encode(long long)) == 0) {
+            long long arg = va_arg(args, long long);
+            [invocation setArgument:&arg atIndex:i];
+        } else if (strcmp(type, @encode(unsigned int)) == 0) {
+            unsigned int arg = va_arg(args, unsigned int);
+            [invocation setArgument:&arg atIndex:i];
+        } else if (strcmp(type, @encode(unsigned long)) == 0) {
+            unsigned long arg = va_arg(args, unsigned long);
+            [invocation setArgument:&arg atIndex:i];
+        } else if (strcmp(type, @encode(unsigned long long)) == 0) {
+            unsigned long long arg = va_arg(args, unsigned long long);
+            [invocation setArgument:&arg atIndex:i];
+        } else if (strcmp(type, @encode(float)) == 0) {
+            float arg = va_arg(args, double); // va_arg promotes float to double
+            [invocation setArgument:&arg atIndex:i];
+        } else if (strcmp(type, @encode(double)) == 0) {
+            double arg = va_arg(args, double);
+            [invocation setArgument:&arg atIndex:i];
+        } else if (strcmp(type, @encode(BOOL)) == 0) {
+            BOOL arg = va_arg(args, int); // BOOL is typically int
+            [invocation setArgument:&arg atIndex:i];
+        } else if (strcmp(type, @encode(bool)) == 0) {
+            bool arg = va_arg(args, int); // bool is promoted to int
+            [invocation setArgument:&arg atIndex:i];
+        } else if (strcmp(type, @encode(char)) == 0) {
+            char arg = va_arg(args, int); // char is promoted to int
+            [invocation setArgument:&arg atIndex:i];
+        } else if (strcmp(type, @encode(unsigned char)) == 0) {
+            unsigned char arg = va_arg(args, int); // unsigned char is promoted to int
+            [invocation setArgument:&arg atIndex:i];
+        } else if (strcmp(type, @encode(short)) == 0) {
+            short arg = va_arg(args, int); // short is promoted to int
+            [invocation setArgument:&arg atIndex:i];
+        } else if (strcmp(type, @encode(unsigned short)) == 0) {
+            unsigned short arg = va_arg(args, int); // unsigned short is promoted to int
+            [invocation setArgument:&arg atIndex:i];
+        } else {
+            // For unknown types, try to read as id (fallback)
+            se_innerLog(@"Unknown argument type: %s, trying as id", type);
+            id arg = va_arg(args, id);
+            [invocation setArgument:&arg atIndex:i];
+        }
     }
     
     va_end(args);
@@ -109,8 +165,8 @@ static id se_safeCallSDKMethod(id target, SEL selector, ...) {
     if (signature.methodReturnLength) {
 //        id returnValue;
 //        [invocation getReturnValue:&returnValue];
-//        
-//       
+//
+//
 //        return returnValue;
         
         void *returnValue;
@@ -404,14 +460,14 @@ void __iOSSolarEngineSDKSetPresetEvent(const char *presetEventName, const char *
     
     SEL selector = NSSelectorFromString(@"setPresetEvent:withProperties:");
     if ([_presetEventName isEqualToString:@"SEPresetEventTypeAppInstall"]) {
-        se_safeCallSDKMethod(sdk, selector,( int)AppInstall, dict);
+        se_safeCallSDKMethod(sdk, selector,(int)AppInstall, dict);
     } else if ([_presetEventName isEqualToString:@"SEPresetEventTypeAppStart"]) {
-        se_safeCallSDKMethod(sdk, selector,( int)AppStart, dict);
+        se_safeCallSDKMethod(sdk, selector,(int)AppStart, dict);
     } else if ([_presetEventName isEqualToString:@"SEPresetEventTypeAppEnd"]) {
-        se_safeCallSDKMethod(sdk, selector, ( int)AppEnd, dict);
+       se_safeCallSDKMethod(sdk, selector,(int)AppEnd, dict);
     } else if ([_presetEventName isEqualToString:@"SEPresetEventTypeAppAll"]) {
-        se_safeCallSDKMethod(sdk, selector,  (int)AppAll, dict);
-    }
+        se_safeCallSDKMethod(sdk, selector, (int)AppAll, dict);
+   }
 }
 
 void __iOSSolarEngineSDKPreInit(const char * appKey, const char * SEUserId) {
@@ -452,15 +508,7 @@ void __iOSSolarEngineSDKInit(const char * appKey, const char * SEUserId, const c
     [config setValue:@([seDict[@"isDebugModel"] boolValue]) forKey:@"isDebugModel"];
     [config setValue:@([seDict[@"logEnabled"] boolValue]) forKey:@"logEnabled"];
     
-#if TARGET_OS_IOS
-    [config setValue:@([seDict[@"isCoppaEnabled"] boolValue]) forKey:@"setCoppaEnabled"];
-    [config setValue:@([seDict[@"isKidsAppEnabled"] boolValue]) forKey:@"setKidsAppEnabled"];
-    [config setValue:@([seDict[@"isEnable2GReporting"] boolValue]) forKey:@"enable2GReporting"];
-    [config setValue:@([seDict[@"isGDPRArea"] boolValue]) forKey:@"isGDPRArea"];
-    [config setValue:@([seDict[@"attAuthorizationWaitingInterval"] intValue]) forKey:@"attAuthorizationWaitingInterval"];
-    
-    [config setValue:@([seDict[@"delayDeeplinkEnable"] boolValue]) forKey:@"enableDelayDeeplink"];
-#endif
+
     
     NSString *sub_lib_version = seDict[@"sub_lib_version"];
     if ([sub_lib_version isKindOfClass:[NSString class]]) {
@@ -541,79 +589,29 @@ void __iOSSESDKSetInitCompletedCallback(SEBridgeInitCallback callback) {
 }
 
 void __iOSSESDKRequestTrackingAuthorizationWithCompletionHandler(SEBridgeInitCallback callback) {
-#if TARGET_OS_IOS
-    id sdk = getSolarEngineSDKInstance();
-    if (!sdk) return;
-    
-    SEL selector = NSSelectorFromString(@"requestTrackingAuthorizationWithCompletionHandler:");
-    se_safeCallSDKMethod(sdk, selector, ^(NSUInteger status) {
-        if (callback) {
-            callback((int)status);
-        }
-    });
-#elif TARGET_OS_MAC
+
     se_innerLog(@"%@ is not supported on MacOS", @"__iOSSESDKRequestTrackingAuthorizationWithCompletionHandler");
-#endif
+
 }
 
 void __iOSSESDKSetAttributionDataCallback(SEBridgeCallback callback) {
-#if TARGET_OS_IOS
-    id sdk = getSolarEngineSDKInstance();
-    if (!sdk) return;
-    
-    SEL selector = NSSelectorFromString(@"setAttributionCallback:");
-    se_safeCallSDKMethod(sdk, selector, ^(int code, NSDictionary * _Nullable attribution) {
-        NSString *attData = nil;
-        if ([attribution isKindOfClass:NSDictionary.class]) {
-            NSData *data = [NSJSONSerialization dataWithJSONObject:attribution options:0 error:nil];
-            if (data) {
-                attData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-            }
-        }
-        
-        if (callback) {
-            callback(code, convertNSStringToCString(attData));
-        }
-    });
-#elif TARGET_OS_MAC
+
     se_innerLog(@"%@ is not supported on MacOS", @"setAttributionCallback");
-#endif
+
 }
 
 char* __iOSSolarEngineSDKGetAttribution(void)
 {
-#if TARGET_OS_IOS
-    id sdk = getSolarEngineSDKInstance();
-    if (!sdk) return nil;
-    
-    SEL selector = NSSelectorFromString(@"getAttributionData");
-    NSDictionary *attribution = se_safeCallSDKMethod(sdk, selector);
-    
-    if (![attribution isKindOfClass:NSDictionary.class]) {
-        return nil;
-    }
-    NSData *data = [NSJSONSerialization dataWithJSONObject:attribution options:0 error:nil];
-    if (data == nil) {
-        return nil;
-    }
-    NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    return convertNSStringToCString(dataString);
-#elif TARGET_OS_MAC
+
     se_innerLog(@"%@ is not supported on MacOS", @"getAttributionData");
-    return "";
-#endif
+    return nil;
+
 }
 
 void __iOSSolarEngineSDKSetGDPRArea(bool isGDPRArea) {
-#if TARGET_OS_IOS
-    id sdk = getSolarEngineSDKInstance();
-    if (!sdk) return;
-    
-    SEL selector = NSSelectorFromString(@"setGDPRArea:");
-    se_safeCallSDKMethod(sdk, selector, @(isGDPRArea));
-#elif TARGET_OS_MAC
+
     se_innerLog(@"%@ is not supported on MacOS", @"setGDPRArea");
-#endif
+
 }
 
 void __iOSSolarEngineSDKTrack(const char *eventName, const char *attributes)
@@ -680,29 +678,9 @@ void __iOSSolarEngineSDKTrackCustomEventWithPreAttributes(const char *eventName,
 
 void __iOSSolarEngineSDKTrackAppReEngagement(const char *attributes)
 {
-    se_innerLog(@"__iOSSolarEngineSDKTrackAppReEngagement called");
-#if TARGET_OS_IOS
-    NSDictionary *customProperties = nil;
-    if (attributes != NULL) {
-        NSString *jsonString = [NSString stringWithUTF8String:attributes];
-        NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-        NSError *error = nil;
-        customProperties = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-        if (error) {
-            NSString *msg = [NSString stringWithFormat:@"%@ is not an invalid JSON data", jsonString];
-            se_innerLog(@"trackAppReEngagement, error :%@",msg);
-            customProperties = nil;
-        }
-    }
-    
-    id sdk = getSolarEngineSDKInstance();
-    if (!sdk) return;
-    
-    SEL selector = NSSelectorFromString(@"trackAppReEngagement:");
-    se_safeCallSDKMethod(sdk, selector, customProperties);
-#elif TARGET_OS_MAC
+
     se_innerLog(@"%@ is not supported on MacOS", @"trackAppReEngagement");
-#endif
+
 }
 
 void __iOSSolarEngineSDKTrackFirstEventWithAttributes(const char *firstEventAttribute) {
@@ -1097,7 +1075,8 @@ void __iOSSolarEngineSDKUserDelete(int deleteType)
     if (!sdk) return;
 
     SEL selector = NSSelectorFromString(@"userDelete:");
-    se_safeCallSDKMethod(sdk, selector, deleteType);
+    // se_safeCallSDKMethod(sdk, selector, @(deleteType));
+        se_safeCallSDKMethod(sdk, selector, deleteType);
 }
 
 void __iOSSolarEngineSDKEventStart(const char *eventName)
@@ -1175,141 +1154,37 @@ void __iOSSolarEngineSDKEventFinishNew(const char *eventName, const char *proper
 }
 
 void __iOSSESDKupdatePostbackConversionValue(int conversionValue, SEBridgeCallback callback) {
-#if TARGET_OS_IOS
-    id sdk = getSolarEngineSDKInstance();
-    if (!sdk) return;
-    
-    SEL selector = NSSelectorFromString(@"updatePostbackConversionValue:completionHandler:");
-    se_safeCallSDKMethod(sdk, selector, @(conversionValue), ^(NSError * _Nonnull error) {
-        if (callback) {
-            callback((int)error.code, convertNSStringToCString(error.description));
-        }
-    });
-#elif TARGET_OS_MAC
+
     se_innerLog(@"%@ is not supported on MacOS", @"updatePostbackConversionValue");
-#endif
+
 }
 
 void __iOSSESDKupdateConversionValueCoarseValue(int fineValue, const char *  coarseValue, SEBridgeCallback callback) {
-#if TARGET_OS_IOS
-    NSString *_coarseValue = nil;
-    if (coarseValue != NULL) {
-        _coarseValue = [NSString stringWithUTF8String:coarseValue];
-    }
 
-    id sdk = getSolarEngineSDKInstance();
-    if (!sdk) return;
-    
-    SEL selector = NSSelectorFromString(@"updatePostbackConversionValue:coarseValue:completionHandler:");
-    se_safeCallSDKMethod(sdk, selector, @(fineValue), _coarseValue, ^(NSError * _Nonnull error) {
-        if (callback) {
-            callback((int)error.code, convertNSStringToCString(error.description));
-        }
-    });
-#elif TARGET_OS_MAC
     se_innerLog(@"%@ is not supported on MacOS", @"updatePostbackConversionValue");
-#endif
+
 }
 
 void __iOSSESDKupdateConversionValueCoarseValueLockWindow(int fineValue, const char *  coarseValue, bool lockWindow, SEBridgeCallback callback) {
-#if TARGET_OS_IOS
-    NSString *_coarseValue = nil;
-    if (coarseValue != NULL) {
-        _coarseValue = [NSString stringWithUTF8String:coarseValue];
-    }
-    
-    id sdk = getSolarEngineSDKInstance();
-    if (!sdk) return;
-    
-    SEL selector = NSSelectorFromString(@"updatePostbackConversionValue:coarseValue:lockWindow:completionHandler:");
-    se_safeCallSDKMethod(sdk, selector, @(fineValue), _coarseValue, @(lockWindow), ^(NSError * _Nonnull error) {
-        if (callback) {
-            callback((int)error.code, convertNSStringToCString(error.description));
-        }
-    });
-#elif TARGET_OS_MAC
+
     se_innerLog(@"%@ is not supported on MacOS", @"updatePostbackConversionValue");
-#endif
+
 }
 
 void __iOSSolarEngineSDKDeeplinkParseCallback(SEBridgeCallback callback) {
-#if TARGET_OS_IOS
-    id sdk = getSolarEngineSDKInstance();
-    if (!sdk) return;
-    
-    SEL selector = NSSelectorFromString(@"setDeepLinkCallback:");
-    se_safeCallSDKMethod(sdk, selector, ^(int code, id deeplinkInfo) {
-        NSString *dData = nil;
-        if (code == 0){
-            NSMutableDictionary *deeplinkData = [NSMutableDictionary dictionary];
-            
-            if ([deeplinkInfo valueForKey:@"from"]) {
-                [deeplinkData setObject:[deeplinkInfo valueForKey:@"from"] forKey:@"from"];
-            }
-            if ([deeplinkInfo valueForKey:@"sedpLink"]) {
-                [deeplinkData setObject:[deeplinkInfo valueForKey:@"sedpLink"] forKey:@"sedpLink"];
-            }
-            if ([deeplinkInfo valueForKey:@"turlId"]) {
-                [deeplinkData setObject:[deeplinkInfo valueForKey:@"turlId"] forKey:@"turlId"];
-            }
-            if ([deeplinkInfo valueForKey:@"customParams"]) {
-                [deeplinkData setObject:[deeplinkInfo valueForKey:@"customParams"] forKey:@"customParams"];
-            }
-            
-            NSData *data = [NSJSONSerialization dataWithJSONObject:deeplinkData options:0 error:nil];
-            if (data) {
-                dData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-            }
-        }
-        
-        if (callback) {
-            callback(code, convertNSStringToCString(dData));
-        }
-    });
-#elif TARGET_OS_MAC
+
     se_innerLog(@"%@ is not supported on MacOS", @"setDeepLinkCallback");
-#endif
+
 }
 
 void __iOSSolarEngineSDKDelayDeeplinkParseCallback(SEBridgeCallback callback) {
-#if TARGET_OS_IOS
-    id sdk = getSolarEngineSDKInstance();
-    if (!sdk) return;
-    
-    SEL selector = NSSelectorFromString(@"setDelayDeeplinkDeepLinkCallbackWithSuccess:fail:");
-    se_safeCallSDKMethod(sdk, selector, ^(id deeplinkInfo) {
-        NSString *dData = nil;
-        NSMutableDictionary *deeplinkData = [NSMutableDictionary dictionary];
-        
-        if ([deeplinkInfo valueForKey:@"sedpUrlscheme"]) {
-            [deeplinkData setObject:[deeplinkInfo valueForKey:@"sedpUrlscheme"] forKey:@"sedpUrlscheme"];
-        }
-        if ([deeplinkInfo valueForKey:@"sedpLink"]) {
-            [deeplinkData setObject:[deeplinkInfo valueForKey:@"sedpLink"] forKey:@"sedpLink"];
-        }
-        if ([deeplinkInfo valueForKey:@"turlId"]) {
-            [deeplinkData setObject:[deeplinkInfo valueForKey:@"turlId"] forKey:@"turlId"];
-        }
-        
-        NSData *data = [NSJSONSerialization dataWithJSONObject:deeplinkData options:0 error:nil];
-        if (data) {
-            dData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        }
-        
-        if (callback) {
-            callback(0, convertNSStringToCString(dData));
-        }
-        
-    }, ^(NSError * _Nullable error) {
-        if (callback) {
-            callback((int)error.code, convertNSStringToCString(nil));
-        }
-    });
-#elif TARGET_OS_MAC
+
+   
     se_innerLog(@"%@ is not supported on MacOS", @"setDelayDeeplinkDeepLinkCallbackWithSuccess");
-#endif
-}
-
-
 
 }
+
+
+
+}
+

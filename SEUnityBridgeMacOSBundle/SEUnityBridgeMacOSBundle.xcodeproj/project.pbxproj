@@ -8,12 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		D25A5E302E03F5FD00D4C4FF /* SolarEngineSDKUnityBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = D25A5E2F2E03F5FD00D4C4FF /* SolarEngineSDKUnityBridge.mm */; };
+		D2FAE4A12E12328000A9E249 /* SESDKRemoteConfigUnityBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = D2FAE49D2E12328000A9E249 /* SESDKRemoteConfigUnityBridge.mm */; };
+		D2FAE4A22E12328000A9E249 /* SEBridgeCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = D2FAE49B2E12328000A9E249 /* SEBridgeCommon.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		D25A5E272E03F59800D4C4FF /* SEUnityBridgeMacOSBundle.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SEUnityBridgeMacOSBundle.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		D25A5E2E2E03F5FD00D4C4FF /* SolarEngineSDKUnityBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SolarEngineSDKUnityBridge.h; sourceTree = "<group>"; };
 		D25A5E2F2E03F5FD00D4C4FF /* SolarEngineSDKUnityBridge.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = SolarEngineSDKUnityBridge.mm; sourceTree = "<group>"; };
+		D2FAE49A2E12328000A9E249 /* SEBridgeCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SEBridgeCommon.h; sourceTree = "<group>"; };
+		D2FAE49B2E12328000A9E249 /* SEBridgeCommon.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SEBridgeCommon.m; sourceTree = "<group>"; };
+		D2FAE49C2E12328000A9E249 /* SESDKRemoteConfigUnityBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SESDKRemoteConfigUnityBridge.h; sourceTree = "<group>"; };
+		D2FAE49D2E12328000A9E249 /* SESDKRemoteConfigUnityBridge.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = SESDKRemoteConfigUnityBridge.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -30,6 +36,10 @@
 		D25A5E1E2E03F59800D4C4FF = {
 			isa = PBXGroup;
 			children = (
+				D2FAE49A2E12328000A9E249 /* SEBridgeCommon.h */,
+				D2FAE49B2E12328000A9E249 /* SEBridgeCommon.m */,
+				D2FAE49C2E12328000A9E249 /* SESDKRemoteConfigUnityBridge.h */,
+				D2FAE49D2E12328000A9E249 /* SESDKRemoteConfigUnityBridge.mm */,
 				D25A5E2E2E03F5FD00D4C4FF /* SolarEngineSDKUnityBridge.h */,
 				D25A5E2F2E03F5FD00D4C4FF /* SolarEngineSDKUnityBridge.mm */,
 				D25A5E282E03F59800D4C4FF /* Products */,
@@ -114,6 +124,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D2FAE4A12E12328000A9E249 /* SESDKRemoteConfigUnityBridge.mm in Sources */,
+				D2FAE4A22E12328000A9E249 /* SEBridgeCommon.m in Sources */,
 				D25A5E302E03F5FD00D4C4FF /* SolarEngineSDKUnityBridge.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
