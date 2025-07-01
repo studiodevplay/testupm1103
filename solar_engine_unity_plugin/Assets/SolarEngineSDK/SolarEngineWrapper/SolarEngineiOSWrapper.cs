@@ -427,147 +427,367 @@ namespace SolarEngine
         }
 
 
-        #region DllImport
+           #region DllImport
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSolarEngineSDKPreInit(string appKey);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSolarEngineSDKInit(string appKey, string SEUserId, string seConfig,
             string rcConfig);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSolarEngineSDKSetGDPRArea(bool isGDPRArea);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSolarEngineSDKTrack(string eventName, string attributes);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSolarEngineSDKTrackCustomEventWithPreAttributes(string eventName,
             string customAttributes, string preAttributes);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSolarEngineSDKTrackIAPWithAttributes(string attributes);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSolarEngineSDKTrackAdImpressionWithAttributes(string attributes);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSolarEngineSDKTrackAdClickWithAttributes(string attributes);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSolarEngineSDKTrackRegisterWithAttributes(string attributes);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSolarEngineSDKTrackLoginWithAttributes(string attributes);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSolarEngineSDKTrackOrderWithAttributes(string attributes);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSolarEngineSDKTrackAppAttrWithAttributes(string attributes);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSolarEngineSDKTrackFirstEventWithAttributes(string attributes);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSolarEngineSDKSetVisitorID(string visitorID);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern string __iOSSolarEngineSDKVisitorID();
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSolarEngineSDKLoginWithAccountID(string accountID);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern string __iOSSolarEngineSDKAccountID();
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern string __iOSSolarEngineSDKGetDistinctId();
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern string __iOSSolarEngineSDKGetPresetProperties();
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSolarEngineSDKLogout();
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
-        private static extern void __iOSSolarEngineSDKTrackAppReEngagement(string properties);
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
 
-        [DllImport("__Internal")]
         private static extern void __iOSSolarEngineSDKReportEventImmediately();
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSolarEngineSDKSetSuperProperties(string properties);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSolarEngineSDKUnsetSuperProperty(string property);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+        
+        private static extern void __iOSSolarEngineSDKTrackAppReEngagement(string properties);
+#if UNITY_IOS||UNITY_IPHONE
+        [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSolarEngineSDKClearSuperProperties();
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSolarEngineSDKUserInit(string properties);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSolarEngineSDKUserUpdate(string properties);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSolarEngineSDKUserAdd(string properties);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSolarEngineSDKUserUnset(string keys);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSolarEngineSDKUserAppend(string properties);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSolarEngineSDKUserDelete(int deleteType);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSolarEngineSDKEventStart(string eventName);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSolarEngineSDKEventFinish(string eventJSONStr);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSolarEngineSDKEventFinishNew(string eventName, string properties);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSolarEngineSDKSetPresetEvent(string eventName, string eventDataJSONString);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern string __iOSSolarEngineSDKGetAttribution();
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSESDKSetAttributionDataCallback(SEiOSStringCallback callback);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSESDKSetInitCompletedCallback(SESDKInitCompletedCallback callback);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSESDKRequestTrackingAuthorizationWithCompletionHandler(
             SESDKATTCompletedCallback callback);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSESDKupdatePostbackConversionValue(int conversionValue,
             SEiOSStringCallback callback);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSESDKupdateConversionValueCoarseValue(int fineValue, String coarseValue,
             SEiOSStringCallback callback);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSESDKupdateConversionValueCoarseValueLockWindow(int fineValue,
             String coarseValue, bool lockWindow, SEiOSStringCallback callback);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSolarEngineSDKDeeplinkParseCallback(SEiOSStringCallback callback);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
+
         private static extern void __iOSSolarEngineSDKDelayDeeplinkParseCallback(SEiOSStringCallback callback);
-      
+
         #endregion
+
 
         
         #region notsupport

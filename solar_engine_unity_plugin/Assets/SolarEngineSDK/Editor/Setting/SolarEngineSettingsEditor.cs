@@ -39,6 +39,9 @@ namespace SolarEngine
         private SerializedProperty androidRemoteConfig;
 // 序列化属性，用于表示小游戏平台远程配置相关的设置
         private SerializedProperty miniGameRemoteConfig; 
+        
+        // 序列化属性，用于表示 macOS 平台远程配置相关的设置
+        private SerializedProperty macosRemoteConfig;
 // 序列化属性，用于表示鸿蒙平台远程配置相关的设置
 
         private SerializedProperty openHarmonyRemoteConfig;
@@ -54,7 +57,8 @@ namespace SolarEngine
         
         
         SerializedProperty OpenHarmonyVersion;
-        
+
+        private SerializedProperty MacOSVersion;
         private SerializedProperty useiOSSDK;
         private SerializedProperty removeAndroidSDK;
 
@@ -89,6 +93,7 @@ namespace SolarEngine
             iOSVersion = serializedObject.FindProperty("_iOSVersion");
             AndroidVersion = serializedObject.FindProperty("_AndroidVersion");
             OpenHarmonyVersion = serializedObject.FindProperty("_OpenHarmonyVersion");
+            MacOSVersion = serializedObject.FindProperty("_MacOSVersion");
 
             // 获取iOS平台URL相关的几个序列化属性，如标识符、方案、通用链接域名等
             iOSUrlIdentifier = serializedObject.FindProperty("_iOSUrlIdentifier");
@@ -121,6 +126,7 @@ namespace SolarEngine
             androidRemoteConfig = serializedObject.FindProperty("_Android");
             miniGameRemoteConfig = serializedObject.FindProperty("_MiniGame");
             openHarmonyRemoteConfig = serializedObject.FindProperty("_OpenHarmony");
+            macosRemoteConfig = serializedObject.FindProperty("_MacOS");
 
             // 记录初始时中国存储区域选择的布尔值
             oldChinaValue = chinaProperty.boolValue;
@@ -235,6 +241,7 @@ namespace SolarEngine
                 #if TUANJIE_2022_3_OR_NEWER
                 EditorGUILayout.PropertyField(openHarmonyRemoteConfig);
                 #endif
+                EditorGUILayout.PropertyField(macosRemoteConfig);
                 EditorGUI.indentLevel -= 1;
                 EditorGUILayout.HelpBox(ConstString.remoteConfigMsg, MessageType.Info);
                 
@@ -347,6 +354,7 @@ namespace SolarEngine
 #if TUANJIE_2022_3_OR_NEWER
                 EditorGUILayout.PropertyField(OpenHarmonyVersion);
 #endif
+                EditorGUILayout.PropertyField(MacOSVersion);
                 EditorGUI.indentLevel--;
 
                 if (!iOSVersion.stringValue.Equals(SolarEngineSettings.iOSVersion))
@@ -356,6 +364,8 @@ namespace SolarEngine
 
                 if (!OpenHarmonyVersion.stringValue.Equals(SolarEngineSettings.OpenHarmonyVersion))
                     SolarEngineSettings.OpenHarmonyVersion = OpenHarmonyVersion.stringValue;
+                if (!MacOSVersion.stringValue.Equals(SolarEngineSettings.MacOSVersion))
+                    SolarEngineSettings.MacOSVersion = MacOSVersion.stringValue;
              
 
                 
