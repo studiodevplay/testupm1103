@@ -196,6 +196,10 @@ namespace SolarEngine
                 odminfo = PluginsEdtior.disableODMInfo();
             }
             
+            if(SolarEngineSettings.isUseMacOS)
+                PluginsEdtior.showMacOS();
+                else
+            PluginsEdtior.disableMacOS();
             return ios && android && miniGame && oaid&&  odminfo&&openHarmony;
 
         }

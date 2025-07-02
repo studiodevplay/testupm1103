@@ -326,34 +326,32 @@ namespace SolarEngine
 				ExecuteShellCommand("pod", "install", pathToBuiltProject);
 			}
 		}
-		private static void ExecuteShellCommand(string command, string args, string workingDir)
+		private static void ExecuteShellCommand(string command, string args, string workingDirectory)
 		{
-			ProcessStartInfo proc = new ProcessStartInfo
-			{
-				FileName = "/bin/bash",
-				Arguments = $"-c \"export LANG=en_US.UTF-8; cd '{workingDir}'; {command} {args}\"",
-				RedirectStandardOutput = true,
-				RedirectStandardError = true,
-				UseShellExecute = false,
-				CreateNoWindow = true
-			};
+			var process = new System.Diagnostics.Process();
 
-			using (Process process = new Process { StartInfo = proc })
-			{
-				process.Start();
-				string output = process.StandardOutput.ReadToEnd();
-				string error = process.StandardError.ReadToEnd();
-				process.WaitForExit();
+			process.StartInfo.FileName = "/bin/bash";
+			process.StartInfo.Arguments =
+				$"-c \"export LANG=en_US.UTF-8; export PATH=/opt/homebrew/bin:/usr/local/bin:$PATH; cd '{workingDirectory}'; {command} {args}\"";
 
-				Debug.Log($"Command output: {output}");
-				if (!string.IsNullOrEmpty(error))
-				{
-					Debug.LogWarning($"[SolarEngine]: Command error: {error}");
-				}
+			process.StartInfo.RedirectStandardOutput = true;
+			process.StartInfo.RedirectStandardError = true;
+			process.StartInfo.UseShellExecute = false;
+			process.StartInfo.CreateNoWindow = true;
+
+			process.Start();
+
+			string output = process.StandardOutput.ReadToEnd();
+			string error = process.StandardError.ReadToEnd();
+
+			process.WaitForExit();
+
+			Debug.Log($"[Shell] Output:\n{output}");
+			if (!string.IsNullOrEmpty(error))
+			{
+				Debug.LogError($"[Shell] Error:\n{error}");
 			}
 		}
-
-		
 		private static void InjectPodsIntoPodfile(string directory)
 		{
 			string podfilePath = Path.Combine(directory, "Podfile");

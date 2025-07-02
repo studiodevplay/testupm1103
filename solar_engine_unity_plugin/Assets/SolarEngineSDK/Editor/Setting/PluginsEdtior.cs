@@ -167,7 +167,18 @@ public class PluginsEdtior : MonoBehaviour
        ShowFile(RemoteConfigsPathiOSH)&&
        ShowPath(RemoteConfigsPathiOSXml);
    }
+
+   public static void disableMacOS()
+   {
+       DefineSymbolsEditor.add_DISABLE_REMOTECONFIG(BuildTargetGroup.Standalone,false);
+
+   }
    
+   public static void showMacOS ()
+   {
+       DefineSymbolsEditor.delete_DISABLE_REMOTECONFIG(BuildTargetGroup.Standalone,false);
+     
+   }
    
   // [MenuItem(DisableAndroid, false, 0)]
    public static bool disableAndroid ()
