@@ -26,6 +26,61 @@ NSString * const SEKeyUnityKeyCustomProperties                         = @"_cust
 NSString * const SEKeyUnityKeyCustomEventName                          = @"_customEventName";
 
 
+NSString * const SEIAPEventProductID                        = @"_product_id";
+NSString * const SEIAPEventProductName                      = @"_product_name";
+NSString * const SEIAPEventProductCount                     = @"_product_num";
+NSString * const SEIAPEventOrderID                          = @"_order_id";
+NSString * const SEIAPEventCurrency                         = @"_currency_type";
+NSString * const SEIAPEventPaystatus                        = @"_pay_status";
+NSString * const SEIAPEventPayType                          = @"_pay_type";
+NSString * const SEIAPEventProductPayAmount                 = @"_pay_amount";
+NSString * const SEIAPEventFailReason                       = @"_fail_reason";
+
+
+NSString * const SEIAPEventPayTypeAlipay                    = @"alipay";
+NSString * const SEIAPEventPayTypeWeixin                    = @"weixin";
+NSString * const SEIAPEventPayTypeApplePay                  = @"applepay";
+NSString * const SEIAPEventPayTypePaypal                    = @"paypal";
+
+
+NSString * const SEAdImpressionPropertyAdPlatform           = @"_ad_platform";
+NSString * const SEAdImpressionPropertyAppID                = @"_ad_appid";
+NSString * const SEAdImpressionPropertyPlacementID          = @"_ad_id";
+NSString * const SEAdImpressionPropertyAdType               = @"_ad_type";
+NSString * const SEAdImpressionPropertyEcpm                 = @"_ad_ecpm";
+NSString * const SEAdImpressionPropertyCurrency             = @"_currency_type";
+NSString * const SEAdImpressionPropertyMediationPlatform    = @"_mediation_platform";
+NSString * const SEAdImpressionPropertyRendered             = @"_is_rendered";
+
+
+NSString * const SEAppAttrPropertyIsAttr                    = @"_is_attr";
+NSString * const SEAppAttrPropertyAdNetwork                 = @"_adnetwork";
+NSString * const SEAppAttrPropertySubChannel                = @"_sub_channel";
+NSString * const SEAppAttrPropertyAdAccountID               = @"_adaccount_id";
+NSString * const SEAppAttrPropertyAdAccountName             = @"_adaccount_name";
+NSString * const SEAppAttrPropertyAdCampaignID              = @"_adcampaign_id";
+NSString * const SEAppAttrPropertyAdCampaignName            = @"_adcampaign_name";
+NSString * const SEAppAttrPropertyAdOfferID                 = @"_adoffer_id";
+NSString * const SEAppAttrPropertyAdOfferName               = @"_adoffer_name";
+NSString * const SEAppAttrPropertyAdCreativeID              = @"_adcreative_id";
+NSString * const SEAppAttrPropertyAdCreativeName            = @"_adcreative_name";
+NSString * const SEAppAttrPropertyAttributionPlatform       = @"_attribution_platform";
+
+
+NSString * const SERegisterPropertyType                     = @"_reg_type";
+NSString * const SERegisterPropertyStatus                   = @"_status";
+
+
+NSString * const SELoginPropertyType                        = @"_login_type";
+NSString * const SELoginPropertyStatus                      = @"_status";
+
+
+NSString * const SEOrderPropertyID                          = @"_order_id";
+NSString * const SEOrderPropertyPayAmount                   = @"_pay_amount";
+NSString * const SEOrderPropertyCurrencyType                = @"_currency_type";
+NSString * const SEOrderPropertyPayType                     = @"_pay_type";
+NSString * const SEOrderPropertyStatus                      = @"_status";
+
 
 
 typedef NS_ENUM(NSUInteger, SEBridgePresetEventType) {
@@ -204,18 +259,18 @@ static id buildIAPAttribute(const char *IAPAttribute) {
     
     id attribute = [[attributeClass alloc] init];
     
-    // Set properties using KVC
-    [attribute setValue:seTrimValue([dict objectForKey:@"productID"]) forKey:@"productID"];
-    [attribute setValue:seTrimValue([dict objectForKey:@"productName"]) forKey:@"productName"];
-    [attribute setValue:seTrimValue([dict objectForKey:@"orderId"]) forKey:@"orderId"];
-    [attribute setValue:seTrimValue([dict objectForKey:@"currencyType"]) forKey:@"currencyType"];
-    [attribute setValue:seTrimValue([dict objectForKey:@"payType"]) forKey:@"payType"];
-    [attribute setValue:seTrimValue([dict objectForKey:@"failReason"]) forKey:@"failReason"];
-    [attribute setValue:@([seTrimValue([dict objectForKey:@"payStatus"]) integerValue]) forKey:@"payStatus"];
-    [attribute setValue:@([seTrimValue([dict objectForKey:@"productCount"]) integerValue]) forKey:@"productCount"];
-    [attribute setValue:@([seTrimValue([dict objectForKey:@"payAmount"]) doubleValue]) forKey:@"payAmount"];
-    [attribute setValue:seTrimValue([dict objectForKey:@"_customProperties"]) forKey:@"customProperties"];
-
+   
+    
+    [attribute setValue:seTrimValue([dict objectForKey:SEIAPEventProductID]) forKey:@"productID"];
+    [attribute setValue:seTrimValue([dict objectForKey:SEIAPEventProductName]) forKey:@"productName"];
+    [attribute setValue:seTrimValue([dict objectForKey:SEIAPEventOrderID]) forKey:@"orderId"];
+    [attribute setValue:seTrimValue([dict objectForKey:SEIAPEventCurrency]) forKey:@"currencyType"];
+    [attribute setValue:seTrimValue([dict objectForKey:SEIAPEventPayType]) forKey:@"payType"];
+    [attribute setValue:seTrimValue([dict objectForKey:SEIAPEventFailReason]) forKey:@"failReason"];
+    [attribute setValue:@([seTrimValue([dict objectForKey:SEIAPEventPaystatus]) integerValue]) forKey:@"payStatus"];
+    [attribute setValue:@([seTrimValue([dict objectForKey:SEIAPEventProductCount]) integerValue]) forKey:@"productCount"];
+    [attribute setValue:@([seTrimValue([dict objectForKey:SEIAPEventProductPayAmount]) doubleValue]) forKey:@"payAmount"];
+    [attribute setValue:seTrimValue([dict objectForKey:@"_customProperties"]) forKey:@"customProperties"]; // 这个 key 没有常量定义，保留原样
     return attribute;
 }
 
@@ -239,14 +294,14 @@ static id buildAdImpressionAttribute(const char *adImpressionAttribute) {
     
     id attribute = [[attributeClass alloc] init];
     
-    [attribute setValue:@([seTrimValue([dict objectForKey:@"adType"]) integerValue]) forKey:@"adType"];
-    [attribute setValue:seTrimValue([dict objectForKey:@"adNetworkPlatform"]) forKey:@"adNetworkPlatform"];
-    [attribute setValue:seTrimValue([dict objectForKey:@"adNetworkAppID"]) forKey:@"adNetworkAppID"];
-    [attribute setValue:seTrimValue([dict objectForKey:@"adNetworkPlacementID"]) forKey:@"adNetworkPlacementID"];
-    [attribute setValue:seTrimValue([dict objectForKey:@"currency"]) forKey:@"currency"];
-    [attribute setValue:seTrimValue([dict objectForKey:@"mediationPlatform"]) forKey:@"mediationPlatform"];
-    [attribute setValue:@([seTrimValue([dict objectForKey:@"ecpm"]) doubleValue]) forKey:@"ecpm"];
-    [attribute setValue:@([seTrimValue([dict objectForKey:@"rendered"]) boolValue]) forKey:@"rendered"];
+    [attribute setValue:@([seTrimValue([dict objectForKey:SEAdImpressionPropertyAdType]) integerValue]) forKey:@"adType"];
+    [attribute setValue:seTrimValue([dict objectForKey:SEAdImpressionPropertyAdPlatform]) forKey:@"adNetworkPlatform"];
+    [attribute setValue:seTrimValue([dict objectForKey:SEAdImpressionPropertyAppID]) forKey:@"adNetworkAppID"];
+    [attribute setValue:seTrimValue([dict objectForKey:SEAdImpressionPropertyPlacementID]) forKey:@"adNetworkPlacementID"];
+    [attribute setValue:seTrimValue([dict objectForKey:SEAdImpressionPropertyCurrency]) forKey:@"currency"];
+    [attribute setValue:seTrimValue([dict objectForKey:SEAdImpressionPropertyMediationPlatform]) forKey:@"mediationPlatform"];
+    [attribute setValue:@([seTrimValue([dict objectForKey:SEAdImpressionPropertyEcpm]) doubleValue]) forKey:@"ecpm"];
+    [attribute setValue:@([seTrimValue([dict objectForKey:SEAdImpressionPropertyRendered]) boolValue]) forKey:@"rendered"];
     [attribute setValue:seTrimValue([dict objectForKey:@"_customProperties"]) forKey:@"customProperties"];
     
     return attribute;
@@ -263,7 +318,7 @@ static id buildAdClickAttribute(const char *adClickAttribute) {
         se_innerLog(@"trackAdClickWithAttributes, error :%@", msg);
         return nil;
     }
-
+    
     Class attributeClass = NSClassFromString(@"SEAdClickEventAttribute");
     if (!attributeClass) {
         se_innerLog(@"SEAdClickEventAttribute class not found");
@@ -272,10 +327,10 @@ static id buildAdClickAttribute(const char *adClickAttribute) {
     
     id attribute = [[attributeClass alloc] init];
     
-    [attribute setValue:@([seTrimValue([dict objectForKey:@"adType"]) integerValue]) forKey:@"adType"];
-    [attribute setValue:seTrimValue([dict objectForKey:@"adNetworkPlatform"]) forKey:@"adNetworkPlatform"];
-    [attribute setValue:seTrimValue([dict objectForKey:@"adNetworkPlacementID"]) forKey:@"adNetworkPlacementID"];
-    [attribute setValue:seTrimValue([dict objectForKey:@"mediationPlatform"]) forKey:@"mediationPlatform"];
+    [attribute setValue:@([seTrimValue([dict objectForKey:SEAdImpressionPropertyAdType]) integerValue]) forKey:@"adType"];
+    [attribute setValue:seTrimValue([dict objectForKey:SEAdImpressionPropertyAdPlatform]) forKey:@"adNetworkPlatform"];
+    [attribute setValue:seTrimValue([dict objectForKey:SEAdImpressionPropertyPlacementID]) forKey:@"adNetworkPlacementID"];
+    [attribute setValue:seTrimValue([dict objectForKey:SEAdImpressionPropertyMediationPlatform]) forKey:@"mediationPlatform"];
     [attribute setValue:seTrimValue([dict objectForKey:@"_customProperties"]) forKey:@"customProperties"];
     
     return attribute;
@@ -300,8 +355,8 @@ static id buildRegisterAttribute(const char *registerAttribute) {
     }
     
     id attribute = [[attributeClass alloc] init];
-    [attribute setValue:seTrimValue([dict objectForKey:@"type"]) forKey:@"registerType"];
-    [attribute setValue:seTrimValue([dict objectForKey:@"status"]) forKey:@"registerStatus"];
+    [attribute setValue:seTrimValue([dict objectForKey:SERegisterPropertyType]) forKey:@"registerType"];
+    [attribute setValue:seTrimValue([dict objectForKey:SERegisterPropertyStatus]) forKey:@"registerStatus"];
     [attribute setValue:seTrimValue([dict objectForKey:@"_customProperties"]) forKey:@"customProperties"];
     
     return attribute;
@@ -326,8 +381,8 @@ static id buildLoginAttribute(const char *loginAttribute) {
     }
     
     id attribute = [[attributeClass alloc] init];
-    [attribute setValue:seTrimValue([dict objectForKey:@"type"]) forKey:@"loginType"];
-    [attribute setValue:seTrimValue([dict objectForKey:@"status"]) forKey:@"loginStatus"];
+    [attribute setValue:seTrimValue([dict objectForKey:SELoginPropertyType]) forKey:@"loginType"];
+    [attribute setValue:seTrimValue([dict objectForKey:SELoginPropertyStatus]) forKey:@"loginStatus"];
     [attribute setValue:seTrimValue([dict objectForKey:@"_customProperties"]) forKey:@"customProperties"];
 
     return attribute;
@@ -352,11 +407,11 @@ static id buildOrderAttribute(const char *orderAttribute) {
     }
     
     id attribute = [[attributeClass alloc] init];
-    [attribute setValue:seTrimValue([dict objectForKey:@"orderID"]) forKey:@"orderID"];
-    [attribute setValue:@([seTrimValue([dict objectForKey:@"payAmount"]) doubleValue]) forKey:@"payAmount"];
-    [attribute setValue:seTrimValue([dict objectForKey:@"currencyType"]) forKey:@"currencyType"];
-    [attribute setValue:seTrimValue([dict objectForKey:@"payType"]) forKey:@"payType"];
-    [attribute setValue:seTrimValue([dict objectForKey:@"status"]) forKey:@"status"];
+    [attribute setValue:seTrimValue([dict objectForKey:SEOrderPropertyID]) forKey:@"orderID"];
+    [attribute setValue:@([seTrimValue([dict objectForKey:SEOrderPropertyPayAmount]) doubleValue]) forKey:@"payAmount"];
+    [attribute setValue:seTrimValue([dict objectForKey:SEOrderPropertyCurrencyType]) forKey:@"currencyType"];
+    [attribute setValue:seTrimValue([dict objectForKey:SEOrderPropertyPayType]) forKey:@"payType"];
+    [attribute setValue:seTrimValue([dict objectForKey:SEOrderPropertyStatus]) forKey:@"status"];
     [attribute setValue:seTrimValue([dict objectForKey:@"_customProperties"]) forKey:@"customProperties"];
 
     return attribute;
@@ -381,17 +436,18 @@ static id buildAppAttrAttribute(const char *AppAttrAttribute) {
     }
     
     id appAttr = [[attributeClass alloc] init];
-    [appAttr setValue:seTrimValue([dict objectForKey:@"adNetwork"]) forKey:@"adNetwork"];
-    [appAttr setValue:seTrimValue([dict objectForKey:@"subChannel"]) forKey:@"subChannel"];
-    [appAttr setValue:seTrimValue([dict objectForKey:@"adAccountID"]) forKey:@"adAccountID"];
-    [appAttr setValue:seTrimValue([dict objectForKey:@"adAccountName"]) forKey:@"adAccountName"];
-    [appAttr setValue:seTrimValue([dict objectForKey:@"adCampaignID"]) forKey:@"adCampaignID"];
-    [appAttr setValue:seTrimValue([dict objectForKey:@"adCampaignName"]) forKey:@"adCampaignName"];
-    [appAttr setValue:seTrimValue([dict objectForKey:@"adOfferID"]) forKey:@"adOfferID"];
-    [appAttr setValue:seTrimValue([dict objectForKey:@"adOfferName"]) forKey:@"adOfferName"];
-    [appAttr setValue:seTrimValue([dict objectForKey:@"adCreativeID"]) forKey:@"adCreativeID"];
-    [appAttr setValue:seTrimValue([dict objectForKey:@"adCreativeName"]) forKey:@"adCreativeName"];
-    [appAttr setValue:seTrimValue([dict objectForKey:@"attributionPlatform"]) forKey:@"attributionPlatform"];
+    [appAttr setValue:seTrimValue([dict objectForKey:SEAppAttrPropertyAdNetwork]) forKey:@"adNetwork"];
+    [appAttr setValue:seTrimValue([dict objectForKey:SEAppAttrPropertySubChannel]) forKey:@"subChannel"];
+    [appAttr setValue:seTrimValue([dict objectForKey:SEAppAttrPropertyAdAccountID]) forKey:@"adAccountID"];
+    [appAttr setValue:seTrimValue([dict objectForKey:SEAppAttrPropertyAdAccountName]) forKey:@"adAccountName"];
+    [appAttr setValue:seTrimValue([dict objectForKey:SEAppAttrPropertyAdCampaignID]) forKey:@"adCampaignID"];
+    [appAttr setValue:seTrimValue([dict objectForKey:SEAppAttrPropertyAdCampaignName]) forKey:@"adCampaignName"];
+    [appAttr setValue:seTrimValue([dict objectForKey:SEAppAttrPropertyAdOfferID]) forKey:@"adOfferID"];
+    [appAttr setValue:seTrimValue([dict objectForKey:SEAppAttrPropertyAdOfferName]) forKey:@"adOfferName"];
+    [appAttr setValue:seTrimValue([dict objectForKey:SEAppAttrPropertyAdCreativeID]) forKey:@"adCreativeID"];
+    [appAttr setValue:seTrimValue([dict objectForKey:SEAppAttrPropertyAdCreativeName]) forKey:@"adCreativeName"];
+    [appAttr setValue:seTrimValue([dict objectForKey:SEAppAttrPropertyAttributionPlatform]) forKey:@"attributionPlatform"];
+
     [appAttr setValue:seTrimValue([dict objectForKey:@"_customProperties"]) forKey:@"customProperties"];
     
     return appAttr;
