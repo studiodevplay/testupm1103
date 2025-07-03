@@ -346,10 +346,10 @@ namespace SolarEngine
 
 			process.WaitForExit();
 
-			Debug.Log($"[Shell] Output:\n{output}");
+			Debug.Log($"[SolarEngine]:[Shell] Output:\n{output}");
 			if (!string.IsNullOrEmpty(error))
 			{
-				Debug.LogError($"[Shell] Error:\n{error}");
+				Debug.LogWarning($"[SolarEngine]:[Shell] Error:\n{error}");
 			}
 		}
 		private static void InjectPodsIntoPodfile(string directory)

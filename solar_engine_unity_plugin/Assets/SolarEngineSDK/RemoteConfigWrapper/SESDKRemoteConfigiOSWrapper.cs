@@ -129,25 +129,53 @@ namespace SolarEngine
 
 
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+    [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
         private static extern void __iOSSESDKSetDefaultConfig(string config);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
         private static extern void __iOSSESDKSetRemoteConfigEventProperties(string properties);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
         private static extern void __iOSSESDKSetRemoteConfigUserProperties(string properties);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
         private static extern string __iOSSESDKFastFetchRemoteConfig(string key);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
         private static extern string __iOSSESDKFastFetchAllRemoteConfig();
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
         private static extern void __iOSSESDKAsyncFetchRemoteConfig(string key, FetchRemoteConfigCallback callBack);
 
+#if UNITY_IOS||UNITY_IPHONE
         [DllImport("__Internal")]
+#elif UNITY_STANDALONE_OSX
+        [DllImport("SEUnityBridgeMacOSBundle")]
+#endif
         private static extern void __iOSSESDKAsyncFetchAllRemoteConfig(FetchRemoteConfigCallback callBack);
 
 
