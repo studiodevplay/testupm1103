@@ -741,7 +741,7 @@ namespace SolarEngine
         public bool isEnable2GReporting { get; set; }
 
         // 是否开启延迟deeplink。默认为false，可选字段
-        [Obsolete("delayDeeplinkEnable is obsolete. Please enableDeferredDeeplink.")]
+        [Obsolete("delayDeeplinkEnable is obsolete. Please use deferredDeeplinkenable.")]
 
         public bool delayDeeplinkEnable {
             get => _deferredDeeplinkEnabled;
