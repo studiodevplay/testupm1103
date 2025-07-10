@@ -43,7 +43,11 @@ namespace SolarEngine
              seDict.Add("sdk_type", "unity");
           
 #endif
-            seDict.Add("fbAppID", config.fbAppID);
+            if (!string.IsNullOrEmpty(config.fbAppID))
+            {
+                seDict.Add("fbAppID", config.fbAppID);
+            }
+          
             seDict.Add("attAuthorizationWaitingInterval", config.attAuthorizationWaitingInterval);
             seDict.Add("caid", config.caid);
             
