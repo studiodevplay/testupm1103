@@ -23,12 +23,16 @@ namespace SolarEngine
 
 		private static SolarEngineSettings instance;
 
+		#region 数据存储区域
+
 		[SerializeField]
 		private bool _China;
 		[SerializeField]
 		private bool _Oversea;
-		
-		
+
+		#endregion
+
+		#region RC
 		//默认开启
 		[SerializeField]
 		private bool _RemoteConfig=true;
@@ -44,23 +48,44 @@ namespace SolarEngine
 		private bool _OpenHarmony=true;
 		[SerializeField]
 		private bool _MacOS=true;
+		
+
+		#endregion
+
+		#region _Oaid、_ODMInfo、_RemoveAndroidSDK
+
 		[SerializeField]
 		private bool _Oaid=true;
 		[SerializeField]
 		private bool _ODMInfo=false;
 		
-		
-		
-		// [SerializeField]
-		// private bool _UseiOSSDK;
+	
 		[SerializeField]
 		private bool _RemoveAndroidSDK;
+
+		#endregion
 		
-		
+
+		#region deeplink
+
+		[SerializeField]
+		private bool _DeepLink;
+		[SerializeField]
+		private string _iOSUrlIdentifier;
+		[SerializeField]
+		private string[] _iOSUrlSchemes = new string[0];
+		[SerializeField]
+		private string[] _iOSUniversalLinksDomains = new string[0];
 		
 		
 		[SerializeField]
-		private bool _DeepLink;
+		private string[] _AndroidUrlSchemes = new string[0];
+		#endregion
+		
+		
+
+		#region Version;
+
 		[SerializeField]
 		private bool _SpecifyVersion;
 		
@@ -74,16 +99,10 @@ namespace SolarEngine
 		private string _OpenHarmonyVersion;
 		[SerializeField]
 		private string _MacOSVersion;
-		[SerializeField]
-		private string _iOSUrlIdentifier;
-		[SerializeField]
-		private string[] _iOSUrlSchemes = new string[0];
-		[SerializeField]
-		private string[] _iOSUniversalLinksDomains = new string[0];
+
+		#endregion
 		
-		
-		[SerializeField]
-		private string[] _AndroidUrlSchemes = new string[0];
+	
 
 		private static SolarEngineSettings Instance
 	    {
@@ -231,6 +250,15 @@ namespace SolarEngine
 			get{ return Instance._MacOSVersion;}
 			set{ Instance._MacOSVersion = value;}
 		}
+
+
+		#region 私有化部署
+
+		
+
+		#endregion
+		
+		
 		#if UNITY_EDITOR
 		[MenuItem("SolarEngineSDK/SDK Edit Settings", false, 0)]
 	    public static void EditSettings ()

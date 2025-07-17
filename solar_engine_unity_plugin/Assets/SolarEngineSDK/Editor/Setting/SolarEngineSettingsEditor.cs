@@ -108,9 +108,6 @@ namespace SolarEngine
         private bool oldDisMiniGameValue;
         private bool oldDisOaidValue;
 
-   
-
-
         private object SolarEngineSetting;
 
         void OnEnable()
