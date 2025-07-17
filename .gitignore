@@ -118,3 +118,5 @@ solar_engine_unity_plugin/TextToolDatas
 solar_engine_unity_plugin/Assets/Resources/SERuntimeSettings.asset
 solar_engine_unity_plugin/Assets/Resources/SolarEngineSettings.asset
 solar_engine_unity_plugin/Assets/SolarEngine/MainLand/se_mainland.txt
+SEUnityBridgeMacOSBundle/build
+SEUnityBridgeMacOSBundle/SEUnityBridgeMacOSBundle.xcodeproj

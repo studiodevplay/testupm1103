@@ -1,12 +1,11 @@
-
 using System;
- using UnityEngine;
+using UnityEngine;
 using UnityEditor;
 using System.Collections;
- using System.IO;
- using System.Linq;
- using System.Reflection;
- using System.Xml.Linq;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Xml.Linq;
 using SolarEngine.Build;
 using SolarEngineSDK.Editor;
 
@@ -15,72 +14,102 @@ namespace SolarEngine
     [CustomEditor(typeof(SolarEngineSettings))]
     public class SolarEngineSettingsEditor : Editor
     {
-      
+        #region 数据存储区域
 
-// 序列化属性，用于表示是否选择中国存储区域的设置，方便在编辑器中操作和获取对应的值
+        //序列化属性，用于表示是否选择中国存储区域的设置，方便在编辑器中操作和获取对应的值
         private SerializedProperty chinaProperty;
-// 序列化属性，用于表示是否选择海外存储区域的设置，方便在编辑器中操作和获取对应的值
+
+        // 序列化属性，用于表示是否选择海外存储区域的设置，方便在编辑器中操作和获取对应的值
         private SerializedProperty overseaProperty;
 
-// 序列化属性，用于表示是否使用远程配置的设置
-        private SerializedProperty useRemoteConfig;
-// 序列化属性，用于表示是否使用 OAID 的设置
-        private SerializedProperty useOaid;
-        // 序列化属性，用于表示是否使用 ODMInfo 的设置
-        private SerializedProperty useODMInfo;   
-// 序列化属性，用于表示是否使用深度链接的设置
-        private SerializedProperty useDeepLink;
-// 序列化属性，用于表示是否使用指定版本的设置
-        private SerializedProperty useSpecifyVersion;
+        #endregion
 
-// 序列化属性，用于表示 iOS 平台远程配置相关的设置
+        #region 远程配置的设置
+
+        // 序列化属性，用于表示是否使用远程配置的设置
+        private SerializedProperty useRemoteConfig;
+
+        // 序列化属性，用于表示 iOS 平台远程配置相关的设置
         private SerializedProperty iOSRemoteConfig;
-// 序列化属性，用于表示 Android 平台远程配置相关的设置
+
+        // 序列化属性，用于表示 Android 平台远程配置相关的设置
         private SerializedProperty androidRemoteConfig;
-// 序列化属性，用于表示小游戏平台远程配置相关的设置
-        private SerializedProperty miniGameRemoteConfig; 
-        
+
+        // 序列化属性，用于表示小游戏平台远程配置相关的设置
+        private SerializedProperty miniGameRemoteConfig;
+
         // 序列化属性，用于表示 macOS 平台远程配置相关的设置
         private SerializedProperty macosRemoteConfig;
-// 序列化属性，用于表示鸿蒙平台远程配置相关的设置
+        // 序列化属性，用于表示鸿蒙平台远程配置相关的设置
 
         private SerializedProperty openHarmonyRemoteConfig;
 
-// 序列化属性，用于表示 iOS 平台 URL 标识符相关的设置
-        SerializedProperty iOSUrlIdentifier;
-// 序列化属性，用于表示 iOS 平台 URL 方案相关的设置
-        SerializedProperty iOSUrlSchemes;
-// 序列化属性，用于表示 iOS 平台通用链接域名相关的设置
-        SerializedProperty iOSUniversalLinksDomains;
-// 序列化属性，用于表示 iOS 平台版本相关的设置
-        SerializedProperty iOSVersion;
-        
-        
-        SerializedProperty OpenHarmonyVersion;
+        #endregion
 
-        private SerializedProperty MacOSVersion;
+
+        #region OAID、ODMInfo、removeAndroidSDK
+
+        // 序列化属性，用于表示是否使用 OAID 的设置
+        private SerializedProperty useOaid;
+
+        // 序列化属性，用于表示是否使用 ODMInfo 的设置
+        private SerializedProperty useODMInfo;
         private SerializedProperty useiOSSDK;
         private SerializedProperty removeAndroidSDK;
 
-// 序列化属性，用于表示 Android 平台 URL 方案相关的设置
+        #endregion
+
+        #region 深度链接
+
+        // 序列化属性，用于表示是否使用深度链接的设置
+        private SerializedProperty useDeepLink;
+
+        // 序列化属性，用于表示 iOS 平台 URL 标识符相关的设置
+        SerializedProperty iOSUrlIdentifier;
+
+        // 序列化属性，用于表示 iOS 平台 URL 方案相关的设置
+        SerializedProperty iOSUrlSchemes;
+
+        // 序列化属性，用于表示 iOS 平台通用链接域名相关的设置
+        SerializedProperty iOSUniversalLinksDomains;
+
+        // 序列化属性，用于表示 Android 平台 URL 方案相关的设置
         SerializedProperty AndroidUrlSchemes;
-// 序列化属性，用于表示 Android 平台版本相关的设置
+
+        #endregion
+
+        #region SDK版本设置
+
+        // 序列化属性，用于表示是否使用指定版本的设置
+        private SerializedProperty useSpecifyVersion;
+
+        // 序列化属性，用于表示 iOS 平台版本相关的设置
+        SerializedProperty iOSVersion;
+        SerializedProperty OpenHarmonyVersion;
+
+        private SerializedProperty MacOSVersion;
+
+        // 序列化属性，用于表示 Android 平台版本相关的设置
         SerializedProperty AndroidVersion;
 
-// 用于记录之前中国存储区域选择的布尔值，方便对比属性值变化
+        #endregion
+
+
+        // 用于记录之前中国存储区域选择的布尔值，方便对比属性值变化
         private bool oldChinaValue;
-// 用于记录之前海外存储区域选择的布尔值，方便对比属性值变化
+
+        // 用于记录之前海外存储区域选择的布尔值，方便对比属性值变化
         private bool oldOverseaValue;
-// 以下类似的多个布尔值用于记录对应属性之前的旧值，便于处理属性变更逻辑
+
+        // 以下类似的多个布尔值用于记录对应属性之前的旧值，便于处理属性变更逻辑
         private bool oldDisAllValue;
         private bool oldDisiOSValue;
         private bool oldDisAndroidValue;
         private bool oldDisMiniGameValue;
         private bool oldDisOaidValue;
 
-    
+   
 
-      
 
         private object SolarEngineSetting;
 
@@ -89,44 +118,68 @@ namespace SolarEngine
             // 获取当前正在编辑的SolarEngineSettings类型的目标对象实例
             SolarEngineSetting = target as SolarEngineSettings;
 
-            // 通过序列化对象查找并获取对应的属性，以下依次是获取iOS版本、Android版本相关的序列化属性
-            iOSVersion = serializedObject.FindProperty("_iOSVersion");
-            AndroidVersion = serializedObject.FindProperty("_AndroidVersion");
-            OpenHarmonyVersion = serializedObject.FindProperty("_OpenHarmonyVersion");
-            MacOSVersion = serializedObject.FindProperty("_MacOSVersion");
+            #region 获取表示中国、海外存储区域选择的序列化属性
 
-            // 获取iOS平台URL相关的几个序列化属性，如标识符、方案、通用链接域名等
+            chinaProperty = serializedObject.FindProperty("_China");
+            overseaProperty = serializedObject.FindProperty("_Oversea");
+
+            #endregion
+
+            #region 获取iOS平台URL相关的几个序列化属性，如标识符、方案、通用链接域名等
+
             iOSUrlIdentifier = serializedObject.FindProperty("_iOSUrlIdentifier");
             iOSUrlSchemes = serializedObject.FindProperty("_iOSUrlSchemes");
             iOSUniversalLinksDomains = serializedObject.FindProperty("_iOSUniversalLinksDomains");
 
-            // 获取Android平台URL方案相关的序列化属性
+            #endregion
+
+
+            #region 获取Android平台URL相关的几个序列化属性，如方案等
+
             AndroidUrlSchemes = serializedObject.FindProperty("_AndroidUrlSchemes");
 
-            // 获取表示中国、海外存储区域选择的序列化属性
-            chinaProperty = serializedObject.FindProperty("_China");
-            overseaProperty = serializedObject.FindProperty("_Oversea");
-            
-            //是否移除iOS or Android
+            #endregion
+
+            #region 是否移除iOS or Android
+
             useiOSSDK = serializedObject.FindProperty("_UseiOSSDK");
             removeAndroidSDK = serializedObject.FindProperty("_RemoveAndroidSDK");
-            
-            
-            
 
-            // 获取是否使用远程配置、OAID、深度链接、指定版本等相关的序列化属性
+            #endregion
+
+            #region 获取是否使用远程配置、OAID、深度链接、指定版本等相关的序列化属性
+
             useRemoteConfig = serializedObject.FindProperty("_RemoteConfig");
             useOaid = serializedObject.FindProperty("_Oaid");
             useODMInfo = serializedObject.FindProperty("_ODMInfo");
             useDeepLink = serializedObject.FindProperty("_DeepLink");
             useSpecifyVersion = serializedObject.FindProperty("_SpecifyVersion");
 
-            // 获取不同平台（iOS、Android、小游戏）远程配置相关的序列化属性
+            #endregion
+
+            #region 获取不同平台（iOS、Android、小游戏）远程配置相关的序列化属性
+
             iOSRemoteConfig = serializedObject.FindProperty("_iOS");
             androidRemoteConfig = serializedObject.FindProperty("_Android");
             miniGameRemoteConfig = serializedObject.FindProperty("_MiniGame");
             openHarmonyRemoteConfig = serializedObject.FindProperty("_OpenHarmony");
             macosRemoteConfig = serializedObject.FindProperty("_MacOS");
+
+            #endregion
+
+            #region 版本
+
+            iOSVersion = serializedObject.FindProperty("_iOSVersion");
+            AndroidVersion = serializedObject.FindProperty("_AndroidVersion");
+            OpenHarmonyVersion = serializedObject.FindProperty("_OpenHarmonyVersion");
+            MacOSVersion = serializedObject.FindProperty("_MacOSVersion");
+
+            #endregion
+
+
+            appkeyProp = serializedObject.FindProperty("_Appkey");
+            isDebugModelProp = serializedObject.FindProperty("_IsDebugModel");
+            logEnabledProp = serializedObject.FindProperty("_LogEnabled");
 
             // 记录初始时中国存储区域选择的布尔值
             oldChinaValue = chinaProperty.boolValue;
@@ -140,135 +193,129 @@ namespace SolarEngine
 
         public override void OnInspectorGUI()
         {
-          
             this._GUI();
         }
-     
-        private void ChinaOrOversea(  GUIStyle darkerCyanTextFieldStyles)
+
+        #region DrawStorageAreaOptions
+
+        private void DrawStorageAreaOptions(GUIStyle darkerCyanTextFieldStyles)
         {
-           
-            
             EditorGUI.indentLevel += 1;
-            EditorGUILayout.PropertyField(chinaProperty,new GUIContent(ConstString.chinaMainland));
-            EditorGUILayout.PropertyField(overseaProperty,new GUIContent(ConstString.nonChinaMainland));
+            EditorGUILayout.PropertyField(chinaProperty, new GUIContent(ConstString.chinaMainland));
+            EditorGUILayout.PropertyField(overseaProperty, new GUIContent(ConstString.nonChinaMainland));
             EditorGUI.indentLevel -= 1;
             if (chinaProperty.boolValue && overseaProperty.boolValue)
             {
                 EditorGUILayout.HelpBox(ConstString.storageWarning, MessageType.Warning);
             }
+
             EditorGUILayout.HelpBox(ConstString.storageAreaMessage, MessageType.Info);
-           
+
             if (serializedObject.ApplyModifiedProperties())
             {
-                
                 // 处理 China 值变化
-                ProcessPropertyChange(chinaProperty, ref oldChinaValue, "_China",null, () =>
+                ProcessPropertyChange(chinaProperty, ref oldChinaValue, "_China", null, () =>
                 {
                     overseaProperty.boolValue = false;
                     oldOverseaValue = overseaProperty.boolValue;
-                    
                 });
-            
+
                 // 处理 Oversea 值变化
-                ProcessPropertyChange(overseaProperty, ref oldOverseaValue, "_Oversea",null, () =>
+                ProcessPropertyChange(overseaProperty, ref oldOverseaValue, "_Oversea", null, () =>
                 {
                     chinaProperty.boolValue = false;
                     oldChinaValue = chinaProperty.boolValue;
                     if (overseaProperty.boolValue)
                     {
                         useOaid.boolValue = false;
-
                     }
-                  
                 });
             }
         }
-
-
-
 
         bool changleStorageValue()
         {
             if (chinaProperty.boolValue)
             {
-             return   XmlModifier.cnxml(true);
+                return XmlModifier.cnxml(true);
             }
             else if (overseaProperty.boolValue)
             {
-                return   XmlModifier.Overseaxml(true);
+                return XmlModifier.Overseaxml(true);
             }
 
             return false;
-
         }
 
+        #endregion
 
-        private bool removesdk=false;
-        
+        #region DrawRemoveAndroidSDKOption
 
-        private void removeSDK()
+        private bool removesdk = false;
+
+
+        private void DrawRemoveAndroidSDKOption()
         {
-            // removesdk =EditorGUILayout.Foldout(removesdk, "SDK");
-            // if (removesdk)
-            // {
-            //     
-                // EditorGUILayout.HelpBox(ConstString.removeSDKMsg, MessageType.Info);
-               // EditorGUI.indentLevel += 1;
-               // EditorGUILayout.PropertyField(useiOSSDK,new GUIContent("USE iOS SDK"));
-                EditorGUILayout.PropertyField(removeAndroidSDK,new GUIContent("Remove Android SDK"));
-               // EditorGUI.indentLevel -= 1;
-                
-                
-          //  }
+            EditorGUILayout.PropertyField(removeAndroidSDK, new GUIContent("Remove Android SDK"));
         }
+
+        #endregion
+
+
+        #region DrawRemoteConfig
 
         private bool _useRemoteConfig = false;
-        private void RemoteConfig()
+
+        private void DrawRemoteConfig()
         {
-          
-            
-           // EditorGUILayout.PropertyField(useRemoteConfig);
-           _useRemoteConfig = EditorGUILayout.Foldout(_useRemoteConfig, "Remote Config");
+            // EditorGUILayout.PropertyField(useRemoteConfig);
+            _useRemoteConfig = EditorGUILayout.Foldout(_useRemoteConfig, "Remote Config");
             if (_useRemoteConfig)
-            {  
-               
-                
+            {
                 EditorGUI.indentLevel += 1;
                 // EditorGUILayout.PropertyField(disAllRemoteConfig);
                 EditorGUILayout.PropertyField(iOSRemoteConfig);
                 EditorGUILayout.PropertyField(androidRemoteConfig);
                 EditorGUILayout.PropertyField(miniGameRemoteConfig);
-                #if TUANJIE_2022_3_OR_NEWER
+#if TUANJIE_2022_3_OR_NEWER
                 EditorGUILayout.PropertyField(openHarmonyRemoteConfig);
-                #endif
+#endif
                 EditorGUILayout.PropertyField(macosRemoteConfig);
                 EditorGUI.indentLevel -= 1;
                 EditorGUILayout.HelpBox(ConstString.remoteConfigMsg, MessageType.Info);
-                
             }
-            
+
             if (removeAndroidSDK.boolValue)
             {
                 androidRemoteConfig.boolValue = false;
             }
-            // else
-            // {
-            //     iOSRemoteConfig.boolValue = true;
-            //     androidRemoteConfig.boolValue = true;
-            //     miniGameRemoteConfig.boolValue = true;
-            // }
-
+//             if (GUILayout.Button("禁用全部"))
+//             {
+//                 iOSRemoteConfig.boolValue = false;
+//                 androidRemoteConfig.boolValue = false;
+//                 miniGameRemoteConfig.boolValue = false;
+// #if TUANJIE_2022_3_OR_NEWER
+//     openHarmonyRemoteConfig.boolValue = false;
+// #endif
+//                 macosRemoteConfig.boolValue = false;
+//             }
         }
-        private void UseOaid()
+
+        #endregion
+
+
+        #region DrawOaidOption
+
+        private void DrawOaidOption()
         {
-            EditorGUILayout.PropertyField(useOaid,new GUIContent(ConstString.oaid));
+            EditorGUILayout.PropertyField(useOaid, new GUIContent(ConstString.oaid));
 
             if (chinaProperty.boolValue)
             {
                 EditorGUILayout.HelpBox(ConstString.storageEnableOaidCN, MessageType.Info);
                 useOaid.boolValue = true;
-
             }
+
             if (removeAndroidSDK.boolValue)
             {
                 useOaid.boolValue = false;
@@ -278,35 +325,36 @@ namespace SolarEngine
             {
                 if (useOaid.boolValue)
                 {
-                     EditorGUILayout.HelpBox(ConstString.oaidEnable, MessageType.Warning);
+                    EditorGUILayout.HelpBox(ConstString.oaidEnable, MessageType.Warning);
                 }
                 else
                 {
-                 //   EditorGUILayout.HelpBox(ConstString.storageDisableOaid, MessageType.Info);
+                    //   EditorGUILayout.HelpBox(ConstString.storageDisableOaid, MessageType.Info);
                 }
             }
-          
         }
 
-        private void UseODMInfo()
+        #endregion
+
+        #region DrawODMInfoOption
+
+        private void DrawODMInfoOption()
         {
             if (overseaProperty.boolValue)
             {
-              
-                EditorGUILayout.PropertyField(useODMInfo,new GUIContent(ConstString.ODMInfo));
+                EditorGUILayout.PropertyField(useODMInfo, new GUIContent(ConstString.ODMInfo));
                 EditorGUILayout.HelpBox(ConstString.odmInfoEnable, MessageType.Info);
-
             }
-            
         }
 
-      
+        #endregion
 
-        private void UseDeepLink( GUIStyle darkerCyanTextFieldStyles )
+        #region DrawDeepLinkOption
+
+        private void DrawDeepLinkOption(GUIStyle darkerCyanTextFieldStyles)
         {
-            
             EditorGUILayout.PropertyField(useDeepLink, new GUIContent("DeepLink"));
-            if (useDeepLink.boolValue) 
+            if (useDeepLink.boolValue)
             {
                 EditorGUI.indentLevel += 1;
                 EditorGUILayout.LabelField("iOS:", darkerCyanTextFieldStyles);
@@ -327,7 +375,7 @@ namespace SolarEngine
                     true);
                 EditorGUI.indentLevel -= 1;
 
-                
+
                 EditorGUILayout.LabelField("Android:", darkerCyanTextFieldStyles);
                 EditorGUI.indentLevel += 1;
                 EditorGUILayout.PropertyField(AndroidUrlSchemes);
@@ -335,19 +383,21 @@ namespace SolarEngine
                 EditorGUI.indentLevel -= 1;
             }
         }
-        
-     
+
+        #endregion
+
+        #region DrawSdkVersionSection
 
         private bool _useSpecifyVersion = false;
-        private void SdkVersion(GUIStyle darkerCyanTextFieldStyles)
+
+        private void DrawSdkVersionSection(GUIStyle darkerCyanTextFieldStyles)
         {
-            
             _useSpecifyVersion = EditorGUILayout.Foldout(_useSpecifyVersion, "SDK Version");
             if (_useSpecifyVersion)
             {
                 // EditorGUILayout.PropertyField(useSpecifyVersion);
 
-               
+
                 EditorGUI.indentLevel++;
                 EditorGUILayout.PropertyField(iOSVersion, new GUIContent("iOS Version"));
                 EditorGUILayout.PropertyField(AndroidVersion);
@@ -366,108 +416,110 @@ namespace SolarEngine
                     SolarEngineSettings.OpenHarmonyVersion = OpenHarmonyVersion.stringValue;
                 if (!MacOSVersion.stringValue.Equals(SolarEngineSettings.MacOSVersion))
                     SolarEngineSettings.MacOSVersion = MacOSVersion.stringValue;
-             
 
-                
+
                 EditorGUILayout.HelpBox(ConstString.confirmVersion, MessageType.Warning);
-
             }
-            // else
-            //     {
-            //         iOSVersion.stringValue = "";
-            //         AndroidVersion.stringValue = "";
-            //     }
-            // }
         }
 
-       
-        
-        
-        private void ProcessPropertyChange(SerializedProperty property, ref bool oldValue, string propertyName, System.Action<bool> xmlAction, System.Action additionalAction = null)
+        #endregion
+
+
+        private SerializedProperty appkeyProp;
+        private SerializedProperty isDebugModelProp;
+        private SerializedProperty logEnabledProp;
+
+        private void DrawsAppInfoSettings()
         {
-       
-            if (property.boolValue!= oldValue)
+            // EditorGUILayout.Space(10);
+            // DrawH2Title("🔧 App Info Settings");
+            // EditorGUILayout.Space(5);
+            //
+            // EditorGUILayout.PropertyField(appkeyProp, new GUIContent("App Key"));
+            // //
+            // EditorGUILayout.PropertyField(isDebugModelProp,new GUIContent(ConstString.DebugModel));
+            // EditorGUILayout.PropertyField(logEnabledProp, new GUIContent("Enable Log"));
+            //
+            //
+            //
+            // serializedObject.ApplyModifiedProperties();
+        }
+
+        private void ProcessPropertyChange(SerializedProperty property, ref bool oldValue, string propertyName,
+            System.Action<bool> xmlAction, System.Action additionalAction = null)
+        {
+            if (property.boolValue != oldValue)
             {
-         
                 oldValue = property.boolValue;
                 additionalAction?.Invoke();
             }
         }
-       
+
         public void _GUI()
         {
             GUIStyle darkerCyanTextFieldStyles = new GUIStyle(EditorStyles.boldLabel);
-            //darkerCyanTextFieldStyles.normal.textColor = Color.white;
-         
-          
-            GUI.color= Color.white;
+
+            GUI.color = Color.white;
             DrawH2Title("SDK Setting");
 
-          
-            ChinaOrOversea(darkerCyanTextFieldStyles);
-       
-            DrawH2Title("SDK Plugins");
-            removeSDK();
-            RemoteConfig();
-            UseOaid();
-            UseODMInfo();
+            DrawStorageAreaOptions(darkerCyanTextFieldStyles);
 
-            UseDeepLink( darkerCyanTextFieldStyles);
-            
-    
-            
-            SdkVersion(darkerCyanTextFieldStyles);
+            DrawH2Title("SDK Plugins");
+            DrawRemoveAndroidSDKOption();
+            DrawRemoteConfig();
+            DrawOaidOption();
+            DrawODMInfoOption();
+
+            DrawDeepLinkOption(darkerCyanTextFieldStyles);
+
+
+            DrawSdkVersionSection(darkerCyanTextFieldStyles);
 
             ApplyButton();
 
-          
+            DrawsAppInfoSettings();
             serializedObject.ApplyModifiedProperties();
-       
         }
-      
-       
- private void ApplyButton()
-{
-    // 创建一个用于按钮样式的GUIStyle对象
-    GUIStyle buttonStyle = new GUIStyle();
-    buttonStyle.normal.textColor = Color.white;
-
-    // 创建一个单像素的纹理对象，用于设置按钮的背景颜色等样式
-    Texture2D backgroundTexture = new Texture2D(1, 1);
-    backgroundTexture.SetPixel(0, 0, Color.white);
-    backgroundTexture.Apply();
-    buttonStyle.normal.background = backgroundTexture;
-
-    // 设置按钮的固定高度、固定宽度以及文本对齐方式等样式属性
-    buttonStyle.fixedHeight = 25;
-    buttonStyle.fixedWidth = 100;
-    buttonStyle.alignment = TextAnchor.MiddleCenter;
 
 
-    // 设置绘制按钮边框时的颜色
-    GUI.color = new Color(200f / 255f, 200f / 255f, 200f / 255f);
-  
-    
-    // 当用户点击按钮区域时执行以下逻辑
-    if (GUILayout.Button( "Apply"))
-    {
-        ApplySetting._applySetting(true);
-    }
-}
+        private void ApplyButton()
+        {
+            // 创建一个用于按钮样式的GUIStyle对象
+            GUIStyle buttonStyle = new GUIStyle();
+            buttonStyle.normal.textColor = Color.white;
+
+            // 创建一个单像素的纹理对象，用于设置按钮的背景颜色等样式
+            Texture2D backgroundTexture = new Texture2D(1, 1);
+            backgroundTexture.SetPixel(0, 0, Color.white);
+            backgroundTexture.Apply();
+            buttonStyle.normal.background = backgroundTexture;
+
+            // 设置按钮的固定高度、固定宽度以及文本对齐方式等样式属性
+            buttonStyle.fixedHeight = 25;
+            buttonStyle.fixedWidth = 100;
+            buttonStyle.alignment = TextAnchor.MiddleCenter;
+
+
+            // 设置绘制按钮边框时的颜色
+            GUI.color = new Color(200f / 255f, 200f / 255f, 200f / 255f);
+
+
+            // 当用户点击按钮区域时执行以下逻辑
+            if (GUILayout.Button("Apply"))
+            {
+                ApplySetting._applySetting(true);
+            }
+        }
 
         //用户应用
-        public  bool Apply()
+        public bool Apply()
         {
-          return  iOSRemoteConfigValue()&&
-           androidRemoteConfigValue()&&
-           miniGameRemoteConfigValue()&&
-           openHarmonyRemoteConfigValue()&&
-             
-           OaidValue()&&
-
-           changleStorageValue();
-         
-
+            return iOSRemoteConfigValue() &&
+                   androidRemoteConfigValue() &&
+                   miniGameRemoteConfigValue() &&
+                   openHarmonyRemoteConfigValue() &&
+                   OaidValue() &&
+                   changleStorageValue();
         }
 
 
@@ -475,24 +527,23 @@ namespace SolarEngine
         {
             if (useOaid.boolValue)
             {
-              return  PluginsEdtior.showOaid();
+                return PluginsEdtior.showOaid();
             }
             else
             {
-              return  PluginsEdtior.disableOaid();
+                return PluginsEdtior.disableOaid();
             }
-          
         }
 
         private bool ODMInfoValue()
         {
             if (useODMInfo.boolValue)
             {
-                return  PluginsEdtior.showODMInfo();
+                return PluginsEdtior.showODMInfo();
             }
             else
             {
-                return  PluginsEdtior.disableODMInfo();
+                return PluginsEdtior.disableODMInfo();
             }
         }
 
@@ -500,66 +551,55 @@ namespace SolarEngine
         {
             if (iOSRemoteConfig.boolValue)
             {
-                return  PluginsEdtior.showiOS();
+                return PluginsEdtior.showiOS();
             }
-               
+
             else
             {
-                return  PluginsEdtior.disableiOS();
-
+                return PluginsEdtior.disableiOS();
             }
         }
+
         bool androidRemoteConfigValue()
         {
-
             if (androidRemoteConfig.boolValue)
             {
-              
-              return  PluginsEdtior.showAndroid();
-            
-
+                return PluginsEdtior.showAndroid();
             }
-              
+
             else
             {
-              
-                 return PluginsEdtior.disableAndroid();
-               
-
+                return PluginsEdtior.disableAndroid();
             }
         }
+
         bool miniGameRemoteConfigValue()
         {
-
             if (miniGameRemoteConfig.boolValue)
-            {  
-               
-               return  PluginsEdtior.showMiniGame();
+            {
+                return PluginsEdtior.showMiniGame();
             }
-             
+
             else
             {
-              
-                return   PluginsEdtior.disableMiniGame();
+                return PluginsEdtior.disableMiniGame();
             }
-            
         }
 
         bool openHarmonyRemoteConfigValue()
         {
-            Debug.Log("openHarmonyRemoteConfigValue"+openHarmonyRemoteConfig.boolValue);
+            Debug.Log("openHarmonyRemoteConfigValue" + openHarmonyRemoteConfig.boolValue);
             if (openHarmonyRemoteConfig.boolValue)
             {
-                return  PluginsEdtior.showOpenHarmony();
+                return PluginsEdtior.showOpenHarmony();
             }
             else
             {
-                return  PluginsEdtior.disableOpenHarmony();
+                return PluginsEdtior.disableOpenHarmony();
             }
-          
         }
-        
-    
+
+
         // 通用标签间的间距
         private const float COMMON_SPACE = 13f;
 
@@ -601,11 +641,8 @@ namespace SolarEngine
         {
             GUILayout.Space(pixels);
         }
-        
-        
-        
-        
-        
+
+
         /// <summary>
         /// 展示提示.
         /// </summary>
@@ -616,14 +653,5 @@ namespace SolarEngine
             // 展示提示信息.
             EditorUtility.DisplayDialog(title, content, "OK");
         }
-
-        
-        
-        
-
     }
-
-
-
 }
-
