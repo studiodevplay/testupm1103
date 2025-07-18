@@ -94,6 +94,17 @@ namespace SolarEngine
 
         #endregion
 
+        #region 私有化部署
+
+        private SerializedProperty CustomDomainEnable;
+        private SerializedProperty ReceiverDomain;
+        private SerializedProperty RuleDomain;
+        private SerializedProperty ReceiverTcpHost;
+        private SerializedProperty RuleTcpHost;
+        private SerializedProperty GatewayTcpHost;
+        
+
+        #endregion
 
         // 用于记录之前中国存储区域选择的布尔值，方便对比属性值变化
         private bool oldChinaValue;
@@ -173,6 +184,16 @@ namespace SolarEngine
 
             #endregion
 
+            #region 私有化部署
+
+            CustomDomainEnable = serializedObject.FindProperty("_CustomDomainEnable");
+            ReceiverDomain = serializedObject.FindProperty("_ReceiverDomain");
+            RuleDomain = serializedObject.FindProperty("_RuleDomain");
+            ReceiverTcpHost = serializedObject.FindProperty("_ReceiverTcpHost");
+            RuleTcpHost = serializedObject.FindProperty("_RuleTcpHost");
+            GatewayTcpHost = serializedObject.FindProperty("_GatewayTcpHost");
+
+            #endregion
 
             appkeyProp = serializedObject.FindProperty("_Appkey");
             isDebugModelProp = serializedObject.FindProperty("_IsDebugModel");
@@ -421,6 +442,58 @@ namespace SolarEngine
 
         #endregion
 
+        private bool _useCustomDomain = false;
+
+        private void DrawCustomDomainOption(GUIStyle darkerCyanTextFieldStyles)
+        {
+            _useCustomDomain = EditorGUILayout.Foldout(_useCustomDomain, "Custom Domain");
+
+            if (_useCustomDomain)
+            {
+                EditorGUI.indentLevel += 1;
+                EditorGUILayout.PropertyField(CustomDomainEnable, new GUIContent("Enable", "Set up Custom Domain"));
+
+                if (SolarEngineSettings.CustomDomainEnable != CustomDomainEnable.boolValue)
+                {
+                    SolarEngineSettings.CustomDomainEnable = CustomDomainEnable.boolValue;
+                }
+
+                if (CustomDomainEnable.boolValue)
+                {
+                    EditorGUI.indentLevel += 1;
+                    EditorGUILayout.PropertyField(ReceiverDomain,
+                        new GUIContent("Receiver Domain",
+                            "receiver https domain name, including the following services:\nEvent reporting, debug mode event reporting, attribution, delayed deeplink"));
+                    EditorGUILayout.PropertyField(RuleDomain,
+                        new GUIContent("Rule Domain",
+                            "rule https domain includes the following services:\nRemote Config"));
+                    EditorGUILayout.PropertyField(ReceiverTcpHost,
+                        new GUIContent("Receiver Tcp Host",
+                            "receiver tcp host， Including the following businesses:\nAttribution and debug mode event reportingt"));
+                    EditorGUILayout.PropertyField(RuleTcpHost,
+                        new GUIContent("Rule Tcp Host",
+                            "rule tcp host， Including the following businesses:\nRemote Config"));
+                    EditorGUILayout.PropertyField(GatewayTcpHost,
+                        new GUIContent("Gateway TcpHost",
+                            "gateway  tcp host， Including the following businesses:\nEvent reporting"));
+
+                    if (SolarEngineSettings.ReceiverDomain != ReceiverDomain.stringValue)
+                        SolarEngineSettings.ReceiverDomain = ReceiverDomain.stringValue;
+                    if (SolarEngineSettings.RuleDomain != RuleDomain.stringValue)
+                        SolarEngineSettings.RuleDomain = RuleDomain.stringValue;
+                    if (SolarEngineSettings.ReceiverTcpHost != ReceiverTcpHost.stringValue)
+                        SolarEngineSettings.ReceiverTcpHost = ReceiverTcpHost.stringValue;
+                    if (SolarEngineSettings.RuleTcpHost != RuleTcpHost.stringValue)
+                        SolarEngineSettings.RuleTcpHost = RuleTcpHost.stringValue;
+                    if (SolarEngineSettings.GatewayTcpHost != GatewayTcpHost.stringValue)
+                        SolarEngineSettings.GatewayTcpHost = GatewayTcpHost.stringValue;
+                    
+                    EditorGUI.indentLevel -= 1;
+                  
+                }
+            }
+        }
+
 
         private SerializedProperty appkeyProp;
         private SerializedProperty isDebugModelProp;
@@ -469,9 +542,8 @@ namespace SolarEngine
 
             DrawDeepLinkOption(darkerCyanTextFieldStyles);
 
-
             DrawSdkVersionSection(darkerCyanTextFieldStyles);
-
+            DrawCustomDomainOption(darkerCyanTextFieldStyles);
             ApplyButton();
 
             DrawsAppInfoSettings();

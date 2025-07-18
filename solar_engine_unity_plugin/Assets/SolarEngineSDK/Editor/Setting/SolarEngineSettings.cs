@@ -253,9 +253,73 @@ namespace SolarEngine
 
 
 		#region 私有化部署
+		[SerializeField]
+		private bool _CustomDomainEnable;
+		[SerializeField]
+		 private string _ReceiverDomain;
+		[SerializeField]
+		private string _RuleDomain;
+		[SerializeField]
+		 private string _ReceiverTcpHost;
+		 [SerializeField]
+		 private string _RuleTcpHost;
+		
+		[SerializeField]
+		private string _GatewayTcpHost;
+		
+		public static bool CustomDomainEnable
+		{
+			get{return  Instance._CustomDomainEnable;}
+			set
+			{
+				Instance._CustomDomainEnable = value;
+			
+				SolarRuntimeSettings.Instance.customDomainEnable = value;
+			}
+		}
+		public static string ReceiverDomain
+		{
+			get{return  Instance._ReceiverDomain;}
+			set{Instance._ReceiverDomain = value;
+                SolarRuntimeSettings.Instance.receiverDomain = value;
+            }
+		}
+		public static string RuleDomain
+		{
+			get{return  Instance._RuleDomain;}
+			set
+			{
+				Instance._RuleDomain = value;
+			}
+		}
+		public static string ReceiverTcpHost
+		{
+			get{return  Instance._ReceiverTcpHost;}
+			set
+			{
+				Instance._ReceiverTcpHost = value;
+			}
+		}
+		public static string RuleTcpHost
+		{
+			get{return  Instance._RuleTcpHost;}
+			set
+			{
+				Instance._RuleTcpHost = value;
+			}
+		}
+		public static string GatewayTcpHost
+		{
+			get{return  Instance._GatewayTcpHost;}
+			set
+			{
+				Instance._GatewayTcpHost = value;
+
+			}
+		}
 
 		
-
+	
 		#endregion
 		
 		
