@@ -37,13 +37,27 @@ namespace SolarEngine
             
             runtimeSettings.isUseOaid = SolarEngineSettings.isUseOaid;
             runtimeSettings.isUseODMInfo = SolarEngineSettings.isUseODMInfo;
+            runtimeSettings.isUseAndroidRc = SolarEngineSettings.isUseAndroid;
+            runtimeSettings.isUseiOSRc = SolarEngineSettings.isUseiOS;
+            runtimeSettings.isUseMininRc = SolarEngineSettings.isUseMiniGame;
+            runtimeSettings.isUseMacOSRc = SolarEngineSettings.isUseMacOS;
+            runtimeSettings.isUseOpenHarmonyRc = SolarEngineSettings.isUseOpenHarmony;
+            
+            runtimeSettings.customDomainEnable = SolarEngineSettings.CustomDomainEnable;
+            runtimeSettings.receiverDomain = SolarEngineSettings.ReceiverDomain;
+            runtimeSettings.ruleDomain = SolarEngineSettings.RuleDomain;
+            runtimeSettings.receiverTcpHost = SolarEngineSettings.ReceiverTcpHost;
+            runtimeSettings.ruleTcpHost = SolarEngineSettings.RuleTcpHost;
+            runtimeSettings.gatewayTcpHost = SolarEngineSettings.GatewayTcpHost;
+           
+            
           
             // 保存更改
             EditorUtility.SetDirty(runtimeSettings);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             
-            Debug.Log("运行时配置已导出到: " + RUNTIME_SETTINGS_PATH);
+            Debug.Log("The runtime configuration has been exported to: " + RUNTIME_SETTINGS_PATH);
         }
     }
 }

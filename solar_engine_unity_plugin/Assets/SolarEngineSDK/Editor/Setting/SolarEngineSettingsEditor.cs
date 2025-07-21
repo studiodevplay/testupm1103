@@ -442,13 +442,13 @@ namespace SolarEngine
 
         #endregion
 
-        private bool _useCustomDomain = false;
+        private bool showDomain = false;
 
         private void DrawCustomDomainOption(GUIStyle darkerCyanTextFieldStyles)
         {
-            _useCustomDomain = EditorGUILayout.Foldout(_useCustomDomain, "Custom Domain");
+            showDomain = EditorGUILayout.Foldout(showDomain, "Custom Domain", true);
 
-            if (_useCustomDomain)
+            if (showDomain)
             {
                 EditorGUI.indentLevel += 1;
                 EditorGUILayout.PropertyField(CustomDomainEnable, new GUIContent("Enable", "Set up Custom Domain"));

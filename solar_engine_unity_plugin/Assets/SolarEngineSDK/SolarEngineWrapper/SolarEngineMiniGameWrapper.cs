@@ -39,7 +39,7 @@ namespace SolarEngine
         {
            
             MiniGameRCConfig minircConfig = new MiniGameRCConfig();
-            minircConfig.enable = rcConfig.enable;
+            minircConfig.enable = rcConfigEnable();
             minircConfig.mergeType = (MiniRCMergeType)(int)rcConfig.mergeType;
             minircConfig.customIDEventProperties = rcConfig.customIDEventProperties;
             minircConfig.customIDProperties = rcConfig.customIDProperties;
@@ -314,14 +314,14 @@ namespace SolarEngine
            private static void TrackCreateRole(CreateRoleAttributes attributes)
         {
 #if SOLARENGINE_WECHAT
-            SolarEngineSDK4MiniGames.trackCreateRole(getCreateRoleDic(attributes),null,attributes.reportingToTencentSdk);
+            SolarEngineSDK4MiniGames.trackCreateRole(getCreateRoleDic(attributes),attributes.customProperties,attributes.reportingToTencentSdk);
  #endif
         }
 
            private static void TrackTutorialFinish(TutorialFinishAttributes attributes)
         {
 #if SOLARENGINE_WECHAT
-            SolarEngineSDK4MiniGames.trackTutorialFinish(getTutorialFinishDic(attributes),null,attributes.reportingToTencentSdk );
+            SolarEngineSDK4MiniGames.trackTutorialFinish(getTutorialFinishDic(attributes),attributes.customProperties,attributes.reportingToTencentSdk );
 #endif            
         }
 
