@@ -77,11 +77,12 @@ internal class ExportPackage {
 				return Path.Combine(outputDirectory.FullName, PackageName);
 			}
 		}
-		[MenuItem("SolarEngineInside/DefaultXml")]
-		public static void DefaultXml()
-		{
-		XmlModifier.defaultXml();
-		}
+		// [MenuItem("SolarEngineInside/BeforeExport")]
+		// public static void BeforeExport()
+		// {
+		// 	BeforeExport();
+		//
+		// }
 
 		[MenuItem("SolarEngineInside/ExportPackage")]
 		// Exporting the *.unityPackage for Asset store
@@ -133,7 +134,9 @@ internal class ExportPackage {
 			return path;
 		}
 
-		private static void BeforeExport()
+		[MenuItem("SolarEngineInside/BeforeExport")]
+
+		public static void BeforeExport()
 		{
 
 			PluginsEdtior.showiOS();

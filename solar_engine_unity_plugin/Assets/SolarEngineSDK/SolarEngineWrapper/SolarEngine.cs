@@ -11,13 +11,14 @@ namespace SolarEngine
     public partial class Analytics : MonoBehaviour
     {
         private SEAttributionCallback attributionCallback_private = null;
-       
-       
-       
+        
 
         public delegate void SEAttributionCallback(int code, Dictionary<string, object> attribution);
 
-        private SESDKInitCompletedCallback initCompletedCallback_private = null;
+        private  SESDKInitCompletedCallback initCompletedCallback_private = null;
+
+      
+    
 
         public delegate void SESDKInitCompletedCallback(int code);
 
@@ -170,6 +171,32 @@ namespace SolarEngine
             Init(appKey, null, config, rcConfig);
         }
 
+        public static void attributionCallback(SEAttributionCallback callback)
+        {
+            if (callback!= null)
+            {
+                Analytics.Instance.attributionCallback_private = callback;
+#if UNITY_OPENHARMONY&&!UNITY_EDITOR
+                setAttributionListener();
+#endif
+            }
+
+            AttributionCompletedCallback(callback);
+        }
+
+        public static void initCompletedCallback(SESDKInitCompletedCallback callback)
+        { 
+            if (callback != null)
+            {
+                Analytics.Instance.initCompletedCallback_private = callback;
+#if UNITY_OPENHARMONY&&!UNITY_EDITOR
+                setInitSDKListener();
+#endif
+            }
+
+            InitCompletedCallback(callback);
+        }
+        
         public static Dictionary<string, object> getAttribution()
         {
             string attributionString = GetAttribution();

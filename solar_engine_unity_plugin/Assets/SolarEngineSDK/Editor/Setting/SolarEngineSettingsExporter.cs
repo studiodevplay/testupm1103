@@ -43,12 +43,12 @@ namespace SolarEngine
             runtimeSettings.isUseMacOSRc = SolarEngineSettings.isUseMacOS;
             runtimeSettings.isUseOpenHarmonyRc = SolarEngineSettings.isUseOpenHarmony;
             
-            runtimeSettings.customDomainEnable = SolarEngineSettings.CustomDomainEnable;
-            runtimeSettings.receiverDomain = SolarEngineSettings.ReceiverDomain;
-            runtimeSettings.ruleDomain = SolarEngineSettings.RuleDomain;
-            runtimeSettings.receiverTcpHost = SolarEngineSettings.ReceiverTcpHost;
-            runtimeSettings.ruleTcpHost = SolarEngineSettings.RuleTcpHost;
-            runtimeSettings.gatewayTcpHost = SolarEngineSettings.GatewayTcpHost;
+            // runtimeSettings.customDomainEnable = SolarEngineSettings.CustomDomainEnable;
+            // runtimeSettings.receiverDomain = SolarEngineSettings.ReceiverDomain;
+            // runtimeSettings.ruleDomain = SolarEngineSettings.RuleDomain;
+            // runtimeSettings.receiverTcpHost = SolarEngineSettings.ReceiverTcpHost;
+            // runtimeSettings.ruleTcpHost = SolarEngineSettings.RuleTcpHost;
+            // runtimeSettings.gatewayTcpHost = SolarEngineSettings.GatewayTcpHost;
            
             
           

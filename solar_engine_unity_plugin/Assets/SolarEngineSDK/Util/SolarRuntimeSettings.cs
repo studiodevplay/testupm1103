@@ -23,12 +23,12 @@ namespace SolarEngine
         public bool isUseOpenHarmonyRc;
         
         
-        public bool   customDomainEnable;
-        public string receiverDomain;
-        public string ruleDomain;
-        public string receiverTcpHost;
-        public string ruleTcpHost;
-        public string gatewayTcpHost;
+        // public bool   customDomainEnable;
+        // public string receiverDomain;
+        // public string ruleDomain;
+        // public string receiverTcpHost;
+        // public string ruleTcpHost;
+        // public string gatewayTcpHost;
         
         // 单例访问（可选）
         private static SolarRuntimeSettings _instance;

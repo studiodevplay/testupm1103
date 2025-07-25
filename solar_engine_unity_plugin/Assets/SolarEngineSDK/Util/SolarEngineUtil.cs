@@ -62,42 +62,25 @@ namespace SolarEngine
 #endif
             seDict.Add("isCoppaEnabled", config.isCoppaEnabled);
             seDict.Add("isKidsAppEnabled", config.isKidsAppEnabled);
+           
+            seDict.Add("enable", config.customDomain.enable);
+            
+            if(!string.IsNullOrEmpty(config.customDomain.receiverDomain))
+              seDict.Add("receiverDomain", config.customDomain.receiverDomain);
+            
+            if(!string.IsNullOrEmpty(config.customDomain.ruleDomain))
+              seDict.Add("ruleDomain", config.customDomain.ruleDomain);
+            
+            if(!string.IsNullOrEmpty(config.customDomain.receiverTcpHost))
+              seDict.Add("receiverTcpHost",config.customDomain.receiverTcpHost);
+            
+            if(!string.IsNullOrEmpty(config.customDomain.ruleTcpHost))
+              seDict.Add("ruleTcpHost",config.customDomain.ruleTcpHost);
+            
+            if (!string.IsNullOrEmpty(config.customDomain.gatewayTcpHost))
+                seDict.Add("gatewayTcpHost", config.customDomain.gatewayTcpHost);
 
-            Debug.Log(SolarRuntimeSettings.InstanceNotNull);
-            if (SolarRuntimeSettings.InstanceNotNull)
-            {
-                if (SolarRuntimeSettings.Instance.customDomainEnable)
-                {
-                    seDict.Add("enable", SolarRuntimeSettings.Instance.customDomainEnable);
-              
-                    if (!string.IsNullOrEmpty(SolarRuntimeSettings.Instance.receiverDomain))
-                    {
-                        seDict.Add("receiverDomain", SolarRuntimeSettings.Instance.receiverDomain);
-                    }
-
-                    if (!string.IsNullOrEmpty(SolarRuntimeSettings.Instance.ruleDomain))
-                    {
-                        seDict.Add("ruleDomain", SolarRuntimeSettings.Instance.ruleDomain);
-                    }
-
-                    if (!string.IsNullOrEmpty(SolarRuntimeSettings.Instance.ruleTcpHost))
-                    {
-                        seDict.Add("ruleTcpHost", SolarRuntimeSettings.Instance.ruleTcpHost);
-                    }
-
-                    if (!string.IsNullOrEmpty(SolarRuntimeSettings.Instance.receiverTcpHost))
-                    {
-                        seDict.Add("receiverTcpHost", SolarRuntimeSettings.Instance.receiverTcpHost);
-                    }
-
-                    if (!string.IsNullOrEmpty(SolarRuntimeSettings.Instance.gatewayTcpHost))
-                    {
-                        seDict.Add("gatewayTcpHost", SolarRuntimeSettings.Instance.gatewayTcpHost);
-                    }
-                }
-               
-            }
-
+           
 
             string seJonString = JsonConvert.SerializeObject(seDict);
             if (islog)
@@ -108,35 +91,37 @@ namespace SolarEngine
             return seJonString;
         }
 
-        private static bool rcConfigEnable()
+        private static bool rcConfigEnable(RCConfig rcConfig)
         {
-            if (SolarRuntimeSettings.InstanceNotNull)
-            {
-#if UNITY_IOS
-               return SolarRuntimeSettings.Instance.isUseiOSRc;
-#elif UNITY_ANDROID
-               return SolarRuntimeSettings.Instance.isUseAndroidRc;
-#elif UNITY_OPENHARMONY
-               return SolarRuntimeSettings.Instance.isUseOpenHarmonyRc;
-#elif SOLARENGINE_BYTEDANCE||SOLARENGINE_BYTEDANCE_CLOUD||SOLARENGINE_BYTEDANCE_STARK||SOLARENGINE_KUAISHOU||SOLARENGINE_WECHAT
-                return SolarRuntimeSettings.Instance.isUseMininRc;
+//             if (SolarRuntimeSettings.InstanceNotNull)
+//             {
+// #if UNITY_IOS
+//                return SolarRuntimeSettings.Instance.isUseiOSRc;
+// #elif UNITY_ANDROID
+//                return SolarRuntimeSettings.Instance.isUseAndroidRc;
+// #elif UNITY_OPENHARMONY
+//                return SolarRuntimeSettings.Instance.isUseOpenHarmonyRc;
+// #elif SOLARENGINE_BYTEDANCE||SOLARENGINE_BYTEDANCE_CLOUD||SOLARENGINE_BYTEDANCE_STARK||SOLARENGINE_KUAISHOU||SOLARENGINE_WECHAT
+//                 return SolarRuntimeSettings.Instance.isUseMininRc;
+//
+// #elif UNITY_STANDALONE_OSX
+//              return SolarRuntimeSettings.Instance.isUseMacRc;
+//  #else
+//                 return false;
+//
+// #endif
+//             }
+//             else
+//             {
+//                 Debug.Log("[SolarEngine] SolarRuntimeSettings.Instance is null，please click apply");
+//
+//                 return false;
+//                     
+//                     
+//             }
 
-#elif UNITY_STANDALONE_OSX
-             return SolarRuntimeSettings.Instance.isUseMacRc;
- #else
-                return false;
-
-#endif
-            }
-            else
-            {
-                Debug.Log("[SolarEngine] SolarRuntimeSettings.Instance is null，please click apply");
-
-                return false;
-                    
-                    
-            }
             // }
+            return rcConfig.enable;
         }
         private static string initRcDict(RCConfig rcConfig)
         {
@@ -150,7 +135,7 @@ namespace SolarEngine
             // {
               
          
-            rcDict.Add("enable", rcConfigEnable());
+            rcDict.Add("enable", rcConfigEnable(rcConfig));
 
             rcDict.Add("mergeType", rcConfig.mergeType);
 
@@ -801,7 +786,7 @@ namespace SolarEngine
     public struct RCConfig
     {
         // // 线参数SDK启用开关，默认为关闭状态，必传字段
-        // public bool enable { get; set; }
+         public bool enable { get; set; }
 
         // SDK配置合并策略，默认情况下服务端配置跟本地缓存配置合并
         // ENUM：SERCMergeTypeUser 在App版本更新时会清除缓存配置
@@ -866,6 +851,7 @@ namespace SolarEngine
 
         // iOS caid；只有iOS调用有效。（仅国内版设置有效）
         public string caid { get; set; }
+        public SECustomDomain customDomain;
 
         // iOS odmInfo；只有iOS调用有效。（仅非中国大陆设置有效）
         // public bool odmInfoEnable { get; set; }

@@ -61,6 +61,15 @@ namespace SolarEngine
             __iOSSolarEngineSDKInit(appKey, userId, initSeDict(config), initRcDict(rcConfig));
         }
 
+        private static void AttributionCompletedCallback(SEAttributionCallback  callback)
+        {
+                __iOSSESDKSetAttributionDataCallback(OnAttributionCallback);
+        }
+        private static void InitCompletedCallback( SESDKInitCompletedCallback  callback)
+        {
+                __iOSSESDKSetInitCompletedCallback(OnInitCompletedCallback);
+        }
+
         private static void SetVisitorID(string visitorId)
         {
             __iOSSolarEngineSDKSetVisitorID(visitorId);

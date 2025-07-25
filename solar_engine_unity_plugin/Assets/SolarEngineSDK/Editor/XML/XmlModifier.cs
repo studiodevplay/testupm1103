@@ -180,7 +180,7 @@ public class XmlModifier
     {
         bool isModified = false;
 
-        if (!SolarEngineSettings.isUseiOS)
+        if (!SolarEngineSettings.isUseiOS&&strongType != StrongType.Default)
             return true;
         else
         {
@@ -208,7 +208,7 @@ public class XmlModifier
     {
         bool isModified = false;
 
-        if (!SolarEngineSettings.isUseODMInfo)
+        if (!SolarEngineSettings.isUseODMInfo&&strongType != StrongType.Default)
             return true;
         else
         {
@@ -237,7 +237,7 @@ public class XmlModifier
     {
         bool isModified = false;
 
-        if (!SolarEngineSettings.isUseAndroid)
+        if (!SolarEngineSettings.isUseAndroid&&strongType != StrongType.Default)
             return true;
         else
         {
@@ -426,7 +426,7 @@ public class XmlModifier
         }
         catch (Exception ex)
         {
-            Debug.LogError(SolorEngine + "Error modifying XML file (oversea) ex.Message");
+            Debug.LogError(SolorEngine + "Error modifying XML file (oversea) "+ex.Message);
             return false;
         }
     }

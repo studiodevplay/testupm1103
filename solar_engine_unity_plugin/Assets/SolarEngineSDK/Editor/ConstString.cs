@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace SolarEngineSDK.Editor
 {
     public class ConstString
@@ -91,15 +93,58 @@ namespace SolarEngineSDK.Editor
         public const string success = "Success";
         public const string fail = "Fail";
         
-        
-        
- 
-        
-        
-        
-        
-     
+      
 
+    }
+
+    public class EditorUtils
+    {
+        public enum EditorColor
+        {
+            SoftBlue,
+            Cyan,
+            GraphiteGray,
+            OliveGreen,
+            Golden,
+            Red,
+            Green,
+            Blue,
+            Yellow,
+            Purple,
+            SoftPurple,
+            DarkPurple,
+         
+            SoftGreen,
+            AppleGreen,
+            GrayGreen
+        }
+
+        /// <summary>
+        /// 通过枚举获取预设颜色
+        /// </summary>
+        public static Color32 GetColor(EditorColor col)
+        {
+            switch (col)
+            {
+                case EditorColor.SoftBlue:      return new Color32(120, 170, 255, 255);  // 柔和蓝
+                case EditorColor.Cyan:          return new Color32(0, 200, 200, 255);    // 浅青
+                case EditorColor.GraphiteGray:  return new Color32(160, 160, 160, 255);  // 石墨灰
+                case EditorColor.OliveGreen:    return new Color32(130, 210, 130, 255);  // 橄榄绿
+                case EditorColor.Golden:        return new Color32(210, 180, 80, 255);   // 金色
+                case EditorColor.Red:           return new Color32(255, 80, 80, 255);
+                case EditorColor.Green:         return new Color32(80, 255, 120, 255);
+                case EditorColor.Blue:          return new Color32(80, 160, 255, 255);
+                case EditorColor.Yellow:        return new Color32(255, 220, 100, 255);
+                case EditorColor.Purple:      return new Color32(155, 110, 245, 255);  // 中紫
+                case EditorColor.SoftPurple:  return new Color32(180, 140, 255, 255);  // 柔和紫（推荐）
+                case EditorColor.DarkPurple:  return new Color32(120, 80, 200, 255);   // 暗紫
+                case EditorColor.SoftGreen:  return new Color32(120, 220, 160, 255);  // 柔和绿（推荐）
+                case EditorColor.AppleGreen: return new Color32(100, 200, 100, 255);  // 苹果绿
+                case EditorColor.GrayGreen:  return new Color32(100, 130, 100, 255);  // 灰绿
+                default:                        return new Color32(255, 255, 255, 255);  // 默认白色
+                
+            }
+        }
 
     }
 }

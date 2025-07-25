@@ -6,11 +6,8 @@ namespace SolarEngine
 {
     public class ApplySetting
     {
-        
-     
-        public static bool _applySetting(bool isShowFail=false,bool isShowSuccess=true,bool isDebug=false)
+        public static bool _applySetting(bool isShowFail = false, bool isShowSuccess = true, bool isDebug = false)
         {
-          
             if (!SolarEngineSettings.isCN && !SolarEngineSettings.isOversea)
             {
                 if (isShowFail)
@@ -22,40 +19,35 @@ namespace SolarEngine
                 {
                     return false;
                 }
-              
             }
 
             setMainLand();
             SolarEngineSettingsExporter.ExportRuntimeSettings();
             string storage = SolarEngineSettings.isCN ? ConstString.chinaMainland : ConstString.nonChinaMainland;
-            bool  result = true;
+            bool result = true;
             if (isShowFail)
             {
-                 result = EditorUtility.DisplayDialog(ConstString.pleaseConfirm,
+                result = EditorUtility.DisplayDialog(ConstString.pleaseConfirm,
                     string.Format("{0} {1}\n {2}", ConstString.currentData, storage, ConstString.confirmMessage2),
-                
                     ConstString.confirm,
                     ConstString.cancel);
             }
-           
-         
+
+
             if (result)
             {
-                
-         
-             
-                if (checkSDK()&&checkPlugins() &&
+                if (checkSDK() && checkPlugins() &&
                     checkXmlHandle())
                 {
                     AssetDatabase.Refresh();
-                    if(isShowSuccess)
-                    ShowTips(ConstString.success,"");
+                    if (isShowSuccess)
+                        ShowTips(ConstString.success, "");
 
                     return true;
                 }
                 else
                 {
-                    EditorUtility.DisplayDialog( ConstString.fail, ConstString.applyFail, "OK");
+                    EditorUtility.DisplayDialog(ConstString.fail, ConstString.applyFail, "OK");
                     return false;
                 }
                 // SolarEngineSettingsEditor.a
@@ -66,63 +58,58 @@ namespace SolarEngine
                 Debug.Log(ConstString.confirmMessage);
                 return false;
             }
-        
-     
         }
 
-       // [MenuItem("SolarEngine/SetMainLand")]
+        // [MenuItem("SolarEngine/SetMainLand")]
         public static void setMainLand()
         {
-
-           if( SolarEngineSettings.isCN || SolarEngineSettings.isOversea)
-            SolarEngineGlobalInfo.setMainLand(SolarEngineSettings.isCN? SolarEngineGlobalInfo.MainLand.China : SolarEngineGlobalInfo.MainLand.Non_China);
-           else
-           { SolarEngineGlobalInfo.setMainLand(SolarEngineGlobalInfo.MainLand.None);
-           }
-
+            if (SolarEngineSettings.isCN || SolarEngineSettings.isOversea)
+                SolarEngineGlobalInfo.setMainLand(SolarEngineSettings.isCN
+                    ? SolarEngineGlobalInfo.MainLand.China
+                    : SolarEngineGlobalInfo.MainLand.Non_China);
+            else
+            {
+                SolarEngineGlobalInfo.setMainLand(SolarEngineGlobalInfo.MainLand.None);
+            }
         }
 
-      //  [MenuItem("SolarEngine/CopyMainLand")]
+        //  [MenuItem("SolarEngine/CopyMainLand")]
         public static void copyMainLand()
         {
-#if     UNITY_STANDALONE_WIN
+#if UNITY_STANDALONE_WIN
             SolarEngineGlobalInfo.copyMainLand();
-#endif            
+#endif
         }
-      //  [MenuItem("SolarEngine/DeleteMainLand")]
+
+        //  [MenuItem("SolarEngine/DeleteMainLand")]
         public static void deleteMainLand()
         {
-#if     UNITY_STANDALONE_WIN
+#if UNITY_STANDALONE_WIN
             SolarEngineGlobalInfo.deleteMainLand();
- #endif
+#endif
         }
-        
+
 
         public static bool checkApplyWithAndroidPackage()
         {
-            bool result=false;
+            bool result = false;
             if (SolarEngineSettings.removeAndroidSDK)
                 return true;
             if (!XmlModifier.isAndroidPackage())
             {
-                
                 if (!SolarEngineSettings.isCN && !SolarEngineSettings.isOversea)
                 {
-                   
-                        EditorUtility.DisplayDialog(ConstString.fail, ConstString.nostorageWarning, ConstString.OK);
-                        return false;
-                
-              
+                    EditorUtility.DisplayDialog(ConstString.fail, ConstString.nostorageWarning, ConstString.OK);
+                    return false;
                 }
-                
-             
-                result=  checkPlugins()&&checkXmlHandle();
-              //  EditorApplication.ExecuteMenuItem("Assets/External Dependency Manager/Android Resolver/Force Resolve ");
 
+
+                result = checkPlugins() && checkXmlHandle();
+                //  EditorApplication.ExecuteMenuItem("Assets/External Dependency Manager/Android Resolver/Force Resolve ");
             }
             else
             {
-                result=  true;
+                result = true;
             }
 
             return result;
@@ -139,55 +126,58 @@ namespace SolarEngine
             {
                 return PluginsEdtior.enableAndroidSDK();
             }
-            
         }
-        
+
         private static bool checkPlugins()
         {
             bool ios = false;
             bool android = false;
             bool miniGame = false;
-            bool oaid=false;
+            bool oaid = false;
 
-            bool openHarmony=false;
+            bool openHarmony = false;
 
             bool odminfo = false;
 
             if (!SolarEngineSettings.isUseiOS)
-                ios=  PluginsEdtior.disableiOS();
+                ios = PluginsEdtior.disableiOS();
             else
             {
-                ios= PluginsEdtior.showiOS();
+                ios = PluginsEdtior.showiOS();
             }
+
             if (!SolarEngineSettings.isUseAndroid)
-                android=    PluginsEdtior.disableAndroid();
+                android = PluginsEdtior.disableAndroid();
             else
             {
-                android=   PluginsEdtior.showAndroid();
+                android = PluginsEdtior.showAndroid();
             }
+
             if (!SolarEngineSettings.isUseMiniGame)
-                miniGame=  PluginsEdtior.disableMiniGame();
+                miniGame = PluginsEdtior.disableMiniGame();
             else
             {
-                miniGame= PluginsEdtior.showMiniGame();
+                miniGame = PluginsEdtior.showMiniGame();
             }
-            if(!SolarEngineSettings.isUseOaid)
+
+            if (!SolarEngineSettings.isUseOaid)
                 oaid = PluginsEdtior.disableOaid();
             else
             {
                 oaid = PluginsEdtior.showOaid();
-            }if( !SolarEngineSettings.isUseOpenHarmony)
+            }
+
+            if (!SolarEngineSettings.isUseOpenHarmony)
                 openHarmony = PluginsEdtior.disableOpenHarmony();
             else
             {
                 openHarmony = PluginsEdtior.showOpenHarmony();
             }
 
-            
 
-            if(!SolarEngineSettings.isUseODMInfo||SolarEngineSettings.isCN)
+            if (!SolarEngineSettings.isUseODMInfo || SolarEngineSettings.isCN)
                 odminfo = PluginsEdtior.disableODMInfo();
-            else if(SolarEngineSettings.isOversea&&SolarEngineSettings.isUseODMInfo)
+            else if (SolarEngineSettings.isOversea && SolarEngineSettings.isUseODMInfo)
             {
                 odminfo = PluginsEdtior.showODMInfo();
             }
@@ -195,24 +185,24 @@ namespace SolarEngine
             {
                 odminfo = PluginsEdtior.disableODMInfo();
             }
-            
-            if(SolarEngineSettings.isUseMacOS)
-                PluginsEdtior.showMacOS();
-                else
-            PluginsEdtior.disableMacOS();
-            return ios && android && miniGame && oaid&&  odminfo&&openHarmony;
 
+            if (SolarEngineSettings.isUseMacOS)
+                PluginsEdtior.showMacOS();
+            else
+                PluginsEdtior.disableMacOS();
+            return ios && android && miniGame && oaid && odminfo && openHarmony;
         }
-        
-        
+
+
         private static bool checkXmlHandle()
         {
             if (SolarEngineSettings.isCN)
-                return  XmlModifier.cnxml(true);
-            else if(SolarEngineSettings.isOversea)
-                return   XmlModifier.Overseaxml(true);
+                return XmlModifier.cnxml(true);
+            else if (SolarEngineSettings.isOversea)
+                return XmlModifier.Overseaxml(true);
             return false;
         }
+
         /// <summary>
         /// 展示提示.
         /// </summary>
@@ -224,7 +214,4 @@ namespace SolarEngine
             EditorUtility.DisplayDialog(title, content, "OK");
         }
     }
-    
- 
-    
 }

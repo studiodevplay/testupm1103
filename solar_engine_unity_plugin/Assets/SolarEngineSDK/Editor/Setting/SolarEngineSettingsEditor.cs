@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Xml.Linq;
 using SolarEngine.Build;
 using SolarEngineSDK.Editor;
+using UnityEngine.UIElements;
 
 namespace SolarEngine
 {
@@ -23,6 +24,8 @@ namespace SolarEngine
         private SerializedProperty overseaProperty;
 
         #endregion
+
+        private SerializedProperty optionalFeatures;
 
         #region 远程配置的设置
 
@@ -102,7 +105,6 @@ namespace SolarEngine
         private SerializedProperty ReceiverTcpHost;
         private SerializedProperty RuleTcpHost;
         private SerializedProperty GatewayTcpHost;
-        
 
         #endregion
 
@@ -113,18 +115,32 @@ namespace SolarEngine
         private bool oldOverseaValue;
 
         // 以下类似的多个布尔值用于记录对应属性之前的旧值，便于处理属性变更逻辑
-        private bool oldDisAllValue;
-        private bool oldDisiOSValue;
-        private bool oldDisAndroidValue;
-        private bool oldDisMiniGameValue;
-        private bool oldDisOaidValue;
 
-        private object SolarEngineSetting;
+        private static bool oldDisiOSValue;
+        private static bool oldDisAndroidValue;
+        private static bool oldDisMiniGameValue;
+        private static bool oldDisOaidValue;
+
+
+        private SolarEngineSettings solarEngingSetting;
 
         void OnEnable()
         {
             // 获取当前正在编辑的SolarEngineSettings类型的目标对象实例
-            SolarEngineSetting = target as SolarEngineSettings;
+
+            if (target == null)
+            {
+                Debug.LogWarning("Target is null in OnEnable.");
+                return;
+            }
+
+            if (serializedObject == null)
+            {
+                Debug.LogWarning("SerializedObject is null in OnEnable.");
+                return;
+            }
+
+            solarEngingSetting = target as SolarEngineSettings;
 
             #region 获取表示中国、海外存储区域选择的序列化属性
 
@@ -132,6 +148,8 @@ namespace SolarEngine
             overseaProperty = serializedObject.FindProperty("_Oversea");
 
             #endregion
+
+            optionalFeatures = serializedObject.FindProperty("_OptionalFeatures");
 
             #region 获取iOS平台URL相关的几个序列化属性，如标识符、方案、通用链接域名等
 
@@ -173,10 +191,16 @@ namespace SolarEngine
             openHarmonyRemoteConfig = serializedObject.FindProperty("_OpenHarmony");
             macosRemoteConfig = serializedObject.FindProperty("_MacOS");
 
+            SolarEngineSettings.isUseAndroid = androidRemoteConfig.boolValue;
+            SolarEngineSettings.isUseiOS = iOSRemoteConfig.boolValue;
+            SolarEngineSettings.isUseMiniGame = miniGameRemoteConfig.boolValue;
+            SolarEngineSettings.isUseOpenHarmony = openHarmonyRemoteConfig.boolValue;
+
             #endregion
 
             #region 版本
 
+            useSpecifyVersion = serializedObject.FindProperty("_SpecifyVersion");
             iOSVersion = serializedObject.FindProperty("_iOSVersion");
             AndroidVersion = serializedObject.FindProperty("_AndroidVersion");
             OpenHarmonyVersion = serializedObject.FindProperty("_OpenHarmonyVersion");
@@ -186,26 +210,27 @@ namespace SolarEngine
 
             #region 私有化部署
 
-            CustomDomainEnable = serializedObject.FindProperty("_CustomDomainEnable");
-            ReceiverDomain = serializedObject.FindProperty("_ReceiverDomain");
-            RuleDomain = serializedObject.FindProperty("_RuleDomain");
-            ReceiverTcpHost = serializedObject.FindProperty("_ReceiverTcpHost");
-            RuleTcpHost = serializedObject.FindProperty("_RuleTcpHost");
-            GatewayTcpHost = serializedObject.FindProperty("_GatewayTcpHost");
+            // CustomDomainEnable = serializedObject.FindProperty("_CustomDomainEnable");
+            // ReceiverDomain = serializedObject.FindProperty("_ReceiverDomain");
+            // RuleDomain = serializedObject.FindProperty("_RuleDomain");
+            // ReceiverTcpHost = serializedObject.FindProperty("_ReceiverTcpHost");
+            // RuleTcpHost = serializedObject.FindProperty("_RuleTcpHost");
+            // GatewayTcpHost = serializedObject.FindProperty("_GatewayTcpHost");
 
             #endregion
 
-            appkeyProp = serializedObject.FindProperty("_Appkey");
-            isDebugModelProp = serializedObject.FindProperty("_IsDebugModel");
-            logEnabledProp = serializedObject.FindProperty("_LogEnabled");
 
             // 记录初始时中国存储区域选择的布尔值
             oldChinaValue = chinaProperty.boolValue;
             // 记录初始时海外存储区域选择的布尔值
             oldOverseaValue = overseaProperty.boolValue;
-
+            Debug.Log("Initial Values ->"+androidRemoteConfig.boolValue);
+            oldDisAndroidValue = androidRemoteConfig.boolValue;
             // 记录初始时是否使用OAID的布尔值
             oldDisOaidValue = useOaid.boolValue;
+
+            Debug.Log(
+                $"Initial Values -> _China: {oldChinaValue}, _Oversea: {oldOverseaValue}, oldDisAndroidValue: {oldDisAndroidValue}, UseOAID: {oldDisOaidValue}");
         }
 
 
@@ -213,21 +238,53 @@ namespace SolarEngine
         {
             this._GUI();
         }
+#if UNITY_EDITOR
+        [MenuItem("SolarEngineSDK/Android/Remove", false, 0)]
+        public static void RemoveAndroidSDK()
+        {
+            SolarEngineSettings.removeAndroidSDK = true;
+            // SolarEngineSettings.isUseOaid = false;
+            // SolarEngineSettings.isUseAndroid = false;
+
+            bool result = PluginsEdtior.disableAndroidSDK() && PluginsEdtior.disableAndroid() &&
+                          PluginsEdtior.disableOaid();
+
+
+            Debug.Log(result);
+        }
+
+        [MenuItem("SolarEngineSDK/Android/Add", false, 0)]
+        public static void AddAndroidSDK()
+        {
+            SolarEngineSettings.removeAndroidSDK = false;
+            SolarEngineSettings.isUseAndroid = oldDisAndroidValue;
+            SolarEngineSettings.isUseOaid = oldDisOaidValue;
+            PluginsEdtior.enableAndroidSDK();
+
+            Debug.Log($"isUseAndroid: {SolarEngineSettings.isUseAndroid}, isUseOaid: {SolarEngineSettings.isUseOaid}");
+            if (SolarEngineSettings.isUseOaid)
+            {
+                PluginsEdtior.showOaid();
+            }
+
+            if (SolarEngineSettings.isUseAndroid)
+                PluginsEdtior.showAndroid();
+        }
+#endif
 
         #region DrawStorageAreaOptions
 
-        private void DrawStorageAreaOptions(GUIStyle darkerCyanTextFieldStyles)
+        private void DrawStorageAreaOptions()
         {
             EditorGUI.indentLevel += 1;
             EditorGUILayout.PropertyField(chinaProperty, new GUIContent(ConstString.chinaMainland));
             EditorGUILayout.PropertyField(overseaProperty, new GUIContent(ConstString.nonChinaMainland));
             EditorGUI.indentLevel -= 1;
-            if (chinaProperty.boolValue && overseaProperty.boolValue)
-            {
-                EditorGUILayout.HelpBox(ConstString.storageWarning, MessageType.Warning);
-            }
 
-            EditorGUILayout.HelpBox(ConstString.storageAreaMessage, MessageType.Info);
+            if (!chinaProperty.boolValue && !overseaProperty.boolValue)
+            {
+                EditorGUILayout.HelpBox(ConstString.storageAreaMessage, MessageType.Info);
+            }
 
             if (serializedObject.ApplyModifiedProperties())
             {
@@ -269,12 +326,17 @@ namespace SolarEngine
 
         #region DrawRemoveAndroidSDKOption
 
-        private bool removesdk = false;
-
-
         private void DrawRemoveAndroidSDKOption()
         {
-            EditorGUILayout.PropertyField(removeAndroidSDK, new GUIContent("Remove Android SDK"));
+            // EditorGUILayout.PropertyField(removeAndroidSDK, new GUIContent("Remove Android SDK"));
+            // if (removeAndroidSDK.boolValue)
+            // {
+            //     useOaid.boolValue = false;
+            // }
+            // else
+            // {
+            //     useOaid.boolValue = oldDisOaidValue;
+            // }
         }
 
         #endregion
@@ -286,37 +348,30 @@ namespace SolarEngine
 
         private void DrawRemoteConfig()
         {
-            // EditorGUILayout.PropertyField(useRemoteConfig);
-            _useRemoteConfig = EditorGUILayout.Foldout(_useRemoteConfig, "Remote Config");
-            if (_useRemoteConfig)
-            {
-                EditorGUI.indentLevel += 1;
-                // EditorGUILayout.PropertyField(disAllRemoteConfig);
-                EditorGUILayout.PropertyField(iOSRemoteConfig);
-                EditorGUILayout.PropertyField(androidRemoteConfig);
-                EditorGUILayout.PropertyField(miniGameRemoteConfig);
-#if TUANJIE_2022_3_OR_NEWER
-                EditorGUILayout.PropertyField(openHarmonyRemoteConfig);
-#endif
-                EditorGUILayout.PropertyField(macosRemoteConfig);
-                EditorGUI.indentLevel -= 1;
-                EditorGUILayout.HelpBox(ConstString.remoteConfigMsg, MessageType.Info);
-            }
-
-            if (removeAndroidSDK.boolValue)
-            {
-                androidRemoteConfig.boolValue = false;
-            }
-//             if (GUILayout.Button("禁用全部"))
+//             _useRemoteConfig = EditorGUILayout.Foldout(_useRemoteConfig, "Remote Config");
+//             if (_useRemoteConfig)
 //             {
-//                 iOSRemoteConfig.boolValue = false;
-//                 androidRemoteConfig.boolValue = false;
-//                 miniGameRemoteConfig.boolValue = false;
+//                 EditorGUI.indentLevel += 1;
+//                 // EditorGUILayout.PropertyField(disAllRemoteConfig);
+//                 EditorGUILayout.PropertyField(iOSRemoteConfig);
+//                 EditorGUILayout.PropertyField(androidRemoteConfig);
+//                 EditorGUILayout.PropertyField(miniGameRemoteConfig);
 // #if TUANJIE_2022_3_OR_NEWER
-//     openHarmonyRemoteConfig.boolValue = false;
+//                 EditorGUILayout.PropertyField(openHarmonyRemoteConfig);
 // #endif
-//                 macosRemoteConfig.boolValue = false;
+//                 EditorGUILayout.PropertyField(macosRemoteConfig);
+//                 EditorGUI.indentLevel -= 1;
+//                 EditorGUILayout.HelpBox(ConstString.remoteConfigMsg, MessageType.Info);
 //             }
+
+            // if (removeAndroidSDK.boolValue)
+            // {
+            //     androidRemoteConfig.boolValue = false;
+            // }
+            // else
+            // {
+            //     androidRemoteConfig.boolValue = true;
+            // }
         }
 
         #endregion
@@ -326,18 +381,21 @@ namespace SolarEngine
 
         private void DrawOaidOption()
         {
-            EditorGUILayout.PropertyField(useOaid, new GUIContent(ConstString.oaid));
-
             if (chinaProperty.boolValue)
             {
                 EditorGUILayout.HelpBox(ConstString.storageEnableOaidCN, MessageType.Info);
                 useOaid.boolValue = true;
             }
 
-            if (removeAndroidSDK.boolValue)
+            if (useOaid.boolValue && chinaProperty.boolValue)
             {
-                useOaid.boolValue = false;
+                EditorGUILayout.LabelField("OAID", EditorStyles.label);
             }
+            else
+            {
+                EditorGUILayout.PropertyField(useOaid, new GUIContent(ConstString.oaid));
+            }
+
 
             if (overseaProperty.boolValue)
             {
@@ -345,11 +403,10 @@ namespace SolarEngine
                 {
                     EditorGUILayout.HelpBox(ConstString.oaidEnable, MessageType.Warning);
                 }
-                else
-                {
-                    //   EditorGUILayout.HelpBox(ConstString.storageDisableOaid, MessageType.Info);
-                }
             }
+
+            oldDisOaidValue = useOaid.boolValue;
+            Debug.Log( "oldDisOaidValue"+useOaid.boolValue);
         }
 
         #endregion
@@ -406,23 +463,26 @@ namespace SolarEngine
 
         #region DrawSdkVersionSection
 
-        private bool _useSpecifyVersion = false;
+        //   private bool _useSpecifyVersion = false;
 
-        private void DrawSdkVersionSection(GUIStyle darkerCyanTextFieldStyles)
+        private void DrawSdkVersionSection()
         {
-            _useSpecifyVersion = EditorGUILayout.Foldout(_useSpecifyVersion, "SDK Version");
-            if (_useSpecifyVersion)
+            EditorGUILayout.PropertyField(useSpecifyVersion, new GUIContent("SDK Version"));
+
+            //   _useSpecifyVersion = EditorGUILayout.Foldout(_useSpecifyVersion, "SDK Version");
+            if (useSpecifyVersion.boolValue)
             {
-                // EditorGUILayout.PropertyField(useSpecifyVersion);
-
-
                 EditorGUI.indentLevel++;
                 EditorGUILayout.PropertyField(iOSVersion, new GUIContent("iOS Version"));
+                // CheckVersionFormat(iOSVersion);
                 EditorGUILayout.PropertyField(AndroidVersion);
+                // CheckVersionFormat(AndroidVersion);
 #if TUANJIE_2022_3_OR_NEWER
                 EditorGUILayout.PropertyField(OpenHarmonyVersion);
+                // CheckVersionFormat(OpenHarmonyVersion);
 #endif
                 EditorGUILayout.PropertyField(MacOSVersion);
+                // CheckVersionFormat(MacOSVersion);
                 EditorGUI.indentLevel--;
 
                 if (!iOSVersion.stringValue.Equals(SolarEngineSettings.iOSVersion))
@@ -440,80 +500,73 @@ namespace SolarEngine
             }
         }
 
-        #endregion
-
-        private bool showDomain = false;
-
-        private void DrawCustomDomainOption(GUIStyle darkerCyanTextFieldStyles)
+        private void CheckVersionFormat(SerializedProperty prop)
         {
-            showDomain = EditorGUILayout.Foldout(showDomain, "Custom Domain", true);
-
-            if (showDomain)
+            string version = prop.stringValue;
+            if (!System.Text.RegularExpressions.Regex.IsMatch(version, @"^\d{1,3}(\.\d{1,3}){3}$") &&
+                !string.IsNullOrEmpty(version))
             {
-                EditorGUI.indentLevel += 1;
-                EditorGUILayout.PropertyField(CustomDomainEnable, new GUIContent("Enable", "Set up Custom Domain"));
-
-                if (SolarEngineSettings.CustomDomainEnable != CustomDomainEnable.boolValue)
-                {
-                    SolarEngineSettings.CustomDomainEnable = CustomDomainEnable.boolValue;
-                }
-
-                if (CustomDomainEnable.boolValue)
-                {
-                    EditorGUI.indentLevel += 1;
-                    EditorGUILayout.PropertyField(ReceiverDomain,
-                        new GUIContent("Receiver Domain",
-                            "receiver https domain name, including the following services:\nEvent reporting, debug mode event reporting, attribution, delayed deeplink"));
-                    EditorGUILayout.PropertyField(RuleDomain,
-                        new GUIContent("Rule Domain",
-                            "rule https domain includes the following services:\nRemote Config"));
-                    EditorGUILayout.PropertyField(ReceiverTcpHost,
-                        new GUIContent("Receiver Tcp Host",
-                            "receiver tcp host， Including the following businesses:\nAttribution and debug mode event reportingt"));
-                    EditorGUILayout.PropertyField(RuleTcpHost,
-                        new GUIContent("Rule Tcp Host",
-                            "rule tcp host， Including the following businesses:\nRemote Config"));
-                    EditorGUILayout.PropertyField(GatewayTcpHost,
-                        new GUIContent("Gateway TcpHost",
-                            "gateway  tcp host， Including the following businesses:\nEvent reporting"));
-
-                    if (SolarEngineSettings.ReceiverDomain != ReceiverDomain.stringValue)
-                        SolarEngineSettings.ReceiverDomain = ReceiverDomain.stringValue;
-                    if (SolarEngineSettings.RuleDomain != RuleDomain.stringValue)
-                        SolarEngineSettings.RuleDomain = RuleDomain.stringValue;
-                    if (SolarEngineSettings.ReceiverTcpHost != ReceiverTcpHost.stringValue)
-                        SolarEngineSettings.ReceiverTcpHost = ReceiverTcpHost.stringValue;
-                    if (SolarEngineSettings.RuleTcpHost != RuleTcpHost.stringValue)
-                        SolarEngineSettings.RuleTcpHost = RuleTcpHost.stringValue;
-                    if (SolarEngineSettings.GatewayTcpHost != GatewayTcpHost.stringValue)
-                        SolarEngineSettings.GatewayTcpHost = GatewayTcpHost.stringValue;
-                    
-                    EditorGUI.indentLevel -= 1;
-                  
-                }
+                EditorGUILayout.HelpBox($"{prop.displayName} 格式错误，应为类似 1.x.x.x 的四段数字", MessageType.Error);
             }
         }
 
+        #endregion
 
-        private SerializedProperty appkeyProp;
-        private SerializedProperty isDebugModelProp;
-        private SerializedProperty logEnabledProp;
 
-        private void DrawsAppInfoSettings()
-        {
-            // EditorGUILayout.Space(10);
-            // DrawH2Title("🔧 App Info Settings");
-            // EditorGUILayout.Space(5);
-            //
-            // EditorGUILayout.PropertyField(appkeyProp, new GUIContent("App Key"));
-            // //
-            // EditorGUILayout.PropertyField(isDebugModelProp,new GUIContent(ConstString.DebugModel));
-            // EditorGUILayout.PropertyField(logEnabledProp, new GUIContent("Enable Log"));
-            //
-            //
-            //
-            // serializedObject.ApplyModifiedProperties();
-        }
+        #region 私有化部署
+
+        // private void DrawCustomDomainOption(GUIStyle darkerCyanTextFieldStyles)
+        // {
+        //     showDomain = EditorGUILayout.Foldout(showDomain, "Custom Domain", true);
+        //
+        //     if (showDomain)
+        //     {
+        //         EditorGUI.indentLevel += 1;
+        //         EditorGUILayout.PropertyField(CustomDomainEnable, new GUIContent("Enable", "Set up Custom Domain"));
+        //
+        //         if (SolarEngineSettings.CustomDomainEnable != CustomDomainEnable.boolValue)
+        //         {
+        //             SolarEngineSettings.CustomDomainEnable = CustomDomainEnable.boolValue;
+        //         }
+        //
+        //         if (CustomDomainEnable.boolValue)
+        //         {
+        //             EditorGUI.indentLevel += 1;
+        //             EditorGUILayout.PropertyField(ReceiverDomain,
+        //                 new GUIContent("Receiver Domain",
+        //                     "receiver https domain name, including the following services:\nEvent reporting, debug mode event reporting, attribution, delayed deeplink"));
+        //             EditorGUILayout.PropertyField(RuleDomain,
+        //                 new GUIContent("Rule Domain",
+        //                     "rule https domain includes the following services:\nRemote Config"));
+        //             EditorGUILayout.PropertyField(ReceiverTcpHost,
+        //                 new GUIContent("Receiver Tcp Host",
+        //                     "receiver tcp host， Including the following businesses:\nAttribution and debug mode event reportingt"));
+        //             EditorGUILayout.PropertyField(RuleTcpHost,
+        //                 new GUIContent("Rule Tcp Host",
+        //                     "rule tcp host， Including the following businesses:\nRemote Config"));
+        //             EditorGUILayout.PropertyField(GatewayTcpHost,
+        //                 new GUIContent("Gateway TcpHost",
+        //                     "gateway  tcp host， Including the following businesses:\nEvent reporting"));
+        //
+        //             if (SolarEngineSettings.ReceiverDomain != ReceiverDomain.stringValue)
+        //                 SolarEngineSettings.ReceiverDomain = ReceiverDomain.stringValue;
+        //             if (SolarEngineSettings.RuleDomain != RuleDomain.stringValue)
+        //                 SolarEngineSettings.RuleDomain = RuleDomain.stringValue;
+        //             if (SolarEngineSettings.ReceiverTcpHost != ReceiverTcpHost.stringValue)
+        //                 SolarEngineSettings.ReceiverTcpHost = ReceiverTcpHost.stringValue;
+        //             if (SolarEngineSettings.RuleTcpHost != RuleTcpHost.stringValue)
+        //                 SolarEngineSettings.RuleTcpHost = RuleTcpHost.stringValue;
+        //             if (SolarEngineSettings.GatewayTcpHost != GatewayTcpHost.stringValue)
+        //                 SolarEngineSettings.GatewayTcpHost = GatewayTcpHost.stringValue;
+        //             
+        //             EditorGUI.indentLevel -= 1;
+        //           
+        //         }
+        //     }
+        // }
+
+        #endregion
+
 
         private void ProcessPropertyChange(SerializedProperty property, ref bool oldValue, string propertyName,
             System.Action<bool> xmlAction, System.Action additionalAction = null)
@@ -528,25 +581,43 @@ namespace SolarEngine
         public void _GUI()
         {
             GUIStyle darkerCyanTextFieldStyles = new GUIStyle(EditorStyles.boldLabel);
+            darkerCyanTextFieldStyles.normal.textColor = Color.white;
 
-            GUI.color = Color.white;
-            DrawH2Title("SDK Setting");
+            DrawH2Title("Quick integration");
 
-            DrawStorageAreaOptions(darkerCyanTextFieldStyles);
+            DrawStorageAreaOptions();
 
-            DrawH2Title("SDK Plugins");
-            DrawRemoveAndroidSDKOption();
-            DrawRemoteConfig();
-            DrawOaidOption();
-            DrawODMInfoOption();
+            EditorGUILayout.Space();
+            var origFontStyle = EditorStyles.label.fontStyle;
+            Color _color = EditorStyles.label.normal.textColor;
+            EditorStyles.label.fontStyle = FontStyle.Bold;
+            EditorStyles.label.normal.textColor = new Color(0f / 255f, 190f / 255f, 190f / 255f);
 
-            DrawDeepLinkOption(darkerCyanTextFieldStyles);
+            optionalFeatures.boolValue = EditorGUILayout.Toggle(
+                new GUIContent("OPTIONAL FEATURES"),
+                optionalFeatures.boolValue
+            );
 
-            DrawSdkVersionSection(darkerCyanTextFieldStyles);
-            DrawCustomDomainOption(darkerCyanTextFieldStyles);
+            EditorStyles.label.fontStyle = origFontStyle;
+            EditorStyles.label.normal.textColor = _color;
+
+            if (solarEngingSetting._OptionalFeatures)
+            {
+                DrawVerticalSpace(5f);
+                EditorGUI.indentLevel += 1;
+                DrawRemoveAndroidSDKOption();
+                DrawRemoteConfig();
+                DrawOaidOption();
+                DrawODMInfoOption();
+
+                DrawDeepLinkOption(darkerCyanTextFieldStyles);
+
+                DrawSdkVersionSection();
+                EditorGUI.indentLevel -= 1;
+            }
+
             ApplyButton();
 
-            DrawsAppInfoSettings();
             serializedObject.ApplyModifiedProperties();
         }
 
@@ -576,8 +647,26 @@ namespace SolarEngine
             // 当用户点击按钮区域时执行以下逻辑
             if (GUILayout.Button("Apply"))
             {
+                // 点击 Apply 时才验证格式
+                if (!IsValidVersion(iOSVersion.stringValue) ||
+                    !IsValidVersion(AndroidVersion.stringValue) ||
+#if TUANJIE_2022_3_OR_NEWER
+            !IsValidVersion(OpenHarmonyVersion.stringValue) ||
+#endif
+                    !IsValidVersion(MacOSVersion.stringValue))
+                {
+                    EditorUtility.DisplayDialog("format error", "Please enter the correct SDK version format (e.g. 1.0.0.0)）", "OK");
+                    return;
+                }
+
                 ApplySetting._applySetting(true);
             }
+        }
+
+        private bool IsValidVersion(string version)
+        {
+            return System.Text.RegularExpressions.Regex.IsMatch(version, @"^\d{1,3}(\.\d{1,3}){3}$") ||
+                   string.IsNullOrEmpty(version);
         }
 
         //用户应用
@@ -673,11 +762,13 @@ namespace SolarEngine
         private const float COMMON_SPACE = 13f;
 
         // 最大间距
-        private const float MAX_SPACE = 25f;
+        private const float MAX_SPACE = 5f;
 
         protected void DrawH2Title(string title)
         {
-            DrawAreaTitle(title, Color.black, TextAnchor.MiddleLeft, 16);
+            string _title = title.ToUpperInvariant();
+            DrawAreaTitle(_title, EditorUtils.GetColor(EditorUtils.EditorColor.Cyan), TextAnchor.MiddleLeft,
+                EditorStyles.label.fontSize);
         }
 
         /// <summary>
@@ -695,7 +786,7 @@ namespace SolarEngine
             var guiStyle = new GUIStyle();
             guiStyle.fontSize = fontSize;
             guiStyle.normal.textColor = color;
-            guiStyle.fontStyle = FontStyle.BoldAndItalic;
+            guiStyle.fontStyle = FontStyle.Bold;
             guiStyle.alignment = textAnchor;
             EditorGUILayout.TextArea(title, guiStyle);
             EditorGUILayout.EndVertical();
