@@ -18,9 +18,25 @@ public class SolarEngineDemo : MonoBehaviour
 
    // string uri = "https://baidu.link.solar-engine.com/se/deeplink.html?sedp_urlscheme=sedp_urlscheme_applik&sedp_link=sedp_link_applink&download=download_applink&turl_id=turlid_applink&a=6&b=8&se_from=links";
 
-    
-   
-    public void InitSDK()
+   public void Awake()
+   {
+       Debug.Log(SolarEngineDemoLOG+" Awake");
+      
+       SolarEngine. Analytics.attributionCallback( attributionCallback);
+       SolarEngine.   Analytics.initCompletedCallback(  initSuccessCallback);
+   }
+
+   public void Start()
+   {
+       // Debug.Log(SolarRuntimeSettings.Instance.customDomainEnable);
+       // Debug.Log(SolarRuntimeSettings.Instance.receiverDomain);
+       // Debug.Log(SolarRuntimeSettings.Instance.ruleDomain);
+       // Debug.Log(SolarRuntimeSettings.Instance.receiverTcpHost);
+       // Debug.Log(SolarRuntimeSettings.Instance.ruleTcpHost);
+       // Debug.Log(SolarRuntimeSettings.Instance.gatewayTcpHost);
+   }
+
+   public void InitSDK()
     {
 
         Debug.Log(SolarEngineDemoLOG+" init click1");
@@ -53,7 +69,7 @@ public class SolarEngineDemo : MonoBehaviour
          
         RCConfig rc = new RCConfig();
         
-        rc.enable = true;
+        // rc.enable = true;
         
         rc.mergeType= RCMergeType.ByUser;
         rc.customIDProperties = new Dictionary<string, object>()
@@ -224,13 +240,6 @@ public class SolarEngineDemo : MonoBehaviour
 
         SolarEngine.Analytics.track("trackCustom", customProperties, preProperties);
 
-        
-        
-        
-        
-    
-
-
     }
 
 
@@ -287,7 +296,7 @@ public class SolarEngineDemo : MonoBehaviour
         productsAttributes.reportingToTencentSdk = 1;
         Debug.Log(SolarEngineDemoLOG + "trackPurchase"+JsonConvert.SerializeObject(productsAttributes));
 
-        // SolarEngine.Analytics.track(productsAttributes);
+        SolarEngine.Analytics.trackPurchase(productsAttributes);
     }
 
     public void trackAdImpression()
@@ -434,7 +443,7 @@ public class SolarEngineDemo : MonoBehaviour
     private void initSuccessCallback(int code)
     {
         Debug.Log(SolarEngineDemoLOG+ "initSuccessCallback  code : " + code);
-
+        setRemoteDefaultConfig();
     }
 
 
@@ -981,6 +990,8 @@ public void trackCreateRole()
     {
         reportingToTencentSdk=1,
         mpRoleName = "role_name",
+        customProperties = new Dictionary<string, object> { { "trackCreateRole", "1" } }
+
     };
     SolarEngine.Analytics.trackCreateRole(createRoleData);
 }
@@ -1000,6 +1011,8 @@ public void trackTutorialFinish()
     TutorialFinishAttributes tutorialFinishData = new TutorialFinishAttributes
     {
         reportingToTencentSdk=1,
+        customProperties = new Dictionary<string, object> { { "trackTutorialFinish", "1" } }
+
     };
     SolarEngine.Analytics.trackTutorialFinish(tutorialFinishData);
 }
