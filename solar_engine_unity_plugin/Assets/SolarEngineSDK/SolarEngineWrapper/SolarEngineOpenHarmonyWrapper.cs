@@ -56,6 +56,14 @@ namespace SolarEngine
             openHarmonyJSClass.CallStatic("initialize", appKey, initSeDict(config), initRcDict(rcConfig));
         }
 
+        private static void AttributionCompletedCallback(SEAttributionCallback callback)
+        {
+        }
+
+        private static void InitCompletedCallback(SESDKInitCompletedCallback callback)
+        {
+        }
+
         private static void SetVisitorID(string visitorId)
         {
             openHarmonyJSClass.CallStatic("setVisitorID", visitorId);
@@ -110,7 +118,6 @@ namespace SolarEngine
         private static void SetGDPRArea(bool isGDPRArea)
         {
             Debug.Log($"{SolorEnginopenharmony}SetGDPRArea");
-             
         }
 
 
@@ -301,16 +308,16 @@ namespace SolarEngine
             Analytics.Instance.delayDeeplinkCallback_private = callback;
             OpenHarmonyJSCallback delaydeeplinkCalllback = new OpenHarmonyJSCallback(onDelayDeepLinkCallback);
             openHarmonyJSClass.CallStatic("setDelayDeepLinkListener", delaydeeplinkCalllback);
-
         }
-        private static void RequestPermissionsFromUser(Action<int>  callback)
+
+        private static void RequestPermissionsFromUser(Action<int> callback)
         {
             getRequestPermission_private = callback;
 
             OpenHarmonyJSCallback requestPermissionCalllback = new OpenHarmonyJSCallback(onRequestPermissionsCallback);
             openHarmonyJSClass.CallStatic("requestPermissionsFromUser", requestPermissionCalllback);
         }
-      
+
 
         private static void SetReferrerTitle(string title)
         {
@@ -404,8 +411,6 @@ namespace SolarEngine
             Debug.Log($"{SolorEnginopenharmony} TrackViewContentActivity");
         }
 
-        
-        
         #endregion
 
 
@@ -420,7 +425,7 @@ namespace SolarEngine
                     Debug.Log("attributionCallback  json: " + json);
                     Debug.Log("attributionCallback  Data: " + code);
                 }
-              
+
                 OnAttributionHandler(code, json);
             }
 
@@ -462,8 +467,8 @@ namespace SolarEngine
 
             return true;
         }
-        
-        
+
+
         private static object onRequestPermissionsCallback(params OpenHarmonyJSObject[] args)
         {
             if (args.Length > 0)
@@ -530,7 +535,7 @@ namespace SolarEngine
                 {
                     Debug.Log("getVisitorIDCallback  VisitorID: " + VisitorID);
                 }
-            
+
                 getVisitor_private?.Invoke(VisitorID);
             }
 
@@ -546,13 +551,14 @@ namespace SolarEngine
                 {
                     Debug.Log("getDistinctIDCallback  DistinctID: " + DistinctID);
                 }
-            
 
-            getDistinct_private?.Invoke(DistinctID);
+
+                getDistinct_private?.Invoke(DistinctID);
             }
 
             return true;
         }
     }
 }
+
 #endif

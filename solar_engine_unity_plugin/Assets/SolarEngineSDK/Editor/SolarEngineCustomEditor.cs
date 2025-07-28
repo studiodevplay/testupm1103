@@ -105,7 +105,8 @@ namespace SolarEngine
 
                 solarEngine.logEnabled = EditorGUILayout.Toggle("Log Enable", solarEngine.logEnabled);
                 solarEngine.isDebugModel = EditorGUILayout.Toggle("Debug Model", solarEngine.isDebugModel);
-
+                solarEngine.deferredDeeplinkenable =
+                    EditorGUILayout.Toggle("Deferred Deeplink", solarEngine.deferredDeeplinkenable);
 #if UNITY_IOS||UNITY_ANDROID
                 if (SolarEngineSettings.isOversea)
                 {
@@ -115,8 +116,7 @@ namespace SolarEngine
                         EditorGUILayout.Toggle("Kids App Enabled", solarEngine.isKidsAppEnabled);
                 }
 
-                solarEngine.deferredDeeplinkenable =
-                    EditorGUILayout.Toggle("Deferred Deeplink", solarEngine.deferredDeeplinkenable);
+              
 #if UNITY_IOS
                 solarEngine.attAuthorizationWaitingInterval = Mathf.Clamp(
                     EditorGUILayout.IntField("ATT Wait Interval", solarEngine.attAuthorizationWaitingInterval),
