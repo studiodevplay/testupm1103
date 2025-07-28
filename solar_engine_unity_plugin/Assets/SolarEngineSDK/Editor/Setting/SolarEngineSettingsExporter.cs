@@ -31,17 +31,17 @@ namespace SolarEngine
                 runtimeSettings = AssetDatabase.LoadAssetAtPath<SolarRuntimeSettings>(RUNTIME_SETTINGS_PATH);
             }
             
-            // 从编辑器配置复制值
-            runtimeSettings.isCN = SolarEngineSettings.isCN;
-            runtimeSettings.isOversea = SolarEngineSettings.isOversea;
-            
-            runtimeSettings.isUseOaid = SolarEngineSettings.isUseOaid;
+            // // 从编辑器配置复制值
+            // runtimeSettings.isCN = SolarEngineSettings.isCN;
+            // runtimeSettings.isOversea = SolarEngineSettings.isOversea;
+            //
+            // runtimeSettings.isUseOaid = SolarEngineSettings.isUseOaid;
             runtimeSettings.isUseODMInfo = SolarEngineSettings.isUseODMInfo;
-            runtimeSettings.isUseAndroidRc = SolarEngineSettings.isUseAndroid;
-            runtimeSettings.isUseiOSRc = SolarEngineSettings.isUseiOS;
-            runtimeSettings.isUseMininRc = SolarEngineSettings.isUseMiniGame;
-            runtimeSettings.isUseMacOSRc = SolarEngineSettings.isUseMacOS;
-            runtimeSettings.isUseOpenHarmonyRc = SolarEngineSettings.isUseOpenHarmony;
+            // runtimeSettings.isUseAndroidRc = SolarEngineSettings.isUseAndroid;
+            // runtimeSettings.isUseiOSRc = SolarEngineSettings.isUseiOS;
+            // runtimeSettings.isUseMininRc = SolarEngineSettings.isUseMiniGame;
+            // runtimeSettings.isUseMacOSRc = SolarEngineSettings.isUseMacOS;
+            // runtimeSettings.isUseOpenHarmonyRc = SolarEngineSettings.isUseOpenHarmony;
             
             // runtimeSettings.customDomainEnable = SolarEngineSettings.CustomDomainEnable;
             // runtimeSettings.receiverDomain = SolarEngineSettings.ReceiverDomain;
