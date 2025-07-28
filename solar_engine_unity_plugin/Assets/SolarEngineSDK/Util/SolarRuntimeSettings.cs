@@ -6,22 +6,22 @@ namespace SolarEngine
     [CreateAssetMenu(fileName = "SERuntimeSettings", menuName = "SolarEngine/Runtime Settings")]
     public class SolarRuntimeSettings : ScriptableObject
     {
-        [HideInInspector]
-        public  bool isCN;
-        [HideInInspector]
-        public bool isOversea;
-        [HideInInspector]
-        public bool isUseOaid;
+        // [HideInInspector]
+        // public  bool isCN;
+        // [HideInInspector]
+        // public bool isOversea;
+        // [HideInInspector]
+        // public bool isUseOaid;
         [HideInInspector]
         public bool isUseODMInfo;
 
-        public bool isUseAndroidRc;
-        public bool isUseiOSRc;
-        
-        public bool isUseMininRc;
-        public bool isUseMacOSRc;
-        public bool isUseOpenHarmonyRc;
-        
+        // public bool isUseAndroidRc;
+        // public bool isUseiOSRc;
+        //
+        // public bool isUseMininRc;
+        // public bool isUseMacOSRc;
+        // public bool isUseOpenHarmonyRc;
+        //
         
         // public bool   customDomainEnable;
         // public string receiverDomain;

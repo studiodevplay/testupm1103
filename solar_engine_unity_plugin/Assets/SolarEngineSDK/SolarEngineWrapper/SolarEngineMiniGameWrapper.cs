@@ -75,7 +75,6 @@ namespace SolarEngine
                         config.initCompletedCallback.Target, config.initCompletedCallback.Method);
                 initParams.miniGameInitCompletedCallback = initCompletedCallback;
             }
-Debug.LogError(config.attributionCallback);
             if (config.attributionCallback != null)
             {
                 SolarEngineSDK4MiniGames.MiniGameAttributionCallback attributionCallback =
