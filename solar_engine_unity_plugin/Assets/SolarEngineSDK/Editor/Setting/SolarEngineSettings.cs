@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using SolarEngineSDK.Editor;
 using UnityEditor;
 #endif
 using UnityEngine;
@@ -76,7 +77,7 @@ namespace SolarEngine
         [SerializeField] private string _iOSVersion;
         [SerializeField] private string _AndroidVersion;
         [SerializeField] private string _OpenHarmonyVersion;
-        [SerializeField] private string _MacOSVersion;
+        // [SerializeField] private string _MacOSVersion;
 
         #endregion
 
@@ -245,11 +246,11 @@ namespace SolarEngine
 
         public static string MacOSVersion
         {
-            get { return Instance._MacOSVersion; }
-            set { Instance._MacOSVersion = value; }
+            get { return Instance._iOSVersion; }
+          //  set { Instance._iOSVersion = value; }
         }
 #if UNITY_EDITOR
-        [MenuItem("SolarEngineSDK/SDK Edit Settings", false, 0)]
+        [MenuItem(ConstString.MenuItem.sdkEditSettings, false, 0)]
         public static void EditSettings()
         {
             Selection.activeObject = Instance;

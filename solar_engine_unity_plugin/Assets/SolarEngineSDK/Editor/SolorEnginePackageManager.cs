@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using SolarEngine;
+using SolarEngineSDK.Editor;
 using UnityEditor;
 using UnityEngine;
 [InitializeOnLoad]
@@ -51,12 +52,12 @@ public class SolorEnginePackageManager : MonoBehaviour
         Application.OpenURL("https://help.solar-engine.com/cn/docs/51FROeEQ");
     }
     
-    [MenuItem("SolarEngineSDK/Documentation/iOS ChangleLog", false, 0)]
+    [MenuItem(ConstString.MenuItem.iOSChangelog, false, 0)]
     static void solarEngineDocsiOS()
     {
         Application.OpenURL("https://help.solar-engine.com/cn/docs/geng-xin-ri-zhi-RAvv");
     }
-    [MenuItem("SolarEngineSDK/Documentation/Android ChangleLog", false, 0)]
+    [MenuItem(ConstString.MenuItem.androidChangelog, false, 0)]
     static void solarEngineDocsAndroid()
     {
         Application.OpenURL("https://help.solar-engine.com/cn/docs/geng-xin-ri-zhi");

@@ -51,7 +51,7 @@ namespace SolarEngine
 
             seDict.Add("delayDeeplinkEnable", config.deferredDeeplinkenable);
 #if UNITY_IOS || UNITY_IPHONE
-            if (SolarRuntimeSettings.Instance!= null)
+            if (SolarRuntimeSettings.Instance != null)
             {
                 seDict.Add("odmInfoEnable", SolarRuntimeSettings.Instance.isUseODMInfo);
             }
@@ -62,25 +62,28 @@ namespace SolarEngine
 #endif
             seDict.Add("isCoppaEnabled", config.isCoppaEnabled);
             seDict.Add("isKidsAppEnabled", config.isKidsAppEnabled);
-           
-            seDict.Add("enable", config.customDomain.enable);
-            
-            if(!string.IsNullOrEmpty(config.customDomain.receiverDomain))
-              seDict.Add("receiverDomain", config.customDomain.receiverDomain);
-            
-            if(!string.IsNullOrEmpty(config.customDomain.ruleDomain))
-              seDict.Add("ruleDomain", config.customDomain.ruleDomain);
-            
-            if(!string.IsNullOrEmpty(config.customDomain.receiverTcpHost))
-              seDict.Add("receiverTcpHost",config.customDomain.receiverTcpHost);
-            
-            if(!string.IsNullOrEmpty(config.customDomain.ruleTcpHost))
-              seDict.Add("ruleTcpHost",config.customDomain.ruleTcpHost);
-            
-            if (!string.IsNullOrEmpty(config.customDomain.gatewayTcpHost))
-                seDict.Add("gatewayTcpHost", config.customDomain.gatewayTcpHost);
+            if (config.customDomain.enable)
+            {
+                Dictionary<string, object> customDomainDict = new Dictionary<string, object>();
+                customDomainDict.Add("enable", config.customDomain.enable);
 
-           
+                if (!string.IsNullOrEmpty(config.customDomain.receiverDomain))
+                    customDomainDict.Add("receiverDomain", config.customDomain.receiverDomain);
+
+                if (!string.IsNullOrEmpty(config.customDomain.ruleDomain))
+                    customDomainDict.Add("ruleDomain", config.customDomain.ruleDomain);
+
+                if (!string.IsNullOrEmpty(config.customDomain.receiverTcpHost))
+                    customDomainDict.Add("receiverTcpHost", config.customDomain.receiverTcpHost);
+
+                if (!string.IsNullOrEmpty(config.customDomain.ruleTcpHost))
+                    customDomainDict.Add("ruleTcpHost", config.customDomain.ruleTcpHost);
+
+                if (!string.IsNullOrEmpty(config.customDomain.gatewayTcpHost))
+                    customDomainDict.Add("gatewayTcpHost", config.customDomain.gatewayTcpHost);
+                seDict.Add("customDomain", customDomainDict);
+            }
+
 
             string seJonString = JsonConvert.SerializeObject(seDict);
             if (islog)
@@ -123,6 +126,7 @@ namespace SolarEngine
             // }
             return rcConfig.enable;
         }
+
         private static string initRcDict(RCConfig rcConfig)
         {
             Dictionary<string, object> rcDict = new Dictionary<string, object>();
@@ -133,8 +137,8 @@ namespace SolarEngine
             // }
             // else
             // {
-              
-         
+
+
             rcDict.Add("enable", rcConfigEnable(rcConfig));
 
             rcDict.Add("mergeType", rcConfig.mergeType);
@@ -786,7 +790,7 @@ namespace SolarEngine
     public struct RCConfig
     {
         // // 线参数SDK启用开关，默认为关闭状态，必传字段
-         public bool enable { get; set; }
+        public bool enable { get; set; }
 
         // SDK配置合并策略，默认情况下服务端配置跟本地缓存配置合并
         // ENUM：SERCMergeTypeUser 在App版本更新时会清除缓存配置
@@ -943,7 +947,6 @@ namespace SolarEngine
         public int reportingToTencentSdk;
         public string mpRoleName;
         public Dictionary<string, object> customProperties;
-
     }
 
     [System.Serializable]
@@ -951,7 +954,6 @@ namespace SolarEngine
     {
         public int reportingToTencentSdk;
         public Dictionary<string, object> customProperties;
-
     }
 
     [System.Serializable]

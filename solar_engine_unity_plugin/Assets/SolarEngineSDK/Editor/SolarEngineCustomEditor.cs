@@ -1,3 +1,4 @@
+using System.Reflection;
 using SolarEngineSDK.Editor;
 using UnityEditor;
 using UnityEngine;
@@ -7,6 +8,53 @@ namespace SolarEngine
     [CustomEditor(typeof(SolarEngineAnalytics))]
     public class SolarEngineCustomEditor : Editor
     {
+        [MenuItem(ConstString.MenuItem.createAnalyticsObject, false, 10)]
+        public static void CreateAnalyticsObject()
+        {
+            // 查找已有 SolarEngineAnalytics
+            SolarEngineAnalytics existing = Object.FindObjectOfType<SolarEngineAnalytics>();
+
+            if (existing != null)
+            {
+                if (!EditorUtility.DisplayDialog("Already Exists",
+                        "A SolarEngineAnalytics already exists in the scene.\nDo you want to create another one (copying its values)?",
+                        "Yes", "No"))
+                {
+                    return;
+                }
+            }
+
+            // 创建新 GameObject 并挂载组件
+            GameObject analyticsGO = new GameObject("SolarEngineAnalytics");
+            SolarEngineAnalytics newAnalytics = analyticsGO.AddComponent<SolarEngineAnalytics>();
+
+            // 复制字段值（浅拷贝）
+            if (existing != null)
+            {
+                CopySerializedFields(existing, newAnalytics);
+            }
+
+            Undo.RegisterCreatedObjectUndo(analyticsGO, "Create SolarEngineAnalytics");
+            Selection.activeGameObject = analyticsGO;
+
+            Debug.Log("Created new SolarEngineAnalytics object in the scene.");
+        }
+
+        private static void CopySerializedFields(SolarEngineAnalytics source, SolarEngineAnalytics target)
+        {
+            var type = typeof(SolarEngineAnalytics);
+            BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+
+            foreach (var field in type.GetFields(flags))
+            {
+                // 仅复制非 static 字段
+                if (!field.IsStatic && !field.IsNotSerialized)
+                {
+                    object value = field.GetValue(source);
+                    field.SetValue(target, value);
+                }
+            }
+        }
         private Editor settingsEditor;
 
         public override void OnInspectorGUI()
@@ -21,8 +69,9 @@ namespace SolarEngine
                 fontSize = 12
             };
 
-            EditorGUILayout.Space();
-            solarEngine.startManually = EditorGUILayout.Toggle("Start SDK Manually", solarEngine.startManually);
+     
+            solarEngine.startManually = EditorGUILayout.Toggle(  new GUIContent("Start SDK Manually", "Enable Start SDK Manually"),
+                solarEngine.startManually);
 
             EditorGUILayout.Space();
 
@@ -36,7 +85,7 @@ namespace SolarEngine
                         textColor = EditorUtils.GetColor(EditorUtils.EditorColor.SoftGreen)
                     }
                 };
-                solarEngine.preInitSeSdk = EditorGUILayout.Toggle("Pre Init SDK", solarEngine.preInitSeSdk);
+                solarEngine.preInitSeSdkManually = EditorGUILayout.Toggle("Pre Init SDK Manually", solarEngine.preInitSeSdkManually);
 
                 EditorGUILayout.LabelField("MULTIPLATFORM SETTINGS", titleStyle);
                 EditorGUI.indentLevel += 1;
@@ -49,15 +98,16 @@ namespace SolarEngine
                     solarEngine.appKey
                 );
 
-                if (solarEngine.appKey.Contains(" "))
+                if (!string.IsNullOrEmpty(solarEngine.appKey)&&solarEngine.appKey.Contains(" "))
                 {
                     EditorGUILayout.HelpBox("App Key Cannot Contain Spaces", MessageType.Error);
                 }
+
                 solarEngine.logEnabled = EditorGUILayout.Toggle("Log Enable", solarEngine.logEnabled);
                 solarEngine.isDebugModel = EditorGUILayout.Toggle("Debug Model", solarEngine.isDebugModel);
 
-                #if UNITY_IOS||UNITY_ANDROID
-                  if (SolarEngineSettings.isOversea)
+#if UNITY_IOS||UNITY_ANDROID
+                if (SolarEngineSettings.isOversea)
                 {
                     solarEngine.isGDPRArea = EditorGUILayout.Toggle("Gdpr Area", solarEngine.isGDPRArea);
                     solarEngine.isCoppaEnabled = EditorGUILayout.Toggle("Coppa Enable", solarEngine.isCoppaEnabled);
@@ -67,14 +117,24 @@ namespace SolarEngine
 
                 solarEngine.deferredDeeplinkenable =
                     EditorGUILayout.Toggle("Deferred Deeplink", solarEngine.deferredDeeplinkenable);
+#if UNITY_IOS
                 solarEngine.attAuthorizationWaitingInterval = Mathf.Clamp(
                     EditorGUILayout.IntField("ATT Wait Interval", solarEngine.attAuthorizationWaitingInterval),
                     0, 120);
-                solarEngine.fbAppID = EditorGUILayout.TextField("Facebook App ID", solarEngine.fbAppID);
-                solarEngine.caid = EditorGUILayout.TextField("Caid", solarEngine.caid);
-                #endif
-                
+#endif
               
+#if UNITY_ANDROID
+                solarEngine.fbAppID = EditorGUILayout.TextField("Facebook App ID", solarEngine.fbAppID);
+
+#endif
+#if UNITY_IOS
+                if (SolarEngineSettings.isCN)
+                    solarEngine.caid = EditorGUILayout.TextField("Caid", solarEngine.caid);
+
+#endif
+
+#endif
+
 
                 EditorGUILayout.LabelField("REMOTE CONFIG", lableStyle);
 
@@ -142,8 +202,6 @@ namespace SolarEngine
             }
 #endif
 #endif
-           
-          
         }
     }
 }

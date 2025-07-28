@@ -90,7 +90,7 @@ namespace SolarEngine
         SerializedProperty iOSVersion;
         SerializedProperty OpenHarmonyVersion;
 
-        private SerializedProperty MacOSVersion;
+        // private SerializedProperty MacOSVersion;
 
         // 序列化属性，用于表示 Android 平台版本相关的设置
         SerializedProperty AndroidVersion;
@@ -204,7 +204,7 @@ namespace SolarEngine
             iOSVersion = serializedObject.FindProperty("_iOSVersion");
             AndroidVersion = serializedObject.FindProperty("_AndroidVersion");
             OpenHarmonyVersion = serializedObject.FindProperty("_OpenHarmonyVersion");
-            MacOSVersion = serializedObject.FindProperty("_MacOSVersion");
+           // MacOSVersion = serializedObject.FindProperty("_MacOSVersion");
 
             #endregion
 
@@ -224,13 +224,13 @@ namespace SolarEngine
             oldChinaValue = chinaProperty.boolValue;
             // 记录初始时海外存储区域选择的布尔值
             oldOverseaValue = overseaProperty.boolValue;
-            Debug.Log("Initial Values ->"+androidRemoteConfig.boolValue);
+            Debug.Log("Initial Values  androidRemoteConfig->"+androidRemoteConfig.boolValue);
             oldDisAndroidValue = androidRemoteConfig.boolValue;
             // 记录初始时是否使用OAID的布尔值
             oldDisOaidValue = useOaid.boolValue;
 
-            Debug.Log(
-                $"Initial Values -> _China: {oldChinaValue}, _Oversea: {oldOverseaValue}, oldDisAndroidValue: {oldDisAndroidValue}, UseOAID: {oldDisOaidValue}");
+            // Debug.Log(
+            //     $"Initial Values -> _China: {oldChinaValue}, _Oversea: {oldOverseaValue}, oldDisAndroidValue: {oldDisAndroidValue}, UseOAID: {oldDisOaidValue}");
         }
 
 
@@ -239,28 +239,27 @@ namespace SolarEngine
             this._GUI();
         }
 #if UNITY_EDITOR
-        [MenuItem("SolarEngineSDK/Android/Remove", false, 0)]
+        [MenuItem("SolarEngineSDK/MiniGame/RemoveAndroid", false, 0)]
         public static void RemoveAndroidSDK()
         {
+            #if SOLARENGINE_BYTEDANCE_CLOUD
             SolarEngineSettings.removeAndroidSDK = true;
-            // SolarEngineSettings.isUseOaid = false;
-            // SolarEngineSettings.isUseAndroid = false;
-
+       
             bool result = PluginsEdtior.disableAndroidSDK() && PluginsEdtior.disableAndroid() &&
                           PluginsEdtior.disableOaid();
 
-
-            Debug.Log(result);
+#else
+            ShowTips("warn", "Only Tiktok Cloud Game takes effect");
+#endif
         }
 
-        [MenuItem("SolarEngineSDK/Android/Add", false, 0)]
+        [MenuItem("SolarEngineSDK/MiniGame/AddAndroid", false, 0)]
         public static void AddAndroidSDK()
         {
             SolarEngineSettings.removeAndroidSDK = false;
             SolarEngineSettings.isUseAndroid = oldDisAndroidValue;
             SolarEngineSettings.isUseOaid = oldDisOaidValue;
             PluginsEdtior.enableAndroidSDK();
-
             Debug.Log($"isUseAndroid: {SolarEngineSettings.isUseAndroid}, isUseOaid: {SolarEngineSettings.isUseOaid}");
             if (SolarEngineSettings.isUseOaid)
             {
@@ -406,7 +405,7 @@ namespace SolarEngine
             }
 
             oldDisOaidValue = useOaid.boolValue;
-            Debug.Log( "oldDisOaidValue"+useOaid.boolValue);
+            // Debug.Log( "oldDisOaidValue"+useOaid.boolValue);
         }
 
         #endregion
@@ -481,7 +480,7 @@ namespace SolarEngine
                 EditorGUILayout.PropertyField(OpenHarmonyVersion);
                 // CheckVersionFormat(OpenHarmonyVersion);
 #endif
-                EditorGUILayout.PropertyField(MacOSVersion);
+               // EditorGUILayout.PropertyField(MacOSVersion);
                 // CheckVersionFormat(MacOSVersion);
                 EditorGUI.indentLevel--;
 
@@ -492,8 +491,8 @@ namespace SolarEngine
 
                 if (!OpenHarmonyVersion.stringValue.Equals(SolarEngineSettings.OpenHarmonyVersion))
                     SolarEngineSettings.OpenHarmonyVersion = OpenHarmonyVersion.stringValue;
-                if (!MacOSVersion.stringValue.Equals(SolarEngineSettings.MacOSVersion))
-                    SolarEngineSettings.MacOSVersion = MacOSVersion.stringValue;
+                // if (!MacOSVersion.stringValue.Equals(SolarEngineSettings.MacOSVersion))
+                //     SolarEngineSettings.MacOSVersion = MacOSVersion.stringValue;
 
 
                 EditorGUILayout.HelpBox(ConstString.confirmVersion, MessageType.Warning);
@@ -647,13 +646,15 @@ namespace SolarEngine
             // 当用户点击按钮区域时执行以下逻辑
             if (GUILayout.Button("Apply"))
             {
-                // 点击 Apply 时才验证格式
+                // 点击 Apply 时验证格式
+                
+                
                 if (!IsValidVersion(iOSVersion.stringValue) ||
-                    !IsValidVersion(AndroidVersion.stringValue) ||
+                    !IsValidVersion(AndroidVersion.stringValue) 
 #if TUANJIE_2022_3_OR_NEWER
-            !IsValidVersion(OpenHarmonyVersion.stringValue) ||
+               || !IsValidVersion(OpenHarmonyVersion.stringValue) 
 #endif
-                    !IsValidVersion(MacOSVersion.stringValue))
+                   )
                 {
                     EditorUtility.DisplayDialog("format error", "Please enter the correct SDK version format (e.g. 1.0.0.0)）", "OK");
                     return;
@@ -665,6 +666,7 @@ namespace SolarEngine
 
         private bool IsValidVersion(string version)
         {
+         
             return System.Text.RegularExpressions.Regex.IsMatch(version, @"^\d{1,3}(\.\d{1,3}){3}$") ||
                    string.IsNullOrEmpty(version);
         }
