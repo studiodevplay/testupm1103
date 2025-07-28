@@ -1,118 +1,19 @@
 using System;
-using UnityEngine;
-using UnityEditor;
-using System.Collections;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Xml.Linq;
-using SolarEngine.Build;
+using System.Text.RegularExpressions;
 using SolarEngineSDK.Editor;
-using UnityEngine.UIElements;
+using UnityEditor;
+using UnityEngine;
 
 namespace SolarEngine
 {
     [CustomEditor(typeof(SolarEngineSettings))]
     public class SolarEngineSettingsEditor : Editor
     {
-        #region 数据存储区域
+        // 通用标签间的间距
+        private const float COMMON_SPACE = 13f;
 
-        //序列化属性，用于表示是否选择中国存储区域的设置，方便在编辑器中操作和获取对应的值
-        private SerializedProperty chinaProperty;
-
-        // 序列化属性，用于表示是否选择海外存储区域的设置，方便在编辑器中操作和获取对应的值
-        private SerializedProperty overseaProperty;
-
-        #endregion
-
-        private SerializedProperty optionalFeatures;
-
-        #region 远程配置的设置
-
-        // 序列化属性，用于表示是否使用远程配置的设置
-        private SerializedProperty useRemoteConfig;
-
-        // 序列化属性，用于表示 iOS 平台远程配置相关的设置
-        private SerializedProperty iOSRemoteConfig;
-
-        // 序列化属性，用于表示 Android 平台远程配置相关的设置
-        private SerializedProperty androidRemoteConfig;
-
-        // 序列化属性，用于表示小游戏平台远程配置相关的设置
-        private SerializedProperty miniGameRemoteConfig;
-
-        // 序列化属性，用于表示 macOS 平台远程配置相关的设置
-        private SerializedProperty macosRemoteConfig;
-        // 序列化属性，用于表示鸿蒙平台远程配置相关的设置
-
-        private SerializedProperty openHarmonyRemoteConfig;
-
-        #endregion
-
-
-        #region OAID、ODMInfo、removeAndroidSDK
-
-        // 序列化属性，用于表示是否使用 OAID 的设置
-        private SerializedProperty useOaid;
-
-        // 序列化属性，用于表示是否使用 ODMInfo 的设置
-        private SerializedProperty useODMInfo;
-        private SerializedProperty useiOSSDK;
-        private SerializedProperty removeAndroidSDK;
-
-        #endregion
-
-        #region 深度链接
-
-        // 序列化属性，用于表示是否使用深度链接的设置
-        private SerializedProperty useDeepLink;
-
-        // 序列化属性，用于表示 iOS 平台 URL 标识符相关的设置
-        SerializedProperty iOSUrlIdentifier;
-
-        // 序列化属性，用于表示 iOS 平台 URL 方案相关的设置
-        SerializedProperty iOSUrlSchemes;
-
-        // 序列化属性，用于表示 iOS 平台通用链接域名相关的设置
-        SerializedProperty iOSUniversalLinksDomains;
-
-        // 序列化属性，用于表示 Android 平台 URL 方案相关的设置
-        SerializedProperty AndroidUrlSchemes;
-
-        #endregion
-
-        #region SDK版本设置
-
-        // 序列化属性，用于表示是否使用指定版本的设置
-        private SerializedProperty useSpecifyVersion;
-
-        // 序列化属性，用于表示 iOS 平台版本相关的设置
-        SerializedProperty iOSVersion;
-        SerializedProperty OpenHarmonyVersion;
-
-        // private SerializedProperty MacOSVersion;
-
-        // 序列化属性，用于表示 Android 平台版本相关的设置
-        SerializedProperty AndroidVersion;
-
-        #endregion
-
-        #region 私有化部署
-
-        private SerializedProperty CustomDomainEnable;
-        private SerializedProperty ReceiverDomain;
-        private SerializedProperty RuleDomain;
-        private SerializedProperty ReceiverTcpHost;
-        private SerializedProperty RuleTcpHost;
-        private SerializedProperty GatewayTcpHost;
-
-        #endregion
-
-        // 用于记录之前中国存储区域选择的布尔值，方便对比属性值变化
-        private bool oldChinaValue;
-
-        // 用于记录之前海外存储区域选择的布尔值，方便对比属性值变化
-        private bool oldOverseaValue;
+        // 最大间距
+        private const float MAX_SPACE = 5f;
 
         // 以下类似的多个布尔值用于记录对应属性之前的旧值，便于处理属性变更逻辑
 
@@ -121,10 +22,18 @@ namespace SolarEngine
         private static bool oldDisMiniGameValue;
         private static bool oldDisOaidValue;
 
+        // 用于记录之前中国存储区域选择的布尔值，方便对比属性值变化
+        private bool oldChinaValue;
+
+        // 用于记录之前海外存储区域选择的布尔值，方便对比属性值变化
+        private bool oldOverseaValue;
+
+        private SerializedProperty optionalFeatures;
+
 
         private SolarEngineSettings solarEngingSetting;
 
-        void OnEnable()
+        private void OnEnable()
         {
             // 获取当前正在编辑的SolarEngineSettings类型的目标对象实例
 
@@ -204,7 +113,7 @@ namespace SolarEngine
             iOSVersion = serializedObject.FindProperty("_iOSVersion");
             AndroidVersion = serializedObject.FindProperty("_AndroidVersion");
             OpenHarmonyVersion = serializedObject.FindProperty("_OpenHarmonyVersion");
-           // MacOSVersion = serializedObject.FindProperty("_MacOSVersion");
+            // MacOSVersion = serializedObject.FindProperty("_MacOSVersion");
 
             #endregion
 
@@ -224,7 +133,7 @@ namespace SolarEngine
             oldChinaValue = chinaProperty.boolValue;
             // 记录初始时海外存储区域选择的布尔值
             oldOverseaValue = overseaProperty.boolValue;
-            Debug.Log("Initial Values  androidRemoteConfig->"+androidRemoteConfig.boolValue);
+            Debug.Log("Initial Values  androidRemoteConfig->" + androidRemoteConfig.boolValue);
             oldDisAndroidValue = androidRemoteConfig.boolValue;
             // 记录初始时是否使用OAID的布尔值
             oldDisOaidValue = useOaid.boolValue;
@@ -236,92 +145,8 @@ namespace SolarEngine
 
         public override void OnInspectorGUI()
         {
-            this._GUI();
+            _GUI();
         }
-#if UNITY_EDITOR
-        [MenuItem("SolarEngineSDK/MiniGame/RemoveAndroid", false, 0)]
-        public static void RemoveAndroidSDK()
-        {
-            #if SOLARENGINE_BYTEDANCE_CLOUD
-            SolarEngineSettings.removeAndroidSDK = true;
-       
-            bool result = PluginsEdtior.disableAndroidSDK() && PluginsEdtior.disableAndroid() &&
-                          PluginsEdtior.disableOaid();
-
-#else
-            ShowTips("warn", "Only Tiktok Cloud Game takes effect");
-#endif
-        }
-
-        [MenuItem("SolarEngineSDK/MiniGame/AddAndroid", false, 0)]
-        public static void AddAndroidSDK()
-        {
-            SolarEngineSettings.removeAndroidSDK = false;
-            SolarEngineSettings.isUseAndroid = oldDisAndroidValue;
-            SolarEngineSettings.isUseOaid = oldDisOaidValue;
-            PluginsEdtior.enableAndroidSDK();
-            Debug.Log($"isUseAndroid: {SolarEngineSettings.isUseAndroid}, isUseOaid: {SolarEngineSettings.isUseOaid}");
-            if (SolarEngineSettings.isUseOaid)
-            {
-                PluginsEdtior.showOaid();
-            }
-
-            if (SolarEngineSettings.isUseAndroid)
-                PluginsEdtior.showAndroid();
-        }
-#endif
-
-        #region DrawStorageAreaOptions
-
-        private void DrawStorageAreaOptions()
-        {
-            EditorGUI.indentLevel += 1;
-            EditorGUILayout.PropertyField(chinaProperty, new GUIContent(ConstString.chinaMainland));
-            EditorGUILayout.PropertyField(overseaProperty, new GUIContent(ConstString.nonChinaMainland));
-            EditorGUI.indentLevel -= 1;
-
-            if (!chinaProperty.boolValue && !overseaProperty.boolValue)
-            {
-                EditorGUILayout.HelpBox(ConstString.storageAreaMessage, MessageType.Info);
-            }
-
-            if (serializedObject.ApplyModifiedProperties())
-            {
-                // 处理 China 值变化
-                ProcessPropertyChange(chinaProperty, ref oldChinaValue, "_China", null, () =>
-                {
-                    overseaProperty.boolValue = false;
-                    oldOverseaValue = overseaProperty.boolValue;
-                });
-
-                // 处理 Oversea 值变化
-                ProcessPropertyChange(overseaProperty, ref oldOverseaValue, "_Oversea", null, () =>
-                {
-                    chinaProperty.boolValue = false;
-                    oldChinaValue = chinaProperty.boolValue;
-                    if (overseaProperty.boolValue)
-                    {
-                        useOaid.boolValue = false;
-                    }
-                });
-            }
-        }
-
-        bool changleStorageValue()
-        {
-            if (chinaProperty.boolValue)
-            {
-                return XmlModifier.cnxml(true);
-            }
-            else if (overseaProperty.boolValue)
-            {
-                return XmlModifier.Overseaxml(true);
-            }
-
-            return false;
-        }
-
-        #endregion
 
         #region DrawRemoveAndroidSDKOption
 
@@ -341,41 +166,6 @@ namespace SolarEngine
         #endregion
 
 
-        #region DrawRemoteConfig
-
-        private bool _useRemoteConfig = false;
-
-        private void DrawRemoteConfig()
-        {
-//             _useRemoteConfig = EditorGUILayout.Foldout(_useRemoteConfig, "Remote Config");
-//             if (_useRemoteConfig)
-//             {
-//                 EditorGUI.indentLevel += 1;
-//                 // EditorGUILayout.PropertyField(disAllRemoteConfig);
-//                 EditorGUILayout.PropertyField(iOSRemoteConfig);
-//                 EditorGUILayout.PropertyField(androidRemoteConfig);
-//                 EditorGUILayout.PropertyField(miniGameRemoteConfig);
-// #if TUANJIE_2022_3_OR_NEWER
-//                 EditorGUILayout.PropertyField(openHarmonyRemoteConfig);
-// #endif
-//                 EditorGUILayout.PropertyField(macosRemoteConfig);
-//                 EditorGUI.indentLevel -= 1;
-//                 EditorGUILayout.HelpBox(ConstString.remoteConfigMsg, MessageType.Info);
-//             }
-
-            // if (removeAndroidSDK.boolValue)
-            // {
-            //     androidRemoteConfig.boolValue = false;
-            // }
-            // else
-            // {
-            //     androidRemoteConfig.boolValue = true;
-            // }
-        }
-
-        #endregion
-
-
         #region DrawOaidOption
 
         private void DrawOaidOption()
@@ -387,22 +177,14 @@ namespace SolarEngine
             }
 
             if (useOaid.boolValue && chinaProperty.boolValue)
-            {
                 EditorGUILayout.LabelField("OAID", EditorStyles.label);
-            }
             else
-            {
                 EditorGUILayout.PropertyField(useOaid, new GUIContent(ConstString.oaid));
-            }
 
 
             if (overseaProperty.boolValue)
-            {
                 if (useOaid.boolValue)
-                {
                     EditorGUILayout.HelpBox(ConstString.oaidEnable, MessageType.Warning);
-                }
-            }
 
             oldDisOaidValue = useOaid.boolValue;
             // Debug.Log( "oldDisOaidValue"+useOaid.boolValue);
@@ -460,6 +242,417 @@ namespace SolarEngine
 
         #endregion
 
+
+        private void ProcessPropertyChange(SerializedProperty property, ref bool oldValue, string propertyName,
+            Action<bool> xmlAction, Action additionalAction = null)
+        {
+            if (property.boolValue != oldValue)
+            {
+                oldValue = property.boolValue;
+                additionalAction?.Invoke();
+            }
+        }
+
+        public void _GUI()
+        {
+            var darkerCyanTextFieldStyles = new GUIStyle(EditorStyles.boldLabel);
+            darkerCyanTextFieldStyles.normal.textColor = Color.white;
+
+            DrawH2Title("Quick integration");
+
+            DrawStorageAreaOptions();
+
+            EditorGUILayout.Space();
+            var origFontStyle = EditorStyles.label.fontStyle;
+            var _color = EditorStyles.label.normal.textColor;
+            EditorStyles.label.fontStyle = FontStyle.Bold;
+            EditorStyles.label.normal.textColor = new Color(0f / 255f, 190f / 255f, 190f / 255f);
+
+            optionalFeatures.boolValue = EditorGUILayout.Toggle(
+                new GUIContent("OPTIONAL FEATURES"),
+                optionalFeatures.boolValue
+            );
+
+            EditorStyles.label.fontStyle = origFontStyle;
+            EditorStyles.label.normal.textColor = _color;
+
+            if (solarEngingSetting._OptionalFeatures)
+            {
+                DrawVerticalSpace(5f);
+                EditorGUI.indentLevel += 1;
+                DrawRemoveAndroidSDKOption();
+                DrawRemoteConfig();
+                DrawOaidOption();
+                DrawODMInfoOption();
+
+                DrawDeepLinkOption(darkerCyanTextFieldStyles);
+
+                DrawSdkVersionSection();
+                EditorGUI.indentLevel -= 1;
+            }
+
+            ApplyButton();
+
+            serializedObject.ApplyModifiedProperties();
+        }
+
+
+        private void ApplyButton()
+        {
+            // 创建一个用于按钮样式的GUIStyle对象
+            var buttonStyle = new GUIStyle();
+            buttonStyle.normal.textColor = Color.white;
+
+            // 创建一个单像素的纹理对象，用于设置按钮的背景颜色等样式
+            var backgroundTexture = new Texture2D(1, 1);
+            backgroundTexture.SetPixel(0, 0, Color.white);
+            backgroundTexture.Apply();
+            buttonStyle.normal.background = backgroundTexture;
+
+            // 设置按钮的固定高度、固定宽度以及文本对齐方式等样式属性
+            buttonStyle.fixedHeight = 25;
+            buttonStyle.fixedWidth = 100;
+            buttonStyle.alignment = TextAnchor.MiddleCenter;
+
+
+            // 设置绘制按钮边框时的颜色
+            GUI.color = new Color(200f / 255f, 200f / 255f, 200f / 255f);
+
+
+            // 当用户点击按钮区域时执行以下逻辑
+            if (GUILayout.Button("Apply"))
+            {
+                // 点击 Apply 时验证格式
+
+
+                if (!IsValidVersion(iOSVersion.stringValue) ||
+                    !IsValidVersion(AndroidVersion.stringValue)
+#if TUANJIE_2022_3_OR_NEWER
+               || !IsValidVersion(OpenHarmonyVersion.stringValue)
+#endif
+                   )
+                {
+                    EditorUtility.DisplayDialog("format error",
+                        "Please enter the correct SDK version format (e.g. 1.0.0.0)）", "OK");
+                    return;
+                }
+
+                ApplySetting._applySetting(true);
+            }
+        }
+
+        private bool IsValidVersion(string version)
+        {
+            return Regex.IsMatch(version, @"^\d{1,3}(\.\d{1,3}){3}$") ||
+                   string.IsNullOrEmpty(version);
+        }
+
+        //用户应用
+        public bool Apply()
+        {
+            return iOSRemoteConfigValue() &&
+                   androidRemoteConfigValue() &&
+                   miniGameRemoteConfigValue() &&
+                   openHarmonyRemoteConfigValue() &&
+                   OaidValue() &&
+                   changleStorageValue();
+        }
+
+
+        private bool OaidValue()
+        {
+            if (useOaid.boolValue)
+                return PluginsEdtior.showOaid();
+            return PluginsEdtior.disableOaid();
+        }
+
+        private bool ODMInfoValue()
+        {
+            if (useODMInfo.boolValue)
+                return PluginsEdtior.showODMInfo();
+            return PluginsEdtior.disableODMInfo();
+        }
+
+        private bool iOSRemoteConfigValue()
+        {
+            if (iOSRemoteConfig.boolValue)
+                return PluginsEdtior.showiOS();
+
+            return PluginsEdtior.disableiOS();
+        }
+
+        private bool androidRemoteConfigValue()
+        {
+            if (androidRemoteConfig.boolValue)
+                return PluginsEdtior.showAndroid();
+
+            return PluginsEdtior.disableAndroid();
+        }
+
+        private bool miniGameRemoteConfigValue()
+        {
+            if (miniGameRemoteConfig.boolValue)
+                return PluginsEdtior.showMiniGame();
+
+            return PluginsEdtior.disableMiniGame();
+        }
+
+        private bool openHarmonyRemoteConfigValue()
+        {
+            Debug.Log("openHarmonyRemoteConfigValue" + openHarmonyRemoteConfig.boolValue);
+            if (openHarmonyRemoteConfig.boolValue)
+                return PluginsEdtior.showOpenHarmony();
+            return PluginsEdtior.disableOpenHarmony();
+        }
+
+        protected void DrawH2Title(string title)
+        {
+            var _title = title.ToUpperInvariant();
+            DrawAreaTitle(_title, EditorUtils.GetColor(EditorUtils.EditorColor.Cyan), TextAnchor.MiddleLeft,
+                EditorStyles.label.fontSize);
+        }
+
+        /// <summary>
+        ///     绘制标题区域.
+        /// </summary>
+        /// <param name="title">标题.</param>
+        /// <param name="color">字体颜色.</param>
+        /// <param name="textAnchor">对齐方式.</param>
+        /// <param name="fontSize">字体大小.</param>
+        private static void DrawAreaTitle(string title, Color color, TextAnchor textAnchor, int fontSize)
+        {
+            EditorGUILayout.BeginVertical();
+            DrawVerticalSpace(MAX_SPACE);
+
+            var guiStyle = new GUIStyle();
+            guiStyle.fontSize = fontSize;
+            guiStyle.normal.textColor = color;
+            guiStyle.fontStyle = FontStyle.Bold;
+            guiStyle.alignment = textAnchor;
+            EditorGUILayout.TextArea(title, guiStyle);
+            EditorGUILayout.EndVertical();
+            DrawVerticalSpace(COMMON_SPACE);
+        }
+
+        /// <summary>
+        ///     绘制垂直方向间距.
+        /// </summary>
+        /// <param name="pixels">间距.</param>
+        private static void DrawVerticalSpace(float pixels)
+        {
+            GUILayout.Space(pixels);
+        }
+
+
+        /// <summary>
+        ///     展示提示.
+        /// </summary>
+        /// <param name="title">标题.</param>
+        /// <param name="content">具体内容.</param>
+        public static void ShowTips(string title, string content)
+        {
+            // 展示提示信息.
+            EditorUtility.DisplayDialog(title, content, "OK");
+        }
+
+        #region 数据存储区域
+
+        //序列化属性，用于表示是否选择中国存储区域的设置，方便在编辑器中操作和获取对应的值
+        private SerializedProperty chinaProperty;
+
+        // 序列化属性，用于表示是否选择海外存储区域的设置，方便在编辑器中操作和获取对应的值
+        private SerializedProperty overseaProperty;
+
+        #endregion
+
+        #region 远程配置的设置
+
+        // 序列化属性，用于表示是否使用远程配置的设置
+        private SerializedProperty useRemoteConfig;
+
+        // 序列化属性，用于表示 iOS 平台远程配置相关的设置
+        private SerializedProperty iOSRemoteConfig;
+
+        // 序列化属性，用于表示 Android 平台远程配置相关的设置
+        private SerializedProperty androidRemoteConfig;
+
+        // 序列化属性，用于表示小游戏平台远程配置相关的设置
+        private SerializedProperty miniGameRemoteConfig;
+
+        // 序列化属性，用于表示 macOS 平台远程配置相关的设置
+        private SerializedProperty macosRemoteConfig;
+        // 序列化属性，用于表示鸿蒙平台远程配置相关的设置
+
+        private SerializedProperty openHarmonyRemoteConfig;
+
+        #endregion
+
+
+        #region OAID、ODMInfo、removeAndroidSDK
+
+        // 序列化属性，用于表示是否使用 OAID 的设置
+        private SerializedProperty useOaid;
+
+        // 序列化属性，用于表示是否使用 ODMInfo 的设置
+        private SerializedProperty useODMInfo;
+        private SerializedProperty useiOSSDK;
+        private SerializedProperty removeAndroidSDK;
+
+        #endregion
+
+        #region 深度链接
+
+        // 序列化属性，用于表示是否使用深度链接的设置
+        private SerializedProperty useDeepLink;
+
+        // 序列化属性，用于表示 iOS 平台 URL 标识符相关的设置
+        private SerializedProperty iOSUrlIdentifier;
+
+        // 序列化属性，用于表示 iOS 平台 URL 方案相关的设置
+        private SerializedProperty iOSUrlSchemes;
+
+        // 序列化属性，用于表示 iOS 平台通用链接域名相关的设置
+        private SerializedProperty iOSUniversalLinksDomains;
+
+        // 序列化属性，用于表示 Android 平台 URL 方案相关的设置
+        private SerializedProperty AndroidUrlSchemes;
+
+        #endregion
+
+        #region SDK版本设置
+
+        // 序列化属性，用于表示是否使用指定版本的设置
+        private SerializedProperty useSpecifyVersion;
+
+        // 序列化属性，用于表示 iOS 平台版本相关的设置
+        private SerializedProperty iOSVersion;
+        private SerializedProperty OpenHarmonyVersion;
+
+        // private SerializedProperty MacOSVersion;
+
+        // 序列化属性，用于表示 Android 平台版本相关的设置
+        private SerializedProperty AndroidVersion;
+
+        #endregion
+
+        #region 私有化部署
+
+        private SerializedProperty CustomDomainEnable;
+        private SerializedProperty ReceiverDomain;
+        private SerializedProperty RuleDomain;
+        private SerializedProperty ReceiverTcpHost;
+        private SerializedProperty RuleTcpHost;
+        private SerializedProperty GatewayTcpHost;
+
+        #endregion
+
+#if UNITY_EDITOR
+        [MenuItem("SolarEngineSDK/MiniGame/RemoveAndroid", false, 0)]
+        public static void RemoveAndroidSDK()
+        {
+#if SOLARENGINE_BYTEDANCE_CLOUD
+            SolarEngineSettings.removeAndroidSDK = true;
+       
+            bool result = PluginsEdtior.disableAndroidSDK() && PluginsEdtior.disableAndroid() &&
+                          PluginsEdtior.disableOaid();
+
+#else
+            ShowTips("warn", "Only Tiktok Cloud Game takes effect");
+#endif
+        }
+
+        [MenuItem("SolarEngineSDK/MiniGame/AddAndroid", false, 0)]
+        public static void AddAndroidSDK()
+        {
+            SolarEngineSettings.removeAndroidSDK = false;
+            SolarEngineSettings.isUseAndroid = oldDisAndroidValue;
+            SolarEngineSettings.isUseOaid = oldDisOaidValue;
+            PluginsEdtior.enableAndroidSDK();
+            Debug.Log($"isUseAndroid: {SolarEngineSettings.isUseAndroid}, isUseOaid: {SolarEngineSettings.isUseOaid}");
+            if (SolarEngineSettings.isUseOaid) PluginsEdtior.showOaid();
+
+            if (SolarEngineSettings.isUseAndroid)
+                PluginsEdtior.showAndroid();
+        }
+#endif
+
+        #region DrawStorageAreaOptions
+
+        private void DrawStorageAreaOptions()
+        {
+            EditorGUI.indentLevel += 1;
+            EditorGUILayout.PropertyField(chinaProperty, new GUIContent(ConstString.chinaMainland));
+            EditorGUILayout.PropertyField(overseaProperty, new GUIContent(ConstString.nonChinaMainland));
+            EditorGUI.indentLevel -= 1;
+
+            if (!chinaProperty.boolValue && !overseaProperty.boolValue)
+                EditorGUILayout.HelpBox(ConstString.storageAreaMessage, MessageType.Info);
+
+            if (serializedObject.ApplyModifiedProperties())
+            {
+                // 处理 China 值变化
+                ProcessPropertyChange(chinaProperty, ref oldChinaValue, "_China", null, () =>
+                {
+                    overseaProperty.boolValue = false;
+                    oldOverseaValue = overseaProperty.boolValue;
+                });
+
+                // 处理 Oversea 值变化
+                ProcessPropertyChange(overseaProperty, ref oldOverseaValue, "_Oversea", null, () =>
+                {
+                    chinaProperty.boolValue = false;
+                    oldChinaValue = chinaProperty.boolValue;
+                    if (overseaProperty.boolValue) useOaid.boolValue = false;
+                });
+            }
+        }
+
+        private bool changleStorageValue()
+        {
+            if (chinaProperty.boolValue)
+                return XmlModifier.cnxml(true);
+            if (overseaProperty.boolValue) return XmlModifier.Overseaxml(true);
+
+            return false;
+        }
+
+        #endregion
+
+
+        #region DrawRemoteConfig
+
+        private bool _useRemoteConfig = false;
+
+        private void DrawRemoteConfig()
+        {
+//             _useRemoteConfig = EditorGUILayout.Foldout(_useRemoteConfig, "Remote Config");
+//             if (_useRemoteConfig)
+//             {
+//                 EditorGUI.indentLevel += 1;
+//                 // EditorGUILayout.PropertyField(disAllRemoteConfig);
+//                 EditorGUILayout.PropertyField(iOSRemoteConfig);
+//                 EditorGUILayout.PropertyField(androidRemoteConfig);
+//                 EditorGUILayout.PropertyField(miniGameRemoteConfig);
+// #if TUANJIE_2022_3_OR_NEWER
+//                 EditorGUILayout.PropertyField(openHarmonyRemoteConfig);
+// #endif
+//                 EditorGUILayout.PropertyField(macosRemoteConfig);
+//                 EditorGUI.indentLevel -= 1;
+//                 EditorGUILayout.HelpBox(ConstString.remoteConfigMsg, MessageType.Info);
+//             }
+
+            // if (removeAndroidSDK.boolValue)
+            // {
+            //     androidRemoteConfig.boolValue = false;
+            // }
+            // else
+            // {
+            //     androidRemoteConfig.boolValue = true;
+            // }
+        }
+
+        #endregion
+
         #region DrawSdkVersionSection
 
         //   private bool _useSpecifyVersion = false;
@@ -480,7 +673,7 @@ namespace SolarEngine
                 EditorGUILayout.PropertyField(OpenHarmonyVersion);
                 // CheckVersionFormat(OpenHarmonyVersion);
 #endif
-               // EditorGUILayout.PropertyField(MacOSVersion);
+                // EditorGUILayout.PropertyField(MacOSVersion);
                 // CheckVersionFormat(MacOSVersion);
                 EditorGUI.indentLevel--;
 
@@ -501,12 +694,10 @@ namespace SolarEngine
 
         private void CheckVersionFormat(SerializedProperty prop)
         {
-            string version = prop.stringValue;
-            if (!System.Text.RegularExpressions.Regex.IsMatch(version, @"^\d{1,3}(\.\d{1,3}){3}$") &&
+            var version = prop.stringValue;
+            if (!Regex.IsMatch(version, @"^\d{1,3}(\.\d{1,3}){3}$") &&
                 !string.IsNullOrEmpty(version))
-            {
                 EditorGUILayout.HelpBox($"{prop.displayName} 格式错误，应为类似 1.x.x.x 的四段数字", MessageType.Error);
-            }
         }
 
         #endregion
@@ -565,255 +756,5 @@ namespace SolarEngine
         // }
 
         #endregion
-
-
-        private void ProcessPropertyChange(SerializedProperty property, ref bool oldValue, string propertyName,
-            System.Action<bool> xmlAction, System.Action additionalAction = null)
-        {
-            if (property.boolValue != oldValue)
-            {
-                oldValue = property.boolValue;
-                additionalAction?.Invoke();
-            }
-        }
-
-        public void _GUI()
-        {
-            GUIStyle darkerCyanTextFieldStyles = new GUIStyle(EditorStyles.boldLabel);
-            darkerCyanTextFieldStyles.normal.textColor = Color.white;
-
-            DrawH2Title("Quick integration");
-
-            DrawStorageAreaOptions();
-
-            EditorGUILayout.Space();
-            var origFontStyle = EditorStyles.label.fontStyle;
-            Color _color = EditorStyles.label.normal.textColor;
-            EditorStyles.label.fontStyle = FontStyle.Bold;
-            EditorStyles.label.normal.textColor = new Color(0f / 255f, 190f / 255f, 190f / 255f);
-
-            optionalFeatures.boolValue = EditorGUILayout.Toggle(
-                new GUIContent("OPTIONAL FEATURES"),
-                optionalFeatures.boolValue
-            );
-
-            EditorStyles.label.fontStyle = origFontStyle;
-            EditorStyles.label.normal.textColor = _color;
-
-            if (solarEngingSetting._OptionalFeatures)
-            {
-                DrawVerticalSpace(5f);
-                EditorGUI.indentLevel += 1;
-                DrawRemoveAndroidSDKOption();
-                DrawRemoteConfig();
-                DrawOaidOption();
-                DrawODMInfoOption();
-
-                DrawDeepLinkOption(darkerCyanTextFieldStyles);
-
-                DrawSdkVersionSection();
-                EditorGUI.indentLevel -= 1;
-            }
-
-            ApplyButton();
-
-            serializedObject.ApplyModifiedProperties();
-        }
-
-
-        private void ApplyButton()
-        {
-            // 创建一个用于按钮样式的GUIStyle对象
-            GUIStyle buttonStyle = new GUIStyle();
-            buttonStyle.normal.textColor = Color.white;
-
-            // 创建一个单像素的纹理对象，用于设置按钮的背景颜色等样式
-            Texture2D backgroundTexture = new Texture2D(1, 1);
-            backgroundTexture.SetPixel(0, 0, Color.white);
-            backgroundTexture.Apply();
-            buttonStyle.normal.background = backgroundTexture;
-
-            // 设置按钮的固定高度、固定宽度以及文本对齐方式等样式属性
-            buttonStyle.fixedHeight = 25;
-            buttonStyle.fixedWidth = 100;
-            buttonStyle.alignment = TextAnchor.MiddleCenter;
-
-
-            // 设置绘制按钮边框时的颜色
-            GUI.color = new Color(200f / 255f, 200f / 255f, 200f / 255f);
-
-
-            // 当用户点击按钮区域时执行以下逻辑
-            if (GUILayout.Button("Apply"))
-            {
-                // 点击 Apply 时验证格式
-                
-                
-                if (!IsValidVersion(iOSVersion.stringValue) ||
-                    !IsValidVersion(AndroidVersion.stringValue) 
-#if TUANJIE_2022_3_OR_NEWER
-               || !IsValidVersion(OpenHarmonyVersion.stringValue) 
-#endif
-                   )
-                {
-                    EditorUtility.DisplayDialog("format error", "Please enter the correct SDK version format (e.g. 1.0.0.0)）", "OK");
-                    return;
-                }
-
-                ApplySetting._applySetting(true);
-            }
-        }
-
-        private bool IsValidVersion(string version)
-        {
-         
-            return System.Text.RegularExpressions.Regex.IsMatch(version, @"^\d{1,3}(\.\d{1,3}){3}$") ||
-                   string.IsNullOrEmpty(version);
-        }
-
-        //用户应用
-        public bool Apply()
-        {
-            return iOSRemoteConfigValue() &&
-                   androidRemoteConfigValue() &&
-                   miniGameRemoteConfigValue() &&
-                   openHarmonyRemoteConfigValue() &&
-                   OaidValue() &&
-                   changleStorageValue();
-        }
-
-
-        private bool OaidValue()
-        {
-            if (useOaid.boolValue)
-            {
-                return PluginsEdtior.showOaid();
-            }
-            else
-            {
-                return PluginsEdtior.disableOaid();
-            }
-        }
-
-        private bool ODMInfoValue()
-        {
-            if (useODMInfo.boolValue)
-            {
-                return PluginsEdtior.showODMInfo();
-            }
-            else
-            {
-                return PluginsEdtior.disableODMInfo();
-            }
-        }
-
-        bool iOSRemoteConfigValue()
-        {
-            if (iOSRemoteConfig.boolValue)
-            {
-                return PluginsEdtior.showiOS();
-            }
-
-            else
-            {
-                return PluginsEdtior.disableiOS();
-            }
-        }
-
-        bool androidRemoteConfigValue()
-        {
-            if (androidRemoteConfig.boolValue)
-            {
-                return PluginsEdtior.showAndroid();
-            }
-
-            else
-            {
-                return PluginsEdtior.disableAndroid();
-            }
-        }
-
-        bool miniGameRemoteConfigValue()
-        {
-            if (miniGameRemoteConfig.boolValue)
-            {
-                return PluginsEdtior.showMiniGame();
-            }
-
-            else
-            {
-                return PluginsEdtior.disableMiniGame();
-            }
-        }
-
-        bool openHarmonyRemoteConfigValue()
-        {
-            Debug.Log("openHarmonyRemoteConfigValue" + openHarmonyRemoteConfig.boolValue);
-            if (openHarmonyRemoteConfig.boolValue)
-            {
-                return PluginsEdtior.showOpenHarmony();
-            }
-            else
-            {
-                return PluginsEdtior.disableOpenHarmony();
-            }
-        }
-
-
-        // 通用标签间的间距
-        private const float COMMON_SPACE = 13f;
-
-        // 最大间距
-        private const float MAX_SPACE = 5f;
-
-        protected void DrawH2Title(string title)
-        {
-            string _title = title.ToUpperInvariant();
-            DrawAreaTitle(_title, EditorUtils.GetColor(EditorUtils.EditorColor.Cyan), TextAnchor.MiddleLeft,
-                EditorStyles.label.fontSize);
-        }
-
-        /// <summary>
-        /// 绘制标题区域.
-        /// </summary>
-        /// <param name="title">标题.</param>
-        /// <param name="color">字体颜色.</param>
-        /// <param name="textAnchor">对齐方式.</param>
-        /// <param name="fontSize">字体大小.</param>
-        private static void DrawAreaTitle(string title, Color color, TextAnchor textAnchor, int fontSize)
-        {
-            EditorGUILayout.BeginVertical();
-            DrawVerticalSpace(MAX_SPACE);
-
-            var guiStyle = new GUIStyle();
-            guiStyle.fontSize = fontSize;
-            guiStyle.normal.textColor = color;
-            guiStyle.fontStyle = FontStyle.Bold;
-            guiStyle.alignment = textAnchor;
-            EditorGUILayout.TextArea(title, guiStyle);
-            EditorGUILayout.EndVertical();
-            DrawVerticalSpace(COMMON_SPACE);
-        }
-
-        /// <summary>
-        /// 绘制垂直方向间距.
-        /// </summary>
-        /// <param name="pixels">间距.</param>
-        private static void DrawVerticalSpace(float pixels)
-        {
-            GUILayout.Space(pixels);
-        }
-
-
-        /// <summary>
-        /// 展示提示.
-        /// </summary>
-        /// <param name="title">标题.</param>
-        /// <param name="content">具体内容.</param>
-        public static void ShowTips(string title, string content)
-        {
-            // 展示提示信息.
-            EditorUtility.DisplayDialog(title, content, "OK");
-        }
     }
 }
