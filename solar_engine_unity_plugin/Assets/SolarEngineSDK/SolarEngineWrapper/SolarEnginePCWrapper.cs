@@ -56,7 +56,13 @@ namespace SolarEngine
             Debug.Log($"{SolorEngine}Unity Editor: GetAccountId");
           return null;
         }
+        private static void AttributionCompletedCallback(SEAttributionCallback callback)
+        {
+        }
 
+        private static void InitCompletedCallback(SESDKInitCompletedCallback callback)
+        {
+        }
         private static void Logout()
         {
             Debug.Log($"{SolorEngine}Unity Editor: Logout");

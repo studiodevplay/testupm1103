@@ -43,7 +43,14 @@ namespace SolarEngine
             openHarmonyJSClass.CallStatic("setAttributionListener", attributionCalllback);
         }
 
+        private static void AttributionCompletedCallback(SEAttributionCallback callback)
+        {
+        }
 
+        private static void InitCompletedCallback(SESDKInitCompletedCallback callback)
+        {
+        }
+        
         private static void Init(string appKey, object userId, SEConfig config)
         {
             initCallBack(config);
