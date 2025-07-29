@@ -42,7 +42,7 @@ namespace SolarEngine
         {
            
             MiniGameRCConfig minircConfig = new MiniGameRCConfig();
-            minircConfig.enable = rcConfigEnable();
+            minircConfig.enable = rcConfigEnable(rcConfig);
             minircConfig.mergeType = (MiniRCMergeType)(int)rcConfig.mergeType;
             minircConfig.customIDEventProperties = rcConfig.customIDEventProperties;
             minircConfig.customIDProperties = rcConfig.customIDProperties;
