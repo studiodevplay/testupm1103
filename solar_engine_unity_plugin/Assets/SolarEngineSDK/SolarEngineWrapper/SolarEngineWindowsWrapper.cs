@@ -12,7 +12,7 @@ namespace SolarEngine
         public partial class Analytics : MonoBehaviour
         {
 
-            private static SESDKInitCompletedCallback initCompletedCallback_win;
+            //private static SESDKInitCompletedCallback initCompletedCallback_win;
             private static string SolorEnginWin =SolorEngine+"windows not currently supported ";
             private static Dictionary<string, object> GetPresetProperties()
             {
@@ -62,9 +62,9 @@ namespace SolarEngine
 
             private static WinSDKWrapper.WinConfig winConfig(SEConfig config)
             {
-                if(config.initCompletedCallback==null&& initCompletedCallback_win!=null)
-                    config.initCompletedCallback = initCompletedCallback_win;
-             
+                // if(config.initCompletedCallback==null&& initCompletedCallback_win!=null)
+                //     config.initCompletedCallback = initCompletedCallback_win;
+                //
                 WinSDKWrapper.WinConfig winConfig = new WinSDKWrapper.WinConfig();
                 winConfig.isDebugModel = config.isDebugModel;
                 winConfig.logEnabled = config.logEnabled;
@@ -88,14 +88,14 @@ namespace SolarEngine
                 return winConfig;
             }
             
-            private static void AttributionCompletedCallback(SEAttributionCallback callback)
-            {
-            }
-
-            private static void InitCompletedCallback(SESDKInitCompletedCallback callback)
-            {
-                initCompletedCallback_win = callback;
-            }
+            // private static void AttributionCompletedCallback(SEAttributionCallback callback)
+            // {
+            // }
+            //
+            // private static void InitCompletedCallback(SESDKInitCompletedCallback callback)
+            // {
+            //     initCompletedCallback_win = callback;
+            // }
             private static void Init(string appKey, string userId, SEConfig config, RCConfig rcConfig)
             {
                 PackageType packageType = MainLand();

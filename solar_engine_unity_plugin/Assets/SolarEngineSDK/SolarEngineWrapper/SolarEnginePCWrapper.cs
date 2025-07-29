@@ -178,13 +178,13 @@ namespace SolarEngine
             Debug.Log($"{SolorEngine}Unity Editor: ReportRegisterEvent");
         }
 
-        private static void AttributionCompletedCallback(SEAttributionCallback callback)
-        {
-        }
-
-        private static void InitCompletedCallback(SESDKInitCompletedCallback callback)
-        {
-        }
+        // private static void AttributionCompletedCallback(SEAttributionCallback callback)
+        // {
+        // }
+        //
+        // private static void InitCompletedCallback(SESDKInitCompletedCallback callback)
+        // {
+        // }
 
         private static void ReportLoginEvent(LoginAttributes attributes)
         {

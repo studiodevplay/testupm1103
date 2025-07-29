@@ -9,7 +9,7 @@ using UnityEngine.UI;
 using Distinct = SolarEngine.Distinct;
 
 
-
+[DefaultExecutionOrder(-100)] 
 public class SolarEngineDemo : MonoBehaviour
 {
     public Texture2D texture;
@@ -18,13 +18,13 @@ public class SolarEngineDemo : MonoBehaviour
 
    // string uri = "https://baidu.link.solar-engine.com/se/deeplink.html?sedp_urlscheme=sedp_urlscheme_applik&sedp_link=sedp_link_applink&download=download_applink&turl_id=turlid_applink&a=6&b=8&se_from=links";
 
-   public void Awake()
-   {
-       Debug.Log(SolarEngineDemoLOG+" Awake");
-      
-       SolarEngine. Analytics.attributionCallback( attributionCallback);
-       SolarEngine.   Analytics.initCompletedCallback(  initSuccessCallback);
-   }
+   // public void Awake()
+   // {
+   //     Debug.Log(SolarEngineDemoLOG+" Awake");
+   //    
+   //     SolarEngine. Analytics.AttributionCallback( attributionCallback);
+   //     SolarEngine.   Analytics.setInitCompletedCallback(  initSuccessCallback);
+   // }
 
    public void Start()
    {
@@ -38,7 +38,7 @@ public class SolarEngineDemo : MonoBehaviour
 
    public void InitSDK()
     {
-
+   
         Debug.Log(SolarEngineDemoLOG+" init click1");
      
        String AppKey = "4e8884227c819e0e";
@@ -96,14 +96,14 @@ public class SolarEngineDemo : MonoBehaviour
         Analytics.delayDeeplinkCompletionHandler(delayDeeplinkCallback);
         
       
-
+   
      
         //如果是在2022版本上开发者可以通过以下方式获取deeplink url并传递给SDK
       
         
         Analytics.SEAttributionCallback callback = new Analytics.SEAttributionCallback(attributionCallback);
         seConfig.attributionCallback = callback;
-
+   
         Analytics.SESDKInitCompletedCallback initCallback = initSuccessCallback;
         seConfig.initCompletedCallback = initCallback;
       
@@ -114,10 +114,10 @@ public class SolarEngineDemo : MonoBehaviour
       //  handleSchemeUrl(uri);
       
       Application.deepLinkActivated += handleSchemeUrl;
-
+   
       //其他Unity版本
       handleSchemeUrl1(Application.absoluteURL);
-
+   
       initRemoteConfig();
     }
    

@@ -18,8 +18,8 @@ namespace SolarEngine
     public partial class Analytics : MonoBehaviour
     {
      
-        private static SESDKInitCompletedCallback initCompletedCallback_miniGame;
-        private static SEAttributionCallback attCompletedCallback_miniGame;
+        // private static SESDKInitCompletedCallback initCompletedCallback_miniGame;
+        // private static SEAttributionCallback attCompletedCallback_miniGame;
         
         private static Dictionary<string, object> GetPresetProperties()
         {
@@ -51,20 +51,20 @@ namespace SolarEngine
             SolarEngineSDK4MiniGames.init(appKey, initSDKInitParams(config), minircConfig);
         }
 
-        private static void InitCompletedCallback( SESDKInitCompletedCallback  callback)
-        {
-            initCompletedCallback_miniGame=callback;
-        }
-        private static void AttributionCompletedCallback( SEAttributionCallback callback)
-        {
-            attCompletedCallback_miniGame=callback;
-        }
+        // private static void InitCompletedCallback( SESDKInitCompletedCallback  callback)
+        // {
+        //     initCompletedCallback_miniGame=callback;
+        // }
+        // private static void AttributionCompletedCallback( SEAttributionCallback callback)
+        // {
+        //     attCompletedCallback_miniGame=callback;
+       // }
         private static InitParams initSDKInitParams( SEConfig config)
         {
-            if(config.initCompletedCallback==null&& initCompletedCallback_miniGame!=null)
-                config.initCompletedCallback = initCompletedCallback_miniGame;
-            if(config.attributionCallback==null&& attCompletedCallback_miniGame!=null)
-                config.attributionCallback = attCompletedCallback_miniGame;
+            // if(config.initCompletedCallback==null&& initCompletedCallback_miniGame!=null)
+            //     config.initCompletedCallback = initCompletedCallback_miniGame;
+            // if(config.attributionCallback==null&& attCompletedCallback_miniGame!=null)
+            //     config.attributionCallback = attCompletedCallback_miniGame;
               InitParams initParams = new InitParams();
 
             if (config.initCompletedCallback != null)

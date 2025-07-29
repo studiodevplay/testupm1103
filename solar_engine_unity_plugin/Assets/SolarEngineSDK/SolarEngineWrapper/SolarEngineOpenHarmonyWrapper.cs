@@ -56,13 +56,13 @@ namespace SolarEngine
             openHarmonyJSClass.CallStatic("initialize", appKey, initSeDict(config), initRcDict(rcConfig));
         }
 
-        private static void AttributionCompletedCallback(SEAttributionCallback callback)
-        {
-        }
-
-        private static void InitCompletedCallback(SESDKInitCompletedCallback callback)
-        {
-        }
+        // private static void AttributionCompletedCallback(SEAttributionCallback callback)
+        // {
+        // }
+        //
+        // private static void InitCompletedCallback(SESDKInitCompletedCallback callback)
+        // {
+        // }
 
         private static void SetVisitorID(string visitorId)
         {

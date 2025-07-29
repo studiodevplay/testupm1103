@@ -171,31 +171,31 @@ namespace SolarEngine
             Init(appKey, null, config, rcConfig);
         }
 
-        public static void attributionCallback(SEAttributionCallback callback)
-        {
-            if (callback!= null)
-            {
-                Analytics.Instance.attributionCallback_private = callback;
-#if UNITY_OPENHARMONY&&!UNITY_EDITOR
-                setAttributionListener();
-#endif
-            }
-
-            AttributionCompletedCallback(callback);
-        }
-
-        public static void initCompletedCallback(SESDKInitCompletedCallback callback)
-        { 
-            if (callback != null)
-            {
-                Analytics.Instance.initCompletedCallback_private = callback;
-#if UNITY_OPENHARMONY&&!UNITY_EDITOR
-                setInitSDKListener();
-#endif
-            }
-
-            InitCompletedCallback(callback);
-        }
+//         public static void attributionCallback(SEAttributionCallback callback)
+//         {
+//             if (callback!= null)
+//             {
+//                 Analytics.Instance.attributionCallback_private = callback;
+// #if UNITY_OPENHARMONY&&!UNITY_EDITOR
+//                 setAttributionListener();
+// #endif
+//             }
+//
+//             AttributionCompletedCallback(callback);
+//         }
+//
+//         public static void initCompletedCallback(SESDKInitCompletedCallback callback)
+//         { 
+//             if (callback != null)
+//             {
+//                 Analytics.Instance.initCompletedCallback_private = callback;
+// #if UNITY_OPENHARMONY&&!UNITY_EDITOR
+//                 setInitSDKListener();
+// #endif
+//             }
+//
+//             InitCompletedCallback(callback);
+//         }
         
         public static Dictionary<string, object> getAttribution()
         {
