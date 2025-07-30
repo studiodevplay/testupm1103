@@ -32,8 +32,8 @@ namespace SolarEngine
             }
             
             // // 从编辑器配置复制值
-            // runtimeSettings.isCN = SolarEngineSettings.isCN;
-            // runtimeSettings.isOversea = SolarEngineSettings.isOversea;
+            runtimeSettings.isCN = SolarEngineSettings.isCN;
+            runtimeSettings.isOversea = SolarEngineSettings.isOversea;
             //
             // runtimeSettings.isUseOaid = SolarEngineSettings.isUseOaid;
             runtimeSettings.isUseODMInfo = SolarEngineSettings.isUseODMInfo;

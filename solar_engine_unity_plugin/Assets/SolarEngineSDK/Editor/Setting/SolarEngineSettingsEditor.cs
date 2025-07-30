@@ -9,6 +9,13 @@ namespace SolarEngine
     [CustomEditor(typeof(SolarEngineSettings))]
     public class SolarEngineSettingsEditor : Editor
     {
+        
+        
+        
+        
+        
+        
+        
         // 通用标签间的间距
         private const float COMMON_SPACE = 13f;
 
@@ -17,7 +24,6 @@ namespace SolarEngine
 
         // 以下类似的多个布尔值用于记录对应属性之前的旧值，便于处理属性变更逻辑
 
-        private static bool oldDisiOSValue;
         private static bool oldDisAndroidValue;
         private static bool oldDisMiniGameValue;
         private static bool oldDisOaidValue;
@@ -33,13 +39,14 @@ namespace SolarEngine
 
         private SolarEngineSettings solarEngingSetting;
 
+
         private void OnEnable()
         {
             // 获取当前正在编辑的SolarEngineSettings类型的目标对象实例
 
             if (target == null)
             {
-                Debug.LogWarning("Target is null in OnEnable.");
+                Debug.LogWarning(ConstString.solorEngineLog + " Target is null in OnEnable.");
                 return;
             }
 
@@ -98,12 +105,8 @@ namespace SolarEngine
             androidRemoteConfig = serializedObject.FindProperty("_Android");
             miniGameRemoteConfig = serializedObject.FindProperty("_MiniGame");
             openHarmonyRemoteConfig = serializedObject.FindProperty("_OpenHarmony");
-            macosRemoteConfig = serializedObject.FindProperty("_MacOS");
 
-            SolarEngineSettings.isUseAndroid = androidRemoteConfig.boolValue;
-            SolarEngineSettings.isUseiOS = iOSRemoteConfig.boolValue;
-            SolarEngineSettings.isUseMiniGame = miniGameRemoteConfig.boolValue;
-            SolarEngineSettings.isUseOpenHarmony = openHarmonyRemoteConfig.boolValue;
+
 
             #endregion
 
@@ -133,13 +136,21 @@ namespace SolarEngine
             oldChinaValue = chinaProperty.boolValue;
             // 记录初始时海外存储区域选择的布尔值
             oldOverseaValue = overseaProperty.boolValue;
-            Debug.Log("Initial Values  androidRemoteConfig->" + androidRemoteConfig.boolValue);
-            oldDisAndroidValue = androidRemoteConfig.boolValue;
-            // 记录初始时是否使用OAID的布尔值
-            oldDisOaidValue = useOaid.boolValue;
 
-            // Debug.Log(
-            //     $"Initial Values -> _China: {oldChinaValue}, _Oversea: {oldOverseaValue}, oldDisAndroidValue: {oldDisAndroidValue}, UseOAID: {oldDisOaidValue}");
+
+
+            oldDisOaidValue = useOaid.boolValue;
+            
+           
+            oldDisAndroidValue = androidRemoteConfig.boolValue;
+            
+            Debug.LogWarning(
+                $"{ConstString.solorEngineLog} -> " +
+                $"Android:{androidRemoteConfig.boolValue}, " +
+                $"iOS:{iOSRemoteConfig.boolValue}, " +
+                $"MiniGame:{miniGameRemoteConfig.boolValue}, " +
+                $"OpenHarmony:{openHarmonyRemoteConfig.boolValue}");
+
         }
 
 
@@ -281,7 +292,7 @@ namespace SolarEngine
                 DrawVerticalSpace(5f);
                 EditorGUI.indentLevel += 1;
                 DrawRemoveAndroidSDKOption();
-                DrawRemoteConfig();
+                //DrawRemoteConfig();
                 DrawOaidOption();
                 DrawODMInfoOption();
 
@@ -291,6 +302,7 @@ namespace SolarEngine
                 EditorGUI.indentLevel -= 1;
             }
 
+          
             ApplyButton();
 
             serializedObject.ApplyModifiedProperties();
@@ -391,6 +403,7 @@ namespace SolarEngine
 
         private bool miniGameRemoteConfigValue()
         {
+     
             if (miniGameRemoteConfig.boolValue)
                 return PluginsEdtior.showMiniGame();
 
@@ -399,7 +412,7 @@ namespace SolarEngine
 
         private bool openHarmonyRemoteConfigValue()
         {
-            Debug.Log("openHarmonyRemoteConfigValue" + openHarmonyRemoteConfig.boolValue);
+            Debug.Log($"{ConstString.solorEngineLog} openHarmonyRemoteConfigValue" + openHarmonyRemoteConfig.boolValue);
             if (openHarmonyRemoteConfig.boolValue)
                 return PluginsEdtior.showOpenHarmony();
             return PluginsEdtior.disableOpenHarmony();
@@ -568,7 +581,7 @@ namespace SolarEngine
             SolarEngineSettings.isUseAndroid = oldDisAndroidValue;
             SolarEngineSettings.isUseOaid = oldDisOaidValue;
             PluginsEdtior.enableAndroidSDK();
-            Debug.Log($"isUseAndroid: {SolarEngineSettings.isUseAndroid}, isUseOaid: {SolarEngineSettings.isUseOaid}");
+            Debug.Log($"{ConstString.solorEngineLog} isUseAndroid: {SolarEngineSettings.isUseAndroid}, isUseOaid: {SolarEngineSettings.isUseOaid}");
             if (SolarEngineSettings.isUseOaid) PluginsEdtior.showOaid();
 
             if (SolarEngineSettings.isUseAndroid)
@@ -625,30 +638,30 @@ namespace SolarEngine
 
         private void DrawRemoteConfig()
         {
-//             _useRemoteConfig = EditorGUILayout.Foldout(_useRemoteConfig, "Remote Config");
-//             if (_useRemoteConfig)
-//             {
-//                 EditorGUI.indentLevel += 1;
-//                 // EditorGUILayout.PropertyField(disAllRemoteConfig);
-//                 EditorGUILayout.PropertyField(iOSRemoteConfig);
-//                 EditorGUILayout.PropertyField(androidRemoteConfig);
-//                 EditorGUILayout.PropertyField(miniGameRemoteConfig);
-// #if TUANJIE_2022_3_OR_NEWER
-//                 EditorGUILayout.PropertyField(openHarmonyRemoteConfig);
-// #endif
-//                 EditorGUILayout.PropertyField(macosRemoteConfig);
-//                 EditorGUI.indentLevel -= 1;
-//                 EditorGUILayout.HelpBox(ConstString.remoteConfigMsg, MessageType.Info);
-//             }
+            _useRemoteConfig = EditorGUILayout.Foldout(_useRemoteConfig, "Remote Config");
+            if (_useRemoteConfig)
+            {
+                EditorGUI.indentLevel += 1;
+                EditorGUILayout.PropertyField(iOSRemoteConfig);
+                EditorGUILayout.PropertyField(androidRemoteConfig);
+                EditorGUILayout.PropertyField(miniGameRemoteConfig);
+#if TUANJIE_2022_3_OR_NEWER
+                EditorGUILayout.PropertyField(openHarmonyRemoteConfig);
+#endif
+                EditorGUI.indentLevel -= 1;
+                EditorGUILayout.HelpBox(ConstString.remoteConfigMsg, MessageType.Info);
+            }
 
-            // if (removeAndroidSDK.boolValue)
-            // {
-            //     androidRemoteConfig.boolValue = false;
-            // }
-            // else
-            // {
-            //     androidRemoteConfig.boolValue = true;
-            // }
+            if (removeAndroidSDK.boolValue)
+            {
+                androidRemoteConfig.boolValue = false;
+            }
+            else
+            {
+                androidRemoteConfig.boolValue = true;
+            }
+
+
         }
 
         #endregion

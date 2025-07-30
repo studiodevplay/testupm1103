@@ -6,10 +6,10 @@ namespace SolarEngine
     [CreateAssetMenu(fileName = "SERuntimeSettings", menuName = "SolarEngine/Runtime Settings")]
     public class SolarRuntimeSettings : ScriptableObject
     {
-        // [HideInInspector]
-        // public  bool isCN;
-        // [HideInInspector]
-        // public bool isOversea;
+        [HideInInspector]
+        public  bool isCN;
+        [HideInInspector]
+        public bool isOversea;
         // [HideInInspector]
         // public bool isUseOaid;
         [HideInInspector]

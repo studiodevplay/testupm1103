@@ -353,6 +353,7 @@ public class XmlModifier
         }
         catch (Exception e)
         {
+            Debug.LogError($"{SolorEngine}Error modifying XML file (Android) {e.Message}");
             return false;
         }
     }
@@ -388,7 +389,7 @@ public class XmlModifier
         }
         catch (Exception ex)
         {
-            Debug.LogError(SolorEngine + "Error modifying XML file (CN) ex.Message");
+            Debug.LogError( $"{SolorEngine }Error modifying XML file (CN) {ex.Message}");
             return false;
         }
     }

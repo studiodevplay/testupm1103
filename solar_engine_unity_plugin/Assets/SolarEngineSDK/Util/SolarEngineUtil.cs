@@ -45,6 +45,9 @@ namespace SolarEngine
             {
                 seDict.Add("fbAppID", config.fbAppID);
             }
+            seDict.Add("adPersonalizationEnabled", config.adPersonalizationEnabled);
+
+            seDict.Add("adUserDataEnabled", config.adUserDataEnabled);
 
             seDict.Add("attAuthorizationWaitingInterval", config.attAuthorizationWaitingInterval);
             seDict.Add("caid", config.caid);
@@ -74,13 +77,13 @@ namespace SolarEngine
                     customDomainDict.Add("ruleDomain", config.customDomain.ruleDomain);
 
                 if (!string.IsNullOrEmpty(config.customDomain.receiverTcpHost))
-                    customDomainDict.Add("receiverTcpHost", config.customDomain.receiverTcpHost);
+                    customDomainDict.Add("tcpReceiverHost", config.customDomain.receiverTcpHost);
 
                 if (!string.IsNullOrEmpty(config.customDomain.ruleTcpHost))
-                    customDomainDict.Add("ruleTcpHost", config.customDomain.ruleTcpHost);
+                    customDomainDict.Add("tcpRuleHost", config.customDomain.ruleTcpHost);
 
                 if (!string.IsNullOrEmpty(config.customDomain.gatewayTcpHost))
-                    customDomainDict.Add("gatewayTcpHost", config.customDomain.gatewayTcpHost);
+                    customDomainDict.Add("tcpGatewayHost", config.customDomain.gatewayTcpHost);
                 seDict.Add("customDomain", customDomainDict);
             }
 
@@ -852,7 +855,10 @@ namespace SolarEngine
 
         // 如果海外开发者需要用到meta归因，此处设置meta appid，只有Android调用有效，iOS没有此字段，无需设置此字段
         public string fbAppID { get; set; }
-
+        //用户是否允许Google将其数据用于个性化广告，开发者自定义，不设置则默认不上报该字段，只有Android调用有效，iOS没有此字段，无需设置此字段
+        public bool adPersonalizationEnabled { get; set; }
+        //用户是否同意将其数据发送到Google，开发者自定义，不设置则默认不上报该字段，只有Android调用有效，iOS没有此字段，无需设置此字段
+        public bool adUserDataEnabled { get; set; }
         // iOS caid；只有iOS调用有效。（仅国内版设置有效）
         public string caid { get; set; }
         public SECustomDomain customDomain;

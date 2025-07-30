@@ -88,7 +88,6 @@ namespace SolarEngine
         public static bool isUseMiniGame
         {
             get => Instance._MiniGame;
-            set => Instance._MiniGame = value;
         }
 
         public static bool isUseOpenHarmony
@@ -99,8 +98,7 @@ namespace SolarEngine
 
         public static bool isUseMacOS
         {
-            get => Instance._MacOS;
-            set => Instance._MacOS = value;
+            get => Instance._iOS;
         }
 
         public static bool isUseAndroid
@@ -173,13 +171,11 @@ namespace SolarEngine
         #region RC
 
         //默认开启
-        [SerializeField] private bool _RemoteConfig = true;
         [SerializeField] private bool _All = true;
         [SerializeField] private bool _iOS = true;
         [SerializeField] private bool _Android = true;
         [SerializeField] private bool _MiniGame = true;
         [SerializeField] private bool _OpenHarmony = true;
-        [SerializeField] private bool _MacOS = true;
 
         #endregion
 
