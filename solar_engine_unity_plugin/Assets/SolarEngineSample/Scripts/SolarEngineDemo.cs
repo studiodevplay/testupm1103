@@ -15,7 +15,7 @@ public class SolarEngineDemo : MonoBehaviour
     public Texture2D texture;
 
     public static readonly  string  SolarEngineDemoLOG="SolarEngineDemo: ";
-
+ 
    // string uri = "https://baidu.link.solar-engine.com/se/deeplink.html?sedp_urlscheme=sedp_urlscheme_applik&sedp_link=sedp_link_applink&download=download_applink&turl_id=turlid_applink&a=6&b=8&se_from=links";
 
    // public void Awake()
@@ -41,7 +41,7 @@ public class SolarEngineDemo : MonoBehaviour
    
         Debug.Log(SolarEngineDemoLOG+" init click1");
      
-       String AppKey = "4e8884227c819e0e";
+       String AppKey = "455cd0c9843e503e";
       
     
         MiniGameInitParams initParams = new MiniGameInitParams();
@@ -69,7 +69,7 @@ public class SolarEngineDemo : MonoBehaviour
          
         RCConfig rc = new RCConfig();
         
-        // rc.enable = true;
+         rc.enable = true;
         
         rc.mergeType= RCMergeType.ByUser;
         rc.customIDProperties = new Dictionary<string, object>()
@@ -84,12 +84,27 @@ public class SolarEngineDemo : MonoBehaviour
         {
             { "customIDUserProperties", "test" }, { "age", 18 }
         };
+       
         seConfig.logEnabled = true;
         seConfig.isDebugModel = true;
+        seConfig.fbAppID = "fbAppID";
+        // seConfig.isGDPRArea = true;
+        // seConfig.isCoppaEnabled = true;
+        // seConfig.isKidsAppEnabled = true;
+        // seConfig.adPersonalizationEnabled = true;
+        // seConfig.adUserDataEnabled = true;
+        SECustomDomain customDomain = new SECustomDomain();
+        customDomain.enable = true;
+        customDomain.receiverDomain = "http://stable-solar.detailroi.com";
+        customDomain.ruleDomain = "http://stable-solar.detailroi.com";
+        customDomain.receiverTcpHost = "cn-test-receiver.solar-engine.com";
+        customDomain.ruleTcpHost = "cn-test-rule.solar-engine.com";
+        customDomain.gatewayTcpHost = "cn-test-gateway.solar-engine.com";
+        seConfig.customDomain = customDomain;
         
      
         //delayDeeplinkEnable
-        seConfig.delayDeeplinkEnable = true;       
+        seConfig.deferredDeeplinkenable = true;       
          setDelayDeeplinkCompletionHandler();
         
         Analytics.deeplinkCompletionHandler(deeplinkCallback);

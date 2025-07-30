@@ -120,3 +120,12 @@ solar_engine_unity_plugin/Assets/Resources/SolarEngineSettings.asset
 solar_engine_unity_plugin/Assets/SolarEngine/MainLand/se_mainland.txt
 SEUnityBridgeMacOSBundle/build
 SEUnityBridgeMacOSBundle/SEUnityBridgeMacOSBundle.xcodeproj
+solar_engine_unity_plugin/Assets/Resources/SERuntimeSettings.asset.meta
+solar_engine_unity_plugin/Assets/Resources/SolarEngineSettings.asset.meta
+solar_engine_unity_plugin/Assets/SolarEngine/MainLand
+MainLand.meta
+solar_engine_unity_plugin/Assets/WebGLTemplates.meta
+solar_engine_unity_plugin/Assets/WX-WASM-SDK-V2.meta
+solar_engine_unity_plugin/ProjectSettings/AndroidResolverDependencies.xml
+solar_engine_unity_plugin/ProjectSettings/GvhProjectSettings.xml
+ProjectSettings.asset

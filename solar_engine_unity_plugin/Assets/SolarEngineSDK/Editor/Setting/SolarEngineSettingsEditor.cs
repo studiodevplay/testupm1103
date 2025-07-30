@@ -12,7 +12,7 @@ namespace SolarEngine
         
         
         
-        
+        bool isshowrc=false;
         
         
         
@@ -292,7 +292,8 @@ namespace SolarEngine
                 DrawVerticalSpace(5f);
                 EditorGUI.indentLevel += 1;
                 DrawRemoveAndroidSDKOption();
-                //DrawRemoteConfig();
+                if(isshowrc)
+                 DrawRemoteConfig();
                 DrawOaidOption();
                 DrawODMInfoOption();
 
@@ -652,14 +653,14 @@ namespace SolarEngine
                 EditorGUILayout.HelpBox(ConstString.remoteConfigMsg, MessageType.Info);
             }
 
-            if (removeAndroidSDK.boolValue)
-            {
-                androidRemoteConfig.boolValue = false;
-            }
-            else
-            {
-                androidRemoteConfig.boolValue = true;
-            }
+            // if (removeAndroidSDK.boolValue)
+            // {
+            //     androidRemoteConfig.boolValue = false;
+            // }
+            // else
+            // {
+            //     androidRemoteConfig.boolValue = true;
+            // }
 
 
         }
