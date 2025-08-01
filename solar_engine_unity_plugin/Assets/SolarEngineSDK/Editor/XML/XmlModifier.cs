@@ -190,7 +190,7 @@ public class XmlModifier
             {
                 if (strongType == StrongType.Default)
                 {
-                    isModified = ModifyIOSNodes(docRemote, IOS_POD_Default);
+                    isModified = ModifyIOSNodes(docRemote, IOS_POD_Default,strongType);
                 }
                 else
                 {
@@ -208,17 +208,23 @@ public class XmlModifier
     {
         bool isModified = false;
 
-        if (!SolarEngineSettings.isUseODMInfo&&strongType != StrongType.Default)
+        if (!SolarEngineSettings.isUseODMInfo && strongType != StrongType.Default)
+        {
+
             return true;
+
+        }
+          
         else
         {
-           
+          
             XDocument docRemote = LoadXmlDocument(IOS_ODMINFO_PATH);
 
             if (docRemote!= null)
             {
                 if (strongType == StrongType.Default)
                 {
+
                     isModified = ModifyIOSNodes(docRemote, IOS_POD_Default);
                 }
                 else
@@ -462,7 +468,7 @@ public class XmlModifier
                         isIosSetSuccess = ModifyIOSNodes(iosDoc, IOS_POD_OVERSEA_NAME);
                         break;
                     case StrongType.Default:
-                        isIosSetSuccess = ModifyIOSNodes(iosDoc, IOS_POD_Default);
+                        isIosSetSuccess = ModifyIOSNodes(iosDoc, IOS_POD_Default,type);
                         break;
                 }
 
