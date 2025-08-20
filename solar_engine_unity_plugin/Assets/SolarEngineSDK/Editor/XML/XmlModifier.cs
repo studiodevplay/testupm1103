@@ -63,6 +63,12 @@ public class XmlModifier
 
     private const string IOS_REMOTECONFIGE_SPEC = "SESDKRemoteConfig";
     private const string IOS_ODMInfo_SPEC = "SESDKODMInfo";
+    private const string IOS_GoogleUtilities_SPEC = "GoogleUtilities";
+    private const string IOS_nanopb_SPEC = "nanopb";
+    private const string IOS_GoogleAdsOnDeviceConversion_SPEC = "GoogleAdsOnDeviceConversion";
+    
+    
+    
     private const string ANDROID_OAID_SPEC = "com.reyun.solar.engine:se-plugin-oaid:";
     //  "
     private const string ANDROID_HMS_SPEC = "com.huawei.hms:ads-identifier:3.4.62.300";
@@ -203,6 +209,51 @@ public class XmlModifier
 
         return isModified;
     }
+
+    private static bool ModifyIOSNodes(XDocument doc,StrongType type = StrongType.Oversea)
+    {
+        try
+        {
+           
+            // 先删除旧的 iosPod 节点
+            doc.Descendants("iosPods").Remove();
+            if (type == StrongType.Default)
+                return true;
+            // 新建固定的 4 个节点
+            XElement root = doc.Root;
+
+            if (root == null)
+            {
+                Debug.LogError("XML 文档没有根节点，无法添加 iosPod 节点");
+                return false;
+            }
+            var iosPods = new XElement("iosPods");
+
+            iosPods.Add(new XElement("iosPod",
+                new XAttribute("name", "SESDKODMInfo"),
+                new XAttribute("version", "1.0.0.1")));
+
+            iosPods.Add(new XElement("iosPod",
+                new XAttribute("name", "GoogleUtilities"),
+                new XAttribute("version", "8.1")));
+
+            iosPods.Add(new XElement("iosPod",
+                new XAttribute("name", "nanopb"),
+                new XAttribute("version", "3.30910.0")));
+
+            iosPods.Add(new XElement("iosPod",
+                new XAttribute("name", "GoogleAdsOnDeviceConversion"),
+                new XAttribute("version", "2.1.0")));
+           root.Add(iosPods);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"修改 iOS 节点时出错: {ex.Message}");
+            return false;
+        }
+    }
+
     
     private static bool iOSODMINFO(StrongType strongType = StrongType.Oversea)
     {
@@ -225,11 +276,17 @@ public class XmlModifier
                 if (strongType == StrongType.Default)
                 {
 
-                    isModified = ModifyIOSNodes(docRemote, IOS_POD_Default);
+                    isModified = ModifyIOSNodes(docRemote, strongType);
                 }
                 else
                 {
-                    isModified = ModifyIOSNodes(docRemote, IOS_ODMInfo_SPEC,strongType, false);
+                    isModified = ModifyIOSNodes(docRemote);
+                    
+                    // isModified = ModifyIOSNodes(docRemote, IOS_GoogleUtilities_SPEC,strongType, false);
+                    //
+                    // isModified = ModifyIOSNodes(docRemote, IOS_nanopb_SPEC,strongType, false);
+
+                    
                 }
 
                 SaveXmlDocument(docRemote, IOS_ODMINFO_PATH);
