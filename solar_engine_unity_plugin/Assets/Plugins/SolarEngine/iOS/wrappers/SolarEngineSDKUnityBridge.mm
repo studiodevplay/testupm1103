@@ -140,7 +140,7 @@ static SEAdImpressionEventAttribute *buildAdImpressionAttribute(const char *adIm
     NSDictionary *customProperties = [dict objectForKey:@"_customProperties"];
 
     SEAdImpressionEventAttribute *attribute = [[SEAdImpressionEventAttribute alloc] init];
-    attribute.adType = [seTrimValue(adType) integerValue];
+    attribute.adType = (SolarEngineAdType)[seTrimValue(adType) integerValue];
     attribute.adNetworkPlatform = seTrimValue(adNetworkPlatform);
     attribute.adNetworkAppID = seTrimValue(adNetworkAppID);
     attribute.adNetworkPlacementID = seTrimValue(adNetworkPlacementID);
@@ -174,7 +174,7 @@ static SEAdClickEventAttribute *buildAdClickAttribute(const char *adClickAttribu
     NSDictionary *customProperties = [dict objectForKey:@"_customProperties"];
     
     SEAdClickEventAttribute *attribute = [[SEAdClickEventAttribute alloc] init];
-    attribute.adType = [seTrimValue(adType) integerValue];
+    attribute.adType = (SolarEngineAdType)[seTrimValue(adType) integerValue];
     attribute.adNetworkPlatform = seTrimValue(adNetworkPlatform);
     attribute.adNetworkPlacementID = seTrimValue(adNetworkPlacementID);
     attribute.mediationPlatform = seTrimValue(mediationPlatform);
