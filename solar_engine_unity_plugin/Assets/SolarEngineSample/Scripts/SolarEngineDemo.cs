@@ -40,8 +40,8 @@ public class SolarEngineDemo : MonoBehaviour
     {
    
         Debug.Log(SolarEngineDemoLOG+" init click1");
-     
-       String AppKey = "455cd0c9843e503e";
+     //us
+       String AppKey = "2946841564bdf46a";
       
     
         MiniGameInitParams initParams = new MiniGameInitParams();
@@ -52,17 +52,20 @@ public class SolarEngineDemo : MonoBehaviour
         seConfig.attAuthorizationWaitingInterval = 120;
         
         ///如接入腾讯广告SDK，请添加以下代码
-        TencentAdvertisingGameSDKInitParams tencentAdvertisingGameSDKInitParams = new TencentAdvertisingGameSDKInitParams();
         
-        tencentAdvertisingGameSDKInitParams.user_action_set_id =1234567;
-        tencentAdvertisingGameSDKInitParams.secret_key = "";
-        tencentAdvertisingGameSDKInitParams.appid = "";
+        TencentAdvertisingGameSDKInitParams tencentAdvertisingGameSDKInitParams = new TencentAdvertisingGameSDKInitParams();
+        tencentAdvertisingGameSDKInitParams.user_action_set_id = 1207670035;
+        tencentAdvertisingGameSDKInitParams.secret_key = "4bcd1b1003c96d4d5344a520adfb3205";
+        tencentAdvertisingGameSDKInitParams.appid = "wx146cc579585c8a5f";
+        
+    
+        initParams.tencentAdvertisingGameSDKInitParams= tencentAdvertisingGameSDKInitParams;
         
         
         initParams.tencentAdvertisingGameSDKInitParams= tencentAdvertisingGameSDKInitParams;
         
         initParams.reportingToTencentSdk = 1;
-        initParams.isInitTencentAdvertisingGameSDK = false;
+        initParams.isInitTencentAdvertisingGameSDK = true;
         
         
          seConfig.miniGameInitParams = initParams;
@@ -94,13 +97,13 @@ public class SolarEngineDemo : MonoBehaviour
         // seConfig.adPersonalizationEnabled = true;
         // seConfig.adUserDataEnabled = true;
         SECustomDomain customDomain = new SECustomDomain();
-        customDomain.enable = true;
+        customDomain.enable =true ;
         customDomain.receiverDomain = "http://stable-solar.detailroi.com";
         customDomain.ruleDomain = "http://stable-solar.detailroi.com";
         customDomain.receiverTcpHost = "cn-test-receiver.solar-engine.com";
         customDomain.ruleTcpHost = "cn-test-rule.solar-engine.com";
         customDomain.gatewayTcpHost = "cn-test-gateway.solar-engine.com";
-        seConfig.customDomain = customDomain;
+       // seConfig.customDomain = customDomain;
         
      
         //delayDeeplinkEnable
@@ -200,6 +203,7 @@ public class SolarEngineDemo : MonoBehaviour
         SESDKRemoteConfig.Item itemBool = remoteConfig.boolItem("testbool", true);
         SESDKRemoteConfig.Item itemInt = remoteConfig.intItem("testint", 1);
         SESDKRemoteConfig.Item[] defaultConfigArray= new SESDKRemoteConfig.Item[]{itemString,itemJson,itemBool,itemInt};
+        Debug.Log(SolarEngineDemoLOG+ "setRemoteDefaultConfig"+JsonConvert.SerializeObject(defaultConfigArray));
         remoteConfig.SetRemoteDefaultConfig(defaultConfigArray);
 
     }
