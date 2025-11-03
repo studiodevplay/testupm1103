@@ -1,0 +1,8 @@
+{
+  "name": "com.solarengine.sdk",
+  "version": "1.0.0",
+  "displayName": "SolarEngine SDK",
+  "description": "SolarEngine SDK for Unity",
+  "unity": "2020.3",
+  "dependencies": {}
+}
