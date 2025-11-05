@@ -1,9 +1,0 @@
-﻿import { SEOpenHarmonyProxy } from "./SEOpenHarmonyProxy";
-
-export function RegisterSENativeBridge() {
-
-  let register :Record<string,object>= {} ;
-  register["SEOpenHarmonyProxy"] =  SEOpenHarmonyProxy;
-
-  return register;
-}
