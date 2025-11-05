@@ -4,4 +4,10 @@
   "displayName": "com.solarengine.sdk",
   "description": "SolarEngine SDK for Unity",
   "unity": "2020.3"
+  "files": [
+     
+      "Plugins",
+      "SolarEngineSDK"
+    ]
+  }
 }
