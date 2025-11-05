@@ -1,0 +1,8 @@
+{
+  "name": "com.solarengine.sdk",
+  "version": "1.0.0",
+  "displayName": "SolarEngine Unity SDK",
+  "description": "SolarEngine analytics SDK for Unity.",
+  "unity": "2019.4",
+  "author": { "name": "SolarEngine" }
+}

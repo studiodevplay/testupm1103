@@ -1,0 +1,7 @@
+# Ignore Unity temp files
+Temp/
+Library/
+Obj/
+Logs/
+MemoryCaptures/
+UserSettings/
