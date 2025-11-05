@@ -1,8 +1,0 @@
-{
-    "name": "SolarEngineSDK.Editor",
-    "references": [
-        "SolarEngineSDK"
-    ],
-    "includePlatforms": ["Editor"],
-    "autoReferenced": true
-}
