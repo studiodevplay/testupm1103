@@ -139,26 +139,30 @@ namespace SolarEngine
 
             bool odminfo = false;
 
-            if (!SolarEngineSettings.isUseiOS)
-                ios = PluginsEdtior.disableiOS();
-            else
-            {
-                ios = PluginsEdtior.showiOS();
-            }
+            // if (!SolarEngineSettings.isUseiOS)
+            //     ios = PluginsEdtior.disableiOS();
+            // else
+            // {
+            //     ios = PluginsEdtior.showiOS();
+            // }
+            ios = true;
+            android = true;
+            miniGame = true;
+            openHarmony = true;
 
-            if (!SolarEngineSettings.isUseAndroid)
-                android = PluginsEdtior.disableAndroid();
-            else
-            {
-                android = PluginsEdtior.showAndroid();
-            }
-
-            if (!SolarEngineSettings.isUseMiniGame)
-                miniGame = PluginsEdtior.disableMiniGame();
-            else
-            {
-                miniGame = PluginsEdtior.showMiniGame();
-            }
+            // if (!SolarEngineSettings.isUseAndroid)
+            //     android = PluginsEdtior.disableAndroid();
+            // else
+            // {
+            //     android = PluginsEdtior.showAndroid();
+            // }
+            //
+            // if (!SolarEngineSettings.isUseMiniGame)
+            //     miniGame = PluginsEdtior.disableMiniGame();
+            // else
+            // {
+            //     miniGame = PluginsEdtior.showMiniGame();
+            // }
 
             if (!SolarEngineSettings.isUseOaid)
                 oaid = PluginsEdtior.disableOaid();
@@ -167,12 +171,12 @@ namespace SolarEngine
                 oaid = PluginsEdtior.showOaid();
             }
 
-            if (!SolarEngineSettings.isUseOpenHarmony)
-                openHarmony = PluginsEdtior.disableOpenHarmony();
-            else
-            {
-                openHarmony = PluginsEdtior.showOpenHarmony();
-            }
+            // if (!SolarEngineSettings.isUseOpenHarmony)
+            //     openHarmony = PluginsEdtior.disableOpenHarmony();
+            // else
+            // {
+            //     openHarmony = PluginsEdtior.showOpenHarmony();
+            // }
 
 
             if (!SolarEngineSettings.isUseODMInfo || SolarEngineSettings.isCN)
