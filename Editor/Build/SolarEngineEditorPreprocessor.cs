@@ -15,6 +15,11 @@ namespace SolarEngine.Build
     public class SolarEngineEditorPreprocessor : IPreprocessBuild
 #endif
     {
+        
+        static SolarEngineEditorPreprocessor()
+        {
+            Debug.Log("[SolarEngine] ✅ Editor Assembly Loaded");
+        }
         public int callbackOrder => -1;
 #if UNITY_2018_1_OR_NEWER
         public void OnPreprocessBuild(UnityEditor.Build.Reporting.BuildReport report)
@@ -27,8 +32,9 @@ namespace SolarEngine.Build
         {
             if (target == BuildTarget.Android || target == BuildTarget.iOS)
             {
+                Debug.Log(string.Format(SolorEngine) + " OnPreprocessBuild");
 #if UNITY_ANDROID&&!SOLARENGINE_BYTEDANCE&&!SOLARENGINE_BYTEDANCE_CLOUD&&!SOLARENGINE_BYTEDANCE_STARK
-                RunPostProcessTasksAndroid();
+               RunPostProcessTasksAndroid();
                 CheckConfusion();
 #endif
 #if (UNITY_ANDROID||UNITY_IOS)&&!SOLARENGINE_BYTEDANCE&&!SOLARENGINE_BYTEDANCE_CLOUD&&!SOLARENGINE_BYTEDANCE_STARK
@@ -59,7 +65,7 @@ namespace SolarEngine.Build
 
 
         private const string SolorEngine = "[SolorEngine]";
-
+        [MenuItem("SolarEngineSDK/CheckConfusion ", false, 0)]
         public static void CheckConfusion()
         {
             if (PlayerSettings.Android.minifyRelease || PlayerSettings.Android.minifyDebug)
@@ -70,6 +76,11 @@ namespace SolarEngine.Build
                 var appproguardPath = Path.Combine(Application.dataPath, "Plugins/Android/proguard-user.txt");
                 var seproguardPath =
                     Path.Combine(Application.dataPath, "Plugins/SolarEngine/Android/proguard-user.txt");
+                if (PackageChecker.IsUPMPackageInstalled())
+                {
+                    seproguardPath =
+                        Path.Combine(PackageChecker. GetPackagePath(), "Plugins/Android/proguard-user.txt");
+                }
 
 
                 if (!File.Exists(appproguardPath))
@@ -156,8 +167,7 @@ namespace SolarEngine.Build
             return manifest.DocumentElement.SelectSingleNode(xpath, GetNamespaceManager(manifest)) != null;
         }
 
-
-        //   [MenuItem("SolarEngineSDK/RunPostProcessTasksAndroid ", false, 0)]
+        [MenuItem("SolarEngineSDK/RunPostProcessTasksAndroid ", false, 0)]
 
         public static void RunPostProcessTasksAndroid()
         {
@@ -165,6 +175,13 @@ namespace SolarEngine.Build
             var androidPluginsPath = Path.Combine(Application.dataPath, "Plugins/Android");
             var seManifestPath =
                 Path.Combine(Application.dataPath, "Plugins/SolarEngine/Android/AndroidManifest.xml");
+            Debug.Log(PackageChecker.IsUPMPackageInstalled());
+            if (PackageChecker.IsUPMPackageInstalled())
+            {
+                 seManifestPath =
+                    Path.Combine(PackageChecker. GetPackagePath(), "Plugins/Android/AndroidManifest.xml");
+            }
+          
             var appManifestPath = Path.Combine(Application.dataPath, "Plugins/Android/AndroidManifest.xml");
             var manifestHasChanged = false;
             if (!File.Exists(appManifestPath))

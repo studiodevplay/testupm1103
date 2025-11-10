@@ -21,10 +21,16 @@ namespace SolarEngine
 		private static readonly string[] SKIP_FILES = {@".*\.meta$"};
 
 		private static string BuildPath { get; set; }
+		static InstallSdkInXcode()
+		{
+			Debug.Log("[SolarEngine] ✅ Editor Assembly Loaded");
+		}
 
 		[PostProcessBuild]
 		public static void OnPostprocessBuild(BuildTarget buildTarget, string pathToBuiltProject)
 		{
+			Debug.Log(string.Format("SolorEngine") + " OnPreprocessBuild");
+
 			if (buildTarget == BuildTarget.iOS)
 			{
 				AfterBuild (pathToBuiltProject);
