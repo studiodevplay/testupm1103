@@ -73,7 +73,20 @@ public class SolorEnginePackageManager : MonoBehaviour
     
 }
 
+public static class SolarEngineUPMWatcher
+{
+    [InitializeOnLoadMethod]
+    private static void RegisterPolling()
+    {
+        EditorApplication.update += Update;
+        Debug.Log("[SolarEngine] 轮询已注册");
+    }
 
+    private static void Update()
+    {
+        // 检测 Packages/com.solarengine.sdk 目录是否存在
+    }
+}
 
 
 [InitializeOnLoad]
@@ -91,8 +104,10 @@ public static class SolarEnginePackageEvents
     private static void OnRegisteredPackages(PackageRegistrationEventArgs args)
     {
         // ✅ 处理新增包（安装）
+        
         foreach (var added in args.added)
         {
+            Debug.Log($"[SolarEngine] 检测到包安装：{added.name}");
             if (added.name == PackageName)
             {
                 Debug.Log($"[SolarEngine] 检测到包安装：{PackageName}");
