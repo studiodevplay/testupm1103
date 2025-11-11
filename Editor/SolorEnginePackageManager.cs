@@ -84,6 +84,7 @@ public static class SolarEnginePackageEvents
 
     static SolarEnginePackageEvents()
     {
+        Debug.Log("[SolarEngine] SolarEnginePackageEvents 初始化");
         Events.registeredPackages += OnRegisteredPackages;
     }
 
