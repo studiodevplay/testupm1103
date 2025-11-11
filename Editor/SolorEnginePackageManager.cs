@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using SolarEngine;
 using SolarEngineSDK.Editor;
 using UnityEditor;
+using UnityEditor.PackageManager;
 using UnityEngine;
 [InitializeOnLoad]
 public class SolorEnginePackageManager : MonoBehaviour
@@ -39,11 +40,7 @@ public class SolorEnginePackageManager : MonoBehaviour
         ApplySetting._applySetting(isShow);
     }
     
-    // [MenuItem("SolarEngineSDK/Documentation", false, 0)]
-    // static void documentation()
-    // {
-    //     Application.OpenURL("https://help.solar-engine.com/cn/docs/ugKp8t");
-    // }
+
     
     
     [MenuItem("SolarEngineSDK/Documentation/UnityDocumentation", false, 0)]
@@ -69,7 +66,38 @@ public class SolorEnginePackageManager : MonoBehaviour
 
   
 
-  
+
+
 
     
 }
+#if UNITY_EDITOR
+
+
+public static class PackageChecker
+{
+    private static string packagePath = "";
+    public static bool IsUPMPackageInstalled(string packageName="com.solarengine.sdk")
+    {
+        var listRequest = Client.List(true, false);
+        while (!listRequest.IsCompleted) {} // 等待完成
+
+        if (listRequest.Status == StatusCode.Success)
+        {
+            foreach (var pkg in listRequest.Result)
+            {
+                if (pkg.name == packageName)
+                    packagePath = pkg.resolvedPath;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static string GetPackagePath()
+    {
+        return packagePath;
+    }
+    
+}
+#endif

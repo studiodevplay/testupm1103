@@ -6,8 +6,8 @@ namespace SolarEngine
 {
     public partial class Analytics : MonoBehaviour
     {
-        public static readonly string sdk_version = "1.3.1.0";
-        public static readonly string SolorEngine = $"[SolarEngineSDK_Unity {sdk_version} :]";
+        public static readonly string  sdk_version = "1.3.1";
+        public static readonly string  SolorEngine = $"[SolarEngineSDK_Unity {sdk_version} :]";
         private static readonly string SEConstant_CHECK_ID = "_first_event_check_id";
         private static readonly string SEConstant_EVENT_TYPE = "_event_type";
 
@@ -18,7 +18,7 @@ namespace SolarEngine
         private static readonly string SEConstant_Custom_CustomProperties = "_customProperties";
 
         private static readonly string SEConstant_IAP = "_appPur";
-        private static readonly string SEConstant_IAP_PName = "_product_name";
+        private static readonly string SEConstant_IAP_PName = "_roduct_name";
         private static readonly string SEConstant_IAP_PID = "_product_id";
         private static readonly string SEConstant_IAP_PCount = "_product_num";
         private static readonly string SEConstant_IAP_Currency = "_currency_type";

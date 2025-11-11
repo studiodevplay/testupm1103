@@ -156,7 +156,6 @@ namespace SolarEngine
 
         public override void OnInspectorGUI()
         {
-         
             _GUI();
         }
 
