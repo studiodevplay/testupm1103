@@ -564,6 +564,12 @@ namespace SolarEngine
         [MenuItem("SolarEngineSDK/MiniGame/RemoveAndroid", false, 0)]
         public static void RemoveAndroidSDK()
         {
+            if (PackageChecker.IsUPMPackageInstalled())
+            {
+                ShowTips ("warn", "UPM access is not supported");
+                return;
+            }
+            
 #if SOLARENGINE_BYTEDANCE_CLOUD
             SolarEngineSettings.removeAndroidSDK = true;
        
@@ -578,6 +584,11 @@ namespace SolarEngine
         [MenuItem("SolarEngineSDK/MiniGame/AddAndroid", false, 0)]
         public static void AddAndroidSDK()
         {
+            if (PackageChecker.IsUPMPackageInstalled())
+            {
+                ShowTips ("warn", "UPM access is not supported");
+                return;
+            }
             SolarEngineSettings.removeAndroidSDK = false;
             SolarEngineSettings.isUseAndroid = oldDisAndroidValue;
             SolarEngineSettings.isUseOaid = oldDisOaidValue;
