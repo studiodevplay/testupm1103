@@ -24,7 +24,6 @@ public class SolorEnginePackageManager : MonoBehaviour
 
     }
     
-   //[MenuItem("SolarEngineSDK/SDK Edit Settings/Apply Settings Panel", false, 0)]
 
     static void finishHandle()
     {
@@ -75,6 +74,7 @@ public class SolorEnginePackageManager : MonoBehaviour
 public static class SDKInstallChecker
 {
     private const string PackageName = "com.solarengine.sdk";
+    private const string SESDKUPMImportedKey = "SESDKUPMImported";
 
     private static bool _checked;
 
@@ -83,15 +83,17 @@ public static class SDKInstallChecker
         if (_checked) return;
         _checked = true;
 
-        if (!EditorPrefs.GetBool("SDKExtraImported", false))
+
+        if (!EditorPrefs.GetBool(SESDKUPMImportedKey, false))
         {
-            if (EditorUtility.DisplayDialog("SolarEngine 扩展模块",
-                    "检测到可选扩展模块，是否现在导入？",
-                    "导入", "稍后"))
+            if (PackageChecker.IsUPMPackageInstalled())
             {
                 ImportConfig();
-              //  EditorPrefs.SetBool("SDKExtraImported", true);
+                EditorPrefs.SetBool(SESDKUPMImportedKey, true);
             }
+         
+         
+            
         }
     }
     [MenuItem("SolarEngine/导入扩展/导入配置模块")]
@@ -99,6 +101,14 @@ public static class SDKInstallChecker
     {
         ImportPackage("solarengine-unity-sdk-upm.unitypackage");
     }
+
+    [MenuItem("SolarEngine/DeleteKey")]
+    public static void DeleteKey()
+    {
+        EditorPrefs.DeleteKey(SESDKUPMImportedKey);
+    }
+    
+    
     private static void ImportPackage(string fileName)
     {
         string packagePath = $"Packages/{PackageName}/~PackagesContent/{fileName}";
@@ -113,7 +123,6 @@ public static class SDKInstallChecker
         Debug.Log($"已导入扩展包: {fileName}");
     }
 }
-   
 
 #if UNITY_EDITOR
 
@@ -123,15 +132,11 @@ public static class PackageChecker
     private static string packagePath = "";
     public static bool IsUPMPackageInstalled(string packageName="com.solarengine.sdk")
     {
-        Debug.Log("[SolarEngine] IsUPMPackageInstalled");
         var listRequest = Client.List(true, false);
-        Debug.Log("[SolarEngine] ListRequest Status:" + listRequest.Status);
         while (!listRequest.IsCompleted) {} // 等待完成
 
-        Debug.Log("[SolarEngine] ListRequest Result:" + listRequest.Result);
         if (listRequest.Status == StatusCode.Success)
         {
-            Debug.Log("[SolarEngine] ListRequest Result:" + listRequest.Result);
             foreach (var pkg in listRequest.Result)
             {
                 
