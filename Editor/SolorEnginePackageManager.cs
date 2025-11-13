@@ -83,7 +83,6 @@ public static class SDKInstallChecker
         if (_checked) return;
         _checked = true;
 
-
         if (!EditorPrefs.GetBool(SESDKUPMImportedKey, false))
         {
             if (PackageChecker.IsUPMPackageInstalled())
@@ -101,14 +100,6 @@ public static class SDKInstallChecker
     {
         ImportPackage("solarengine-unity-sdk-upm.unitypackage");
     }
-
-    [MenuItem("SolarEngine/DeleteKey")]
-    public static void DeleteKey()
-    {
-        EditorPrefs.DeleteKey(SESDKUPMImportedKey);
-    }
-    
-    
     private static void ImportPackage(string fileName)
     {
         string packagePath = $"Packages/{PackageName}/~PackagesContent/{fileName}";
@@ -141,8 +132,10 @@ public static class PackageChecker
             {
                 
                 if (pkg.name == packageName)
+                {
                     packagePath = pkg.resolvedPath;
-                return true;
+                    return true;
+                }
             }
         }
         return false;

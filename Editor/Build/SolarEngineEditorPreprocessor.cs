@@ -9,6 +9,9 @@ using UnityEditor.Callbacks;
 
 namespace SolarEngine.Build
 {
+    
+    
+    
 #if UNITY_2018_1_OR_NEWER
     public class SolarEngineEditorPreprocessor : IPreprocessBuildWithReport
 #else
@@ -59,6 +62,12 @@ namespace SolarEngine.Build
 
 
         private const string SolorEngine = "[SolorEngine]";
+        // [ MenuItem("SolarEngine/Android/Apply Setting")]
+        // public static void ApplySetting_Andrpid()
+        // { 
+        //     RunPostProcessTasksAndroid();
+        //     CheckConfusion();
+        // }
 
         public static void CheckConfusion()
         {
@@ -173,7 +182,8 @@ namespace SolarEngine.Build
             var appManifestPath = Path.Combine(Application.dataPath, "Plugins/Android/AndroidManifest.xml");
             var manifestHasChanged = false;
             if (PackageChecker.IsUPMPackageInstalled())
-            {
+            { 
+                Debug.Log("11111111111111"  );
                 seManifestPath =
                     Path.Combine(PackageChecker. GetPackagePath(), "Plugins/Android/AndroidManifest.xml");
             }

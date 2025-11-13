@@ -68,10 +68,10 @@ namespace SolarEngine.Platform
            return TT.PlayerPrefs.HasKey(key);
         }
 
-        public void clearQueue(string str)
-        {
-            TT.GetFileSystemManager().RmdirSync(Application.persistentDataPath+"/"+str);
-        }
+        // public void clearQueue(string str)
+        // {
+        //     TT.GetFileSystemManager().RmdirSync(Application.persistentDataPath+"/"+str);
+        // }
         public object getData(string key, Type type)
         {
             if (!string.IsNullOrEmpty(key) && TT.PlayerPrefs.HasKey(key))
