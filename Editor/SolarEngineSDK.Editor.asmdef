@@ -1,21 +1,9 @@
 {
     "name": "SolarEngineSDK.Editor",
-    "rootNamespace": "",
     "references": [
         "SolarEngineSDK",
-        "UnityEditor",
-        "WxEditor",
-        "Wx"
+        "UnityEditor"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
-    "excludePlatforms": [],
-    "allowUnsafeCode": false,
-    "overrideReferences": false,
-    "precompiledReferences": [],
-    "autoReferenced": true,
-    "defineConstraints": [],
-    "versionDefines": [],
-    "noEngineReferences": false
+    "includePlatforms": ["Editor"],
+    "autoReferenced": true
 }

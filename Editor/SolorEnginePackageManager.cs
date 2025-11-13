@@ -64,10 +64,6 @@ public class SolorEnginePackageManager : MonoBehaviour
     private const string nostorageWarning = "You must choose either China or Overseas!";
   
 
-  
-
-
-    
 }
 
 [InitializeOnLoad]
@@ -130,12 +126,13 @@ public static class PackageChecker
         {
             foreach (var pkg in listRequest.Result)
             {
-                
+
                 if (pkg.name == packageName)
                 {
                     packagePath = pkg.resolvedPath;
                     return true;
                 }
+                   
             }
         }
         return false;
